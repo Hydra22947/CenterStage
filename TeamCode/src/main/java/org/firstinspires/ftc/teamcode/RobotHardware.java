@@ -50,6 +50,10 @@ public class RobotHardware {
     public BetterServo handRightServo;
     public BetterServo handLeftServo;
 
+    //Intake Extension
+    public BetterServo extensionRightServo;
+    public BetterServo extensionLeftServo;
+
     // TODO: ADD x3 Distance Sensors, webcam
 
     // odo pod encoders
@@ -140,6 +144,9 @@ public class RobotHardware {
         this.handLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
         this.handRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
 
+        //INTAKE EXTENSION
+     //   this.extensionRightServo = new BetterServo(hardwareMap.get(Servo.class, "sER"));
+       // this.extensionLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sEL"));
 
 //        this.podLeft = new BetterEncoder(new MotorEx(hardwareMap, "").encoder); // TODO: where the fuck did i connect them
 //        this.podFront = new BetterEncoder(new MotorEx(hardwareMap, "").encoder);

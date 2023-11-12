@@ -76,7 +76,7 @@ public class MeepMeepTesting {
                                 .waitSeconds(WAIT_TIME)
                                 .lineToSplineHeading(stageDoorPose)
                                 .splineToConstantHeading(intakePixelVector, Math.toRadians(180))
-
+/*
                                 //Going for backdrop
                                 .waitSeconds(WAIT_TIME)
                                 .splineToConstantHeading(stageDoorVector, Math.toRadians(0))
@@ -103,7 +103,7 @@ public class MeepMeepTesting {
                                 //  .splineToConstantHeading(stageDoorVector, Math.toRadians(0))
                                 .splineToLinearHeading(stageDoorPose, Math.toRadians(0))
                                 .splineToSplineHeading(placePixelPose, Math.toRadians(0))
-
+*/
                                 .build()
                 );
     }
