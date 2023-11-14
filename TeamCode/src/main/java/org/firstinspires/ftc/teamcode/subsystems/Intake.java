@@ -1,28 +1,35 @@
 package org.firstinspires.ftc.teamcode.subsystems;
-
+import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
+import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.util.BetterGamepad;
+import org.firstinspires.ftc.teamcode.util.PIDFController;
+import org.firstinspires.ftc.teamcode.util.values.Globals;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 
-public class Intake extends BetterSubsystem
-{
+@Config
+public class Intake extends BetterSubsystem {
 
-    private DcMotor _intakeMotor;
+    private final RobotHardware robot;
+    public static double speed = 1;
+    double target, currentTarget = speed;
 
-    //Constructor
-    public Intake(HardwareMap hardwareMap)
+    public Intake()
     {
-        this._intakeMotor = hardwareMap.get(DcMotor.class, "mI");
-
-        this._intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this._intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this._intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.robot = RobotHardware.getInstance();
     }
 
     @Override
     public void periodic() {
+        target = currentTarget;
 
+        robot.intakeServoRight.setPower(currentTarget);
+        robot.intakeServoLeft.setPower(currentTarget);
     }
 
     @Override
@@ -38,5 +45,10 @@ public class Intake extends BetterSubsystem
     @Override
     public void reset() {
 
+    }
+
+    public void setTarget(double target)
+    {
+        currentTarget = target;
     }
 }

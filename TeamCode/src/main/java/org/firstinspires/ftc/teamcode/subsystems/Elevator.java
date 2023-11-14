@@ -1,13 +1,17 @@
 package org.firstinspires.ftc.teamcode.subsystems;
+import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
+import org.firstinspires.ftc.teamcode.util.PIDFController;
 import org.firstinspires.ftc.teamcode.util.values.Globals;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 
@@ -19,13 +23,14 @@ public class Elevator extends BetterSubsystem {
     public static double INCREMENT = 1;
     double target, currentTarget = BASE_LEVEL;
     public static double TICKS_PER_REV = 145.1, SPOOL_RADIUS = 0.75; // in //TODO: CHANGE
-    double power = 1;
     boolean usePID = true;
     public static double maxPower = 0.85;
-    public static boolean DEBUG = true;
+    public static double kP = 1, kI = 0, kD = 0;
 
     Gamepad gamepad;
     BetterGamepad cGamepad;
+    PIDFController controller;
+    PIDFController.PIDCoefficients pidCoefficients = new PIDFController.PIDCoefficients();
 
     public Elevator(Gamepad gamepad)
     {
@@ -33,6 +38,12 @@ public class Elevator extends BetterSubsystem {
 
         this.gamepad = gamepad;
         this.cGamepad = new BetterGamepad(gamepad);
+
+        pidCoefficients.kP = kP;
+        pidCoefficients.kI = kI;
+        pidCoefficients.kD = kD;
+
+        controller = new PIDFController(pidCoefficients);
     }
 
     public Elevator()
@@ -42,17 +53,16 @@ public class Elevator extends BetterSubsystem {
 
     @Override
     public void periodic() {
+
         if(!Globals.IS_AUTO)
         {
             cGamepad.update();
 
             if (usePID)
             {
-                target = currentTarget;
+                controller.targetPosition = currentTarget;
 
-                robot.elevatorMotor.setTargetPosition(inchesToEncoderTicks(target));
-                robot.elevatorMotor.setPower(power);
-                robot.elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.elevatorMotor.setPower(controller.update(encoderTicksToInches(robot.elevatorMotor.getCurrentPosition())));
             }
             else
             {
@@ -73,11 +83,9 @@ public class Elevator extends BetterSubsystem {
         }
         else
         {
-            target = currentTarget;
+            controller.targetPosition = currentTarget;
 
-            robot.elevatorMotor.setTargetPosition(inchesToEncoderTicks(target));
-            robot.elevatorMotor.setPower(power);
-            robot.elevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.elevatorMotor.setPower(controller.update(encoderTicksToInches(robot.elevatorMotor.getCurrentPosition())));
         }
     }
 

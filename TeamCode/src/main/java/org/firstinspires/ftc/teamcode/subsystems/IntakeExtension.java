@@ -18,8 +18,7 @@ public class IntakeExtension extends BetterSubsystem {
 
     private RobotHardware robot;
 
-    private ExtensionState rightState = ExtensionState.CLOSE;
-    private ExtensionState leftState = ExtensionState.CLOSE;
+    private ExtensionState state = ExtensionState.CLOSE;
 
 
     public IntakeExtension() {
@@ -41,8 +40,7 @@ public class IntakeExtension extends BetterSubsystem {
     }
 
     public void setPosition(double position) {
-        this.robot.extensionRightServo.setPosition(position);
-        this.robot.extensionLeftServo.setPosition(position);
+        this.robot.extensionServo.setPosition(position);
     }
 
     @Override
