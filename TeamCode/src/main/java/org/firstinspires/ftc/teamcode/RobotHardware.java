@@ -132,17 +132,20 @@ public class RobotHardware {
 //
 //
 //        // INTAKE
-//        this.intakeAngleServo = new BetterServo(hardwareMap.get(Servo.class, "sIA"));
-//        this.intakeServoRight = hardwareMap.get(CRServo.class, "sIR");
-//        this.intakeServoLeft = hardwareMap.get(CRServo.class, "sIL");
+        this.intakeAngleServo = new BetterServo(hardwareMap.get(Servo.class, "sIA"));
+        intakeAngleServo.setDirection(Servo.Direction.REVERSE);
+        //this.intakeServoRight = hardwareMap.get(CRServo.class, "sIR");
+        //this.intakeServoLeft = hardwareMap.get(CRServo.class, "sIL");
+
 //        //INTAKE EXTENSION
 //        this.extensionServo = new BetterServo(hardwareMap.get(Servo.class, "sE"));
 //        // BEAMS
 //        this.breambeamRight = hardwareMap.get(DigitalChannel.class, "bbR");
 //        this.breambeamLeft = hardwareMap.get(DigitalChannel.class, "bbL");
-//        // HAND
-//        this.intakeHandPivotRightServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPR"));
-//        this.intakeHandPivotLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPL"));
+        // HAND
+        this.intakeHandPivotRightServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPR"));
+        this.intakeHandPivotLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPL"));
+        intakeHandPivotLeftServo.setDirection(Servo.Direction.REVERSE);
 //
 //        // OUTTAKE
 //        // CLAW

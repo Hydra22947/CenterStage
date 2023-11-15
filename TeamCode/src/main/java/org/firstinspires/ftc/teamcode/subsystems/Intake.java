@@ -51,4 +51,9 @@ public class Intake extends BetterSubsystem {
     {
         currentTarget = target;
     }
+
+    public double getTarget()
+    {
+        return currentTarget;
+    }
 }
