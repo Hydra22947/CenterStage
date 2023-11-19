@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.util.Angle;
 import org.firstinspires.ftc.teamcode.util.values.Globals;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterEncoder;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterServo;
@@ -66,7 +67,7 @@ public class RobotHardware {
 
     // hardwareMap storage
     private HardwareMap hardwareMap;
-    private Telemetry telemetry;
+    public Telemetry telemetry;
 
     // singleton go brrrr
     private static RobotHardware instance = null;
@@ -107,24 +108,24 @@ public class RobotHardware {
 
         this.imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
-                RevHubOrientationOnRobot.UsbFacingDirection.UP));
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
         this.imu.initialize(parameters);
 
 //        // DRIVETRAIN
-//        this.dtBackLeftMotor = hardwareMap.get(DcMotorEx.class, "mBL");
-//        this.dtBackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        this.dtBackLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-//
-//        this.dtFrontLeftMotor = hardwareMap.get(DcMotorEx.class, "mFL");
-//        this.dtFrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        this.dtFrontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-//
-//        this.dtBackRightMotor = hardwareMap.get(DcMotorEx.class, "mBR");
-//        this.dtBackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//
-//        this.dtFrontRightMotor = hardwareMap.get(DcMotorEx.class, "mFR");
-//        this.dtFrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.dtBackLeftMotor = hardwareMap.get(DcMotorEx.class, "mBL");
+        this.dtBackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.dtBackLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        this.dtFrontLeftMotor = hardwareMap.get(DcMotorEx.class, "mFL");
+        this.dtFrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.dtFrontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        this.dtBackRightMotor = hardwareMap.get(DcMotorEx.class, "mBR");
+        this.dtBackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        this.dtFrontRightMotor = hardwareMap.get(DcMotorEx.class, "mFR");
+        this.dtFrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //
 //
 //        // ELEVATOR
@@ -134,18 +135,17 @@ public class RobotHardware {
 //        // INTAKE
         this.intakeAngleServo = new BetterServo(hardwareMap.get(Servo.class, "sIA"));
         intakeAngleServo.setDirection(Servo.Direction.REVERSE);
-        //this.intakeServoRight = hardwareMap.get(CRServo.class, "sIR");
-        //this.intakeServoLeft = hardwareMap.get(CRServo.class, "sIL");
+        this.intakeServoRight = hardwareMap.get(CRServo.class, "sIR");
+        this.intakeServoLeft = hardwareMap.get(CRServo.class, "sIL");
+        this.intakeServoRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        // TODO: 2 ds
 
 //        //INTAKE EXTENSION
 //        this.extensionServo = new BetterServo(hardwareMap.get(Servo.class, "sE"));
-//        // BEAMS
-//        this.breambeamRight = hardwareMap.get(DigitalChannel.class, "bbR");
-//        this.breambeamLeft = hardwareMap.get(DigitalChannel.class, "bbL");
         // HAND
         this.intakeHandPivotRightServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPR"));
         this.intakeHandPivotLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPL"));
-        intakeHandPivotLeftServo.setDirection(Servo.Direction.REVERSE);
+        intakeHandPivotRightServo.setDirection(Servo.Direction.REVERSE);
 //
 //        // OUTTAKE
 //        // CLAW
@@ -154,14 +154,17 @@ public class RobotHardware {
 //        this.outtakeRightServo = new BetterServo(hardwareMap.get(Servo.class, "sCR"));
 //        this.outtakePivotServo = new BetterServo(hardwareMap.get(Servo.class, "sC"));
         // HAND
-        this.handLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
-        this.handRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
+//        this.handLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
+//        this.handRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
+        //        // BEAMS
+//        this.breambeamRight = hardwareMap.get(DigitalChannel.class, "bbR");
+//        this.breambeamLeft = hardwareMap.get(DigitalChannel.class, "bbL");
 
 
         // ODO PODS
-        this.podLeft = new BetterEncoder(new MotorEx(hardwareMap, "").encoder); // TODO: where the fuck did i connect them
-        this.podFront = new BetterEncoder(new MotorEx(hardwareMap, "").encoder);
-        this.podRight = new BetterEncoder(new MotorEx(hardwareMap, "").encoder);
+        this.podLeft = new BetterEncoder(new MotorEx(hardwareMap, "mBR").encoder);
+        this.podFront = new BetterEncoder(new MotorEx(hardwareMap, "mFR").encoder);
+        this.podRight = new BetterEncoder(new MotorEx(hardwareMap, "mFL").encoder);
     }
 
     public void read() {
@@ -193,15 +196,15 @@ public class RobotHardware {
         this.subsystems.addAll(Arrays.asList(subsystems));
     }
 
-    // TODO: add offset if needed
-    // imuAngle - imuOffset;
-    @Nonnegative
+    public void setExternalHeading(double value) {
+    }
+
     public double getAngle() {
-        return imuAngle - imuOffset;
+        return Angle.norm(imuAngle + imuOffset);
     }
 
     public void setImuOffset(double offset)
     {
-        this.imuOffset = offset;
+        this.imuOffset = -imuAngle + offset;
     }
 }

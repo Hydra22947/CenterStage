@@ -1,23 +1,38 @@
 package org.firstinspires.ftc.teamcode.subsystems;
-import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
-import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.util.BetterGamepad;
-import org.firstinspires.ftc.teamcode.util.PIDFController;
-import org.firstinspires.ftc.teamcode.util.values.Globals;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
+import org.jetbrains.annotations.NotNull;
 
 @Config
 public class Intake extends BetterSubsystem {
 
     private final RobotHardware robot;
-    public static double speed = 1;
-    double target, currentTarget = speed;
+
+    //public static double intakeAngle1 = 0.07, intakeAngle2 = 0, intakeAngle3 = 0;
+    public static double intakePivotAngle1 = 0.2, intakePivotAngle2 = 0.3, intakePivotAngle3 = 0.4;
+
+    public static double power = 1;
+    public static double handToAmmoRatio = 0.3;
+    public enum Angle
+    {
+        INTAKE,
+        MID,
+        TRANSFER
+    }
+
+    public enum Type
+    {
+        AMMO,
+        HAND
+    }
+
+    public Angle ammo = Angle.INTAKE;
+    public Angle hand = Angle.INTAKE;
+
+    boolean shouldIntake = false;
+    boolean forward = false;
 
     public Intake()
     {
@@ -26,10 +41,25 @@ public class Intake extends BetterSubsystem {
 
     @Override
     public void periodic() {
-        target = currentTarget;
+        updateState(ammo, Type.AMMO);
+        updateState(hand, Type.HAND);
 
-        robot.intakeServoRight.setPower(currentTarget);
-        robot.intakeServoLeft.setPower(currentTarget);
+        if(shouldIntake && forward)
+        {
+            robot.intakeServoRight.setPower(power);
+            robot.intakeServoLeft.setPower(power);
+        }
+        else if(shouldIntake)
+        {
+            robot.intakeServoRight.setPower(-power);
+            robot.intakeServoLeft.setPower(-power);
+        }
+        else
+        {
+            robot.intakeServoRight.setPower(0);
+            robot.intakeServoLeft.setPower(0);
+        }
+
     }
 
     @Override
@@ -47,13 +77,76 @@ public class Intake extends BetterSubsystem {
 
     }
 
-    public void setTarget(double target)
-    {
-        currentTarget = target;
+    public void setAmmo(Angle ammo) {
+        this.ammo = ammo;
     }
 
-    public double getTarget()
+    public void setHand(Angle hand) {
+        this.hand = hand;
+    }
+
+    public void updateState(@NotNull Angle angle, @NotNull Type type) {
+        double position = getPosition(angle, type);
+
+        switch(type) {
+            case AMMO:
+                this.robot.intakeAngleServo.setPosition(position);
+                break;
+            case HAND:
+                this.robot.intakeHandPivotLeftServo.setPosition(position);
+                this.robot.intakeHandPivotRightServo.setPosition(position);
+                break;
+        }
+
+
+    }
+
+    private double getPosition(Angle angle, Type type)
     {
-        return currentTarget;
+        switch (type)
+        {
+            case AMMO:
+                switch (angle) {
+                    case INTAKE:
+                        return intakePivotAngle1 * handToAmmoRatio;
+                    case MID:
+                        return intakePivotAngle2 * handToAmmoRatio;
+                    case TRANSFER:
+                        return intakePivotAngle3 * handToAmmoRatio;
+                    default:
+                        return 0.0;
+
+                }
+
+            case HAND:
+                switch (angle) {
+                    case INTAKE:
+                        return intakePivotAngle1 ;
+                    case MID:
+                        return intakePivotAngle2;
+                    case TRANSFER:
+                        return intakePivotAngle3;
+                    default:
+                        return 0.0;
+                }
+            default:
+                return 0.0;
+        }
+    }
+
+    public boolean isShouldIntake() {
+        return shouldIntake;
+    }
+
+    public void setShouldIntake(boolean shouldIntake) {
+        this.shouldIntake = shouldIntake;
+    }
+
+    public boolean isForward() {
+        return forward;
+    }
+
+    public void setForward(boolean forward) {
+        this.forward = forward;
     }
 }

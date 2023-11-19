@@ -1,15 +1,16 @@
 package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
 
-public class IntakeCommand extends InstantCommand {
+public class IntakeCommand extends SequentialCommandGroup {
 
-    public IntakeCommand(Intake intake, int direction) {
+    public IntakeCommand(Intake intake, Intake.Angle angle) {
         super(
-                ()-> intake.setTarget(intake.getTarget() * direction)
+                new InstantCommand(() -> intake.setAmmo(angle)),
+                new InstantCommand(() -> intake.setHand(angle))
         );
     }
 }

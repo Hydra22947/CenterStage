@@ -50,7 +50,7 @@ public class OpMode extends CommandOpMode {
 
         robot.init(hardwareMap, telemetry);
 
-        drivetrain = new Drivetrain(gamepad1, gamepad2, true);
+        drivetrain = new Drivetrain(gamepad1, true);
         elevator = new Elevator(gamepad2);
         claw = new Claw();
         hand = new Hand();

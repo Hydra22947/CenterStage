@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.testing;
+package org.firstinspires.ftc.teamcode.testing.hardware;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -14,17 +14,19 @@ import com.qualcomm.robotcore.util.Range;
 @Config
 public class CRServoTest extends LinearOpMode {
 
-    private CRServo intake = null;
+    private CRServo servo = null;
 
     public static double power = 0.1;
+    public static String hw = "sI";
 
     @Override
     public void runOpMode() {
-        intake  = hardwareMap.get(CRServo.class, "sI");
+        servo  = hardwareMap.get(CRServo.class, hw);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            intake.setPower(power);
-        }    }
+            servo.setPower(power);
+        }
+    }
 }

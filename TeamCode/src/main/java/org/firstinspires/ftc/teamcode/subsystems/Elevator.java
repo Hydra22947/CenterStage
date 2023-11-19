@@ -49,6 +49,12 @@ public class Elevator extends BetterSubsystem {
     public Elevator()
     {
         this.robot = RobotHardware.getInstance();
+
+        pidCoefficients.kP = kP;
+        pidCoefficients.kI = kI;
+        pidCoefficients.kD = kD;
+
+        controller = new PIDFController(pidCoefficients);
     }
 
     @Override
