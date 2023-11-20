@@ -8,14 +8,11 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.commands.ClawCommand;
-import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Hand;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
-import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
 import org.firstinspires.ftc.teamcode.util.values.ClawSide;
 import org.firstinspires.ftc.teamcode.util.values.Globals;
 
@@ -32,8 +29,6 @@ public class Markers {
 
     Intake intake;
 
-    IntakePivot pivot;
-
     IntakeExtension intakeExtension;
 
     ClawSide clawSide;
@@ -47,12 +42,11 @@ public class Markers {
         claw = new Claw();
         hand = new Hand();
         intake = new Intake();
-        pivot = new IntakePivot();
         intakeExtension = new IntakeExtension();
 
         robot = RobotHardware.getInstance();
 
-        robot.addSubsystem(elevator, claw, hand, intake,pivot , intakeExtension);
+        robot.addSubsystem(elevator, claw, hand, intake , intakeExtension);
 
 
     }

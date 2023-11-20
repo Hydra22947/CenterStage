@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 import org.jetbrains.annotations.NotNull;
 
+// TODO: needs to be CRServo with position limits
 public class IntakeExtension extends BetterSubsystem {
     public enum ExtensionState {
         OPEN,
@@ -11,7 +12,7 @@ public class IntakeExtension extends BetterSubsystem {
         CLOSE
     }
 
-    public static double OPEN_EXTENSION = 1.0;
+    public static double OPEN_EXTENSION = 0.1;
     public static double OPEN_HALFWAY_EXTENSION = 0.5;// maybe for pixel at auto beginning
     public static double CLOSE_EXTENSION = 0.0;
 

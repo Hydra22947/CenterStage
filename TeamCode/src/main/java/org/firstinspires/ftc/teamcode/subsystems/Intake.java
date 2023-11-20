@@ -10,15 +10,13 @@ public class Intake extends BetterSubsystem {
 
     private final RobotHardware robot;
 
-    //public static double intakeAngle1 = 0.07, intakeAngle2 = 0, intakeAngle3 = 0;
-    public static double intakePivotAngle1 = 0.2, intakePivotAngle2 = 0.3, intakePivotAngle3 = 0.4;
+    public static double intakePivot = 0.065, outtakePivot = 0.58;
 
     public static double power = 1;
-    public static double handToAmmoRatio = 0.3;
+    public static double handToAmmoRatio = 1.15;
     public enum Angle
     {
         INTAKE,
-        MID,
         TRANSFER
     }
 
@@ -108,11 +106,9 @@ public class Intake extends BetterSubsystem {
             case AMMO:
                 switch (angle) {
                     case INTAKE:
-                        return intakePivotAngle1 * handToAmmoRatio;
-                    case MID:
-                        return intakePivotAngle2 * handToAmmoRatio;
+                        return intakePivot * handToAmmoRatio;
                     case TRANSFER:
-                        return intakePivotAngle3 * handToAmmoRatio;
+                        return outtakePivot * handToAmmoRatio;
                     default:
                         return 0.0;
 
@@ -121,11 +117,9 @@ public class Intake extends BetterSubsystem {
             case HAND:
                 switch (angle) {
                     case INTAKE:
-                        return intakePivotAngle1 ;
-                    case MID:
-                        return intakePivotAngle2;
+                        return intakePivot ;
                     case TRANSFER:
-                        return intakePivotAngle3;
+                        return outtakePivot;
                     default:
                         return 0.0;
                 }
