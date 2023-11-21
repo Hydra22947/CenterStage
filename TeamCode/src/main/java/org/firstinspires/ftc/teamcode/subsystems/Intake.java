@@ -26,8 +26,8 @@ public class Intake extends BetterSubsystem {
         HAND
     }
 
-    public Angle ammo = Angle.INTAKE;
-    public Angle hand = Angle.INTAKE;
+    public Angle ammo = Angle.TRANSFER;
+    public Angle hand = Angle.TRANSFER;
 
     boolean shouldIntake = false;
     boolean forward = false;

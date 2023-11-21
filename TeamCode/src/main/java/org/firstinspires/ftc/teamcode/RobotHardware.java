@@ -138,10 +138,10 @@ public class RobotHardware {
         this.intakeServoRight = hardwareMap.get(CRServo.class, "sIR");
         this.intakeServoLeft = hardwareMap.get(CRServo.class, "sIL");
         this.intakeServoRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        //INTAKE EXTENSION
+        this.extensionServo = new BetterServo(hardwareMap.get(Servo.class, "sE"));
         // TODO: 2 ds
 
-//        //INTAKE EXTENSION
-//        this.extensionServo = new BetterServo(hardwareMap.get(Servo.class, "sE"));
         // HAND
         this.intakeHandPivotRightServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPR"));
         this.intakeHandPivotLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPL"));
@@ -179,6 +179,7 @@ public class RobotHardware {
             subsystem.write();
         }
     }
+
 
     public void periodic() {
         for (BetterSubsystem subsystem : subsystems) {

@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 import org.jetbrains.annotations.NotNull;
 
+@Config
 // TODO: needs to be CRServo with position limits
 public class IntakeExtension extends BetterSubsystem {
     public enum ExtensionState {
@@ -12,15 +15,12 @@ public class IntakeExtension extends BetterSubsystem {
         CLOSE
     }
 
-    public static double OPEN_EXTENSION = 0.1;
+    public static double OPEN_EXTENSION = 0.4;
     public static double OPEN_HALFWAY_EXTENSION = 0.5;// maybe for pixel at auto beginning
     public static double CLOSE_EXTENSION = 0.0;
 
-
     private RobotHardware robot;
-
-    private ExtensionState state = ExtensionState.CLOSE;
-
+    ExtensionState current = ExtensionState.CLOSE;
 
     public IntakeExtension() {
         this.robot = RobotHardware.getInstance();
@@ -38,6 +38,7 @@ public class IntakeExtension extends BetterSubsystem {
                 setPosition(CLOSE_EXTENSION);
                 break;
         }
+        current = currentState;
     }
 
     public void setPosition(double position) {
@@ -46,7 +47,7 @@ public class IntakeExtension extends BetterSubsystem {
 
     @Override
     public void periodic() {
-
+        updateState(current);
     }
 
     @Override

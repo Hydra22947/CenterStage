@@ -59,19 +59,19 @@ public class IntakeTest extends CommandOpMode {
                 ));
 
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whileHeld(new SequentialCommandGroup(
+                .whenPressed(new SequentialCommandGroup(
                         new IntakeExtensionCommand(intakeExtension, IntakeExtension.ExtensionState.OPEN)
                 ));
 
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whileHeld(new SequentialCommandGroup(
+                .whenPressed(new SequentialCommandGroup(
                         new IntakeExtensionCommand(intakeExtension, IntakeExtension.ExtensionState.CLOSE)
                 ));
     }
 
     @Override
     public void run() {
-        if(!gamepad1.right_bumper || !gamepad1.left_bumper)
+        if(!gamepad1.right_bumper && !gamepad1.left_bumper)
         {
             intake.setShouldIntake(false);
         }
