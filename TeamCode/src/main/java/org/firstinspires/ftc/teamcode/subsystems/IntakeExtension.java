@@ -15,7 +15,7 @@ public class IntakeExtension extends BetterSubsystem {
         CLOSE
     }
 
-    public static double OPEN_EXTENSION = 0.4;
+    public static double OPEN_EXTENSION = 0.385;
     public static double OPEN_HALFWAY_EXTENSION = 0.5;// maybe for pixel at auto beginning
     public static double CLOSE_EXTENSION = 0.0;
 

@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -56,6 +57,9 @@ public class RobotHardware {
     public BetterServo handLeftServo;
     public DigitalChannel breambeamRight;  // Touch sensor Object
     public DigitalChannel breambeamLeft;  // Touch sensor Object
+
+    public CRServo testCr;
+    public AnalogInput analogTestCr;
 
 
     // TODO: ADD x3 Distance Sensors, webcam
@@ -141,6 +145,12 @@ public class RobotHardware {
         //INTAKE EXTENSION
         this.extensionServo = new BetterServo(hardwareMap.get(Servo.class, "sE"));
         // TODO: 2 ds
+
+
+        // TEST CR SERVO
+        this.testCr = hardwareMap.get(CRServo.class, "sT");
+        this.analogTestCr = hardwareMap.get(AnalogInput.class, "aT");
+
 
         // HAND
         this.intakeHandPivotRightServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPR"));
