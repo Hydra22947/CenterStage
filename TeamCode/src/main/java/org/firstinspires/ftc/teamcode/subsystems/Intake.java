@@ -10,7 +10,7 @@ public class Intake extends BetterSubsystem {
 
     private final RobotHardware robot;
 
-    public static double intakePivot = 0.065, outtakePivot = 0.58;
+    public static double intakePivot = 0.0795, outtakePivot = 0.58;
 
     public static double power = 1;
     public static double handToAmmoRatio = 1.15;
