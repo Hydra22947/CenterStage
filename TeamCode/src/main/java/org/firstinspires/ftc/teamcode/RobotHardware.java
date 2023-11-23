@@ -46,7 +46,8 @@ public class RobotHardware {
     public BetterServo intakeAngleServo;
     public BetterServo intakeHandPivotRightServo;
     public BetterServo intakeHandPivotLeftServo;
-    public BetterServo extensionServo;
+    public CRServo extensionServo;
+    public AnalogInput extensionServoEncoder;
 
 
     // outake
@@ -143,14 +144,15 @@ public class RobotHardware {
         this.intakeServoLeft = hardwareMap.get(CRServo.class, "sIL");
         this.intakeServoRight.setDirection(DcMotorSimple.Direction.REVERSE);
         //INTAKE EXTENSION
-        this.extensionServo = new BetterServo(hardwareMap.get(Servo.class, "sE"));
+        this.extensionServo = hardwareMap.get(CRServo.class, "sE");
+        this.extensionServoEncoder = hardwareMap.get(AnalogInput.class, "seE");
         // TODO: 2 ds
 
-
+/*
         // TEST CR SERVO
         this.testCr = hardwareMap.get(CRServo.class, "sT");
         this.analogTestCr = hardwareMap.get(AnalogInput.class, "aT");
-
+*/
 
         // HAND
         this.intakeHandPivotRightServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPR"));

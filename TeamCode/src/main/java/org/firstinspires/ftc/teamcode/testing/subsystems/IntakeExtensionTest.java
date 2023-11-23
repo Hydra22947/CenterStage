@@ -47,6 +47,11 @@ public class IntakeExtensionTest extends CommandOpMode {
     public void run() {
         this._robot.read();
 
+        if(this._gamepadEx.getLeftY() != 0)
+        {
+            this._intakeExtension.updateState(IntakeExtension.ExtensionState.MANUAL);
+        }
+
         super.run();
         this._robot.periodic();
 
