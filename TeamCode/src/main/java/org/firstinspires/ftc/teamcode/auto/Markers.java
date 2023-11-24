@@ -50,7 +50,7 @@ public class Markers {
         claw = new Claw();
         hand = new Hand();
         intake = new Intake();
-        intakeExtension = new IntakeExtension();
+        intakeExtension = new IntakeExtension(null);
         outtake = new Outtake();
 
         robot = RobotHardware.getInstance();

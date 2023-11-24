@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 public class IntakeExtensionCommand extends InstantCommand {
     public IntakeExtensionCommand(IntakeExtension extension, IntakeExtension.ExtensionState state) {
         super(
-                ()-> extension.updateState(state)
+                ()-> extension.setCurrent(state)
         );
     }
 }

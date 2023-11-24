@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -26,7 +27,7 @@ public class IntakeExtension extends BetterSubsystem {
     public static double CLOSE_EXTENSION = 90;
     public static double MAX_POWER = 1;
 
-    public static double kP = 0.525, kI = 0, kD = 0.00051;
+    public static double kP = 0.825, kI = 0, kD = 0.00051;
 
     private RobotHardware robot;
     private AbsoluteAnalogEncoder absoloutEncoder;
@@ -36,11 +37,11 @@ public class IntakeExtension extends BetterSubsystem {
 
     ExtensionState current = ExtensionState.CLOSE;
 
-    public IntakeExtension() {
+    public IntakeExtension(Gamepad gamepad) {
         this.robot = RobotHardware.getInstance();
         this.absoloutEncoder = new AbsoluteAnalogEncoder(this.robot.extensionServoEncoder);
 
-        this.cGamepad = new BetterGamepad(gamepad1);
+        this.cGamepad = new BetterGamepad(gamepad);
         this.pidCoefficients = new PIDFController.PIDCoefficients();
         pidCoefficients.kP = kP;
         pidCoefficients.kI = kI;
@@ -50,8 +51,10 @@ public class IntakeExtension extends BetterSubsystem {
 
     }
 
-    public void updateState(@NotNull ExtensionState currentState) {
-        switch (currentState) {
+    public void updateState() {
+        cGamepad.update();
+
+        switch (current) {
             case OPEN:
                 setPosition(OPEN_EXTENSION, -MAX_POWER, MAX_POWER);
                 break;
@@ -62,21 +65,32 @@ public class IntakeExtension extends BetterSubsystem {
                 setPosition(CLOSE_EXTENSION, -MAX_POWER, MAX_POWER);
                 break;
             case MANUAL:
-                setPosition(OPEN_EXTENSION, -this.cGamepad.left_stick_y, this.cGamepad.left_stick_y);
+                if(this.cGamepad.right_trigger != 0)
+                {
+                    setPosition(OPEN_EXTENSION, -this.cGamepad.right_trigger, this.cGamepad.right_trigger);
+                }
+                else
+                {
+                    setPosition(CLOSE_EXTENSION, -MAX_POWER, MAX_POWER);
+                }
                 break;
         }
-        current = currentState;
     }
 
     public void setPosition(double position, double min, double max)
     {
-        this.controller.targetPosition =  Math.toRadians(position);
-        this.robot.extensionServo.setPower(Range.clip(controller.update(absoloutEncoder.getCurrentPosition()), min, max));
+        controller.updateError(Math.toRadians(position) - absoloutEncoder.getCurrentPosition());
+
+        this.robot.extensionServo.setPower(Range.clip(controller.update(), min, max));
+        robot.telemetry.addData("POWER", robot.extensionServo.getPower());
+        robot.telemetry.addData("POWER PID", controller.update());
+        robot.telemetry.addData("POS", absoloutEncoder.getCurrentPosition());
+        robot.telemetry.update();
     }
 
     @Override
     public void periodic() {
-        updateState(current);
+        updateState();
     }
 
     @Override
@@ -92,5 +106,13 @@ public class IntakeExtension extends BetterSubsystem {
     @Override
     public void reset() {
 
+    }
+
+    public ExtensionState getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(ExtensionState current) {
+        this.current = current;
     }
 }

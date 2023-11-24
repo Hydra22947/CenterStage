@@ -32,7 +32,7 @@ public class IntakeTest extends CommandOpMode {
         robot.init(hardwareMap, telemetry);
 
         intake = new Intake();
-        intakeExtension = new IntakeExtension();
+        intakeExtension = new IntakeExtension(gamepad1);
 
         robot.addSubsystem(intake, intakeExtension);
 

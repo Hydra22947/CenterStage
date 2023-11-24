@@ -65,8 +65,7 @@ public class RobotHardware {
     public BetterEncoder podRight;
     public BetterEncoder podFront;
 
-    // hardwareMap storage
-    private HardwareMap hardwareMap;
+    // Telemetry storage
     public Telemetry telemetry;
 
     // singleton go brrrr
@@ -97,7 +96,6 @@ public class RobotHardware {
      * @param telemetry Saved for later in the event FTC Dashboard used
      */
     public void init(final HardwareMap hardwareMap, final Telemetry telemetry) {
-        this.hardwareMap = hardwareMap;
         if (Globals.USING_DASHBOARD) {
             this.telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
         } else {
@@ -140,7 +138,7 @@ public class RobotHardware {
         this.intakeServoRight.setDirection(DcMotorSimple.Direction.REVERSE);
         //INTAKE EXTENSION
         this.extensionServo = hardwareMap.get(CRServo.class, "sE");
-        this.extensionServoEncoder = hardwareMap.get(AnalogInput.class, "seE");
+        this.extensionServoEncoder = hardwareMap.get(AnalogInput.class, "asE");
         // TODO: 2 ds
 
         // HAND
@@ -150,13 +148,13 @@ public class RobotHardware {
 
         // OUTTAKE
         // CLAW
-        this.outtakeClawLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sCL"));
-        this.outtakeClawLeftServo.setDirection(Servo.Direction.REVERSE);
-        this.outtakeClawRightServo = new BetterServo(hardwareMap.get(Servo.class, "sCR"));
-        this.outtakeClawPivotServo = new BetterServo(hardwareMap.get(Servo.class, "sC"));
-        // HAND
-        this.outttakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
-        this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
+//        this.outtakeClawLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sCL"));
+//        this.outtakeClawLeftServo.setDirection(Servo.Direction.REVERSE);
+//        this.outtakeClawRightServo = new BetterServo(hardwareMap.get(Servo.class, "sCR"));
+//        this.outtakeClawPivotServo = new BetterServo(hardwareMap.get(Servo.class, "sC"));
+//        // HAND
+//        this.outttakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
+//        this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
         // BEAMS
 //        this.breambeamRight = hardwareMap.get(DigitalChannel.class, "bbR");
 //        this.breambeamLeft = hardwareMap.get(DigitalChannel.class, "bbL");

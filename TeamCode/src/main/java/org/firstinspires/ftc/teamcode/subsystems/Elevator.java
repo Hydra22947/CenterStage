@@ -21,7 +21,7 @@ public class Elevator extends BetterSubsystem {
     private final RobotHardware robot;
     public static double BASE_LEVEL = 5;
     public static double INCREMENT = 1;
-    double target, currentTarget = BASE_LEVEL;
+    double currentTarget = BASE_LEVEL;
     public static double TICKS_PER_REV = 145.1, SPOOL_RADIUS = 0.75; // in //TODO: CHANGE
     boolean usePID = true;
     public static double maxPower = 0.85;
