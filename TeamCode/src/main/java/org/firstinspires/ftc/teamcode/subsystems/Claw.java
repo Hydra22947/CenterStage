@@ -57,12 +57,12 @@ public class Claw extends BetterSubsystem
 
         if((rightClaw == Claw.ClawState.OPEN || rightClaw == ClawState.CLOSED) && !shouldOpen)
         {
-            checkAndClose(robot.breambeamRight, ClawSide.RIGHT);
+            checkAndClose(robot.breakbeamRight, ClawSide.RIGHT);
         }
 
         if((leftClaw == Claw.ClawState.OPEN || leftClaw == ClawState.CLOSED) && !shouldOpen)
         {
-            checkAndClose(robot.breambeamLeft, ClawSide.LEFT);
+            checkAndClose(robot.breakbeamLeft, ClawSide.LEFT);
         }
 
     }
@@ -87,20 +87,20 @@ public class Claw extends BetterSubsystem
 
         switch(side) {
             case LEFT:
-                robot.outtakeclawLeftServo.setPosition(position);
+                robot.outtakeClawLeftServo.setPosition(position);
                 this.leftClaw = state;
                 break;
             case RIGHT:
-                robot.outtakeRightServo.setPosition(position);
+                robot.outtakeClawRightServo.setPosition(position);
                 this.rightClaw = state;
                 break;
             case BOTH:
                 position = getClawStatePosition(state, ClawSide.LEFT);
-                robot.outtakeclawLeftServo.setPosition(position);
+                robot.outtakeClawLeftServo.setPosition(position);
                 this.leftClaw = state;
 
                 position = getClawStatePosition(state, ClawSide.RIGHT);
-                robot.outtakeRightServo.setPosition(position);
+                robot.outtakeClawRightServo.setPosition(position);
                 this.rightClaw = state;
                 break;
         }

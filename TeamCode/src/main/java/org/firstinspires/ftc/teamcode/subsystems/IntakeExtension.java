@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 import org.jetbrains.annotations.NotNull;
 
 @Config
-// TODO: needs to be CRServo with position limits
 public class IntakeExtension extends BetterSubsystem {
     public enum ExtensionState {
         OPEN,
@@ -54,25 +53,25 @@ public class IntakeExtension extends BetterSubsystem {
     public void updateState(@NotNull ExtensionState currentState) {
         switch (currentState) {
             case OPEN:
-                setPosition(OPEN_EXTENSION);
+                setPosition(OPEN_EXTENSION, -MAX_POWER, MAX_POWER);
                 break;
             case INTERMEDIATE:
-                setPosition(OPEN_HALFWAY_EXTENSION);
+                setPosition(OPEN_HALFWAY_EXTENSION, -MAX_POWER, MAX_POWER);
                 break;
             case CLOSE:
-                setPosition(CLOSE_EXTENSION);
+                setPosition(CLOSE_EXTENSION, -MAX_POWER, MAX_POWER);
                 break;
             case MANUAL:
-                this.robot.extensionServo.setPower(Range.clip(-this.cGamepad.left_stick_y, -MAX_POWER, MAX_POWER));
+                setPosition(OPEN_EXTENSION, -this.cGamepad.left_stick_y, this.cGamepad.left_stick_y);
                 break;
         }
         current = currentState;
     }
 
-    public void setPosition(double position)
+    public void setPosition(double position, double min, double max)
     {
         this.controller.targetPosition =  Math.toRadians(position);
-        controller.update(absoloutEncoder.getCurrentPosition());
+        this.robot.extensionServo.setPower(Range.clip(controller.update(absoloutEncoder.getCurrentPosition()), min, max));
     }
 
     @Override

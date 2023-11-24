@@ -47,6 +47,8 @@ public final class PIDFController {
      */
     public double lastError;
 
+    double error;
+
     /**
      * Feedforward parameters {@code kV}, {@code kA}, and {@code kStatic} correspond with a basic
      * kinematic model of DC motors. The general function {@code kF} computes a custom feedforward
@@ -144,10 +146,10 @@ public final class PIDFController {
      */
     public double update(
             long timestamp,
-            double measuredPosition,
+            @Nullable Double measuredPosition,
             @Nullable Double measuredVelocity
     ) {
-        final double error = getPositionError(measuredPosition);
+        //final double error = getPositionError(measuredPosition);
 
         if (lastUpdateTs == 0) {
             lastError = error;
@@ -170,8 +172,8 @@ public final class PIDFController {
         }
         
         double baseOutput = pid.kP * error + pid.kI * errorSum + pid.kD * velError +
-                kV * targetVelocity + kA * targetAcceleration + 
-                kF.compute(measuredPosition, measuredVelocity);
+                kV * targetVelocity + kA * targetAcceleration //*+
+                /*kF.compute(measuredPosition, measuredVelocity)*/;
         
         double output = 0;
         if (Math.abs(baseOutput) > 1e-6) {
@@ -198,6 +200,11 @@ public final class PIDFController {
         return update(System.nanoTime(), measuredPosition, null);
     }
 
+    public double update(
+    ) {
+        return update(System.nanoTime(), null, null);
+    }
+
     /**
      * Reset the controller's integral sum.
      */
@@ -205,5 +212,10 @@ public final class PIDFController {
         errorSum = 0;
         lastError = 0;
         lastUpdateTs = 0;
+    }
+
+    public void updateError(double error)
+    {
+        this.error = error;
     }
 }

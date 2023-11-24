@@ -4,26 +4,31 @@ import com.ThermalEquilibrium.homeostasis.Utils.Timer;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.commands.ClawCommand;
+import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
+import org.firstinspires.ftc.teamcode.commands.OuttakeCommand;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
+import org.firstinspires.ftc.teamcode.subsystems.Elevator;
+import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.values.ClawSide;
+import org.firstinspires.ftc.teamcode.util.values.Globals;
 
 @Config
 @TeleOp(name = "Claw Test")
-public class ClawTest extends CommandOpMode {
+public class OuttakeTest extends CommandOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
     Claw claw;
     GamepadEx gamepadEx;
     Timer timer;
+    Outtake outtake;
+    Elevator elevator;
     double passed = 0;
     public static double delay = 1;
 
@@ -37,19 +42,21 @@ public class ClawTest extends CommandOpMode {
         robot.init(hardwareMap, telemetry);
 
         claw = new Claw();
+        outtake = new Outtake();
+        elevator = new Elevator();
 
-        robot.addSubsystem(claw);
+        robot.addSubsystem(claw, outtake, elevator);
 
         gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new SequentialCommandGroup(
-                        new ClawCommand(claw, Claw.ClawState.CLOSED, ClawSide.BOTH)
-                       // new WaitCommand((long)delayTillSensor)
+                        new ElevatorCommand(elevator, Globals.START_ELEVATOR),
+                        new OuttakeCommand(outtake, Outtake.Angle.OUTTAKE)
                 ));
 
         gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(new SequentialCommandGroup(
+                        new ElevatorCommand(elevator, 0),
                         new ClawCommand(claw, Claw.ClawState.OPEN, ClawSide.BOTH)
-                        //new WaitCommand((long)delayTillSensor)
                 ));
     }
 
@@ -70,10 +77,6 @@ public class ClawTest extends CommandOpMode {
 
         super.run();
         robot.periodic();
-
-        telemetry.addData("RIGHT", claw.rightClaw.name());
-        telemetry.addData("LEFT", claw.leftClaw.name());
-        telemetry.addData("should open", claw.isShouldOpen());
 
         telemetry.update();
         robot.write();

@@ -26,8 +26,6 @@ import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import javax.annotation.Nonnegative;
-
 @Config
 public class RobotHardware {
 
@@ -51,16 +49,13 @@ public class RobotHardware {
 
 
     // outake
-    public BetterServo outtakeclawLeftServo;
-    public BetterServo outtakeRightServo;
-    public BetterServo outtakePivotServo;
-    public BetterServo handRightServo;
-    public BetterServo handLeftServo;
-    public DigitalChannel breambeamRight;  // Touch sensor Object
-    public DigitalChannel breambeamLeft;  // Touch sensor Object
-
-    public CRServo testCr;
-    public AnalogInput analogTestCr;
+    public BetterServo outtakeClawLeftServo;
+    public BetterServo outtakeClawRightServo;
+    public BetterServo outtakeClawPivotServo;
+    public BetterServo outtakeHandRightServo;
+    public BetterServo outttakeHandLeftServo;
+    public DigitalChannel breakbeamRight;  // Touch sensor Object
+    public DigitalChannel breakbeamLeft;  // Touch sensor Object
 
 
     // TODO: ADD x3 Distance Sensors, webcam
@@ -148,27 +143,21 @@ public class RobotHardware {
         this.extensionServoEncoder = hardwareMap.get(AnalogInput.class, "seE");
         // TODO: 2 ds
 
-/*
-        // TEST CR SERVO
-        this.testCr = hardwareMap.get(CRServo.class, "sT");
-        this.analogTestCr = hardwareMap.get(AnalogInput.class, "aT");
-*/
-
         // HAND
         this.intakeHandPivotRightServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPR"));
         this.intakeHandPivotLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPL"));
         intakeHandPivotRightServo.setDirection(Servo.Direction.REVERSE);
-//
-//        // OUTTAKE
-//        // CLAW
-//        this.outtakeclawLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sCL"));
-//        this.outtakeclawLeftServo.setDirection(Servo.Direction.REVERSE);
-//        this.outtakeRightServo = new BetterServo(hardwareMap.get(Servo.class, "sCR"));
-//        this.outtakePivotServo = new BetterServo(hardwareMap.get(Servo.class, "sC"));
+
+        // OUTTAKE
+        // CLAW
+        this.outtakeClawLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sCL"));
+        this.outtakeClawLeftServo.setDirection(Servo.Direction.REVERSE);
+        this.outtakeClawRightServo = new BetterServo(hardwareMap.get(Servo.class, "sCR"));
+        this.outtakeClawPivotServo = new BetterServo(hardwareMap.get(Servo.class, "sC"));
         // HAND
-//        this.handLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
-//        this.handRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
-        //        // BEAMS
+        this.outttakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
+        this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
+        // BEAMS
 //        this.breambeamRight = hardwareMap.get(DigitalChannel.class, "bbR");
 //        this.breambeamLeft = hardwareMap.get(DigitalChannel.class, "bbL");
 

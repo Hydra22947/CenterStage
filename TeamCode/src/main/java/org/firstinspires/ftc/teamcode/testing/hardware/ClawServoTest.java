@@ -27,7 +27,7 @@ public class ClawServoTest extends LinearOpMode {
 
         while (opModeIsActive()) {
             servo1.setPosition(pos1);
-            servo2.setPosition(pos2);
+            //servo2.setPosition(pos2);
         }
     }
 }

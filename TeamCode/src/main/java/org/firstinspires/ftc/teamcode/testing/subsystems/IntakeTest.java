@@ -46,18 +46,6 @@ public class IntakeTest extends CommandOpMode {
                         new IntakeCommand(intake, Intake.Angle.TRANSFER)
                 ));
 
-        gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whileHeld(new SequentialCommandGroup(
-                        new InstantCommand(() -> intake.setForward(true)),
-                        new InstantCommand(() -> intake.setShouldIntake(true))
-                ));
-
-        gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whileHeld(new SequentialCommandGroup(
-                        new InstantCommand(() -> intake.setForward(false)),
-                        new InstantCommand(() -> intake.setShouldIntake(true))
-                ));
-
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
                 .whenPressed(new SequentialCommandGroup(
                         new IntakeExtensionCommand(intakeExtension, IntakeExtension.ExtensionState.OPEN)
@@ -71,10 +59,23 @@ public class IntakeTest extends CommandOpMode {
 
     @Override
     public void run() {
-        if(!gamepad1.right_bumper && !gamepad1.left_bumper)
+        if(gamepad1.right_trigger != 0)
         {
-            intake.setShouldIntake(false);
+            intake.setManual(true);
+            intake.intakeMove(gamepad1.right_trigger);
         }
+        else if(gamepad1.left_trigger != 0)
+        {
+            intake.setManual(true);
+            intake.intakeMove(gamepad1.left_trigger);
+        }
+        else
+        {
+            intake.setManual(false);
+        }
+
+
+
 
         robot.read();
 
