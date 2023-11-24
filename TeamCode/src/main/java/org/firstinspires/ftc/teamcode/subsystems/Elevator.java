@@ -68,22 +68,27 @@ public class Elevator extends BetterSubsystem {
             {
                 controller.targetPosition = currentTarget;
 
-                robot.elevatorMotor.setPower(controller.update(encoderTicksToInches(robot.elevatorMotor.getCurrentPosition())));
+                robot.elevatorMotorRight.setPower(controller.update(encoderTicksToInches(robot.elevatorMotorRight.getCurrentPosition())));
+                robot.elevatorMotorLeft.setPower(controller.update(encoderTicksToInches(robot.elevatorMotorLeft.getCurrentPosition())));
             }
             else
             {
-                robot.elevatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 if(gamepad.left_stick_y != 0 && !gamepad.left_stick_button)
                 {
-                    robot.elevatorMotor.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
+                    robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
+                    robot.elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
                 }
                 else if(gamepad.left_stick_y != 0 && gamepad.left_stick_button)
                 {
-                    robot.elevatorMotor.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
+                    robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
+                    robot.elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
                 }
                 else
                 {
-                    robot.elevatorMotor.setPower(0);
+                    robot.elevatorMotorRight.setPower(0);
+                    robot.elevatorMotorLeft.setPower(0);
                 }
             }
         }
@@ -91,7 +96,8 @@ public class Elevator extends BetterSubsystem {
         {
             controller.targetPosition = currentTarget;
 
-            robot.elevatorMotor.setPower(controller.update(encoderTicksToInches(robot.elevatorMotor.getCurrentPosition())));
+            robot.elevatorMotorRight.setPower(controller.update(encoderTicksToInches(robot.elevatorMotorRight.getCurrentPosition())));
+            robot.elevatorMotorLeft.setPower(controller.update(encoderTicksToInches(robot.elevatorMotorLeft.getCurrentPosition())));
         }
     }
 

@@ -29,6 +29,7 @@ public class Intake extends BetterSubsystem {
     public Angle ammo = Angle.TRANSFER;
     public Angle hand = Angle.TRANSFER;
 
+    Angle angle = Angle.TRANSFER;
     boolean shouldIntake = false;
     boolean forward = false;
     boolean manual = false;
@@ -40,8 +41,8 @@ public class Intake extends BetterSubsystem {
 
     @Override
     public void periodic() {
-        updateState(ammo, Type.AMMO);
-        updateState(hand, Type.HAND);
+        updateState(Type.AMMO);
+        updateState(Type.HAND);
 
         if(shouldIntake && forward && !manual)
         {
@@ -59,12 +60,36 @@ public class Intake extends BetterSubsystem {
             robot.intakeServoLeft.setPower(0);
         }
 
+        // if there are 2 pixels(white / yellow / green / purple), automatically transfer
+        /**
+            1.make sure intake is at transfer pose
+            2.make sure outtake is at intake pose
+            3.set intake power to -0.1(-0.1 = public static) till both laser beams detect
+         */
+
     }
 
     public void intakeMove(double power)
     {
         robot.intakeServoRight.setPower(power);
         robot.intakeServoLeft.setPower(power);
+    }
+
+    public void move(Angle angle)
+    {
+        setAngle(angle);
+
+        updateState(Type.AMMO);
+        updateState(Type.HAND);
+    }
+
+
+    public Angle getAngle() {
+        return angle;
+    }
+
+    public void setAngle(Angle angle) {
+        this.angle = angle;
     }
 
     @Override
@@ -90,7 +115,7 @@ public class Intake extends BetterSubsystem {
         this.hand = hand;
     }
 
-    public void updateState(@NotNull Angle angle, @NotNull Type type) {
+    public void updateState(@NotNull Type type) {
         double position = getPosition(angle, type);
 
         switch(type) {
@@ -102,9 +127,9 @@ public class Intake extends BetterSubsystem {
                 this.robot.intakeHandPivotRightServo.setPosition(position);
                 break;
         }
-
-
     }
+
+
 
     private double getPosition(Angle angle, Type type)
     {

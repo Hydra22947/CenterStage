@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -36,7 +37,8 @@ public class RobotHardware {
     public DcMotorEx dtBackRightMotor;
 
     // elevator
-    public DcMotorEx elevatorMotor;
+    public DcMotorEx elevatorMotorRight;
+    public DcMotorEx elevatorMotorLeft;
 
     // intake
     public CRServo intakeServoRight;
@@ -46,7 +48,8 @@ public class RobotHardware {
     public BetterServo intakeHandPivotLeftServo;
     public CRServo extensionServo;
     public AnalogInput extensionServoEncoder;
-
+    public RevColorSensorV3 colorRight;
+    public RevColorSensorV3 colorLeft;
 
     // outake
     public BetterServo outtakeClawLeftServo;
@@ -110,7 +113,7 @@ public class RobotHardware {
                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
         this.imu.initialize(parameters);
 
-//        // DRIVETRAIN
+        // DRIVETRAIN
         this.dtBackLeftMotor = hardwareMap.get(DcMotorEx.class, "mBL");
         this.dtBackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.dtBackLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -124,22 +127,20 @@ public class RobotHardware {
 
         this.dtFrontRightMotor = hardwareMap.get(DcMotorEx.class, "mFR");
         this.dtFrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//
-//
-//        // ELEVATOR
-//        this.elevatorMotor = hardwareMap.get(DcMotorEx.class, "mE");
-//
-//
-//        // INTAKE
+
+
+        // INTAKE
         this.intakeAngleServo = new BetterServo(hardwareMap.get(Servo.class, "sIA"));
         intakeAngleServo.setDirection(Servo.Direction.REVERSE);
         this.intakeServoRight = hardwareMap.get(CRServo.class, "sIR");
         this.intakeServoLeft = hardwareMap.get(CRServo.class, "sIL");
         this.intakeServoRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        // COLOR/DS SENSORS
+        this.colorRight = hardwareMap.get(RevColorSensorV3.class, "cR");
+        this.colorLeft = hardwareMap.get(RevColorSensorV3.class, "cL");
         //INTAKE EXTENSION
         this.extensionServo = hardwareMap.get(CRServo.class, "sE");
         this.extensionServoEncoder = hardwareMap.get(AnalogInput.class, "asE");
-        // TODO: 2 ds
 
         // HAND
         this.intakeHandPivotRightServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPR"));
@@ -152,13 +153,15 @@ public class RobotHardware {
 //        this.outtakeClawLeftServo.setDirection(Servo.Direction.REVERSE);
 //        this.outtakeClawRightServo = new BetterServo(hardwareMap.get(Servo.class, "sCR"));
 //        this.outtakeClawPivotServo = new BetterServo(hardwareMap.get(Servo.class, "sC"));
-//        // HAND
+        // HAND
 //        this.outttakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
 //        this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
         // BEAMS
 //        this.breambeamRight = hardwareMap.get(DigitalChannel.class, "bbR");
 //        this.breambeamLeft = hardwareMap.get(DigitalChannel.class, "bbL");
-
+        // ELEVATOR
+        this.elevatorMotorRight = hardwareMap.get(DcMotorEx.class, "mER");
+        this.elevatorMotorRight = hardwareMap.get(DcMotorEx.class, "mEL");
 
         // ODO PODS
         this.podLeft = new BetterEncoder(new MotorEx(hardwareMap, "mBR").encoder);

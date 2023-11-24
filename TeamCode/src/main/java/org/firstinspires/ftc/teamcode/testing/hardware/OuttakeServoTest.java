@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.util.PIDFController;
 public class OuttakeServoTest extends LinearOpMode {
 
     public static double target = 0;
+    public static double target2 = 0;
 
     private BetterGamepad cGamepad;
     Servo servo, servo2;
@@ -39,7 +40,7 @@ public class OuttakeServoTest extends LinearOpMode {
             cGamepad.update();
 
             servo.setPosition(target);
-            servo2.setPosition(target);
+            servo2.setPosition(target2);
 
             telemetry.update();
         }

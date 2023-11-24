@@ -6,27 +6,14 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.teamcode.commands.ClawCommand;
-import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
-import org.firstinspires.ftc.teamcode.commands.ElevatorIncrementCommand;
-import org.firstinspires.ftc.teamcode.commands.HandCommand;
-import org.firstinspires.ftc.teamcode.commands.OuttakeCommand;
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
-import org.firstinspires.ftc.teamcode.subsystems.Elevator;
-import org.firstinspires.ftc.teamcode.subsystems.Hand;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake;
-import org.firstinspires.ftc.teamcode.util.values.ClawSide;
 import org.firstinspires.ftc.teamcode.util.values.Globals;
-import org.firstinspires.ftc.teamcode.util.values.HandPoints;
 
 @Config
 @TeleOp(name = "OpMode Red")
@@ -67,7 +54,7 @@ public class OpMode extends CommandOpMode {
         intakeExtension = new IntakeExtension(gamepad1);
 
 
-        robot.addSubsystem(drivetrain,/* elevator,*/ intake/*, outtake*/, intakeExtension);
+        robot.addSubsystem(drivetrain, intake, intakeExtension/*, elevator, outtake*/);
 
 //        gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
 //                    .whenPressed(new SequentialCommandGroup(
@@ -86,8 +73,13 @@ public class OpMode extends CommandOpMode {
 //                ));
 //
 
+        gamepadEx.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(new InstantCommand(() ->
+                        intake.setAngle((intake.getAngle() == Intake.Angle.INTAKE) ? Intake.Angle.TRANSFER : Intake.Angle.INTAKE)
+                ));
 
-        while (opModeInInit()) {
+        while (opModeInInit())
+        {
             intake.setHand(Intake.Angle.TRANSFER);
             intake.setAmmo(Intake.Angle.TRANSFER);
             intakeExtension.setCurrent(IntakeExtension.ExtensionState.MANUAL);
@@ -99,16 +91,14 @@ public class OpMode extends CommandOpMode {
 
     @Override
     public void run() {
-        gamepadEx.readButtons();
-        gamepadEx2.readButtons();
 
-        robot.read();
 
         intake.setManual(true);
 
         if(gamepad1.right_trigger != 0)
         {
             intake.intakeMove(gamepad1.right_trigger);
+            intake.move(Intake.Angle.INTAKE);
         }
         else if(gamepad1.left_trigger != 0)
         {
@@ -118,6 +108,7 @@ public class OpMode extends CommandOpMode {
         {
             intake.intakeMove(0);
             intake.setShouldIntake(false);
+            intake.move(Intake.Angle.TRANSFER);
         }
 
 
@@ -141,6 +132,8 @@ public class OpMode extends CommandOpMode {
 
         super.run();
         robot.periodic();
+
+        robot.read();
 
         telemetry.update();
         robot.write();
