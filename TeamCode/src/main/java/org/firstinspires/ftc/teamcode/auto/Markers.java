@@ -5,21 +5,27 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
+import org.firstinspires.ftc.teamcode.commands.IntakeCommand;
+import org.firstinspires.ftc.teamcode.commands.IntakeExtensionCommand;
+import org.firstinspires.ftc.teamcode.commands.OuttakeCommand;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Hand;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
+import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.values.ClawSide;
 import org.firstinspires.ftc.teamcode.util.values.Globals;
 
 public class Markers {
 
-    // TODO: add custom actions as soon as possible
 
+    long timer = 5000;
     Elevator elevator;
     Claw claw;
     Hand hand;
@@ -31,9 +37,11 @@ public class Markers {
 
     IntakeExtension intakeExtension;
 
+    Outtake outtake;
+
+
     ClawSide clawSide;
 
-    double elevatorTarget = Globals.START_ELEVATOR;
 
     public Markers()
     {
@@ -43,6 +51,7 @@ public class Markers {
         hand = new Hand();
         intake = new Intake();
         intakeExtension = new IntakeExtension();
+        outtake = new Outtake();
 
         robot = RobotHardware.getInstance();
 
@@ -53,18 +62,36 @@ public class Markers {
 
     public class actions implements Action {
 
-        public void score(){
-            new SequentialCommandGroup();
+
+        public void score()
+        {
+            new SequentialCommandGroup(
+                    new IntakeCommand(intake, Intake.Angle.INTAKE),
+                    new ElevatorCommand(elevator, Globals.START_ELEVATOR ),
+                    new OuttakeCommand(outtake , Outtake.Angle.OUTTAKE),
+                    //////////////////////////////////////////////////////
+                    new WaitCommand(timer),
+                    //////////////////////////////////////////////////////
+                    new OuttakeCommand(outtake , Outtake.Angle.INTAKE),
+                    new ElevatorCommand(elevator, 0),
+                    new IntakeCommand(intake , Intake.Angle.TRANSFER));
+
         }
 
-        public void goBack()
-        {
-            new SequentialCommandGroup();
-        };
+
+        public void intakeRelease() { new IntakeCommand(intake , Intake.Angle.TRANSFER); }
 
         public void intakeAndLock()
         {
-            new SequentialCommandGroup();
+            new SequentialCommandGroup(
+                    new IntakeExtensionCommand( intakeExtension , IntakeExtension.ExtensionState.OPEN),
+                    new IntakeCommand(intake , Intake.Angle.INTAKE),
+                    //////////////////////////////////////////////////////
+                    new WaitCommand(timer),
+                    //////////////////////////////////////////////////////
+                    new IntakeCommand(intake , Intake.Angle.TRANSFER),
+                    new IntakeExtensionCommand( intakeExtension , IntakeExtension.ExtensionState.CLOSE)
+            );
         };
 
 
@@ -72,7 +99,7 @@ public class Markers {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return false;
+            return true;
         }
     }
 
@@ -80,27 +107,18 @@ public class Markers {
     public boolean loop(TelemetryPacket packet) {
 
 
-        return false;
+        return true;
     }
 
 
-
-
-
-
-    public Action score () {
-      return score();
+    public Action score () { return score() ;
 
     }
-    public Action goBack () {
-        return goBack();
+    public Action goBack () { return goBack(); }
 
-    }
+    public Action intakeAndLock () { return intakeAndLock(); }
 
-    public Action intakeAndLock () {
-        return intakeAndLock();
-
-    }
+    public Action intakeRelease() { return intakeRelease(); }
 }
 
 
