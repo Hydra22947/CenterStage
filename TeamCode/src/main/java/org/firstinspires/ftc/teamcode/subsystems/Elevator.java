@@ -29,7 +29,7 @@ public class Elevator extends BetterSubsystem {
 
     Gamepad gamepad;
     BetterGamepad cGamepad;
-    PIDFController controller;
+    PIDFController controller, controller2;
     PIDFController.PIDCoefficients pidCoefficients = new PIDFController.PIDCoefficients();
 
     public Elevator(Gamepad gamepad)
@@ -44,6 +44,7 @@ public class Elevator extends BetterSubsystem {
         pidCoefficients.kD = kD;
 
         controller = new PIDFController(pidCoefficients);
+        controller2 = new PIDFController(pidCoefficients);
     }
 
     public Elevator()
@@ -55,6 +56,7 @@ public class Elevator extends BetterSubsystem {
         pidCoefficients.kD = kD;
 
         controller = new PIDFController(pidCoefficients);
+        controller2 = new PIDFController(pidCoefficients);
     }
 
     @Override
@@ -66,10 +68,7 @@ public class Elevator extends BetterSubsystem {
 
             if (usePID)
             {
-                controller.targetPosition = currentTarget;
-
-                robot.elevatorMotorRight.setPower(controller.update(encoderTicksToInches(robot.elevatorMotorRight.getCurrentPosition())));
-                robot.elevatorMotorLeft.setPower(controller.update(encoderTicksToInches(robot.elevatorMotorLeft.getCurrentPosition())));
+                setPidControl();
             }
             else
             {
@@ -94,11 +93,17 @@ public class Elevator extends BetterSubsystem {
         }
         else
         {
-            controller.targetPosition = currentTarget;
-
-            robot.elevatorMotorRight.setPower(controller.update(encoderTicksToInches(robot.elevatorMotorRight.getCurrentPosition())));
-            robot.elevatorMotorLeft.setPower(controller.update(encoderTicksToInches(robot.elevatorMotorLeft.getCurrentPosition())));
+            setPidControl();
         }
+    }
+
+    void setPidControl()
+    {
+        controller.updateError(currentTarget - encoderTicksToInches(robot.elevatorMotorRight.getCurrentPosition()));
+        controller2.updateError(currentTarget - encoderTicksToInches(robot.elevatorMotorLeft.getCurrentPosition()));
+
+        robot.elevatorMotorRight.setPower(controller.update());
+        robot.elevatorMotorLeft.setPower(controller2.update());
     }
 
     @Override
