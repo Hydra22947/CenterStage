@@ -60,7 +60,6 @@ public class RobotHardware {
     public DigitalChannel breakbeamRight;  // Touch sensor Object
     public DigitalChannel breakbeamLeft;  // Touch sensor Object
 
-
     // TODO: ADD x3 Distance Sensors, webcam
 
     // odo pod encoders
@@ -151,16 +150,16 @@ public class RobotHardware {
 
         // OUTTAKE
         // CLAW
-//        this.outtakeClawLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sCL"));
-//        this.outtakeClawLeftServo.setDirection(Servo.Direction.REVERSE);
-//        this.outtakeClawRightServo = new BetterServo(hardwareMap.get(Servo.class, "sCR"));
-//        this.outtakeClawPivotServo = new BetterServo(hardwareMap.get(Servo.class, "sC"));
+        this.outtakeClawLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sCL"));
+        this.outtakeClawLeftServo.setDirection(Servo.Direction.REVERSE);
+        this.outtakeClawRightServo = new BetterServo(hardwareMap.get(Servo.class, "sCR"));
+        this.outtakeClawPivotServo = new BetterServo(hardwareMap.get(Servo.class, "sC"));
         // HAND
-//        this.outttakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
-//        this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
+        this.outttakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
+        this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
         // BEAMS
-//        this.breambeamRight = hardwareMap.get(DigitalChannel.class, "bbR");
-//        this.breambeamLeft = hardwareMap.get(DigitalChannel.class, "bbL");
+        this.breakbeamRight = hardwareMap.get(DigitalChannel.class, "bbR");
+        this.breakbeamLeft = hardwareMap.get(DigitalChannel.class, "bbL");
         // ELEVATOR
         this.elevatorMotorRight = hardwareMap.get(DcMotorEx.class, "mER");
         this.elevatorMotorRight = hardwareMap.get(DcMotorEx.class, "mEL");
