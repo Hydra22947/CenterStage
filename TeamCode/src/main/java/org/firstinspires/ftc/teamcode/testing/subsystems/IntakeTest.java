@@ -67,7 +67,7 @@ public class IntakeTest extends CommandOpMode {
         else if(gamepad1.left_trigger != 0)
         {
             intake.setManual(true);
-            intake.intakeMove(gamepad1.left_trigger);
+            intake.intakeMove(-gamepad1.left_trigger);
         }
         else
         {

@@ -80,8 +80,7 @@ public class OpMode extends CommandOpMode {
 
         while (opModeInInit())
         {
-            intake.setHand(Intake.Angle.TRANSFER);
-            intake.setAmmo(Intake.Angle.TRANSFER);
+            intake.setAngle(Intake.Angle.TRANSFER);
             intakeExtension.setCurrent(IntakeExtension.ExtensionState.MANUAL);
 
             telemetry.addLine("Initialized");

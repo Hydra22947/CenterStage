@@ -9,8 +9,7 @@ public class IntakeCommand extends SequentialCommandGroup {
 
     public IntakeCommand(Intake intake, Intake.Angle angle) {
         super(
-                new InstantCommand(() -> intake.setAmmo(angle)),
-                new InstantCommand(() -> intake.setHand(angle))
+                new InstantCommand(() -> intake.setAngle(angle))
         );
     }
 }

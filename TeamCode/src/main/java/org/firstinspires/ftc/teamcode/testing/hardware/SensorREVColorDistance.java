@@ -20,17 +20,12 @@ public class SensorREVColorDistance extends LinearOpMode {
     public void runOpMode() {
 
         // get references to the color sensors.
-        rightSensorColor = hardwareMap.get(RevColorSensorV3.class, "dsR");
-        leftSensorColor = hardwareMap.get(RevColorSensorV3.class, "dsL");
+        rightSensorColor = hardwareMap.get(RevColorSensorV3.class, "cR");
+        leftSensorColor = hardwareMap.get(RevColorSensorV3.class, "cL");
 
         // hsvValues arrays to hold the hue, saturation, and value information.
         float rightHsvValues[] = {0F, 0F, 0F};
         float leftHsvValues[] = {0F, 0F, 0F};
-
-        // get a reference to the RelativeLayout so we can change the background
-        // color of the Robot Controller app to match the hue detected by the RGB sensor.
-        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
-        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
 
         // wait for the start button to be pressed.
         waitForStart();
@@ -50,28 +45,14 @@ public class SensorREVColorDistance extends LinearOpMode {
                     leftHsvValues);
 
             // send the info back to driver station using telemetry function.
-            telemetry.addData("Right argb  ", rightSensorColor.argb());
-            telemetry.addData("Right Sensor - Hue", rightHsvValues[0]);
-
-            telemetry.addData("Left argb  ", leftSensorColor.argb());
-            telemetry.addData("Left Sensor - Hue", leftHsvValues[0]);
-
-            // change the background color to match the hue detected by the right RGB sensor.
-            relativeLayout.post(new Runnable() {
-                public void run() {
-                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, new float[]{leftHsvValues[0], 1.0f, 1.0f}));
-                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, new float[]{rightHsvValues[0], 1.0f, 1.0f}));
-                }
-            });
+            telemetry.addData("Right Sensor - H", rightHsvValues[0]);
+            telemetry.addData("Right Sensor - S", rightHsvValues[1]);
+            telemetry.addData("Right Sensor - V", rightHsvValues[2]);
+            telemetry.addData("Left Sensor - H", leftHsvValues[0]);
+            telemetry.addData("Left Sensor - S", leftHsvValues[1]);
+            telemetry.addData("Left Sensor - V", leftHsvValues[2]);
 
             telemetry.update();
         }
-
-        // Set the panel back to the default color
-        relativeLayout.post(new Runnable() {
-            public void run() {
-                relativeLayout.setBackgroundColor(Color.WHITE);
-            }
-        });
     }
 }

@@ -14,7 +14,7 @@ public class Intake extends BetterSubsystem {
 
     private final RobotHardware robot;
 
-    public static double intakeHandPivot = 0.08, intakeAmmoPivot = 0.04;
+    public static double intakeHandPivot = 0.06, intakeAmmoPivot = 0.04;
     public static double outtakeHandPivot = 0.5, outtakeAmmoPivot = 0.58;
 
     public static double power = 1;
@@ -65,10 +65,10 @@ public class Intake extends BetterSubsystem {
             robot.intakeServoLeft.setPower(0);
         }
 
-        if(hasPixel(robot.colorLeft) && hasPixel(robot.colorRight) && getAngle() == Angle.TRANSFER)
-        {
-            robot.setReadyToTransferPixels(true);
-        }
+//        if(hasPixel(robot.colorLeft) && hasPixel(robot.colorRight) && getAngle() == Angle.TRANSFER)
+//        {
+//            robot.setReadyToTransferPixels(true);
+//        }
 
     }
 
@@ -113,14 +113,6 @@ public class Intake extends BetterSubsystem {
     @Override
     public void reset() {
 
-    }
-
-    public void setAmmo(Angle ammo) {
-        this.ammo = ammo;
-    }
-
-    public void setHand(Angle hand) {
-        this.hand = hand;
     }
 
     public void updateState(@NotNull Type type) {
