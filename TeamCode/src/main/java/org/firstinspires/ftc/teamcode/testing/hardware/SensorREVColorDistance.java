@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.testing.hardware;
 import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
+import org.firstinspires.ftc.teamcode.util.values.Globals;
 
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -15,7 +16,9 @@ public class SensorREVColorDistance extends LinearOpMode {
 
     RevColorSensorV3 rightSensorColor;
     RevColorSensorV3 leftSensorColor;
-
+    // hsvValues arrays to hold the hue, saturation, and value information.
+    float rightHsvValues[] = {0F, 0F, 0F};
+    float leftHsvValues[] = {0F, 0F, 0F};
     @Override
     public void runOpMode() {
 
@@ -23,9 +26,7 @@ public class SensorREVColorDistance extends LinearOpMode {
         rightSensorColor = hardwareMap.get(RevColorSensorV3.class, "cR");
         leftSensorColor = hardwareMap.get(RevColorSensorV3.class, "cL");
 
-        // hsvValues arrays to hold the hue, saturation, and value information.
-        float rightHsvValues[] = {0F, 0F, 0F};
-        float leftHsvValues[] = {0F, 0F, 0F};
+
 
         // wait for the start button to be pressed.
         waitForStart();
@@ -51,8 +52,19 @@ public class SensorREVColorDistance extends LinearOpMode {
             telemetry.addData("Left Sensor - H", leftHsvValues[0]);
             telemetry.addData("Left Sensor - S", leftHsvValues[1]);
             telemetry.addData("Left Sensor - V", leftHsvValues[2]);
+            telemetry.addData("Right Detected - V", checkIfPixelIn(rightHsvValues));
+            telemetry.addData("Left Detected - V", checkIfPixelIn(leftHsvValues));
 
             telemetry.update();
         }
+    }
+
+    public boolean checkIfPixelIn(float[] hsvValues)
+    {
+        boolean hueCheck = ((hsvValues[0] + 5) == Globals.BASIC_HUE) || ((hsvValues[0] - 5) == Globals.BASIC_HUE);
+        boolean satCheck = ((hsvValues[1] + 5) == Globals.BASIC_HUE) || ((hsvValues[1] - 5) == Globals.BASIC_HUE);
+        boolean valCheck = ((hsvValues[2] + 5) == Globals.BASIC_HUE) || ((hsvValues[2] - 5) == Globals.BASIC_HUE);
+
+        return hueCheck &&  satCheck && valCheck;
     }
 }

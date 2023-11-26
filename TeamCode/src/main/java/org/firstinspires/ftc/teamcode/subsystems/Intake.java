@@ -6,6 +6,7 @@ import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.util.ColorSensors;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class Intake extends BetterSubsystem {
 
     private final RobotHardware robot;
-
+    private ColorSensors sensors;
     public static double intakeHandPivot = 0.06, intakeAmmoPivot = 0.04;
     public static double outtakeHandPivot = 0.5, outtakeAmmoPivot = 0.58;
 
@@ -42,12 +43,14 @@ public class Intake extends BetterSubsystem {
     public Intake()
     {
         this.robot = RobotHardware.getInstance();
+        this.sensors = new ColorSensors();
     }
 
     @Override
     public void periodic() {
         updateState(Type.AMMO);
         updateState(Type.HAND);
+        checkFinishedIntake();
 
         if(shouldIntake && forward && !manual)
         {
@@ -159,16 +162,12 @@ public class Intake extends BetterSubsystem {
                 return 0.0;
         }
     }
-    public void finishedIntake()
+    public void checkFinishedIntake()
     {
-        float hsvValues[] = {0F, 0F, 0F};
-        final float values[] = hsvValues;
-        final double SCALE_FACTOR = 255;
-
-        Color.RGBToHSV((int) (this.robot.colorRight.red() * SCALE_FACTOR),
-                (int) (this.robot.colorRight.green() * SCALE_FACTOR),
-                (int) (this.robot.colorRight.blue() * SCALE_FACTOR),
-                hsvValues);
+        if(this.sensors.checkIfPixelIn(this.sensors.getRightHsvValues()) || this.sensors.checkIfPixelIn(this.sensors.getLeftHsvValues()))
+        {
+            this.shouldIntake = false;
+        }
     }
     public boolean isShouldIntake() {
         return shouldIntake;

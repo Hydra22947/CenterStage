@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
-import org.slf4j.Marker;
 
 public class Left extends LinearOpMode {
 
@@ -22,8 +21,20 @@ public class Left extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-    Action runRight = drive.actionBuilder(new Pose2d(PoseStorage.startX , PoseStorage.startY, PoseStorage.startH))
-            .afterTime(5,markers.score())
+    Action placeYellowPixel = drive.actionBuilder(AutoConstants.startPoseLeft)
+            //Place purple pixel
+            .lineToX(AutoConstants.strafeLeftToLine)
+
+            //Going for backdrop
+            .waitSeconds(AutoConstants.WAIT_TIME)
+            .lineToX(AutoConstants.strafeLeftToStageDoor)
+            .splineToConstantHeading(AutoConstants.stageDoorVector, Math.toRadians(0))
+            .splineToLinearHeading(AutoConstants.placePixelPose, Math.toRadians(0))
+
+            //Going for intake
+            .waitSeconds(AutoConstants.WAIT_TIME)
+          //  .lineToSplineHeading(AutoConstants.stageDoorPose)
+            .splineToConstantHeading(AutoConstants.intakePixelVector, Math.toRadians(180))
             .build();
 
     }
