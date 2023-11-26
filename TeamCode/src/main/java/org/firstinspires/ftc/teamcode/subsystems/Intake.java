@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
+import android.graphics.Color;
+
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -159,7 +161,17 @@ public class Intake extends BetterSubsystem {
                 return 0.0;
         }
     }
+    public void finishedIntake()
+    {
+        float hsvValues[] = {0F, 0F, 0F};
+        final float values[] = hsvValues;
+        final double SCALE_FACTOR = 255;
 
+        Color.RGBToHSV((int) (this.robot.colorRight.red() * SCALE_FACTOR),
+                (int) (this.robot.colorRight.green() * SCALE_FACTOR),
+                (int) (this.robot.colorRight.blue() * SCALE_FACTOR),
+                hsvValues);
+    }
     public boolean isShouldIntake() {
         return shouldIntake;
     }
