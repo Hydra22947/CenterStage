@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -12,15 +13,15 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 @TeleOp(name = "Sensor: REVColorDistance", group = "tests")
 public class SensorREVColorDistance extends LinearOpMode {
 
-    ColorSensor rightSensorColor;
-    ColorSensor leftSensorColor;
+    RevColorSensorV3 rightSensorColor;
+    RevColorSensorV3 leftSensorColor;
 
     @Override
     public void runOpMode() {
 
         // get references to the color sensors.
-        rightSensorColor = hardwareMap.get(ColorSensor.class, "dsR");
-        leftSensorColor = hardwareMap.get(ColorSensor.class, "dsL");
+        rightSensorColor = hardwareMap.get(RevColorSensorV3.class, "dsR");
+        leftSensorColor = hardwareMap.get(RevColorSensorV3.class, "dsL");
 
         // hsvValues arrays to hold the hue, saturation, and value information.
         float rightHsvValues[] = {0F, 0F, 0F};

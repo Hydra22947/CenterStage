@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
 import org.firstinspires.ftc.teamcode.commands.OuttakeCommand;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.values.ClawSide;
 import org.firstinspires.ftc.teamcode.util.values.Globals;
@@ -28,6 +29,7 @@ public class OuttakeTest extends CommandOpMode {
     GamepadEx gamepadEx;
     Timer timer;
     Outtake outtake;
+    Intake intake;
     Elevator elevator;
     double passed = 0;
     public static double delay = 1;
@@ -42,10 +44,11 @@ public class OuttakeTest extends CommandOpMode {
         robot.init(hardwareMap, telemetry);
 
         claw = new Claw();
-        outtake = new Outtake();
+        intake = new Intake();
+        outtake = new Outtake(intake, claw);
         elevator = new Elevator();
 
-        robot.addSubsystem(claw, outtake, elevator);
+        robot.addSubsystem(claw, outtake, elevator, intake);
 
         gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new SequentialCommandGroup(

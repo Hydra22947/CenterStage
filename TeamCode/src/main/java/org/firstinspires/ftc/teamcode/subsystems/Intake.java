@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import android.graphics.Color;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
@@ -16,6 +18,7 @@ public class Intake extends BetterSubsystem {
     public static double outtakeHandPivot = 0.5, outtakeAmmoPivot = 0.58;
 
     public static double power = 1;
+    public static double powerTransfer = -0.1;
     public enum Angle
     {
         INTAKE,
@@ -62,13 +65,16 @@ public class Intake extends BetterSubsystem {
             robot.intakeServoLeft.setPower(0);
         }
 
-        // if there are 2 pixels(white / yellow / green / purple), automatically transfer
-        /**
-            1.make sure intake is at transfer pose
-            2.make sure outtake is at intake pose
-            3.set intake power to -0.1(-0.1 = public static) till both laser beams detect
-         */
+        if(hasPixel(robot.colorLeft) && hasPixel(robot.colorRight) && getAngle() == Angle.TRANSFER)
+        {
+            robot.setReadyToTransferPixels(true);
+        }
 
+    }
+
+    boolean hasPixel(RevColorSensorV3 colorSensor)
+    {
+        return false;
     }
 
     public void intakeMove(double power)

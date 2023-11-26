@@ -81,6 +81,8 @@ public class RobotHardware {
 
     private double imuAngle, imuOffset = 0;
 
+    boolean readyToTransferPixels = false;
+
     /**
      * Creating the singleton the first time, instantiating.
      */
@@ -209,5 +211,13 @@ public class RobotHardware {
     public void setImuOffset(double offset)
     {
         this.imuOffset = -imuAngle + offset;
+    }
+
+    public boolean isReadyToTransferPixels() {
+        return readyToTransferPixels;
+    }
+
+    public void setReadyToTransferPixels(boolean readyToTransferPixels) {
+        this.readyToTransferPixels = readyToTransferPixels;
     }
 }

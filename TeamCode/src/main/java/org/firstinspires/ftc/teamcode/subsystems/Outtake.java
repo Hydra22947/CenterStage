@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.util.values.ClawSide;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,18 +28,34 @@ public class Outtake extends BetterSubsystem {
         HAND
     }
 
-    public Angle claw = Angle.OUTTAKE;
-    public Angle hand = Angle.OUTTAKE;
+    public Angle clawAngle = Angle.OUTTAKE;
+    public Angle handAngle = Angle.OUTTAKE;
+    Intake intake;
+    Claw claw;
 
-    public Outtake()
+    public Outtake(Intake intake, Claw claw)
     {
         this.robot = RobotHardware.getInstance();
+        this.intake = intake;
+        this.claw = claw;
     }
 
     @Override
     public void periodic() {
-        updateState(claw, Type.CLAW);
-        updateState(hand, Type.HAND);
+        updateState(clawAngle, Type.CLAW);
+        updateState(handAngle, Type.HAND);
+
+        if(robot.isReadyToTransferPixels() && clawAngle == Angle.INTAKE && handAngle == Angle.INTAKE)
+        {
+            intake.intakeMove(Intake.powerTransfer);
+            // until pixels see beam(already happens in opmode) because of peridoric
+            if(!claw.checkAndClose(robot.breakbeamRight, ClawSide.RIGHT) && !claw.checkAndClose(robot.breakbeamLeft, ClawSide.LEFT))
+            {
+                clawAngle = Angle.OUTTAKE;
+                handAngle = Angle.OUTTAKE;
+            }
+
+        }
     }
 
     @Override
@@ -57,11 +74,11 @@ public class Outtake extends BetterSubsystem {
     }
 
     public void setClaw(Angle claw) {
-        this.claw = claw;
+        this.clawAngle = claw;
     }
 
     public void setHand(Angle hand) {
-        this.hand = hand;
+        this.handAngle = hand;
     }
 
     public void updateState(@NotNull Angle angle, @NotNull Type type) {

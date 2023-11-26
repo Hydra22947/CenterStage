@@ -135,7 +135,7 @@ public class Claw extends BetterSubsystem
         }
     }
 
-    public void checkAndClose(DigitalChannel sensor, ClawSide side)
+    public boolean checkAndClose(DigitalChannel sensor, ClawSide side)
     {
 
         if(sensor.getState() && !shouldOpen)
@@ -151,7 +151,7 @@ public class Claw extends BetterSubsystem
                     new ClawCommand(this, Claw.ClawState.CLOSED, side)).schedule();
         }
 
-
+        return sensor.getState();
     }
 
     public boolean isShouldOpen() {
