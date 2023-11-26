@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 
-// TODO: CHECK IF MOTION PROFILE IS GOOD
 public class Hand extends BetterSubsystem
 {
     private final RobotHardware robot;

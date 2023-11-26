@@ -189,4 +189,7 @@ public class Intake extends BetterSubsystem {
         this.manual = manual;
     }
 
+    public static double getPower() {
+        return power;
+    }
 }

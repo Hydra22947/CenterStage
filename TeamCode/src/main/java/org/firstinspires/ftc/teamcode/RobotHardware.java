@@ -46,8 +46,7 @@ public class RobotHardware {
     public BetterServo intakeAngleServo;
     public BetterServo intakeHandPivotRightServo;
     public BetterServo intakeHandPivotLeftServo;
-    public CRServo extensionServo;
-    public AnalogInput extensionServoEncoder;
+    public Servo extensionServo;
     public RevColorSensorV3 colorRight;
     public RevColorSensorV3 colorLeft;
 
@@ -140,8 +139,7 @@ public class RobotHardware {
         this.colorRight = hardwareMap.get(RevColorSensorV3.class, "cR");
         this.colorLeft = hardwareMap.get(RevColorSensorV3.class, "cL");
         //INTAKE EXTENSION
-        this.extensionServo = hardwareMap.get(CRServo.class, "sE");
-        this.extensionServoEncoder = hardwareMap.get(AnalogInput.class, "asE");
+        this.extensionServo = hardwareMap.get(Servo.class, "sE");
 
         // HAND
         this.intakeHandPivotRightServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPR"));

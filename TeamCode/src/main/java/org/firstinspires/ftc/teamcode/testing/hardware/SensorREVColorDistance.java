@@ -3,19 +3,27 @@ package org.firstinspires.ftc.teamcode.testing.hardware;
 import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
+
+import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.util.values.Globals;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
+@Config
 @TeleOp(name = "Sensor: REVColorDistance", group = "tests")
 public class SensorREVColorDistance extends LinearOpMode {
 
     RevColorSensorV3 rightSensorColor;
     RevColorSensorV3 leftSensorColor;
+    public static double toleranceH = 5; // Range of +-5
+    public static double toleranceS = 5; // Range of +-5
+    public static double toleranceV = 5; // Range of +-5
+
     // hsvValues arrays to hold the hue, saturation, and value information.
     float rightHsvValues[] = {0F, 0F, 0F};
     float leftHsvValues[] = {0F, 0F, 0F};
@@ -61,10 +69,12 @@ public class SensorREVColorDistance extends LinearOpMode {
 
     public boolean checkIfPixelIn(float[] hsvValues)
     {
-        boolean hueCheck = ((hsvValues[0] + 5) == Globals.BASIC_HUE) || ((hsvValues[0] - 5) == Globals.BASIC_HUE);
-        boolean satCheck = ((hsvValues[1] + 5) == Globals.BASIC_HUE) || ((hsvValues[1] - 5) == Globals.BASIC_HUE);
-        boolean valCheck = ((hsvValues[2] + 5) == Globals.BASIC_HUE) || ((hsvValues[2] - 5) == Globals.BASIC_HUE);
 
-        return hueCheck &&  satCheck && valCheck;
+
+        boolean hueCheck = hsvValues[0] >= Globals.BASIC_HUE - toleranceH && hsvValues[0] <= Globals.BASIC_HUE + toleranceH;
+        boolean satCheck = hsvValues[1] >= Globals.BASIC_SAT - toleranceS && hsvValues[0] <= Globals.BASIC_SAT + toleranceS;
+        boolean valCheck = hsvValues[2] >= Globals.BASIC_VAL - toleranceV && hsvValues[0] <= Globals.BASIC_VAL + toleranceV;
+
+        return !(hueCheck &&  satCheck && valCheck);
     }
 }

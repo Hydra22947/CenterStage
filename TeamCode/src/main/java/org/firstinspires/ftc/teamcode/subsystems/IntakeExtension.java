@@ -22,32 +22,19 @@ public class IntakeExtension extends BetterSubsystem {
         MANUAL
     }
 
-    public static double OPEN_EXTENSION = 120;
+    public static double OPEN_EXTENSION = 0.5;
     public static double OPEN_HALFWAY_EXTENSION = OPEN_EXTENSION / 2;// maybe for pixel at auto beginning
-    public static double CLOSE_EXTENSION = 10;
-    public static double MAX_POWER = 1;
-
-    public static double kP = 0.825, kI = 0, kD = 0.00051;
+    public static double CLOSE_EXTENSION = 0;
 
     private RobotHardware robot;
-    private AbsoluteAnalogEncoder absoloutEncoder;
-    private PIDFController.PIDCoefficients pidCoefficients;
-    private PIDFController controller;
     private BetterGamepad cGamepad;
 
     ExtensionState current = ExtensionState.CLOSE;
 
     public IntakeExtension(Gamepad gamepad) {
         this.robot = RobotHardware.getInstance();
-        this.absoloutEncoder = new AbsoluteAnalogEncoder(this.robot.extensionServoEncoder);
 
         this.cGamepad = new BetterGamepad(gamepad);
-        this.pidCoefficients = new PIDFController.PIDCoefficients();
-        pidCoefficients.kP = kP;
-        pidCoefficients.kI = kI;
-        pidCoefficients.kD = kD;
-
-        controller = new PIDFController(pidCoefficients);
 
     }
 
@@ -56,36 +43,18 @@ public class IntakeExtension extends BetterSubsystem {
 
         switch (current) {
             case OPEN:
-                setPosition(OPEN_EXTENSION, -MAX_POWER, MAX_POWER);
+                this.robot.extensionServo.setPosition(OPEN_EXTENSION);
                 break;
             case INTERMEDIATE:
-                setPosition(OPEN_HALFWAY_EXTENSION, -MAX_POWER, MAX_POWER);
+                this.robot.extensionServo.setPosition(OPEN_HALFWAY_EXTENSION);
                 break;
             case CLOSE:
-                setPosition(CLOSE_EXTENSION, -MAX_POWER, MAX_POWER);
+                this.robot.extensionServo.setPosition(CLOSE_EXTENSION);
                 break;
             case MANUAL:
-                if(this.cGamepad.right_trigger != 0)
-                {
-                    setPosition(OPEN_EXTENSION, -this.cGamepad.right_trigger, this.cGamepad.right_trigger);
-                }
-                else
-                {
-                    setPosition(CLOSE_EXTENSION, -MAX_POWER, MAX_POWER);
-                }
+                this.robot.extensionServo.setPosition(Range.clip(cGamepad.right_trigger, CLOSE_EXTENSION, OPEN_EXTENSION));
                 break;
         }
-    }
-
-    public void setPosition(double position, double min, double max)
-    {
-        controller.updateError(Math.toRadians(position) - absoloutEncoder.getCurrentPosition());
-
-        this.robot.extensionServo.setPower(Range.clip(controller.update(), min, max));
-        robot.telemetry.addData("POWER", robot.extensionServo.getPower());
-        robot.telemetry.addData("POWER PID", controller.update());
-        robot.telemetry.addData("POS", absoloutEncoder.getCurrentPosition());
-        robot.telemetry.update();
     }
 
     @Override
