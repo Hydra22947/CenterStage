@@ -55,7 +55,7 @@ public class RobotHardware {
     public BetterServo outtakeClawRightServo;
     public BetterServo outtakeClawPivotServo;
     public BetterServo outtakeHandRightServo;
-    public BetterServo outttakeHandLeftServo;
+    public BetterServo outtakeHandLeftServo;
     public DigitalChannel breakbeamRight;  // Touch sensor Object
     public DigitalChannel breakbeamLeft;  // Touch sensor Object
 
@@ -153,14 +153,19 @@ public class RobotHardware {
         this.outtakeClawRightServo = new BetterServo(hardwareMap.get(Servo.class, "sCR"));
         this.outtakeClawPivotServo = new BetterServo(hardwareMap.get(Servo.class, "sC"));
         // HAND
-        this.outttakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
+        this.outtakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
         this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
         // BEAMS
         this.breakbeamRight = hardwareMap.get(DigitalChannel.class, "bbR");
         this.breakbeamLeft = hardwareMap.get(DigitalChannel.class, "bbL");
         // ELEVATOR
         this.elevatorMotorRight = hardwareMap.get(DcMotorEx.class, "mER");
-        this.elevatorMotorRight = hardwareMap.get(DcMotorEx.class, "mEL");
+        this.elevatorMotorLeft = hardwareMap.get(DcMotorEx.class, "mEL");
+        elevatorMotorRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        elevatorMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elevatorMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // ODO PODS
         this.podLeft = new BetterEncoder(new MotorEx(hardwareMap, "mBR").encoder);
@@ -211,6 +216,7 @@ public class RobotHardware {
     }
 
     public boolean isReadyToTransferPixels() {
+        // check for colors and closed
         return readyToTransferPixels;
     }
 

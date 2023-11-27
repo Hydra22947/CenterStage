@@ -19,22 +19,25 @@ import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 public class Elevator extends BetterSubsystem {
 
     private final RobotHardware robot;
-    public static double BASE_LEVEL = 5;
-    public static double INCREMENT = 1;
-    double currentTarget = BASE_LEVEL;
-    public static double TICKS_PER_REV = 145.1, SPOOL_RADIUS = 0.75; // in //TODO: CHANGE
+    public static double BASE_LEVEL = 420;
+    public static double MAX_LEVEL = 1260;
+    public static double INCREMENT = 105;
+    double currentTarget = 0;
     boolean usePID = true;
     public static double maxPower = 0.85;
-    public static double kP = 1, kI = 0, kD = 0;
+    public static double kP = .01, kI = 0, kD = 0.00001;
 
     Gamepad gamepad;
     BetterGamepad cGamepad;
     PIDFController controller, controller2;
     PIDFController.PIDCoefficients pidCoefficients = new PIDFController.PIDCoefficients();
 
+    boolean isAuto = false;
     public Elevator(Gamepad gamepad)
     {
         this.robot = RobotHardware.getInstance();
+
+
 
         this.gamepad = gamepad;
         this.cGamepad = new BetterGamepad(gamepad);
@@ -45,6 +48,8 @@ public class Elevator extends BetterSubsystem {
 
         controller = new PIDFController(pidCoefficients);
         controller2 = new PIDFController(pidCoefficients);
+
+        isAuto = false;
     }
 
     public Elevator()
@@ -57,12 +62,14 @@ public class Elevator extends BetterSubsystem {
 
         controller = new PIDFController(pidCoefficients);
         controller2 = new PIDFController(pidCoefficients);
+
+        isAuto = true;
     }
 
     @Override
     public void periodic() {
 
-        if(!Globals.IS_AUTO)
+        if(!isAuto)
         {
             cGamepad.update();
 
@@ -72,8 +79,6 @@ public class Elevator extends BetterSubsystem {
             }
             else
             {
-                robot.elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 if(gamepad.left_stick_y != 0 && !gamepad.left_stick_button)
                 {
                     robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
@@ -99,11 +104,16 @@ public class Elevator extends BetterSubsystem {
 
     void setPidControl()
     {
-        controller.updateError(currentTarget - encoderTicksToInches(robot.elevatorMotorRight.getCurrentPosition()));
-        controller2.updateError(currentTarget - encoderTicksToInches(robot.elevatorMotorLeft.getCurrentPosition()));
+        controller.updateError(currentTarget - robot.elevatorMotorRight.getCurrentPosition());
+        controller2.updateError(currentTarget - robot.elevatorMotorLeft.getCurrentPosition());
 
         robot.elevatorMotorRight.setPower(controller.update());
         robot.elevatorMotorLeft.setPower(controller2.update());
+
+        robot.telemetry.addData("target", currentTarget);
+        robot.telemetry.addData("power right", controller.update());
+        robot.telemetry.addData("power left", controller2.update());
+        robot.telemetry.update();
     }
 
     @Override
@@ -121,17 +131,10 @@ public class Elevator extends BetterSubsystem {
 
     }
 
-    public static double encoderTicksToInches(int ticks) {
-        return SPOOL_RADIUS * 2 * Math.PI * ticks / TICKS_PER_REV;
-    }
-
-    public static int inchesToEncoderTicks(double inches) {
-        return (int)Math.round((inches * TICKS_PER_REV) / (SPOOL_RADIUS * 2 * Math.PI));
-    }
-
     public void setTarget(double target)
     {
-        currentTarget = target;
+        setPidControl();
+        this.currentTarget = target;
     }
 
     public void increment()

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.config.Config;
 
+import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.values.ClawSide;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
@@ -11,8 +12,8 @@ public class Outtake extends BetterSubsystem {
 
     private final RobotHardware robot;
 
-    public static double intakeHandPivot = 0.08, intakeClawPivot = 0.04;
-    public static double outtakeHandPivot = 0.5, outtakeClawPivot = 0.58;
+    public static double intakeHandPivot = 0.375, intakeClawPivot = 0.135;
+    public static double outtakeHandPivot = 0.9, outtakeClawPivot = 0.97;
 
     public static double power = 1;
 
@@ -28,10 +29,9 @@ public class Outtake extends BetterSubsystem {
         HAND
     }
 
-    public Angle clawAngle = Angle.OUTTAKE;
-    public Angle handAngle = Angle.OUTTAKE;
-    Intake intake;
-    Claw claw;
+    Angle angle = Angle.INTAKE;
+    Intake intake = null;
+    Claw claw = null;
 
     public Outtake(Intake intake, Claw claw)
     {
@@ -40,22 +40,26 @@ public class Outtake extends BetterSubsystem {
         this.claw = claw;
     }
 
+    public Outtake()
+    {
+        this.robot = RobotHardware.getInstance();
+
+    }
+
     @Override
     public void periodic() {
-        updateState(clawAngle, Type.CLAW);
-        updateState(handAngle, Type.HAND);
+        updateState(Type.CLAW);
+        updateState(Type.HAND);
 
-        if(robot.isReadyToTransferPixels() && clawAngle == Angle.INTAKE && handAngle == Angle.INTAKE)
-        {
-            intake.intakeMove(Intake.powerTransfer);
-            // until pixels see beam(already happens in opmode) because of peridoric
-            if(!claw.checkAndClose(robot.breakbeamRight, ClawSide.RIGHT) && !claw.checkAndClose(robot.breakbeamLeft, ClawSide.LEFT))
-            {
-                clawAngle = Angle.OUTTAKE;
-                handAngle = Angle.OUTTAKE;
-            }
-
-        }
+//        if(intake != null && claw != null && robot.isReadyToTransferPixels() && clawAngle == Angle.INTAKE && handAngle == Angle.INTAKE)
+//        {
+//            robot.telemetry.addData("NULL", 0);
+//            robot.telemetry.update();
+//            intake.intakeMove(Intake.powerTransfer);
+//            // until pixels see beam(already happens in opmode) because of peridoric
+//            if(!claw.checkAndClose(robot.breakbeamRight, ClawSide.RIGHT) && !claw.checkAndClose(robot.breakbeamLeft, ClawSide.LEFT));
+//
+//        }
     }
 
     @Override
@@ -73,54 +77,36 @@ public class Outtake extends BetterSubsystem {
 
     }
 
-    public void setClaw(Angle claw) {
-        this.clawAngle = claw;
+
+    public void setAngle(@NotNull Angle angle) {
+        this.angle = angle;
     }
 
-    public void setHand(Angle hand) {
-        this.handAngle = hand;
-    }
-
-    public void updateState(@NotNull Angle angle, @NotNull Type type) {
-        double position = getPosition(angle, type);
+    public void updateState(@NotNull Type type) {
 
         switch(type) {
             case CLAW:
-                this.robot.outtakeClawPivotServo.setPosition(position);
+                switch (angle){
+                    case INTAKE:
+                        this.robot.outtakeClawPivotServo.setPosition(intakeClawPivot);
+                        break;
+                    case OUTTAKE:
+                        this.robot.outtakeClawPivotServo.setPosition(outtakeClawPivot);
+                        break;
+                }
                 break;
             case HAND:
-                this.robot.outtakeHandRightServo.setPosition(position);
-                this.robot.outttakeHandLeftServo.setPosition(position);
+                switch (angle){
+                    case INTAKE:
+                        this.robot.outtakeHandRightServo.setPosition(intakeHandPivot);
+                        this.robot.outtakeHandLeftServo.setPosition(intakeHandPivot);
+                        break;
+                    case OUTTAKE:
+                        this.robot.outtakeHandRightServo.setPosition(outtakeHandPivot);
+                        this.robot.outtakeHandLeftServo.setPosition(outtakeHandPivot);
+                        break;
+                }
                 break;
-        }
-    }
-
-    private double getPosition(Angle angle, Type type)
-    {
-        switch (type)
-        {
-            case CLAW:
-                switch (angle) {
-                    case INTAKE:
-                        return intakeClawPivot;
-                    case OUTTAKE:
-                        return outtakeClawPivot;
-                    default:
-                        return 0.0;
-
-                }
-
-            case HAND:
-                switch (angle) {
-                    case INTAKE:
-                        return intakeHandPivot;
-                    case OUTTAKE:
-                        return outtakeHandPivot;
-                    default:
-                        return 0.0;
-                }
-            default:
-                return 0.0;
         }
     }
 

@@ -10,8 +10,7 @@ public class OuttakeCommand extends SequentialCommandGroup {
 
     public OuttakeCommand(Outtake outtake, Outtake.Angle angle) {
         super(
-                new InstantCommand(() -> outtake.setClaw(angle)),
-                new InstantCommand(() -> outtake.setHand(angle))
+                new InstantCommand(() -> outtake.setAngle(angle))
         );
     }
 }

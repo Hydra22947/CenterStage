@@ -29,7 +29,7 @@ public class IntakeExtension extends BetterSubsystem {
     private RobotHardware robot;
     private BetterGamepad cGamepad;
 
-    ExtensionState current = ExtensionState.CLOSE;
+    public static ExtensionState current = ExtensionState.CLOSE;
 
     public IntakeExtension(Gamepad gamepad) {
         this.robot = RobotHardware.getInstance();

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.ColorSensors;
+import org.firstinspires.ftc.teamcode.util.values.Globals;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,13 +33,13 @@ public class Intake extends BetterSubsystem {
         HAND
     }
 
-    public Angle ammo = Angle.TRANSFER;
-    public Angle hand = Angle.TRANSFER;
-
     Angle angle = Angle.TRANSFER;
     boolean shouldIntake = false;
     boolean forward = false;
     boolean manual = false;
+
+    private float rightHsvValues[] = {0F, 0F, 0F};
+    private float leftHsvValues[] = {0F, 0F, 0F};
 
     public Intake()
     {
@@ -48,6 +49,8 @@ public class Intake extends BetterSubsystem {
 
     @Override
     public void periodic() {
+        insertHSVValues();
+
         updateState(Type.AMMO);
         updateState(Type.HAND);
         checkFinishedIntake();
@@ -68,16 +71,11 @@ public class Intake extends BetterSubsystem {
             robot.intakeServoLeft.setPower(0);
         }
 
-//        if(hasPixel(robot.colorLeft) && hasPixel(robot.colorRight) && getAngle() == Angle.TRANSFER)
-//        {
-//            robot.setReadyToTransferPixels(true);
-//        }
+        if(checkIfPixelIn(leftHsvValues) && checkIfPixelIn(rightHsvValues) && getAngle() == Angle.TRANSFER &&  IntakeExtension.current == IntakeExtension.ExtensionState.CLOSE)
+        {
+            robot.setReadyToTransferPixels(true);
+        }
 
-    }
-
-    boolean hasPixel(RevColorSensorV3 colorSensor)
-    {
-        return false;
     }
 
     public void intakeMove(double power)
@@ -132,7 +130,27 @@ public class Intake extends BetterSubsystem {
         }
     }
 
+    public void insertHSVValues()
+    {
+        Color.RGBToHSV((int) (this.robot.colorRight.red() * Globals.SCALE_FACTOR),
+                (int) ((this.robot.colorRight.green() * Globals.SCALE_FACTOR)),
+                (int) ((this.robot.colorRight.blue() * Globals.SCALE_FACTOR)),
+                rightHsvValues);
 
+        Color.RGBToHSV((int) (this.robot.colorLeft.red() * Globals.SCALE_FACTOR),
+                (int) (this.robot.colorLeft.green() * Globals.SCALE_FACTOR),
+                (int) (this.robot.colorLeft.blue() * Globals.SCALE_FACTOR),
+                leftHsvValues);
+    }
+
+    public boolean checkIfPixelIn(float[] hsvValues)
+    {
+        boolean hueCheck = ((hsvValues[0] + 5) == Globals.BASIC_HUE) || ((hsvValues[0] - 5) == Globals.BASIC_HUE);
+        boolean satCheck = ((hsvValues[1] + 5) == Globals.BASIC_HUE) || ((hsvValues[1] - 5) == Globals.BASIC_HUE);
+        boolean valCheck = ((hsvValues[2] + 5) == Globals.BASIC_HUE) || ((hsvValues[2] - 5) == Globals.BASIC_HUE);
+
+        return hueCheck &&  satCheck && valCheck;
+    }
 
     private double getPosition(Angle angle, Type type)
     {
