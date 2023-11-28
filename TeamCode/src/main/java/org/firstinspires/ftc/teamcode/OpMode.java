@@ -31,19 +31,26 @@ import org.firstinspires.ftc.teamcode.util.values.Globals;
 @TeleOp(name = "OpMode Red")
 public class OpMode extends CommandOpMode {
 
+    // robot
     private final RobotHardware robot = RobotHardware.getInstance();
+
+    // subsystems
     Drivetrain drivetrain;
     Elevator elevator;
     Intake intake;
     Outtake outtake;
     Claw claw;
-    GamepadEx gamepadEx, gamepadEx2;
-    BetterGamepad betterGamepad1, betterGamepad2;
     IntakeExtension intakeExtension;
 
+    // gamepads
+    GamepadEx gamepadEx, gamepadEx2;
+    BetterGamepad betterGamepad1, betterGamepad2;
+
+    // variables
+    Timer timer;
     double elevatorTarget = Globals.START_ELEVATOR;
     boolean rightBumberTrigger = false;
-    Timer timer;
+    double passed = 0;
 
     @Override
     public void initialize() {
@@ -84,6 +91,9 @@ public class OpMode extends CommandOpMode {
 
         gamepadEx.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(new SequentialCommandGroup(
+                        new InstantCommand(() -> claw.setShouldOpen(true)),
+                        new InstantCommand(() -> passed = timer.currentTime()),
+                        new WaitCommand((long)Globals.WAIT_DELAY_TILL_CLOSE),
                         new InstantCommand(() -> elevator.setUsePID(true)),
                         new OuttakeCommand(outtake, Outtake.Angle.INTAKE),
                         new WaitCommand((long)Globals.WAIT_DELAY_TILL_OUTTAKE),
@@ -107,6 +117,11 @@ public class OpMode extends CommandOpMode {
     public void run() {
         betterGamepad1.update();
         betterGamepad2.update();
+
+        if(timer.currentTime() - passed >= Globals.delayClaw)
+        {
+            claw.setShouldOpen(false);
+        }
 
         if(betterGamepad1.rightBumperOnce())
         {

@@ -32,7 +32,6 @@ public class OuttakeTest extends CommandOpMode {
     Intake intake;
     Elevator elevator;
     double passed = 0;
-    public static double delay = 1;
 
     @Override
     public void initialize() {
@@ -71,7 +70,7 @@ public class OuttakeTest extends CommandOpMode {
             passed = timer.currentTime();
         }
 
-        if(timer.currentTime() - passed >= delay)
+        if(timer.currentTime() - passed >= Globals.delayClaw)
         {
             claw.setShouldOpen(false);
         }
