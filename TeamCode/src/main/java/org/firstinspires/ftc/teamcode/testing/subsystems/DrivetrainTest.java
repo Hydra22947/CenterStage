@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
-import org.firstinspires.ftc.teamcode.util.values.Globals;
+import org.firstinspires.ftc.teamcode.Globals;
 
 @Config
 @TeleOp(name = "Drivetrain Test", group = "tests")

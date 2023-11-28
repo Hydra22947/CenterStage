@@ -22,18 +22,32 @@ public class ServoTest extends LinearOpMode {
     public static double pos2 = 0.35;
     public static double pos3 = 0.5;
 
+    boolean use1 = true;
+    boolean use2 = true;
+    boolean use3 = true;
+
     @Override
     public void runOpMode() {
-        servo1  = hardwareMap.get(Servo.class, hw);
-        servo2  = hardwareMap.get(Servo.class, hw2);
-        servo3  = hardwareMap.get(Servo.class, hw3);
+        if(use1)
+            servo1  = hardwareMap.get(Servo.class, hw);
+
+        if(use2)
+            servo2  = hardwareMap.get(Servo.class, hw2);
+
+        if(use3)
+            servo3  = hardwareMap.get(Servo.class, hw3);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            servo1.setPosition(pos1);
-            servo2.setPosition(pos2);
-            servo3.setPosition(pos3);
+            if(use1)
+                servo1.setPosition(pos1);
+
+            if(use2)
+                servo2.setPosition(pos2);
+
+            if(use3)
+                servo3.setPosition(pos3);
         }
     }
 }

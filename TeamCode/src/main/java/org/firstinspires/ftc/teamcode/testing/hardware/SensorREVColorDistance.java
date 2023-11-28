@@ -1,18 +1,13 @@
 package org.firstinspires.ftc.teamcode.testing.hardware;
 
-import android.app.Activity;
 import android.graphics.Color;
-import android.view.View;
 
-import org.checkerframework.checker.units.qual.C;
-import org.firstinspires.ftc.teamcode.util.values.Globals;
+import org.firstinspires.ftc.teamcode.Globals;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 
 @Config
 @TeleOp(name = "Sensor: REVColorDistance", group = "tests")

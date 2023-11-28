@@ -16,13 +16,12 @@ import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.PIDFController;
 
 
-@TeleOp(name="Outtake CR Servo Test", group="tests")
+@TeleOp(name="CR Servo Analog Test", group="tests")
 @Config
 public class OuttakeCRServoTest extends LinearOpMode {
 
     public static double target = 0;
     public static boolean PID = false;
-
     public static double MAX_POWER = 1;
     public static double kP = 0.3, kI = 0, kD = 0.00051;
     private BetterGamepad cGamepad;

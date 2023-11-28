@@ -15,12 +15,11 @@ import org.firstinspires.ftc.teamcode.commands.IntakeExtensionCommand;
 import org.firstinspires.ftc.teamcode.commands.OuttakeCommand;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
-import org.firstinspires.ftc.teamcode.subsystems.Hand;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
-import org.firstinspires.ftc.teamcode.util.values.ClawSide;
-import org.firstinspires.ftc.teamcode.util.values.Globals;
+import org.firstinspires.ftc.teamcode.util.ClawSide;
+import org.firstinspires.ftc.teamcode.Globals;
 
 public class Markers {
 
@@ -28,7 +27,6 @@ public class Markers {
     long timer = 5000;
     Elevator elevator;
     Claw claw;
-    Hand hand;
     Gamepad gamepad2;
 
     RobotHardware robot;
@@ -48,14 +46,13 @@ public class Markers {
 
         elevator = new Elevator(gamepad2);
         claw = new Claw();
-        hand = new Hand();
         intake = new Intake();
         intakeExtension = new IntakeExtension(null);
         outtake = new Outtake(intake, claw);
 
         robot = RobotHardware.getInstance();
 
-        robot.addSubsystem(elevator, claw, hand, intake , intakeExtension);
+        robot.addSubsystem(elevator, claw, intake , intakeExtension);
 
 
     }

@@ -2,9 +2,8 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
 
-import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
-import org.firstinspires.ftc.teamcode.util.values.ClawSide;
+import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 public class ClawCommand extends InstantCommand {
 
