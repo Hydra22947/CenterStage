@@ -51,15 +51,14 @@ public class Outtake extends BetterSubsystem {
         updateState(Type.CLAW);
         updateState(Type.HAND);
 
-//        if(intake != null && claw != null && robot.isReadyToTransferPixels() && clawAngle == Angle.INTAKE && handAngle == Angle.INTAKE)
-//        {
-//            robot.telemetry.addData("NULL", 0);
-//            robot.telemetry.update();
-//            intake.intakeMove(Intake.powerTransfer);
-//            // until pixels see beam(already happens in opmode) because of peridoric
-//            if(!claw.checkAndClose(robot.breakbeamRight, ClawSide.RIGHT) && !claw.checkAndClose(robot.breakbeamLeft, ClawSide.LEFT));
-//
-//        }
+        if(intake != null && claw != null && robot.isReadyToTransferPixels() && angle == Angle.INTAKE)
+        {
+            robot.telemetry.update();
+            intake.intakeMove(Intake.powerTransfer);
+            // until pixels see beam(already happens in opmode) because of peridoric
+            if(!claw.checkAndClose(robot.breakbeamRight, ClawSide.RIGHT) && !claw.checkAndClose(robot.breakbeamLeft, ClawSide.LEFT));
+
+        }
     }
 
     @Override

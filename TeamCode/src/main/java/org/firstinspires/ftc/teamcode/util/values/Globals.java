@@ -20,6 +20,8 @@ public class Globals {
     public static double ELEVATOR_INCREMENT = .2;
     public static double BASIC_HUE = 72, BASIC_SAT = 0.61, BASIC_VAL = 31;
     public static double SCALE_FACTOR = 255;
+    public static double WAIT_DELAY_TILL_OUTTAKE = 125;
+    public static double INCREMENT = 105;
     /*Pixel hsv values in case we need
 
     public static double YELLOW_HUE = 48, YELLOW_SAT = 0.77, YELLOW_VALUE = 13;

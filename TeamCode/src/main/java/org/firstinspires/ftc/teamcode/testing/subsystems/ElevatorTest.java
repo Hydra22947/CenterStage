@@ -26,7 +26,6 @@ public class ElevatorTest extends CommandOpMode {
     Elevator elevator;
     Outtake outtake;
     GamepadEx gamepadEx;
-    public static double WAIT_DELAY_TILL_OUTTAKE = 250;
 
     @Override
     public void initialize() {
@@ -45,7 +44,7 @@ public class ElevatorTest extends CommandOpMode {
                 .whenPressed(new SequentialCommandGroup(
                         new InstantCommand(() -> elevator.setUsePID(true)),
                         new ElevatorCommand(elevator, Elevator.BASE_LEVEL),
-                        new WaitCommand((long) WAIT_DELAY_TILL_OUTTAKE),
+                        new WaitCommand((long)Globals.WAIT_DELAY_TILL_OUTTAKE),
                         new OuttakeCommand(outtake, Outtake.Angle.OUTTAKE)
                 ));
 
@@ -53,7 +52,7 @@ public class ElevatorTest extends CommandOpMode {
                 .whenPressed(new SequentialCommandGroup(
                         new InstantCommand(() -> elevator.setUsePID(true)),
                         new OuttakeCommand(outtake, Outtake.Angle.INTAKE),
-                        new WaitCommand((long) WAIT_DELAY_TILL_OUTTAKE),
+                        new WaitCommand((long)Globals.WAIT_DELAY_TILL_OUTTAKE),
                         new ElevatorCommand(elevator, 0)
                 ));
     }

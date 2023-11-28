@@ -8,14 +8,22 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.checkerframework.checker.units.qual.C;
+import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
 import org.firstinspires.ftc.teamcode.commands.IntakeCommand;
+import org.firstinspires.ftc.teamcode.commands.OuttakeCommand;
+import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
+import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.values.Globals;
 
@@ -25,9 +33,10 @@ public class OpMode extends CommandOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
     Drivetrain drivetrain;
-    //Elevator elevator;
+    Elevator elevator;
     Intake intake;
-    //Outtake outtake;
+    Outtake outtake;
+    Claw claw;
     GamepadEx gamepadEx, gamepadEx2;
     BetterGamepad betterGamepad1, betterGamepad2;
     IntakeExtension intakeExtension;
@@ -56,43 +65,31 @@ public class OpMode extends CommandOpMode {
         robot.init(hardwareMap, telemetry);
 
         drivetrain = new Drivetrain(gamepad1, true);
-        //elevator = new Elevator(gamepad2);
-        //outtake = new Outtake();
+        elevator = new Elevator(gamepad2);
+        outtake = new Outtake(intake, claw);
+        claw = new Claw();
         intake = new Intake();
         intakeExtension = new IntakeExtension(gamepad1);
 
 
-        robot.addSubsystem(drivetrain, intake, intakeExtension/*, elevator, outtake*/);
+        robot.addSubsystem(drivetrain, intake, intakeExtension, elevator, outtake, claw);
 
+        gamepadEx.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(new SequentialCommandGroup(
+                        new InstantCommand(() -> elevator.setUsePID(true)),
+                        new ElevatorCommand(elevator, Elevator.BASE_LEVEL),
+                        new WaitCommand((long)Globals.WAIT_DELAY_TILL_OUTTAKE),
+                        new OuttakeCommand(outtake, Outtake.Angle.OUTTAKE)
+                ));
 
-//        gamepadEx.getGamepadButton(GamepadKeys.Button.Y)
-//                    .whenPressed(new SequentialCommandGroup(
-//                            new ClawCommand(claw, Claw.ClawState.CLOSED, ClawSide.BOTH),
-//                            new WaitCommand(10),
-//                            new ElevatorCommand(elevator, Globals.START_ELEVATOR)
-//                            new OuttakeCommand(outtake, Outtake.Angle.OUTTAKE)
-//                        ));
-//
-//        gamepadEx.getGamepadButton(GamepadKeys.Button.A)
-//                .whenPressed(new SequentialCommandGroup(
-//                        new ClawCommand(claw, Claw.ClawState.OPEN, ClawSide.BOTH),
-//                        new WaitCommand(100),
-//                        new ElevatorCommand(elevator, 0)
-//                        new OuttakeCommand(outtake, Outtake.Angle.INTAKE)
-//                ));
-//
-
-//        gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-//                .whenPressed(new ParallelCommandGroup(
-//                        new IntakeCommand(intake, Intake.Angle.INTAKE),
-//                        new InstantCommand(() -> intake.intakeMove(intake.getPower())),
-//                        new InstantCommand(() -> setRightBumberTrigger(true))
-//                ));
-//
-//        gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-//                .whenPressed(new ParallelCommandGroup(
-//                        new InstantCommand(() -> setRightBumberTrigger(false))
-//                ));
+        gamepadEx.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(new SequentialCommandGroup(
+                        new InstantCommand(() -> elevator.setUsePID(true)),
+                        new OuttakeCommand(outtake, Outtake.Angle.INTAKE),
+                        new WaitCommand((long)Globals.WAIT_DELAY_TILL_OUTTAKE),
+                        new ElevatorCommand(elevator, 0),
+                        new InstantCommand(() -> elevatorTarget += Globals.ELEVATOR_INCREMENT)
+                ));
 
         while (opModeInInit())
         {
@@ -151,24 +148,14 @@ public class OpMode extends CommandOpMode {
             intake.move(Intake.Angle.TRANSFER);
         }
 
-
-//        if(gamepadEx.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) || gamepadEx2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER))
-//        {
-//            elevatorTarget += Globals.ELEVATOR_INCREMENT;
-//        }
-//        else if(gamepadEx.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || gamepadEx2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER))
-//        {
-//            elevatorTarget -= Globals.ELEVATOR_INCREMENT;
-//        }
-//
-//        if(gamepad2.left_stick_y != 0)
-//        {
-//            elevator.setUsePID(false);
-//        }
-//        else
-//        {
-//            elevator.setUsePID(true);
-//        }
+        if(gamepad1.left_stick_y != 0)
+        {
+            elevator.setUsePID(false);
+        }
+        else
+        {
+            elevator.setUsePID(true);
+        }
 
         super.run();
         robot.periodic();

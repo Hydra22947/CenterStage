@@ -21,7 +21,6 @@ public class Elevator extends BetterSubsystem {
     private final RobotHardware robot;
     public static double BASE_LEVEL = 420;
     public static double MAX_LEVEL = 1260;
-    public static double INCREMENT = 105;
     double currentTarget = 0;
     boolean usePID = true;
     public static double maxPower = 0.85;
@@ -139,12 +138,12 @@ public class Elevator extends BetterSubsystem {
 
     public void increment()
     {
-        currentTarget += INCREMENT;
+        currentTarget += Globals.INCREMENT;
     }
 
     public void decrement()
     {
-        currentTarget -= INCREMENT;
+        currentTarget -= Globals.INCREMENT;
     }
 
     public void setUsePID(boolean usePID) {
