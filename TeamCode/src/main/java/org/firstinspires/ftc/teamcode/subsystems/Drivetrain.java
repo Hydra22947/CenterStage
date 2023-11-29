@@ -21,6 +21,14 @@ public class Drivetrain {
     //AngleController controller;
     //PIDCoefficients coefficients;
 
+    enum Wheels
+    {
+        frontLeft,
+        frontRight,
+        backLeft,
+        backRight
+    }
+
     double frontLeftPower = 0, backLeftPower = 0, frontRightPower = 0, backRightPower = 0;
     //public static double kP = 1, kI = 0, kD = 0;
     public static double targetAngle = 0;
@@ -74,24 +82,24 @@ public class Drivetrain {
         double theta = input.angle();
 
         double[] wheelSpeeds = new double[4];
-        wheelSpeeds[RobotDrive.MotorType.kFrontLeft.value] = Math.sin(theta + Math.PI / 4);
-        wheelSpeeds[RobotDrive.MotorType.kFrontRight.value] = Math.sin(theta - Math.PI / 4);
-        wheelSpeeds[RobotDrive.MotorType.kBackLeft.value] = Math.sin(theta - Math.PI / 4);
-        wheelSpeeds[RobotDrive.MotorType.kBackRight.value] = Math.sin(theta + Math.PI / 4);
+        wheelSpeeds[Wheels.frontLeft.ordinal()] = Math.sin(theta + Math.PI / 4);
+        wheelSpeeds[Wheels.frontRight.ordinal()] = Math.sin(theta - Math.PI / 4);
+        wheelSpeeds[Wheels.backLeft.ordinal()] = Math.sin(theta - Math.PI / 4);
+        wheelSpeeds[Wheels.backRight.ordinal()] = Math.sin(theta + Math.PI / 4);
 
         normalize(wheelSpeeds, input.magnitude());
 
-        wheelSpeeds[RobotDrive.MotorType.kFrontLeft.value] += (twist + rotationLock);
-        wheelSpeeds[RobotDrive.MotorType.kFrontRight.value] -= (twist + rotationLock);
-        wheelSpeeds[RobotDrive.MotorType.kBackLeft.value] += (twist + rotationLock);
-        wheelSpeeds[RobotDrive.MotorType.kBackRight.value] -= (twist + rotationLock);
+        wheelSpeeds[Wheels.frontLeft.ordinal()] += (twist + rotationLock);
+        wheelSpeeds[Wheels.frontRight.ordinal()] -= (twist + rotationLock);
+        wheelSpeeds[Wheels.backLeft.ordinal()] += (twist + rotationLock);
+        wheelSpeeds[Wheels.backRight.ordinal()] -= (twist + rotationLock);
 
         normalize(wheelSpeeds);
 
-        robot.dtFrontLeftMotor.setPower(RobotDrive.MotorType.kFrontLeft.value);
-        robot.dtFrontRightMotor.setPower(RobotDrive.MotorType.kFrontRight.value);
-        robot.dtBackLeftMotor.setPower(RobotDrive.MotorType.kBackLeft.value);
-        robot.dtBackRightMotor.setPower(RobotDrive.MotorType.kBackRight.value);
+        robot.dtFrontLeftMotor.setPower(wheelSpeeds[Wheels.frontLeft.ordinal()]);
+        robot.dtFrontRightMotor.setPower(wheelSpeeds[Wheels.frontRight.ordinal()]);
+        robot.dtBackLeftMotor.setPower(wheelSpeeds[Wheels.backLeft.ordinal()]);
+        robot.dtBackRightMotor.setPower(wheelSpeeds[Wheels.backRight.ordinal()]);
 
         robot.telemetry.addData("Heading", Math.toDegrees(heading));
         robot.telemetry.addData("fl", frontLeftPower);
