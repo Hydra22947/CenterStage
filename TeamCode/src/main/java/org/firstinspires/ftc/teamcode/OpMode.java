@@ -146,10 +146,15 @@ public class OpMode extends LinearOpMode {
                     {
                         intake.intakeMove(-gamepad1.left_trigger);
                     }
+                    else if(robot.isReadyToRetract())
+                    {
+                        intake.intakeMove(Intake.powerTransfer);
+                    }
                     else
                     {
                         intake.intakeMove(0);
                     }
+
                     break;
                 case INTAKE:
                     intake.move(Intake.Angle.INTAKE);
@@ -171,6 +176,11 @@ public class OpMode extends LinearOpMode {
                     {
                         intakeState = IntakeState.RETRACT;
                     }
+
+                    if(robot.isReadyToRetract())
+                    {
+                        intakeState = IntakeState.RETRACT;
+                    }
                     break;
                 case INTAKE_EXTEND:
                     intake.intakeMove(gamepad1.right_trigger);
@@ -184,48 +194,46 @@ public class OpMode extends LinearOpMode {
                 default:
                     intakeState = IntakeState.RETRACT;
                     break;
-            }
-
-        switch (liftState)
-        {
-            case RETRACT:
-                elevator.setTarget(0);
-                outtake.setAngle(Outtake.Angle.INTAKE);
-                //claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
-
-                if(betterGamepad1.YOnce())
-                {
-                    previousElevator = getTime();
-                    liftState = LiftState.EXTRACT;
-                }
-                break;
-            case EXTRACT:
-                elevator.setTarget(Elevator.BASE_LEVEL + (openedXTimes * Globals.ELEVATOR_INCREMENT));
-
-                if((getTime() - previousElevator) >= Globals.WAIT_DELAY_TILL_OUTTAKE )
-                {
-                    outtake.setAngle(Outtake.Angle.OUTTAKE);
-
                 }
 
-                if(betterGamepad1.AOnce())
+                switch (liftState)
                 {
-                    openedXTimes += 1;
-                    claw.setShouldOpen(true);
-                    clawPassed = getTime();
-                    elevatorReset = getTime();
-                    retract = true;
-                }
-                else if((getTime() - elevatorReset) >= Globals.WAIT_DELAY_TILL_CLOSE && retract)
-                {
-                    retract = false;
+                    case RETRACT:
+                    elevator.setTarget(0);
+                    outtake.setAngle(Outtake.Angle.INTAKE);
+
+                    if(betterGamepad1.YOnce())
+                    {
+                        previousElevator = getTime();
+                        liftState = LiftState.EXTRACT;
+                    }
+                    break;
+                case EXTRACT:
+                    elevator.setTarget(Elevator.BASE_LEVEL + (openedXTimes * Globals.ELEVATOR_INCREMENT));
+
+                    if((getTime() - previousElevator) >= Globals.WAIT_DELAY_TILL_OUTTAKE )
+                    {
+                        outtake.setAngle(Outtake.Angle.OUTTAKE);
+                    }
+
+                    if(betterGamepad1.AOnce())
+                    {
+                        openedXTimes += 1;
+                        claw.setShouldOpen(true);
+                        clawPassed = getTime();
+                        elevatorReset = getTime();
+                        retract = true;
+                    }
+                    else if((getTime() - elevatorReset) >= Globals.WAIT_DELAY_TILL_CLOSE && retract)
+                    {
+                        retract = false;
+                        liftState = LiftState.RETRACT;
+                    }
+                    break;
+                default:
                     liftState = LiftState.RETRACT;
+                    break;
                 }
-                break;
-            default:
-                liftState = LiftState.RETRACT;
-                break;
-        }
             telemetry.update();
         }
     }

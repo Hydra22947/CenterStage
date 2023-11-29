@@ -77,7 +77,7 @@ public class RobotHardware {
 
     private double imuAngle, imuOffset = 0;
 
-    boolean readyToTransferPixels = false;
+    boolean readyToRetract = false;
 
     /**
      * Creating the singleton the first time, instantiating.
@@ -213,12 +213,12 @@ public class RobotHardware {
         this.imuOffset = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + offset;
     }
 
-    public boolean isReadyToTransferPixels() {
+    public boolean isReadyToRetract() {
         // check for colors and closed
-        return readyToTransferPixels;
+        return readyToRetract;
     }
 
-    public void setReadyToTransferPixels(boolean readyToTransferPixels) {
-        this.readyToTransferPixels = readyToTransferPixels;
+    public void setReadyToRetract(boolean readyToTransferPixels) {
+        this.readyToRetract = readyToTransferPixels;
     }
 }

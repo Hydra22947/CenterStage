@@ -13,15 +13,15 @@ import org.firstinspires.ftc.teamcode.util.CommandSystem;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Scanner;
+
 @Config
 public class Claw
 {
     public static boolean auto = true;
     public static double delay = 135;
     boolean shouldOpen = false;
-    boolean firstOpen = true, firstClose = true;
     private final RobotHardware robot;
-    double open = 0, close = 0;
     CommandSystem commandSystem = new CommandSystem();
     public enum ClawState
     {
@@ -67,7 +67,6 @@ public class Claw
         {
             checkAndClose(robot.breakbeamLeft, ClawSide.LEFT);
         }
-
     }
 
     public void updateState(@NotNull ClawState state, @NotNull ClawSide side) {
@@ -128,21 +127,12 @@ public class Claw
         if(sensor.getState() && !shouldOpen)
         {
             updateState(ClawState.OPEN, side);
-            firstClose = true;
         }
        else if(!shouldOpen)
         {
-            if(firstClose)
-            {
-                close = getTime() ;
-                firstClose = false;
-            }
-
-            if((getTime() - close) >= delay && !firstClose)
-            {
-                updateState(ClawState.CLOSED, side);
-                //firstClose = true;
-            }
+            new SequentialCommandGroup(
+                    new WaitCommand((long) delay),
+                    new ClawCommand(this, Claw.ClawState.CLOSED, side)).execute();
         }
 
         return sensor.getState();

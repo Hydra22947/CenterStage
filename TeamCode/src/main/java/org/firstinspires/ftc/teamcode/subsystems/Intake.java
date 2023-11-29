@@ -68,11 +68,14 @@ public class Intake {
             robot.intakeServoLeft.setPower(0);
         }
 
-//        if(checkIfPixelIn(leftHsvValues) && checkIfPixelIn(rightHsvValues) && getAngle() == Angle.TRANSFER &&  IntakeExtension.current == IntakeExtension.ExtensionState.CLOSE)
-//        {
-//            robot.setReadyToTransferPixels(true);
-//        }
-
+        if(checkIfPixelIn(leftHsvValues) && checkIfPixelIn(rightHsvValues))
+        {
+            robot.setReadyToRetract(true);
+        }
+        else
+        {
+            robot.setReadyToRetract(false);
+        }
     }
 
     public void intakeMove(double power)
