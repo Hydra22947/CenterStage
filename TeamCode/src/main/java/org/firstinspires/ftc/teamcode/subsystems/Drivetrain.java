@@ -1,19 +1,13 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.AngleController;
-import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
-import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.Rotation2d;
-import com.acmerobotics.roadrunner.Vector2d;
+import com.arcrobotics.ftclib.drivebase.RobotDrive;
+import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.Globals;
-import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 
 @Config
 public class Drivetrain {
@@ -54,14 +48,11 @@ public class Drivetrain {
 
     public void update() {
         _cGamepad1.update();
-        double heading =Math.PI + Math.PI/2;// robot.getAngle();
+        double heading = robot.getAngle();
 
-        double twist = _cGamepad1.right_stick_x * 1.1;
-
-        Vector2d input = new Vector2d(
-                -_cGamepad1.left_stick_y,
-                -_cGamepad1.left_stick_x
-        );
+        double twist = Range.clip(_cGamepad1.right_stick_x * 1.1, -Globals.MAX_POWER, Globals.MAX_POWER);
+        double strafeSpeed = Range.clip(_cGamepad1.left_stick_x, -Globals.MAX_POWER, Globals.MAX_POWER);
+        double forwardSpeed = Range.clip(-_cGamepad1.left_stick_y, -Globals.MAX_POWER, Globals.MAX_POWER);
 
         if(_cGamepad1.XOnce())
         {
@@ -77,17 +68,30 @@ public class Drivetrain {
 //            rotationLock = 0;
 //        }
 
-        input = new Rotation2d(Math.cos(heading), Math.sin(heading)).inverse().times(new Vector2d(-input.x, input.y));
+        Vector2d input = new Vector2d(strafeSpeed, forwardSpeed);
+        input = input.rotateBy(-heading);
 
-        frontLeftPower = Range.clip(input.x + (twist + rotationLock) + input.y, -Globals.MAX_POWER, Globals.MAX_POWER);
-        backLeftPower = Range.clip(input.x + (twist + rotationLock)  - input.y, -Globals.MAX_POWER, Globals.MAX_POWER);
-        frontRightPower = Range.clip(input.x - (twist + rotationLock) - input.y, -Globals.MAX_POWER, Globals.MAX_POWER);
-        backRightPower = Range.clip(input.x - (twist + rotationLock) + input.y, -Globals.MAX_POWER, Globals.MAX_POWER);
+        double theta = input.angle();
 
-        robot.dtFrontLeftMotor.setPower(frontLeftPower);
-        robot.dtBackLeftMotor.setPower(backLeftPower);
-        robot.dtFrontRightMotor.setPower(frontRightPower);
-        robot.dtBackRightMotor.setPower(backRightPower);
+        double[] wheelSpeeds = new double[4];
+        wheelSpeeds[RobotDrive.MotorType.kFrontLeft.value] = Math.sin(theta + Math.PI / 4);
+        wheelSpeeds[RobotDrive.MotorType.kFrontRight.value] = Math.sin(theta - Math.PI / 4);
+        wheelSpeeds[RobotDrive.MotorType.kBackLeft.value] = Math.sin(theta - Math.PI / 4);
+        wheelSpeeds[RobotDrive.MotorType.kBackRight.value] = Math.sin(theta + Math.PI / 4);
+
+        normalize(wheelSpeeds, input.magnitude());
+
+        wheelSpeeds[RobotDrive.MotorType.kFrontLeft.value] += (twist + rotationLock);
+        wheelSpeeds[RobotDrive.MotorType.kFrontRight.value] -= (twist + rotationLock);
+        wheelSpeeds[RobotDrive.MotorType.kBackLeft.value] += (twist + rotationLock);
+        wheelSpeeds[RobotDrive.MotorType.kBackRight.value] -= (twist + rotationLock);
+
+        normalize(wheelSpeeds);
+
+        robot.dtFrontLeftMotor.setPower(RobotDrive.MotorType.kFrontLeft.value);
+        robot.dtFrontRightMotor.setPower(RobotDrive.MotorType.kFrontRight.value);
+        robot.dtBackLeftMotor.setPower(RobotDrive.MotorType.kBackLeft.value);
+        robot.dtBackRightMotor.setPower(RobotDrive.MotorType.kBackRight.value);
 
         robot.telemetry.addData("Heading", Math.toDegrees(heading));
         robot.telemetry.addData("fl", frontLeftPower);
@@ -96,6 +100,38 @@ public class Drivetrain {
         robot.telemetry.addData("br", backRightPower);
     }
 
+    void normalize(double[] wheelSpeeds, double magnitude) {
+        double maxMagnitude = Math.abs(wheelSpeeds[0]);
+        for (int i = 1; i < wheelSpeeds.length; i++) {
+            double temp = Math.abs(wheelSpeeds[i]);
+            if (maxMagnitude < temp) {
+                maxMagnitude = temp;
+            }
+        }
+        for (int i = 0; i < wheelSpeeds.length; i++) {
+            wheelSpeeds[i] = (wheelSpeeds[i] / maxMagnitude) * magnitude;
+        }
+
+    }
+
+    /**
+     * Normalize the wheel speeds
+     */
+    void normalize(double[] wheelSpeeds) {
+        double maxMagnitude = Math.abs(wheelSpeeds[0]);
+        for (int i = 1; i < wheelSpeeds.length; i++) {
+            double temp = Math.abs(wheelSpeeds[i]);
+            if (maxMagnitude < temp) {
+                maxMagnitude = temp;
+            }
+        }
+        if (maxMagnitude > 1) {
+            for (int i = 0; i < wheelSpeeds.length; i++) {
+                wheelSpeeds[i] = (wheelSpeeds[i] / maxMagnitude);
+            }
+        }
+
+    }
 
     public void resetAngle()
     {
