@@ -205,12 +205,12 @@ public class RobotHardware {
     }
 
     public double getAngle() {
-        return Angle.norm(imuAngle + imuOffset);
+        return Angle.norm(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + imuOffset);
     }
 
     public void setImuOffset(double offset)
     {
-        this.imuOffset = -imuAngle + offset;
+        this.imuOffset = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + offset;
     }
 
     public boolean isReadyToTransferPixels() {

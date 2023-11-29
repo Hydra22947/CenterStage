@@ -52,7 +52,7 @@ public class Markers {
 
         robot = RobotHardware.getInstance();
 
-        robot.addSubsystem(elevator, claw, intake , intakeExtension);
+        //robot.addSubsystem(elevator, claw, intake , intakeExtension);
 
 
     }

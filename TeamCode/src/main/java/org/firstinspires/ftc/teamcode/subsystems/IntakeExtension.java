@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 import org.jetbrains.annotations.NotNull;
 
 @Config
-public class IntakeExtension extends BetterSubsystem {
+public class IntakeExtension {
     public enum ExtensionState {
         OPEN,
         INTERMEDIATE,
@@ -38,7 +38,7 @@ public class IntakeExtension extends BetterSubsystem {
 
     }
 
-    public void updateState() {
+    public void update() {
         cGamepad.update();
 
         switch (current) {
@@ -55,26 +55,6 @@ public class IntakeExtension extends BetterSubsystem {
                 this.robot.extensionServo.setPosition(Range.clip(cGamepad.right_trigger, CLOSE_EXTENSION, OPEN_EXTENSION));
                 break;
         }
-    }
-
-    @Override
-    public void periodic() {
-        updateState();
-    }
-
-    @Override
-    public void read() {
-
-    }
-
-    @Override
-    public void write() {
-
-    }
-
-    @Override
-    public void reset() {
-
     }
 
     public ExtensionState getCurrent() {

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Globals;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 
 @Config
-public class Elevator extends BetterSubsystem {
+public class Elevator {
 
     private final RobotHardware robot;
     public static double BASE_LEVEL = 420;
@@ -59,8 +59,7 @@ public class Elevator extends BetterSubsystem {
         isAuto = true;
     }
 
-    @Override
-    public void periodic() {
+    public void update() {
 
         if(!isAuto)
         {
@@ -107,21 +106,6 @@ public class Elevator extends BetterSubsystem {
         robot.telemetry.addData("power right", controller.update());
         robot.telemetry.addData("power left", controller2.update());
         robot.telemetry.update();
-    }
-
-    @Override
-    public void read() {
-
-    }
-
-    @Override
-    public void write() {
-
-    }
-
-    @Override
-    public void reset() {
-
     }
 
     public void setTarget(double target)

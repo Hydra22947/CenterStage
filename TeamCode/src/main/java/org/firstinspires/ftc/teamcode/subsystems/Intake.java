@@ -10,12 +10,12 @@ import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 import org.jetbrains.annotations.NotNull;
 
 @Config
-public class Intake extends BetterSubsystem {
+public class Intake {
 
     private final RobotHardware robot;
     private ColorSensors sensors;
-    public static double intakeHandPivot = 0.06, intakeAmmoPivot = 0.04;
-    public static double outtakeHandPivot = 0.5, outtakeAmmoPivot = 0.58;
+    public static double intakeHandPivot = 0.05, intakeAmmoPivot = 0;
+    public static double outtakeHandPivot = 0.475, outtakeAmmoPivot = 0.58;
 
     public static double power = 1;
     public static double powerTransfer = -0.1;
@@ -45,13 +45,12 @@ public class Intake extends BetterSubsystem {
         this.sensors = new ColorSensors();
     }
 
-    @Override
-    public void periodic() {
-        insertHSVValues();
+    public void update() {
+        //insertHSVValues();
 
         updateState(Type.AMMO);
         updateState(Type.HAND);
-        checkFinishedIntake();
+        //checkFinishedIntake();
 
         if(shouldIntake && forward && !manual)
         {
@@ -69,10 +68,10 @@ public class Intake extends BetterSubsystem {
             robot.intakeServoLeft.setPower(0);
         }
 
-        if(checkIfPixelIn(leftHsvValues) && checkIfPixelIn(rightHsvValues) && getAngle() == Angle.TRANSFER &&  IntakeExtension.current == IntakeExtension.ExtensionState.CLOSE)
-        {
-            robot.setReadyToTransferPixels(true);
-        }
+//        if(checkIfPixelIn(leftHsvValues) && checkIfPixelIn(rightHsvValues) && getAngle() == Angle.TRANSFER &&  IntakeExtension.current == IntakeExtension.ExtensionState.CLOSE)
+//        {
+//            robot.setReadyToTransferPixels(true);
+//        }
 
     }
 
@@ -98,22 +97,6 @@ public class Intake extends BetterSubsystem {
     public void setAngle(Angle angle) {
         this.angle = angle;
     }
-
-    @Override
-    public void read() {
-
-    }
-
-    @Override
-    public void write() {
-
-    }
-
-    @Override
-    public void reset() {
-
-    }
-
     public void updateState(@NotNull Type type) {
         double position = getPosition(angle, type);
 

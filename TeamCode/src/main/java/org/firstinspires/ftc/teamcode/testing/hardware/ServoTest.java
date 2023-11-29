@@ -14,17 +14,17 @@ public class ServoTest extends LinearOpMode {
     private Servo servo1 = null;
     private Servo servo2 = null;
     private Servo servo3 = null;
-    public static String hw = "sHR";
-    public static String hw2 = "sHR";
+    public static String hw = "sCR";
+    public static String hw2 = "sCL";
     public static String hw3 = "sC";
 
     public static double pos1 = 0.35;
     public static double pos2 = 0.35;
     public static double pos3 = 0.5;
 
-    boolean use1 = true;
-    boolean use2 = true;
-    boolean use3 = true;
+    public static boolean use1 = true;
+    public static boolean use2 = true;
+    public static boolean use3 = false;
 
     @Override
     public void runOpMode() {

@@ -4,21 +4,25 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.commands.ClawCommand;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
+import org.firstinspires.ftc.teamcode.util.CommandSystem;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 import org.jetbrains.annotations.NotNull;
 
 @Config
-public class Claw extends BetterSubsystem
+public class Claw
 {
     public static boolean auto = true;
     public static double delay = 135;
     boolean shouldOpen = false;
+    boolean firstOpen = true, firstClose = true;
     private final RobotHardware robot;
-
+    double open = 0, close = 0;
+    CommandSystem commandSystem = new CommandSystem();
     public enum ClawState
     {
         CLOSED,
@@ -29,8 +33,8 @@ public class Claw extends BetterSubsystem
     public ClawState leftClaw = ClawState.OPEN;
     public ClawState rightClaw = ClawState.OPEN;
 
-    public static double openLeft = 0.0, closeLeft = 0.1;
-    public static double openRight = 0.0, closeRight = 0.1;
+    public static double openLeft = 0.45, closeLeft = 0.5375;
+    public static double openRight = 0.48, closeRight = 0.57;
     double tempRight = closeRight;
     double tempLeft = closeLeft;
 
@@ -40,8 +44,7 @@ public class Claw extends BetterSubsystem
         updateState(ClawState.OPEN, ClawSide.BOTH);
     }
 
-    @Override
-    public void periodic() {
+    public void update() {
         if(shouldOpen)
         {
             updateState(ClawState.OPEN, ClawSide.BOTH);
@@ -67,21 +70,6 @@ public class Claw extends BetterSubsystem
 
     }
 
-    @Override
-    public void read() {
-
-    }
-
-    @Override
-    public void write() {
-
-    }
-
-    @Override
-    public void reset() {
-
-    }
-
     public void updateState(@NotNull ClawState state, @NotNull ClawSide side) {
         double position = getClawStatePosition(state, side);
 
@@ -98,7 +86,6 @@ public class Claw extends BetterSubsystem
                 position = getClawStatePosition(state, ClawSide.LEFT);
                 robot.outtakeClawLeftServo.setPosition(position);
                 this.leftClaw = state;
-
                 position = getClawStatePosition(state, ClawSide.RIGHT);
                 robot.outtakeClawRightServo.setPosition(position);
                 this.rightClaw = state;
@@ -140,15 +127,22 @@ public class Claw extends BetterSubsystem
 
         if(sensor.getState() && !shouldOpen)
         {
-            new SequentialCommandGroup(
-                    new WaitCommand((long)delay),
-                    new ClawCommand(this, Claw.ClawState.OPEN, side)).schedule();
+            updateState(ClawState.OPEN, side);
+            firstClose = true;
         }
        else if(!shouldOpen)
         {
-            new SequentialCommandGroup(
-                    new WaitCommand((long) delay),
-                    new ClawCommand(this, Claw.ClawState.CLOSED, side)).schedule();
+            if(firstClose)
+            {
+                close = getTime() ;
+                firstClose = false;
+            }
+
+            if((getTime() - close) >= delay && !firstClose)
+            {
+                updateState(ClawState.CLOSED, side);
+                //firstClose = true;
+            }
         }
 
         return sensor.getState();
@@ -160,5 +154,10 @@ public class Claw extends BetterSubsystem
 
     public void setShouldOpen(boolean shouldOpen) {
         this.shouldOpen = shouldOpen;
+    }
+
+    double getTime()
+    {
+        return System.nanoTime() / 1000000;
     }
 }

@@ -11,7 +11,9 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
 import org.firstinspires.ftc.teamcode.commands.OuttakeCommand;
@@ -26,7 +28,7 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
 @TeleOp(name = "OpMode Red")
-public class OpMode extends CommandOpMode {
+public class OpMode extends LinearOpMode {
 
     // robot
     private final RobotHardware robot = RobotHardware.getInstance();
@@ -44,15 +46,27 @@ public class OpMode extends CommandOpMode {
     BetterGamepad betterGamepad1, betterGamepad2;
 
     // variables
-    Timer timer;
-    double elevatorTarget = Globals.START_ELEVATOR;
-    boolean rightBumberTrigger = false;
-    double passed = 0;
+    double clawPassed = 0;
+    double elevatorReset = 0;
+    double previousElevator = 0;
+    int openedXTimes = 0;
+    boolean retract = false;
+    public enum IntakeState {
+        RETRACT,
+        INTAKE,
+        INTAKE_EXTEND
+    }
+
+    public enum LiftState {
+        RETRACT,
+        EXTRACT
+    }
+
+    IntakeState intakeState = IntakeState.RETRACT;
+    LiftState liftState = LiftState.RETRACT;
 
     @Override
-    public void initialize() {
-        timer = new Timer();
-        timer.reset();
+    public void runOpMode() throws InterruptedException {
 
         CommandScheduler.getInstance().reset();
 
@@ -75,30 +89,7 @@ public class OpMode extends CommandOpMode {
         intake = new Intake();
         intakeExtension = new IntakeExtension(gamepad1);
 
-
-        robot.addSubsystem(drivetrain, intake, intakeExtension, elevator, outtake, claw);
-
-        gamepadEx.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(new SequentialCommandGroup(
-                        new InstantCommand(() -> elevator.setUsePID(true)),
-                        new ElevatorCommand(elevator, Elevator.BASE_LEVEL),
-                        new WaitCommand((long)Globals.WAIT_DELAY_TILL_OUTTAKE),
-                        new OuttakeCommand(outtake, Outtake.Angle.OUTTAKE)
-                ));
-
-        gamepadEx.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(new SequentialCommandGroup(
-                        new InstantCommand(() -> claw.setShouldOpen(true)),
-                        new InstantCommand(() -> passed = timer.currentTime()),
-                        new WaitCommand((long)Globals.WAIT_DELAY_TILL_CLOSE),
-                        new InstantCommand(() -> elevator.setUsePID(true)),
-                        new OuttakeCommand(outtake, Outtake.Angle.INTAKE),
-                        new WaitCommand((long)Globals.WAIT_DELAY_TILL_OUTTAKE),
-                        new ElevatorCommand(elevator, 0),
-                        new InstantCommand(() -> elevatorTarget += Globals.ELEVATOR_INCREMENT)
-                ));
-
-        while (opModeInInit())
+        while (!opModeIsActive() && !isStopRequested())
         {
             intake.setAngle(Intake.Angle.TRANSFER);
             intakeExtension.setCurrent(IntakeExtension.ExtensionState.MANUAL);
@@ -110,87 +101,139 @@ public class OpMode extends CommandOpMode {
 
             intake.setManual(true);
         }
-    }
 
-    @Override
-    public void run() {
-        betterGamepad1.update();
-        betterGamepad2.update();
+        waitForStart();
 
-        if(timer.currentTime() - passed >= Globals.delayClaw)
+        while (opModeIsActive())
         {
-            claw.setShouldOpen(false);
-        }
+            betterGamepad1.update();
+            betterGamepad2.update();
+            intake.update();
+            //intakeExtension.update();
+            drivetrain.update();
+            claw.update();
+            outtake.update();
 
-        if(betterGamepad1.rightBumperOnce())
-        {
-            intake.move(Intake.Angle.INTAKE);
-            intake.intakeMove(intake.power);
-            if(rightBumberTrigger)
+            if(getTime() - clawPassed >= Globals.delayClaw)
             {
-                rightBumberTrigger = false;
-                intake.move(Intake.Angle.TRANSFER);
-                intake.intakeMove(0);
+                claw.setShouldOpen(false);
+            }
+
+            if(gamepad2.left_stick_y != 0)
+            {
+                elevator.setUsePID(false);
             }
             else
             {
-                rightBumberTrigger = true;
+                elevator.setUsePID(true);
             }
-        }
-        else if(betterGamepad1.leftBumperOnce())
-        {
-            rightBumberTrigger = false;
-            intake.move(Intake.Angle.TRANSFER);
-            intake.intakeMove(0);
-        }
-        else if(gamepad1.right_trigger != 0)
-        {
-            intake.intakeMove(gamepad1.right_trigger);
-            intake.move(Intake.Angle.INTAKE);
-            rightBumberTrigger = false;
 
-        }
-        else if(gamepad1.left_trigger != 0)
-        {
-            intake.intakeMove(-gamepad1.left_trigger);
-            rightBumberTrigger = false;
-        }
-        else if(!rightBumberTrigger)
-        {
-            intake.intakeMove(0);
-            intake.setShouldIntake(false);
-            intake.move(Intake.Angle.TRANSFER);
-        }
+            switch (intakeState)
+            {
+                case RETRACT:
+                    intake.move(Intake.Angle.TRANSFER);
 
-        if(gamepad1.left_stick_y != 0)
+                    if(betterGamepad1.rightBumperOnce())
+                    {
+                        intakeState = IntakeState.INTAKE;
+                    }
+                    else if(gamepad1.right_trigger != 0)
+                    {
+                        intakeState = IntakeState.INTAKE_EXTEND;
+                    }
+
+                    if(gamepad1.left_trigger != 0)
+                    {
+                        intake.intakeMove(-gamepad1.left_trigger);
+                    }
+                    else
+                    {
+                        intake.intakeMove(0);
+                    }
+                    break;
+                case INTAKE:
+                    intake.move(Intake.Angle.INTAKE);
+
+                    if(gamepad1.left_trigger != 0)
+                    {
+                        intake.intakeMove(-gamepad1.left_trigger);
+                    }
+                    else
+                    {
+                        intake.intakeMove(intake.power);
+                    }
+
+                    if(gamepad1.right_trigger != 0)
+                    {
+                        intakeState = IntakeState.INTAKE_EXTEND;
+                    }
+                    else if(betterGamepad1.rightBumperOnce())
+                    {
+                        intakeState = IntakeState.RETRACT;
+                    }
+                    break;
+                case INTAKE_EXTEND:
+                    intake.intakeMove(gamepad1.right_trigger);
+                    intake.move(Intake.Angle.INTAKE);
+
+                    if(gamepad1.right_trigger == 0)
+                    {
+                        intakeState = IntakeState.RETRACT;
+                    }
+                    break;
+                default:
+                    intakeState = IntakeState.RETRACT;
+                    break;
+            }
+
+        switch (liftState)
         {
-            elevator.setUsePID(false);
+            case RETRACT:
+                elevator.setTarget(0);
+                outtake.setAngle(Outtake.Angle.INTAKE);
+                //claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
+
+                if(betterGamepad1.YOnce())
+                {
+                    previousElevator = getTime();
+                    liftState = LiftState.EXTRACT;
+                }
+                break;
+            case EXTRACT:
+                elevator.setTarget(Elevator.BASE_LEVEL + (openedXTimes * Globals.ELEVATOR_INCREMENT));
+
+                if((getTime() - previousElevator) >= Globals.WAIT_DELAY_TILL_OUTTAKE )
+                {
+                    outtake.setAngle(Outtake.Angle.OUTTAKE);
+
+                }
+
+                if(betterGamepad1.AOnce())
+                {
+                    openedXTimes += 1;
+                    claw.setShouldOpen(true);
+                    clawPassed = getTime();
+                    elevatorReset = getTime();
+                    retract = true;
+                }
+                else if((getTime() - elevatorReset) >= Globals.WAIT_DELAY_TILL_CLOSE && retract)
+                {
+                    retract = false;
+                    liftState = LiftState.RETRACT;
+                }
+                break;
+            default:
+                liftState = LiftState.RETRACT;
+                break;
         }
-        else
-        {
-            elevator.setUsePID(true);
+            telemetry.update();
         }
-
-        super.run();
-        robot.periodic();
-
-        robot.read();
-
-        telemetry.update();
-        robot.write();
     }
 
-    public void setElevatorTarget(double elevatorTarget)
+    double getTime()
     {
-        this.elevatorTarget = elevatorTarget;
+        return System.nanoTime() / 1000000;
     }
 
-    public double getElevatorTarget()
-    {
-        return elevatorTarget;
-    }
 
-    public void setRightBumberTrigger(boolean rightBumberTrigger) {
-        this.rightBumberTrigger = rightBumberTrigger;
-    }
 }

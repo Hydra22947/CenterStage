@@ -34,7 +34,7 @@ public class IntakeTest extends CommandOpMode {
         intake = new Intake();
         intakeExtension = new IntakeExtension(gamepad1);
 
-        robot.addSubsystem(intake, intakeExtension);
+        //robot.addSubsystem(intake, intakeExtension);
 
         gamepadEx.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(new SequentialCommandGroup(

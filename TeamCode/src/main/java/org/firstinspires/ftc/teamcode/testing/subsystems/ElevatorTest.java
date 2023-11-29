@@ -37,7 +37,7 @@ public class ElevatorTest extends CommandOpMode {
         elevator = new Elevator(gamepad1);
         outtake = new Outtake();
 
-        robot.addSubsystem(elevator, outtake);
+        //robot.addSubsystem(elevator, outtake);
 
         gamepadEx.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(new SequentialCommandGroup(

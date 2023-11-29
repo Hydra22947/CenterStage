@@ -47,7 +47,7 @@ public class OuttakeTest extends CommandOpMode {
         outtake = new Outtake(intake, claw);
         elevator = new Elevator();
 
-        robot.addSubsystem(claw, outtake, elevator, intake);
+       // robot.addSubsystem(claw, outtake, elevator, intake);
 
         gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new SequentialCommandGroup(

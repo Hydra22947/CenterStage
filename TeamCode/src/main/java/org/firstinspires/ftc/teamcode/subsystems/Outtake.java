@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 import org.jetbrains.annotations.NotNull;
 
 @Config
-public class Outtake extends BetterSubsystem {
+public class Outtake {
 
     private final RobotHardware robot;
 
@@ -45,36 +45,19 @@ public class Outtake extends BetterSubsystem {
 
     }
 
-    @Override
-    public void periodic() {
+    public void update() {
         updateState(Type.CLAW);
         updateState(Type.HAND);
 
-        if(intake != null && claw != null && robot.isReadyToTransferPixels() && angle == Angle.INTAKE)
-        {
-            robot.telemetry.update();
-            intake.intakeMove(Intake.powerTransfer);
-            // until pixels see beam(already happens in opmode) because of peridoric
-            if(!claw.checkAndClose(robot.breakbeamRight, ClawSide.RIGHT) && !claw.checkAndClose(robot.breakbeamLeft, ClawSide.LEFT));
-
-        }
+//        if(intake != null && claw != null && robot.isReadyToTransferPixels() && angle == Angle.INTAKE)
+//        {
+//            robot.telemetry.update();
+//            intake.intakeMove(Intake.powerTransfer);
+//            // until pixels see beam(already happens in opmode) because of peridoric
+//            if(!claw.checkAndClose(robot.breakbeamRight, ClawSide.RIGHT) && !claw.checkAndClose(robot.breakbeamLeft, ClawSide.LEFT));
+//
+//        }
     }
-
-    @Override
-    public void read() {
-
-    }
-
-    @Override
-    public void write() {
-
-    }
-
-    @Override
-    public void reset() {
-
-    }
-
 
     public void setAngle(@NotNull Angle angle) {
         this.angle = angle;

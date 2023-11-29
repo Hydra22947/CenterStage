@@ -36,7 +36,7 @@ public class DrivetrainTest extends CommandOpMode {
 
         drivetrain = new Drivetrain(gamepad1, true);
         drivetrain.resetAngle();
-        robot.addSubsystem(drivetrain);
+        //robot.addSubsystem(drivetrain);
 
         robot.read();
 
