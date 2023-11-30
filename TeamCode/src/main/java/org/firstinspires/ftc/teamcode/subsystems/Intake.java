@@ -15,7 +15,7 @@ public class Intake {
     private final RobotHardware robot;
     private ColorSensors sensors;
     public static double intakeHandPivot = 0.05, intakeAmmoPivot = 0;
-    public static double outtakeHandPivot = 0.475, outtakeAmmoPivot = 0.58;
+    public static double outtakeHandPivot = 0.47, outtakeAmmoPivot = 0.56;
 
     public static double power = 1;
     public static double powerTransfer = -0.1;

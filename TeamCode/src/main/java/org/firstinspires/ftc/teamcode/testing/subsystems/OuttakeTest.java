@@ -42,7 +42,7 @@ public class OuttakeTest extends CommandOpMode {
         gamepadEx = new GamepadEx(gamepad1);
         robot.init(hardwareMap, telemetry);
 
-        claw = new Claw();
+//        claw = new Claw();
         intake = new Intake();
         outtake = new Outtake(intake, claw);
         elevator = new Elevator();

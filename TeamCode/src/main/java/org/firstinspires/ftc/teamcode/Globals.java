@@ -17,12 +17,11 @@ public class Globals {
 
     public static double MAX_POWER = 0.8;
     public static double START_ELEVATOR = 2;
-    public static double ELEVATOR_INCREMENT = .2;
+    public static double ELEVATOR_INCREMENT = 50;
     public static double BASIC_HUE = 72, BASIC_SAT = 0.61, BASIC_VAL = 31;
     public static double SCALE_FACTOR = 255;
     public static double WAIT_DELAY_TILL_OUTTAKE = 150;
     public static double WAIT_DELAY_TILL_CLOSE = 500;
-    public static double INCREMENT = 305;
     public static double delayClaw = WAIT_DELAY_TILL_CLOSE;
     /*Pixel hsv values in case we need
 

@@ -1,28 +1,25 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.OpMode;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.commands.ClawCommand;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
-import org.firstinspires.ftc.teamcode.util.CommandSystem;
-import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Scanner;
 
 @Config
 public class Claw
 {
     public static boolean auto = true;
-    public static double delay = 135;
+    public static double delay = 300;
     boolean shouldOpen = false;
     private final RobotHardware robot;
-    CommandSystem commandSystem = new CommandSystem();
+    int counter = 0;
     public enum ClawState
     {
         CLOSED,
@@ -33,15 +30,19 @@ public class Claw
     public ClawState leftClaw = ClawState.OPEN;
     public ClawState rightClaw = ClawState.OPEN;
 
-    public static double openLeft = 0.45, closeLeft = 0.5375;
-    public static double openRight = 0.48, closeRight = 0.57;
+    public static double openLeft = 0.47, closeLeft = 0.5375;
+    public static double openRight = 0.55, closeRight = 0.6;
     double tempRight = closeRight;
     double tempLeft = closeLeft;
 
-    public Claw()
+    OpMode opMode;
+
+    public Claw(OpMode opMode)
     {
         this.robot = RobotHardware.getInstance();
         updateState(ClawState.OPEN, ClawSide.BOTH);
+
+        this.opMode = opMode;
     }
 
     public void update() {
@@ -130,9 +131,9 @@ public class Claw
         }
        else if(!shouldOpen)
         {
-            new SequentialCommandGroup(
+            opMode.schedule(new SequentialCommandGroup(
                     new WaitCommand((long) delay),
-                    new ClawCommand(this, Claw.ClawState.CLOSED, side)).execute();
+                    new InstantCommand(() -> updateState(ClawState.CLOSED, side))));
         }
 
         return sensor.getState();

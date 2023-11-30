@@ -45,7 +45,7 @@ public class Markers {
     {
 
         elevator = new Elevator(gamepad2);
-        claw = new Claw();
+//        claw = new Claw();
         intake = new Intake();
         intakeExtension = new IntakeExtension(null);
         outtake = new Outtake(intake, claw);

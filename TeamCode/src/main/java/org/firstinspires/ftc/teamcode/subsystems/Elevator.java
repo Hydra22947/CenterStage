@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
@@ -13,8 +14,8 @@ import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 public class Elevator {
 
     private final RobotHardware robot;
-    public static double BASE_LEVEL = 420;
-    public static double MAX_LEVEL = 1260;
+    public static double BASE_LEVEL = 750;
+    public static double MAX_LEVEL = 1650;
     double currentTarget = 0;
     boolean usePID = true;
     public static double maxPower = 0.85;
@@ -67,10 +68,15 @@ public class Elevator {
 
             if (usePID)
             {
+                robot.elevatorMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
                 setPidControl();
             }
             else
             {
+                robot.elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 if(gamepad.left_stick_y != 0 && !gamepad.left_stick_button)
                 {
                     robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
@@ -111,17 +117,25 @@ public class Elevator {
     public void setTarget(double target)
     {
         setPidControl();
-        this.currentTarget = target;
+        if(target > MAX_LEVEL)
+        {
+            this.currentTarget = MAX_LEVEL;
+        }
+        else
+        {
+            this.currentTarget = target;
+        }
+
     }
 
     public void increment()
     {
-        currentTarget += Globals.INCREMENT;
+        currentTarget += Globals.ELEVATOR_INCREMENT;
     }
 
     public void decrement()
     {
-        currentTarget -= Globals.INCREMENT;
+        currentTarget -= Globals.ELEVATOR_INCREMENT;
     }
 
     public void setUsePID(boolean usePID) {
