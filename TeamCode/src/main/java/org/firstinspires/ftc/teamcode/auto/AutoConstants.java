@@ -17,8 +17,9 @@ public class AutoConstants {
 
     public static Pose2d startPoseLeft = new Pose2d(startX, startY, startH);
     public static Pose2d placePixelPose = new Pose2d(placePixelX, -placePixelY, placePixelH);
-    public static Pose2d stageDoorPose = new Pose2d(stageDoorPoseX, stageDoorPoseY, stageDoorPoseH);
-    public static Vector2d stageDoorVector = new Vector2d(stageDoorVectorX, stageDoorVectorY);
-
+    public static Vector2d stageDoorVector1 = new Vector2d(stageDoorPoseX, stageDoorPoseY);
+    public static Vector2d stageDoorVector2 = new Vector2d(stageDoorVectorX, stageDoorVectorY);
     public static Vector2d intakePixelVector = new Vector2d(intakePixelVectorX, intakePixelVectorY);
+
+    public static Pose2d currentPose;
 }
