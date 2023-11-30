@@ -19,6 +19,7 @@ public class Intake {
 
     public static double power = 1;
     public static double powerTransfer = -0.1;
+    public static double ERROR = 3;
     public enum Angle
     {
         INTAKE,
@@ -46,7 +47,7 @@ public class Intake {
     }
 
     public void update() {
-        //insertHSVValues();
+        insertHSVValues();
 
         updateState(Type.AMMO);
         updateState(Type.HAND);
@@ -129,9 +130,9 @@ public class Intake {
 
     public boolean checkIfPixelIn(float[] hsvValues)
     {
-        boolean hueCheck = ((hsvValues[0] + 5) == Globals.BASIC_HUE) || ((hsvValues[0] - 5) == Globals.BASIC_HUE);
-        boolean satCheck = ((hsvValues[1] + 5) == Globals.BASIC_HUE) || ((hsvValues[1] - 5) == Globals.BASIC_HUE);
-        boolean valCheck = ((hsvValues[2] + 5) == Globals.BASIC_HUE) || ((hsvValues[2] - 5) == Globals.BASIC_HUE);
+        boolean hueCheck = ((hsvValues[0] + ERROR) == Globals.BASIC_HUE) || ((hsvValues[0] - ERROR) == Globals.BASIC_HUE);
+        boolean satCheck = ((hsvValues[1] + ERROR) == Globals.BASIC_HUE) || ((hsvValues[1] - ERROR) == Globals.BASIC_HUE);
+        boolean valCheck = ((hsvValues[2] + ERROR) == Globals.BASIC_HUE) || ((hsvValues[2] - ERROR) == Globals.BASIC_HUE);
 
         return hueCheck &&  satCheck && valCheck;
     }
@@ -164,12 +165,10 @@ public class Intake {
                 return 0.0;
         }
     }
-    public void checkFinishedIntake()
+    public boolean checkFinishedIntake()
     {
-        if(this.sensors.checkIfPixelIn(this.sensors.getRightHsvValues()) || this.sensors.checkIfPixelIn(this.sensors.getLeftHsvValues()))
-        {
-            this.shouldIntake = false;
-        }
+        return this.sensors.checkIfPixelIn(this.sensors.getRightHsvValues()) || this.sensors.checkIfPixelIn(this.sensors.getLeftHsvValues());
+
     }
     public boolean isShouldIntake() {
         return shouldIntake;
