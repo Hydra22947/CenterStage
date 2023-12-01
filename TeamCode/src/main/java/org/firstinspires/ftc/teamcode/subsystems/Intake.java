@@ -2,18 +2,17 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import android.graphics.Color;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.util.ColorSensors;
 import org.firstinspires.ftc.teamcode.Globals;
-import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 import org.jetbrains.annotations.NotNull;
 
 @Config
 public class Intake {
 
     private final RobotHardware robot;
-    private ColorSensors sensors;
     public static double intakeHandPivot = 0.05, intakeAmmoPivot = 0;
     public static double outtakeHandPivot = 0.47, outtakeAmmoPivot = 0.56;
 
@@ -43,7 +42,6 @@ public class Intake {
     public Intake()
     {
         this.robot = RobotHardware.getInstance();
-        this.sensors = new ColorSensors();
     }
 
     public void update() {
@@ -69,7 +67,7 @@ public class Intake {
             robot.intakeServoLeft.setPower(0);
         }
 
-        if(checkIfPixelIn(leftHsvValues) && checkIfPixelIn(rightHsvValues))
+        if(checkIfPixelIn(robot.colorRight) && checkIfPixelIn(robot.colorLeft))
         {
             robot.setReadyToRetract(true);
         }
@@ -128,13 +126,9 @@ public class Intake {
                 leftHsvValues);
     }
 
-    public boolean checkIfPixelIn(float[] hsvValues)
+    public boolean checkIfPixelIn(RevColorSensorV3 sensor)
     {
-        boolean hueCheck = ((hsvValues[0] + ERROR) == Globals.BASIC_HUE) || ((hsvValues[0] - ERROR) == Globals.BASIC_HUE);
-        boolean satCheck = ((hsvValues[1] + ERROR) == Globals.BASIC_HUE) || ((hsvValues[1] - ERROR) == Globals.BASIC_HUE);
-        boolean valCheck = ((hsvValues[2] + ERROR) == Globals.BASIC_HUE) || ((hsvValues[2] - ERROR) == Globals.BASIC_HUE);
-
-        return hueCheck &&  satCheck && valCheck;
+        return -Globals.ERROR <= sensor.getDistance(DistanceUnit.CM) && sensor.getDistance(DistanceUnit.CM) <= Globals.ERROR;
     }
 
     private double getPosition(Angle angle, Type type)
@@ -165,11 +159,7 @@ public class Intake {
                 return 0.0;
         }
     }
-    public boolean checkFinishedIntake()
-    {
-        return this.sensors.checkIfPixelIn(this.sensors.getRightHsvValues()) || this.sensors.checkIfPixelIn(this.sensors.getLeftHsvValues());
 
-    }
     public boolean isShouldIntake() {
         return shouldIntake;
     }

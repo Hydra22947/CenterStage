@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.testing.hardware;
 
 import android.graphics.Color;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Globals;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -55,21 +56,28 @@ public class SensorREVColorDistance extends LinearOpMode {
             telemetry.addData("Left Sensor - H", leftHsvValues[0]);
             telemetry.addData("Left Sensor - S", leftHsvValues[1]);
             telemetry.addData("Left Sensor - V", leftHsvValues[2]);
-            telemetry.addData("Right Detected - V", checkIfPixelIn(rightHsvValues));
-            telemetry.addData("Left Detected - V", checkIfPixelIn(leftHsvValues));
+            telemetry.addData("Right Sensor - DISTANCE", rightSensorColor.getDistance(DistanceUnit.CM));
+            telemetry.addData("Left Sensor - DISTANCE", leftSensorColor.getDistance(DistanceUnit.CM));
+            telemetry.addData("Left Sensor - V", leftHsvValues[2]);
+            telemetry.addData("Right Detected", checkIfPixelIn(rightSensorColor));
+            telemetry.addData("Left Detected", checkIfPixelIn(leftSensorColor));
 
             telemetry.update();
         }
     }
 
-    public boolean checkIfPixelIn(float[] hsvValues)
+//    public boolean checkIfPixelIn(float[] hsvValues)
+//    {
+//
+//
+//        boolean hueCheck = hsvValues[0] >= Globals.BASIC_HUE - toleranceH && hsvValues[0] <= Globals.BASIC_HUE + toleranceH;
+//        boolean satCheck = hsvValues[1] >= Globals.BASIC_SAT - toleranceS && hsvValues[0] <= Globals.BASIC_SAT + toleranceS;
+//        boolean valCheck = hsvValues[2] >= Globals.BASIC_VAL - toleranceV && hsvValues[0] <= Globals.BASIC_VAL + toleranceV;
+//
+//        return !(hueCheck &&  satCheck && valCheck);
+//    }
+    public boolean checkIfPixelIn(RevColorSensorV3 sensor)
     {
-
-
-        boolean hueCheck = hsvValues[0] >= Globals.BASIC_HUE - toleranceH && hsvValues[0] <= Globals.BASIC_HUE + toleranceH;
-        boolean satCheck = hsvValues[1] >= Globals.BASIC_SAT - toleranceS && hsvValues[0] <= Globals.BASIC_SAT + toleranceS;
-        boolean valCheck = hsvValues[2] >= Globals.BASIC_VAL - toleranceV && hsvValues[0] <= Globals.BASIC_VAL + toleranceV;
-
-        return !(hueCheck &&  satCheck && valCheck);
+        return -Globals.ERROR <= sensor.getDistance(DistanceUnit.CM) && sensor.getDistance(DistanceUnit.CM) <= Globals.ERROR;
     }
 }

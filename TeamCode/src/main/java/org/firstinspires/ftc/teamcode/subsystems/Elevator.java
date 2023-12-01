@@ -19,7 +19,7 @@ public class Elevator {
     double currentTarget = 0;
     boolean usePID = true;
     public static double maxPower = 0.85;
-    public static double kP = .01, kI = 0, kD = 0.00001;
+    public static double kP = 0.005, kI = 0, kD = 0.0000001;
 
     Gamepad gamepad;
     BetterGamepad cGamepad;

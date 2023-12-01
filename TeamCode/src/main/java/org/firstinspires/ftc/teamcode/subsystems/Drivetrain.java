@@ -37,9 +37,9 @@ public class Drivetrain {
         _cGamepad1.update();
         double y = -_cGamepad1.left_stick_y; // Remember, Y stick value is reversed
         double x = _cGamepad1.left_stick_x;
-        double rx = _cGamepad1.right_stick_x * 0.9;
+        double rx = _cGamepad1.right_stick_x * 0.65;
 
-        double botHeading = robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        double botHeading = robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + Math.PI;
 
         // Rotate the movement direction counter to the bot's rotation
         double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
@@ -60,6 +60,9 @@ public class Drivetrain {
         robot.dtBackLeftMotor.setPower(backLeftPower);
         robot.dtFrontRightMotor.setPower(frontRightPower);
         robot.dtBackRightMotor.setPower(backRightPower);
+
+        robot.telemetry.addData("heading R", botHeading);
+        robot.telemetry.addData("heading H", Math.toDegrees(botHeading));
     }
 
 

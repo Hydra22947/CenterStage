@@ -19,7 +19,7 @@ public class Claw
     public static double delay = 300;
     boolean shouldOpen = false;
     private final RobotHardware robot;
-    int counter = 0;
+    public boolean overwrite = false;
     public enum ClawState
     {
         CLOSED,
@@ -59,12 +59,12 @@ public class Claw
             closeLeft = tempLeft;
         }
 
-        if((rightClaw == Claw.ClawState.OPEN || rightClaw == ClawState.CLOSED) && !shouldOpen)
+        if((rightClaw == Claw.ClawState.OPEN || rightClaw == ClawState.CLOSED) && !shouldOpen && !overwrite)
         {
             checkAndClose(robot.breakbeamRight, ClawSide.RIGHT);
         }
 
-        if((leftClaw == Claw.ClawState.OPEN || leftClaw == ClawState.CLOSED) && !shouldOpen)
+        if((leftClaw == Claw.ClawState.OPEN || leftClaw == ClawState.CLOSED) && !shouldOpen && !overwrite)
         {
             checkAndClose(robot.breakbeamLeft, ClawSide.LEFT);
         }

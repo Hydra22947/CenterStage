@@ -44,11 +44,15 @@ public class OpMode extends CommandOpMode {
     // gamepads
     GamepadEx gamepadEx, gamepadEx2;
     BetterGamepad betterGamepad1, betterGamepad2;
+    public static double transferPower = -1;
+    public static double delayTransfer = 800;
+    public static double maxTransferTimer = 6750; // make sure maxTransferTimer > delayTransfer
 
     // variables
     double clawPassed = 0;
     double elevatorReset = 0;
     double previousElevator = 0;
+    double transferTimer = 0;
     int openedXTimes = 0;
     boolean retract = false;
     public enum IntakeState {
@@ -104,10 +108,11 @@ public class OpMode extends CommandOpMode {
 
     @Override
     public void run() {
+
+        //intakeExtension.update();
         betterGamepad1.update();
         betterGamepad2.update();
         intake.update();
-        //intakeExtension.update();
         drivetrain.update();
         claw.update();
         outtake.update();
@@ -132,11 +137,21 @@ public class OpMode extends CommandOpMode {
                     intakeState = IntakeState.INTAKE_EXTEND;
                 }
 
+                if(intake.checkIfPixelIn(robot.colorRight) || intake.checkIfPixelIn(robot.colorLeft))
+                {
+                    intake.intakeMove(transferPower);
+                }
+
                 if (gamepad1.left_trigger != 0) {
                     intake.intakeMove(-gamepad1.left_trigger);
-                } else if (robot.isReadyToRetract()) {
-                    intake.intakeMove(Intake.powerTransfer);
-                } else {
+                }
+                else if((intake.checkIfPixelIn(robot.colorRight) || intake.checkIfPixelIn(robot.colorLeft)
+                    ) && (getTime() - transferTimer >= delayTransfer) && (getTime() - transferTimer <= maxTransferTimer))
+                {
+                    intake.intakeMove(transferPower);
+                }
+                else
+                {
                     intake.intakeMove(0);
                 }
 
@@ -157,6 +172,7 @@ public class OpMode extends CommandOpMode {
                 }
 
                 if (robot.isReadyToRetract()) {
+                    transferTimer = getTime();
                     intakeState = IntakeState.RETRACT;
                 }
                 break;
@@ -189,8 +205,11 @@ public class OpMode extends CommandOpMode {
                 if ((getTime() - previousElevator) >= Globals.WAIT_DELAY_TILL_OUTTAKE) {
                     outtake.setAngle(Outtake.Angle.OUTTAKE);
                 }
+                claw.overwrite = true;
 
+                claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
                 if (betterGamepad1.AOnce()) {
+                    claw.overwrite = false;
                     openedXTimes++;
                     claw.setShouldOpen(true);
                     clawPassed = getTime();

@@ -63,6 +63,9 @@ public class FieldCentricMecanumTeleOp extends LinearOpMode {
             robot.dtBackLeftMotor.setPower(backLeftPower);
             robot.dtFrontRightMotor.setPower(frontRightPower);
             robot.dtBackRightMotor.setPower(backRightPower);
+
+            telemetry.addData("heading", botHeading);
+            telemetry.update();
         }
     }
 }
