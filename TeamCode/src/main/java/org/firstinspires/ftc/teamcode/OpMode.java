@@ -46,7 +46,7 @@ public class OpMode extends CommandOpMode {
     BetterGamepad betterGamepad1, betterGamepad2;
     public static double transferPower = -1;
     public static double delayTransfer = 800;
-    public static double maxTransferTimer = 6750; // make sure maxTransferTimer > delayTransfer
+    public static double maxTransferTimer = 2750; // make sure maxTransferTimer > delayTransfer
 
     // variables
     double clawPassed = 0;
@@ -68,6 +68,7 @@ public class OpMode extends CommandOpMode {
 
     IntakeState intakeState = IntakeState.RETRACT;
     LiftState liftState = LiftState.RETRACT;
+    double loopTime = 0;
 
     @Override
     public void initialize() {
@@ -112,8 +113,8 @@ public class OpMode extends CommandOpMode {
         //intakeExtension.update();
         betterGamepad1.update();
         betterGamepad2.update();
-        intake.update();
         drivetrain.update();
+        intake.update();
         claw.update();
         outtake.update();
 
@@ -137,16 +138,11 @@ public class OpMode extends CommandOpMode {
                     intakeState = IntakeState.INTAKE_EXTEND;
                 }
 
-                if(intake.checkIfPixelIn(robot.colorRight) || intake.checkIfPixelIn(robot.colorLeft))
-                {
-                    intake.intakeMove(transferPower);
-                }
-
                 if (gamepad1.left_trigger != 0) {
                     intake.intakeMove(-gamepad1.left_trigger);
                 }
-                else if((intake.checkIfPixelIn(robot.colorRight) || intake.checkIfPixelIn(robot.colorLeft)
-                    ) && (getTime() - transferTimer >= delayTransfer) && (getTime() - transferTimer <= maxTransferTimer))
+                else if(/*(intake.checkIfPixelIn(robot.colorRight) || intake.checkIfPixelIn(robot.colorLeft))
+                        && */(getTime() - transferTimer >= delayTransfer) && (getTime() - transferTimer <= maxTransferTimer))
                 {
                     intake.intakeMove(transferPower);
                 }
@@ -224,9 +220,12 @@ public class OpMode extends CommandOpMode {
                 liftState = LiftState.RETRACT;
                 break;
         }
-        telemetry.update();
 
+        telemetry.addData("hz ", 1000000000 / (System.nanoTime() - loopTime));
+        telemetry.update();
         CommandScheduler.getInstance().run();
+
+        loopTime = System.nanoTime();
     }
 
 
