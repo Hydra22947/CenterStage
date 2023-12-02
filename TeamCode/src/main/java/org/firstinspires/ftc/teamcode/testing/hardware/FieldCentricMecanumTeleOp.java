@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.testing.hardware;
 
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 @TeleOp
 public class FieldCentricMecanumTeleOp extends LinearOpMode {
 
+    double loopTime = 0;
     private final RobotHardware robot = RobotHardware.getInstance();
     @Override
     public void runOpMode() throws InterruptedException {
@@ -64,8 +66,11 @@ public class FieldCentricMecanumTeleOp extends LinearOpMode {
             robot.dtFrontRightMotor.setPower(frontRightPower);
             robot.dtBackRightMotor.setPower(backRightPower);
 
+            telemetry.addData("hz ", 1000000000 / (System.nanoTime() - loopTime));
             telemetry.addData("heading", botHeading);
             telemetry.update();
+
+            loopTime = System.nanoTime();
         }
     }
 }

@@ -39,7 +39,7 @@ public class OpMode extends CommandOpMode {
     Intake intake;
     Outtake outtake;
     Claw claw;
-    IntakeExtension intakeExtension;
+    //IntakeExtension intakeExtension;
 
     // gamepads
     GamepadEx gamepadEx, gamepadEx2;
@@ -75,7 +75,6 @@ public class OpMode extends CommandOpMode {
         CommandScheduler.getInstance().reset();
 
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
-        Globals.IS_AUTO = false;
         Globals.IS_USING_IMU = true;
 
         gamepadEx = new GamepadEx(gamepad1);
@@ -91,19 +90,23 @@ public class OpMode extends CommandOpMode {
         outtake = new Outtake(intake, claw);
         claw = new Claw(this);
         intake = new Intake();
-        intakeExtension = new IntakeExtension(gamepad1);
+        //intakeExtension = new IntakeExtension(gamepad1);
 
         while (opModeInInit())
         {
             intake.setAngle(Intake.Angle.TRANSFER);
-            intakeExtension.setCurrent(IntakeExtension.ExtensionState.MANUAL);
+            //intakeExtension.setCurrent(IntakeExtension.ExtensionState.MANUAL);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
+            elevator.setAuto(false);
 
             telemetry.addLine("Initialized");
             telemetry.update();
 
             intake.setManual(true);
+            intake.update();
+            claw.update();
+            outtake.update();
         }
     }
 
@@ -141,8 +144,8 @@ public class OpMode extends CommandOpMode {
                 if (gamepad1.left_trigger != 0) {
                     intake.intakeMove(-gamepad1.left_trigger);
                 }
-                else if(/*(intake.checkIfPixelIn(robot.colorRight) || intake.checkIfPixelIn(robot.colorLeft))
-                        && */(getTime() - transferTimer >= delayTransfer) && (getTime() - transferTimer <= maxTransferTimer))
+                else if(((getTime() - transferTimer >= delayTransfer) && (getTime() - transferTimer <= maxTransferTimer))
+                        || ((intake.checkIfPixelIn(robot.colorRight) || intake.checkIfPixelIn(robot.colorLeft))))
                 {
                     intake.intakeMove(transferPower);
                 }

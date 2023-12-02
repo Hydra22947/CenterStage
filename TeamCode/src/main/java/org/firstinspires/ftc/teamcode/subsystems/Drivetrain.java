@@ -66,7 +66,6 @@ public class Drivetrain {
         robot.dtFrontRightMotor.setPower(frontRightPower);
         robot.dtBackRightMotor.setPower(backRightPower);
 
-        robot.telemetry.addData("heading R", botHeading);
         robot.telemetry.addData("heading H", Math.toDegrees(botHeading));
     }
 

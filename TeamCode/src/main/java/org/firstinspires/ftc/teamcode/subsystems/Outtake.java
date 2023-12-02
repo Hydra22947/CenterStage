@@ -48,15 +48,6 @@ public class Outtake {
     public void update() {
         updateState(Type.CLAW);
         updateState(Type.HAND);
-
-//        if(intake != null && claw != null && robot.isReadyToTransferPixels() && angle == Angle.INTAKE)
-//        {
-//            robot.telemetry.update();
-//            intake.intakeMove(Intake.powerTransfer);
-//            // until pixels see beam(already happens in opmode) because of peridoric
-//            if(!claw.checkAndClose(robot.breakbeamRight, ClawSide.RIGHT) && !claw.checkAndClose(robot.breakbeamLeft, ClawSide.LEFT));
-//
-//        }
     }
 
     public void setAngle(@NotNull Angle angle) {

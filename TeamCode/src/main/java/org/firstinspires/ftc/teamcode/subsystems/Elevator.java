@@ -26,7 +26,8 @@ public class Elevator {
     PIDFController controller, controller2;
     PIDFController.PIDCoefficients pidCoefficients = new PIDFController.PIDCoefficients();
 
-    boolean isAuto = false;
+    boolean first = true, firstNoPID = true;
+    boolean isAuto;
     public Elevator(Gamepad gamepad)
     {
         this.robot = RobotHardware.getInstance();
@@ -68,15 +69,27 @@ public class Elevator {
 
             if (usePID)
             {
-                robot.elevatorMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                if(first)
+                {
+                    robot.elevatorMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    first = false;
+                    firstNoPID = true;
+                }
+
 
                 setPidControl();
             }
             else
             {
-                robot.elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                if(firstNoPID)
+                {
+                    robot.elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    robot.elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    firstNoPID = false;
+                    first = true;
+                }
+
                 if(gamepad.left_stick_y != 0 && !gamepad.left_stick_button)
                 {
                     robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
@@ -92,6 +105,7 @@ public class Elevator {
                     robot.elevatorMotorRight.setPower(0);
                     robot.elevatorMotorLeft.setPower(0);
                 }
+
             }
         }
         else
@@ -107,11 +121,6 @@ public class Elevator {
 
         robot.elevatorMotorRight.setPower(controller.update());
         robot.elevatorMotorLeft.setPower(controller2.update());
-
-        robot.telemetry.addData("target", currentTarget);
-        robot.telemetry.addData("power right", controller.update());
-        robot.telemetry.addData("power left", controller2.update());
-        robot.telemetry.update();
     }
 
     public void setTarget(double target)
@@ -128,17 +137,12 @@ public class Elevator {
 
     }
 
-    public void increment()
-    {
-        currentTarget += Globals.ELEVATOR_INCREMENT;
-    }
-
-    public void decrement()
-    {
-        currentTarget -= Globals.ELEVATOR_INCREMENT;
-    }
-
     public void setUsePID(boolean usePID) {
         this.usePID = usePID;
+    }
+
+    public void setAuto(boolean isAuto)
+    {
+        this.isAuto = isAuto;
     }
 }
