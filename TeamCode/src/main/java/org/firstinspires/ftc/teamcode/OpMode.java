@@ -208,6 +208,7 @@ public class OpMode extends CommandOpMode {
             case INTAKE_EXTEND:
                 claw.overwrite = false;
                 claw.setShouldOpen(true);
+                closeClaw = false;
 
                 intake.intakeMove(gamepad1.right_trigger);
                 intake.move(Intake.Angle.INTAKE);
@@ -215,7 +216,6 @@ public class OpMode extends CommandOpMode {
                 if (gamepad1.right_trigger == 0) {
                     intakeState = IntakeState.RETRACT;
                 }
-                closeClaw = false;
                 break;
             default:
                 intakeState = IntakeState.RETRACT;
@@ -270,6 +270,7 @@ public class OpMode extends CommandOpMode {
                     claw.setShouldOpen(true);
                     clawPassed = getTime();
                     elevatorReset = getTime();
+                    closeClaw = false;
                     retract = true;
                 } else if ((getTime() - elevatorReset) >= Globals.WAIT_DELAY_TILL_CLOSE && retract) {
                     retract = false;
