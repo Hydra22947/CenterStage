@@ -8,71 +8,80 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.OpMode;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
 import org.firstinspires.ftc.teamcode.commands.OuttakeCommand;
+import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.Globals;
+import org.firstinspires.ftc.teamcode.util.BetterGamepad;
+import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
 @TeleOp(name = "Elevator Test")
-public class ElevatorTest extends CommandOpMode {
+public class ElevatorTest extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
     Elevator elevator;
-    Outtake outtake;
-    GamepadEx gamepadEx;
+    BetterGamepad gamepadEx;
 
+    enum Lift
+    {
+        RETRACT, EXCTRACT
+    }
+
+    Lift liftState = Lift.RETRACT;
     @Override
-    public void initialize() {
+    public void runOpMode() {
         CommandScheduler.getInstance().reset();
 
-        gamepadEx = new GamepadEx(gamepad1);
+        gamepadEx = new BetterGamepad(gamepad1);
 
         robot.init(hardwareMap, telemetry);
 
         elevator = new Elevator(gamepad1);
-        outtake = new Outtake();
 
-        //robot.addSubsystem(elevator, outtake);
+        waitForStart();
 
-        gamepadEx.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(new SequentialCommandGroup(
-                        new InstantCommand(() -> elevator.setUsePID(true)),
-                        new ElevatorCommand(elevator, Elevator.BASE_LEVEL),
-                        new WaitCommand((long)Globals.WAIT_DELAY_TILL_OUTTAKE),
-                        new OuttakeCommand(outtake, Outtake.Angle.OUTTAKE)
-                ));
-
-        gamepadEx.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(new SequentialCommandGroup(
-                        new InstantCommand(() -> elevator.setUsePID(true)),
-                        new OuttakeCommand(outtake, Outtake.Angle.INTAKE),
-                        new WaitCommand((long)Globals.WAIT_DELAY_TILL_OUTTAKE),
-                        new ElevatorCommand(elevator, 0)
-                ));
-    }
-
-    @Override
-    public void run() {
-        if(gamepad1.left_stick_y != 0)
+        while (opModeIsActive())
         {
-            elevator.setUsePID(false);
-        }
-        else
-        {
-            elevator.setUsePID(true);
-        }
+            if(gamepad2.left_stick_y != 0)
+            {
+                elevator.setUsePID(false);
+            }
+            else
+            {
+                elevator.setUsePID(true);
+            }
 
-        robot.read();
+            switch (liftState) {
+                case RETRACT:
+                    elevator.setTarget(0);
 
-        super.run();
-        robot.periodic();
-        telemetry.update();
-        robot.write();
+                    if (gamepadEx.YOnce()) {
+                        liftState = Lift.EXCTRACT;
+                    }
+                    break;
+                case EXCTRACT:
+                    elevator.setTarget(Elevator.BASE_LEVEL);
+
+                    if (gamepadEx.AOnce()) {
+                        liftState = Lift.RETRACT;
+                    }
+                    break;
+                default:
+                    liftState = Lift.RETRACT;
+                    break;
+            }
+
+            elevator.update();
+            telemetry.update();
+        }
     }
 
 }

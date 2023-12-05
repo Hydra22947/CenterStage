@@ -46,7 +46,7 @@ public class Markers {
 //        claw = new Claw();
         intake = new Intake();
 //        intakeExtension = new IntakeExtension(null);
-        outtake = new Outtake(intake, claw);
+        outtake = new Outtake();
 
         robot = RobotHardware.getInstance();
 

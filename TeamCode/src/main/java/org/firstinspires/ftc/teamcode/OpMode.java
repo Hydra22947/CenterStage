@@ -88,7 +88,7 @@ public class OpMode extends CommandOpMode {
 
         drivetrain = new Drivetrain(gamepad1, true);
         elevator = new Elevator(gamepad2);
-        outtake = new Outtake(intake, claw);
+        outtake = new Outtake();
         claw = new Claw(this);
         intake = new Intake();
         //intakeExtension = new IntakeExtension(gamepad1);

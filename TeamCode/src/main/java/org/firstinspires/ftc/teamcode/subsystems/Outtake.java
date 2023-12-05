@@ -29,21 +29,11 @@ public class Outtake {
     }
 
     Angle angle = Angle.INTAKE;
-    Intake intake = null;
-    Claw claw = null;
-
-    public Outtake(Intake intake, Claw claw)
-    {
-        this.robot = RobotHardware.getInstance();
-        this.intake = intake;
-        this.claw = claw;
-    }
-
     public Outtake()
     {
         this.robot = RobotHardware.getInstance();
-
     }
+
 
     public void update() {
         updateState(Type.CLAW);
