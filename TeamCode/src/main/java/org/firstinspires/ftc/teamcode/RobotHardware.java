@@ -44,7 +44,6 @@ public class RobotHardware {
     public BetterServo intakeAngleServo;
     public BetterServo intakeHandPivotRightServo;
     public BetterServo intakeHandPivotLeftServo;
-    public Servo extensionServo;
     public RevColorSensorV3 colorRight;
     public RevColorSensorV3 colorLeft;
 
@@ -136,8 +135,6 @@ public class RobotHardware {
         // COLOR/DS SENSORS
         this.colorRight = hardwareMap.get(RevColorSensorV3.class, "cR");
         this.colorLeft = hardwareMap.get(RevColorSensorV3.class, "cL");
-        //INTAKE EXTENSION
-        this.extensionServo = hardwareMap.get(Servo.class, "sE");
 
         // HAND
         this.intakeHandPivotRightServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPR"));
@@ -211,6 +208,11 @@ public class RobotHardware {
     public void setImuOffset(double offset)
     {
         this.imuOffset = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + offset;
+    }
+
+    public double getImuOffset()
+    {
+        return imuOffset;
     }
 
     public boolean isReadyToRetract() {

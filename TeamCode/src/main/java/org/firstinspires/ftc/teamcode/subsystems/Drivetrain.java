@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Rotation2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.drivebase.RobotDrive;
-import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
@@ -19,6 +22,13 @@ public class Drivetrain {
     private BetterGamepad _cGamepad1;
 
     private final RobotHardware robot;
+    Vector2d input;
+    PoseVelocity2d powers;
+    public static double maxPower = 0.7;
+    public static double minPower = 0.3;
+    public static double maxPowerSpin = maxPower / 2;
+    double power = 0;
+    boolean slow = false;
 
     //Constructor
     public Drivetrain(Gamepad gamepad1, boolean redAlliance)
@@ -35,56 +45,66 @@ public class Drivetrain {
 
     public void update() {
         _cGamepad1.update();
-        double y = -_cGamepad1.left_stick_y; // Remember, Y stick value is reversed
-        double x = _cGamepad1.left_stick_x;
-        double rx = _cGamepad1.right_stick_x * 0.65;
 
-        double botHeading = robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + Math.PI;
+        input = new Vector2d(
+                -_cGamepad1.left_stick_y * maxPower,
+                -_cGamepad1.left_stick_x * maxPower
+        );
+
+        input = Rotation2d.exp(robot.getAngle()).inverse().times(
+                new Vector2d(-input.x, input.y));
+
+        powers = new PoseVelocity2d(
+                input,
+                -_cGamepad1.right_stick_x * maxPowerSpin
+        );
+
 
 
         if(_cGamepad1.XOnce())
         {
-            robot.imu.resetYaw();
+            resetAngle();
         }
-        // Rotate the movement direction counter to the bot's rotation
-        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
-        rotX = rotX * 1.1;  // Counteract imperfect strafing
+        if(_cGamepad1.right_trigger != 0 && slow)
+        {
+            power = minPower;
+            maxPowerSpin = minPower / 2;
+        }
+        else
+        {
+            power = maxPower;
+            maxPowerSpin = maxPower / 2;
+        }
 
-        // Denominator is the largest motor power (absolute value) or 1
-        // This ensures all the powers maintain the same ratio,
-        // but only if at least one is out of the range [-1, 1]
-        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), Globals.MAX_POWER);
-        double frontLeftPower = (rotY + rotX + rx) / denominator;
-        double backLeftPower = (rotY - rotX + rx) / denominator;
-        double frontRightPower = (rotY - rotX - rx) / denominator;
-        double backRightPower = (rotY + rotX - rx) / denominator;
+        robot.dtFrontLeftMotor.setPower(powers.linearVel.x + powers.angVel + powers.linearVel.y);
+        robot.dtBackLeftMotor.setPower(powers.linearVel.x  + powers.angVel - powers.linearVel.y);
+        robot.dtFrontRightMotor.setPower(powers.linearVel.x  - powers.angVel - powers.linearVel.y);
+        robot.dtBackRightMotor.setPower(powers.linearVel.x  - powers.angVel + powers.linearVel.y);
 
-        robot.dtFrontLeftMotor.setPower(frontLeftPower);
-        robot.dtBackLeftMotor.setPower(backLeftPower);
-        robot.dtFrontRightMotor.setPower(frontRightPower);
-        robot.dtBackRightMotor.setPower(backRightPower);
-
-        robot.telemetry.addData("heading H", Math.toDegrees(botHeading));
+        robot.telemetry.addData("heading H", Math.toDegrees(robot.getAngle()));
+        robot.telemetry.addData("offset", robot.getImuOffset());
     }
 
 
     public void resetAngle()
     {
-        robot.imu.resetYaw();
+        //robot.imu.resetYaw();
 
-//        // check if we are blue/red alliance and set zero angle - For centric drive
-//        if(!redAlliance)
-//        {
-//            robot.setImuOffset((Math.PI - Math.PI / 2));
-//        }
-//        else if(redAlliance)
-//        {
-//            robot.setImuOffset(Math.PI + Math.PI );
-//        }
-        robot.telemetry.addData("RESET", 0);
+        // check if we are blue/red alliance and set zero angle - For centric drive
+        if(!redAlliance)
+        {
+            robot.setImuOffset(-Math.PI);
+        }
+        else if(redAlliance)
+        {
+            robot.setImuOffset(Math.PI);
+        }
+
         robot.telemetry.update();
     }
 
+    public void setSlow(boolean slow) {
+        this.slow = slow;
+    }
 }

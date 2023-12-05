@@ -11,12 +11,10 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
 import org.firstinspires.ftc.teamcode.commands.IntakeCommand;
-import org.firstinspires.ftc.teamcode.commands.IntakeExtensionCommand;
 import org.firstinspires.ftc.teamcode.commands.OuttakeCommand;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.firstinspires.ftc.teamcode.Globals;
@@ -33,7 +31,7 @@ public class Markers {
 
     Intake intake;
 
-    IntakeExtension intakeExtension;
+//    IntakeExtension intakeExtension;
 
     Outtake outtake;
 
@@ -47,7 +45,7 @@ public class Markers {
         elevator = new Elevator(gamepad2);
 //        claw = new Claw();
         intake = new Intake();
-        intakeExtension = new IntakeExtension(null);
+//        intakeExtension = new IntakeExtension(null);
         outtake = new Outtake(intake, claw);
 
         robot = RobotHardware.getInstance();
@@ -81,13 +79,13 @@ public class Markers {
         public void intakeAndLock()
         {
             new SequentialCommandGroup(
-                    new IntakeExtensionCommand( intakeExtension , IntakeExtension.ExtensionState.OPEN),
+//                    new IntakeExtensionCommand( intakeExtension , IntakeExtension.ExtensionState.OPEN),
                     new IntakeCommand(intake , Intake.Angle.INTAKE),
                     //////////////////////////////////////////////////////
                     new WaitCommand(timer),
                     //////////////////////////////////////////////////////
-                    new IntakeCommand(intake , Intake.Angle.TRANSFER),
-                    new IntakeExtensionCommand( intakeExtension , IntakeExtension.ExtensionState.CLOSE)
+                    new IntakeCommand(intake , Intake.Angle.TRANSFER)
+//                    new IntakeExtensionCommand( intakeExtension , IntakeExtension.ExtensionState.CLOSE)
             );
         };
 
