@@ -45,7 +45,7 @@ public class OpMode extends CommandOpMode {
     GamepadEx gamepadEx, gamepadEx2;
     BetterGamepad betterGamepad1, betterGamepad2;
     public static double transferPower = -1;
-    public static double delayTransfer = 800;
+    public static double delayTransfer = 900;
     public static double maxTransferTimer = 2750; // make sure maxTransferTimer > delayTransfer
 
     // variables
@@ -178,9 +178,7 @@ public class OpMode extends CommandOpMode {
                 if(closeClaw && (getTime() - transferTimer >= maxTransferTimer))
                 {
                     claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
-                    closeClaw = false;
                 }
-
 
                 break;
             case INTAKE:
@@ -203,14 +201,21 @@ public class OpMode extends CommandOpMode {
                     transferTimer = getTime();
                     intakeState = IntakeState.RETRACT;
                 }
+                claw.overwrite = false;
+                claw.setShouldOpen(true);
+                closeClaw = false;
                 break;
             case INTAKE_EXTEND:
+                claw.overwrite = false;
+                claw.setShouldOpen(true);
+
                 intake.intakeMove(gamepad1.right_trigger);
                 intake.move(Intake.Angle.INTAKE);
 
                 if (gamepad1.right_trigger == 0) {
                     intakeState = IntakeState.RETRACT;
                 }
+                closeClaw = false;
                 break;
             default:
                 intakeState = IntakeState.RETRACT;

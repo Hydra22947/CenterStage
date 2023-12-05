@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 @Config
 public class Claw
 {
-    public static boolean auto = true;
     public static double delay = 500;
     boolean shouldOpen = false;
     private final RobotHardware robot;

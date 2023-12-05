@@ -26,7 +26,7 @@ public class Drivetrain {
     PoseVelocity2d powers;
     public static double maxPower = 0.7;
     public static double minPower = 0.3;
-    public static double maxPowerSpin = maxPower / 2;
+    public static double maxPowerSpin = maxPower / 1.5;
     double power = 0;
     boolean slow = false;
 
@@ -47,16 +47,16 @@ public class Drivetrain {
         _cGamepad1.update();
 
         input = new Vector2d(
-                -_cGamepad1.left_stick_y * maxPower,
+                _cGamepad1.left_stick_y * maxPower,
                 -_cGamepad1.left_stick_x * maxPower
         );
 
-        input = Rotation2d.exp(robot.getAngle()).inverse().times(
-                new Vector2d(-input.x, input.y));
+        input = Rotation2d.exp(-robot.getAngle()).inverse().times(
+                new Vector2d(input.x, input.y));
 
         powers = new PoseVelocity2d(
                 input,
-                -_cGamepad1.right_stick_x * maxPowerSpin
+                _cGamepad1.right_stick_x * maxPower
         );
 
 
@@ -89,7 +89,7 @@ public class Drivetrain {
 
     public void resetAngle()
     {
-        //robot.imu.resetYaw();
+        robot.imu.resetYaw();
 
         // check if we are blue/red alliance and set zero angle - For centric drive
         if(!redAlliance)
