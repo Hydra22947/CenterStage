@@ -25,8 +25,6 @@ public class Drivetrain {
     Vector2d input;
     PoseVelocity2d powers;
     public static double maxPower = 0.7;
-    public static double minPower = 0.3;
-    public static double maxPowerSpin = maxPower / 1.5;
     double power = 0;
     boolean slow = false;
 
@@ -38,6 +36,8 @@ public class Drivetrain {
         // gamepad helper to see if pressed button once
         this._cGamepad1 = new BetterGamepad(gamepad1);
 
+        power = maxPower;
+
         this.redAlliance = redAlliance;
 
         resetAngle();
@@ -47,8 +47,8 @@ public class Drivetrain {
         _cGamepad1.update();
 
         input = new Vector2d(
-                _cGamepad1.left_stick_y * maxPower,
-                -_cGamepad1.left_stick_x * maxPower
+                Range.clip(_cGamepad1.left_stick_y, -power, power),
+                Range.clip(-_cGamepad1.left_stick_x, -power, power)
         );
 
         input = Rotation2d.exp(-robot.getAngle()).inverse().times(
@@ -56,25 +56,12 @@ public class Drivetrain {
 
         powers = new PoseVelocity2d(
                 input,
-                _cGamepad1.right_stick_x * maxPower
+                Range.clip(_cGamepad1.right_stick_x, -power, power)
         );
-
-
 
         if(_cGamepad1.XOnce())
         {
             resetAngle();
-        }
-
-        if(_cGamepad1.right_trigger != 0 && slow)
-        {
-            power = minPower;
-            maxPowerSpin = minPower / 2;
-        }
-        else
-        {
-            power = maxPower;
-            maxPowerSpin = maxPower / 2;
         }
 
         robot.dtFrontLeftMotor.setPower(powers.linearVel.x + powers.angVel + powers.linearVel.y);
@@ -82,8 +69,11 @@ public class Drivetrain {
         robot.dtFrontRightMotor.setPower(powers.linearVel.x  - powers.angVel - powers.linearVel.y);
         robot.dtBackRightMotor.setPower(powers.linearVel.x  - powers.angVel + powers.linearVel.y);
 
+        robot.telemetry.addLine("" + slow);
         robot.telemetry.addData("heading H", Math.toDegrees(robot.getAngle()));
         robot.telemetry.addData("offset", robot.getImuOffset());
+        robot.telemetry.addData("power", power);
+        robot.telemetry.addData("max power", maxPower);
     }
 
 
@@ -104,7 +94,13 @@ public class Drivetrain {
         robot.telemetry.update();
     }
 
-    public void setSlow(boolean slow) {
-        this.slow = slow;
+    public void fast()
+    {
+        power = maxPower;
+    }
+
+    public void slow()
+    {
+        power = maxPower / 2;
     }
 }
