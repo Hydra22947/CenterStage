@@ -17,6 +17,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.util.Angle;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterEncoder;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterServo;
@@ -33,7 +35,7 @@ public class RobotHardware {
     public DcMotorEx dtFrontRightMotor;
     public DcMotorEx dtBackLeftMotor;
     public DcMotorEx dtBackRightMotor;
-
+    public MecanumDrive drivetrain;
     // elevator
     public DcMotorEx elevatorMotorRight;
     public DcMotorEx elevatorMotorLeft;

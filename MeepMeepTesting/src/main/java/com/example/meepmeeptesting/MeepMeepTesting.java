@@ -57,18 +57,19 @@ public class MeepMeepTesting {
         Pose2d placePixelPose = new Pose2d(45, -33, Math.toRadians(0));
         Pose2d stageDoorPose = new Pose2d(30, -21.5, Math.toRadians(0));
         Vector2d stageDoorVector = new Vector2d(0, -12);
-
+        Pose2d a = new Pose2d(-15, -12, Math.toRadians(0));
         Pose2d middleIntakePixelVector = new Pose2d(-45, -25);
         Vector2d intakePixelVector = new Vector2d(-34, -12);
 
         return myBot.setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-34, -60, 0))
+                        drive.trajectorySequenceBuilder(new Pose2d(-34, -60, Math.toRadians(90)))
                                 //Place purple pixel
-                                .strafeLeft(30)
+                               // .strafeLeft(30)
+                                .forward(47)
                                 .waitSeconds(.5)
                                 //Going for backdrop
-                                .strafeLeft(8)
+                                .lineToSplineHeading(a)
                                 .splineToConstantHeading(stageDoorVector, Math.toRadians(0))
                                 .splineToLinearHeading(placePixelPose, Math.toRadians(0))
 
