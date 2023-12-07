@@ -46,7 +46,7 @@ public class OpMode extends CommandOpMode {
     BetterGamepad betterGamepad1, betterGamepad2;
     public static double transferPower = -1;
     public static double delayTransfer = 900;
-    public static double maxTransferTimer = 2750; // make sure maxTransferTimer > delayTransfer
+    public static double maxTransferTimer = 2550; // make sure maxTransferTimer > delayTransfer
 
     // variables
     double clawPassed = 0;

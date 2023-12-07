@@ -14,7 +14,7 @@ public class Intake {
 
     private final RobotHardware robot;
     public static double intakeHandPivot = 0.1, intakeAmmoPivot = 0;
-    public static double outtakeHandPivot = .46, outtakeAmmoPivot = 0.56;
+    public static double outtakeHandPivot = .48, outtakeAmmoPivot = 0.58;
 
     public static double power = 1;
     public enum Angle
