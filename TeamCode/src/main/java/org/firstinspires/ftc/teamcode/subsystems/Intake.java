@@ -7,6 +7,7 @@ import com.qualcomm.hardware.rev.RevColorSensorV3;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.Globals;
+import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.jetbrains.annotations.NotNull;
 
 @Config
@@ -14,25 +15,34 @@ public class Intake {
 
     private final RobotHardware robot;
     public static double intakeHandPivot = 0.1, intakeAmmoPivot = 0;
-    public static double outtakeHandPivot = .48, outtakeAmmoPivot = 0.58;
+    public static double outtakeHandPivot = .46, outtakeAmmoPivot = 0.56;
 
-    public static double power = 1;
+    public static double openRight = 0, closeRight = 0;
+    public static double openLeft = 0, closeLeft = 0;
+
     public enum Angle
     {
         INTAKE,
         TRANSFER
     }
 
+    public enum ClawState
+    {
+        OPEN,
+        CLOSE
+    }
+
     public enum Type
     {
         AMMO,
-        HAND
+        HAND,
+        CLAW
     }
 
     Angle angle = Angle.TRANSFER;
+    ClawState clawStateLeft = ClawState.OPEN;
+    ClawState clawStateRight = ClawState.OPEN;
     boolean shouldIntake = false;
-    boolean forward = false;
-    boolean manual = false;
 
     private float rightHsvValues[] = {0F, 0F, 0F};
     private float leftHsvValues[] = {0F, 0F, 0F};
@@ -43,27 +53,8 @@ public class Intake {
     }
 
     public void update() {
-        insertHSVValues();
-
         updateState(Type.AMMO);
         updateState(Type.HAND);
-        //checkFinishedIntake();
-
-        if(shouldIntake && forward && !manual)
-        {
-            robot.intakeServoRight.setPower(power);
-            robot.intakeServoLeft.setPower(power);
-        }
-        else if(shouldIntake && !manual)
-        {
-            robot.intakeServoRight.setPower(-power);
-            robot.intakeServoLeft.setPower(-power);
-        }
-        else if(!manual)
-        {
-            robot.intakeServoRight.setPower(0);
-            robot.intakeServoLeft.setPower(0);
-        }
 
         if(checkIfPixelIn(robot.colorRight) && checkIfPixelIn(robot.colorLeft))
         {
@@ -73,12 +64,6 @@ public class Intake {
         {
             robot.setReadyToRetract(false);
         }
-    }
-
-    public void intakeMove(double power)
-    {
-        robot.intakeServoRight.setPower(power);
-        robot.intakeServoLeft.setPower(power);
     }
 
     public void move(Angle angle)
@@ -111,18 +96,56 @@ public class Intake {
         }
     }
 
-    public void insertHSVValues()
-    {
-        Color.RGBToHSV((int) (this.robot.colorRight.red() * Globals.SCALE_FACTOR),
-                (int) ((this.robot.colorRight.green() * Globals.SCALE_FACTOR)),
-                (int) ((this.robot.colorRight.blue() * Globals.SCALE_FACTOR)),
-                rightHsvValues);
+    public void updateClawState(@NotNull ClawState state, @NotNull ClawSide side) {
+        double position = getClawStatePosition(state, side);
 
-        Color.RGBToHSV((int) (this.robot.colorLeft.red() * Globals.SCALE_FACTOR),
-                (int) (this.robot.colorLeft.green() * Globals.SCALE_FACTOR),
-                (int) (this.robot.colorLeft.blue() * Globals.SCALE_FACTOR),
-                leftHsvValues);
+        switch (side) {
+            case LEFT:
+                robot.outtakeClawLeftServo.setPosition(position);
+                this.clawStateLeft = state;
+                break;
+            case RIGHT:
+                robot.outtakeClawRightServo.setPosition(position);
+                this.clawStateRight = state;
+                break;
+            case BOTH:
+                position = getClawStatePosition(state, ClawSide.LEFT);
+                robot.outtakeClawLeftServo.setPosition(position);
+                this.clawStateRight = state;
+                position = getClawStatePosition(state, ClawSide.RIGHT);
+                robot.outtakeClawRightServo.setPosition(position);
+                this.clawStateLeft = state;
+                break;
+        }
     }
+
+    private double getClawStatePosition(ClawState state, ClawSide side)
+    {
+        switch (side)
+        {
+            case LEFT:
+                switch (state) {
+                    case CLOSE:
+                        return closeLeft;
+                    case OPEN:
+                        return openLeft;
+                    default:
+                        return 0.0;
+                }
+            case RIGHT:
+                switch (state) {
+                    case CLOSE:
+                        return closeRight;
+                    case OPEN:
+                        return openRight;
+                    default:
+                        return 0.0;
+                }
+            default:
+                return 0.0;
+        }
+    }
+
 
     public boolean checkIfPixelIn(RevColorSensorV3 sensor)
     {
@@ -166,19 +189,6 @@ public class Intake {
         this.shouldIntake = shouldIntake;
     }
 
-    public boolean isForward() {
-        return forward;
-    }
 
-    public void setForward(boolean forward) {
-        this.forward = forward;
-    }
 
-    public void setManual(boolean manual) {
-        this.manual = manual;
-    }
-
-    public static double getPower() {
-        return power;
-    }
 }

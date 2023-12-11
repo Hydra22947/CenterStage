@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
 @TeleOp(name = "Intake Test")
@@ -35,19 +36,12 @@ public class IntakeTest extends LinearOpMode {
             if(gamepad1.right_trigger != 0)
             {
                 intake.move(Intake.Angle.INTAKE);
-                intake.setManual(true);
-                intake.intakeMove(gamepad1.right_trigger);
-            }
-            else if(gamepad1.left_trigger != 0)
-            {
-                intake.move(Intake.Angle.TRANSFER);
-                intake.setManual(true);
-                intake.intakeMove(-gamepad1.left_trigger);
+                intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
             }
             else
             {
                 intake.move(Intake.Angle.TRANSFER);
-                intake.setManual(false);
+                intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             }
 
             telemetry.update();

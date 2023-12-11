@@ -41,8 +41,8 @@ public class RobotHardware {
     public DcMotorEx elevatorMotorLeft;
 
     // intake
-    public CRServo intakeServoRight;
-    public CRServo intakeServoLeft;
+    public BetterServo intakeClawLeftServo;
+    public BetterServo intakeClawRightServo;
     public BetterServo intakeAngleServo;
     public BetterServo intakeHandPivotRightServo;
     public BetterServo intakeHandPivotLeftServo;
@@ -131,9 +131,8 @@ public class RobotHardware {
         // INTAKE
         this.intakeAngleServo = new BetterServo(hardwareMap.get(Servo.class, "sIA"));
         intakeAngleServo.setDirection(Servo.Direction.REVERSE);
-        this.intakeServoRight = hardwareMap.get(CRServo.class, "sIR");
-        this.intakeServoLeft = hardwareMap.get(CRServo.class, "sIL");
-        this.intakeServoRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.intakeClawLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sICL"));
+        this.intakeClawRightServo = new BetterServo(hardwareMap.get(Servo.class, "sICR"));
         // COLOR/DS SENSORS
         this.colorRight = hardwareMap.get(RevColorSensorV3.class, "cR");
         this.colorLeft = hardwareMap.get(RevColorSensorV3.class, "cL");
@@ -149,6 +148,7 @@ public class RobotHardware {
         this.outtakeClawLeftServo.setDirection(Servo.Direction.REVERSE);
         this.outtakeClawRightServo = new BetterServo(hardwareMap.get(Servo.class, "sCR"));
         this.outtakeClawPivotServo = new BetterServo(hardwareMap.get(Servo.class, "sC"));
+        this.outtakeClawPivotServo.setDirection(Servo.Direction.REVERSE);
         // HAND
         this.outtakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
         this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));

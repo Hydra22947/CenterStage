@@ -99,7 +99,6 @@ public class OpMode extends CommandOpMode {
         outtake.setAngle(Outtake.Angle.INTAKE);
         elevator.setAuto(false);
 
-        intake.setManual(true);
         intake.update();
         claw.update();
         outtake.update();
@@ -160,24 +159,15 @@ public class OpMode extends CommandOpMode {
                     drivetrain.fast();
                 }
 
-
-                if (gamepad1.left_trigger != 0) {
-                    intake.intakeMove(-gamepad1.left_trigger);
-                }
-                else if(((getTime() - transferTimer >= delayTransfer) && (getTime() - transferTimer <= maxTransferTimer))/*
-                        || ((intake.checkIfPixelIn(robot.colorRight) || intake.checkIfPixelIn(robot.colorLeft)))*/)
+                if(getTime() - transferTimer >= delayTransfer)
                 {
-                    intake.intakeMove(transferPower);
+                    intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
+
                     closeClaw = true;
-                    //claw.overwrite = true;
-                }
-                else
-                {
-                    intake.intakeMove(0);
                 }
 
 
-                if(closeClaw && (getTime() - transferTimer >= maxTransferTimer))
+                if(closeClaw)
                 {
                     claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
                 }
@@ -185,12 +175,6 @@ public class OpMode extends CommandOpMode {
                 break;
             case INTAKE:
                 intake.move(Intake.Angle.INTAKE);
-
-                if (gamepad1.left_trigger != 0) {
-                    intake.intakeMove(-gamepad1.left_trigger);
-                } else {
-                    intake.intakeMove(intake.power);
-                }
 
                 if (gamepad1.right_trigger != 0) {
                     intakeState = IntakeState.INTAKE_EXTEND;
@@ -200,24 +184,36 @@ public class OpMode extends CommandOpMode {
 
                 if (robot.isReadyToRetract()) {
                     transferTimer = getTime();
+                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
+
                     intakeState = IntakeState.RETRACT;
                 }
-//                claw.overwrite = false;
-//                claw.setShouldOpen(true);
+
                 closeClaw = false;
 
                 claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
                 break;
             case INTAKE_EXTEND:
-//                claw.overwrite = false;
-//                claw.setShouldOpen(true);
-                intake.intakeMove(gamepad1.right_trigger);
                 intake.move(Intake.Angle.INTAKE);
+
+                if (betterGamepad1.rightBumperOnce()) {
+                    intakeState = IntakeState.RETRACT;
+                }
+
+                if (robot.isReadyToRetract()) {
+                    transferTimer = getTime();
+                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
+
+                    intakeState = IntakeState.RETRACT;
+                }
+
+                closeClaw = false;
+
+                claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
 
                 if (gamepad1.right_trigger == 0) {
                     intakeState = IntakeState.RETRACT;
                 }
-                claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
                 break;
             default:
                 intakeState = IntakeState.RETRACT;

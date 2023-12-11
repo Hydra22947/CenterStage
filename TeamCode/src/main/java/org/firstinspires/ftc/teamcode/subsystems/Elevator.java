@@ -15,7 +15,7 @@ public class Elevator {
 
     private final RobotHardware robot;
     public static double BASE_LEVEL = 1000;
-    public static double MAX_LEVEL = 1650;
+    public static double MAX_LEVEL = 1600;
     double currentTarget = 0;
     boolean usePID = true;
     public static double maxPower = 0.85;
