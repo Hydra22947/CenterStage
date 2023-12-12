@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.Pose;
 
 @Config
-public class PositionCommand implements LinearOpMode {
+public class TestAuto extends LinearOpMode {
     Pose targetPose;
 
     public static double xP = 0.0385;
