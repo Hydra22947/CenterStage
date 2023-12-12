@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.roadrunner;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.Pose;
 
 @Config
+@Autonomous
 public class TestAuto extends LinearOpMode {
     public static double x = 0, y = 0, h = 0;
     Pose targetPose = new Pose(x,y,h);
