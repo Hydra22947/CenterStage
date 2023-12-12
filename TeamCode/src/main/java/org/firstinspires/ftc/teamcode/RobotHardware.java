@@ -78,7 +78,7 @@ public class RobotHardware {
 
     private double imuAngle, imuOffset = 0;
 
-    boolean readyToRetract = false;
+    boolean readyToRetract = false, closeRight = false, closeLeft = false;
 
     /**
      * Creating the singleton the first time, instantiating.
@@ -224,5 +224,23 @@ public class RobotHardware {
 
     public void setReadyToRetract(boolean readyToTransferPixels) {
         this.readyToRetract = readyToTransferPixels;
+    }
+
+    public boolean isCloseRight() {
+        // check for colors and closed
+        return closeRight;
+    }
+
+    public void closeRight(boolean closeRight) {
+        this.closeRight = closeRight;
+    }
+
+    public boolean isCloseLeft() {
+        // check for colors and closed
+        return closeLeft;
+    }
+
+    public void closeLeft(boolean closeLeft) {
+        this.closeLeft = closeLeft;
     }
 }

@@ -14,16 +14,17 @@ import org.jetbrains.annotations.NotNull;
 public class Intake {
 
     private final RobotHardware robot;
-    public static double intakeHandPivot = 0.1, intakeAmmoPivot = 0;
-    public static double outtakeHandPivot = .46, outtakeAmmoPivot = 0.56;
+    public static double intakeHandPivot = 0.12, intakeAmmoPivot = 0.23;
+    public static double outtakeHandPivot = .57, outtakeAmmoPivot = 0.77;
 
-    public static double openRight = 0, closeRight = 0;
-    public static double openLeft = 0, closeLeft = 0;
+    public static double openRight = 0.55, closeRight = 0.37;
+    public static double openLeft = 0.45, closeLeft = 0.63;
 
     public enum Angle
     {
         INTAKE,
-        TRANSFER
+        TRANSFER,
+        MID
     }
 
     public enum ClawState
@@ -42,10 +43,7 @@ public class Intake {
     Angle angle = Angle.TRANSFER;
     ClawState clawStateLeft = ClawState.OPEN;
     ClawState clawStateRight = ClawState.OPEN;
-    boolean shouldIntake = false;
 
-    private float rightHsvValues[] = {0F, 0F, 0F};
-    private float leftHsvValues[] = {0F, 0F, 0F};
 
     public Intake()
     {
@@ -55,6 +53,26 @@ public class Intake {
     public void update() {
         updateState(Type.AMMO);
         updateState(Type.HAND);
+
+
+        if(checkIfPixelIn(robot.colorRight))
+        {
+            robot.closeRight(true);
+        }
+        else
+        {
+            robot.closeRight(false);
+        }
+
+        if(checkIfPixelIn(robot.colorLeft))
+        {
+            robot.closeLeft(true);
+        }
+        else
+        {
+            robot.closeLeft(false);
+        }
+
 
         if(checkIfPixelIn(robot.colorRight) && checkIfPixelIn(robot.colorLeft))
         {
@@ -101,19 +119,19 @@ public class Intake {
 
         switch (side) {
             case LEFT:
-                robot.outtakeClawLeftServo.setPosition(position);
+                robot.intakeClawLeftServo.setPosition(position);
                 this.clawStateLeft = state;
                 break;
             case RIGHT:
-                robot.outtakeClawRightServo.setPosition(position);
+                robot.intakeClawRightServo.setPosition(position);
                 this.clawStateRight = state;
                 break;
             case BOTH:
                 position = getClawStatePosition(state, ClawSide.LEFT);
-                robot.outtakeClawLeftServo.setPosition(position);
+                robot.intakeClawLeftServo.setPosition(position);
                 this.clawStateRight = state;
                 position = getClawStatePosition(state, ClawSide.RIGHT);
-                robot.outtakeClawRightServo.setPosition(position);
+                robot.intakeClawRightServo.setPosition(position);
                 this.clawStateLeft = state;
                 break;
         }
@@ -159,6 +177,7 @@ public class Intake {
             case AMMO:
                 switch (angle) {
                     case INTAKE:
+                    case MID:
                         return intakeAmmoPivot;
                     case TRANSFER:
                         return outtakeAmmoPivot;
@@ -172,6 +191,7 @@ public class Intake {
                     case INTAKE:
                         return intakeHandPivot;
                     case TRANSFER:
+                    case MID:
                         return outtakeHandPivot;
                     default:
                         return 0.0;
@@ -180,15 +200,6 @@ public class Intake {
                 return 0.0;
         }
     }
-
-    public boolean isShouldIntake() {
-        return shouldIntake;
-    }
-
-    public void setShouldIntake(boolean shouldIntake) {
-        this.shouldIntake = shouldIntake;
-    }
-
 
 
 }
