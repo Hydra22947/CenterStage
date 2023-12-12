@@ -172,6 +172,7 @@ public class OpMode extends CommandOpMode {
                 if((getTime() - releaseTimer) >= delayRelease && robot.isReadyToRetract())
                 {
                     intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
+                    intake.move(Intake.Angle.TRANSFER);
 
                     goToMidTimer = getTime();
 

@@ -48,7 +48,15 @@ public class TestAuto extends LinearOpMode {
 
         waitForStart();
 
-        execute();
+        timer = new ElapsedTime();
+        stable = new ElapsedTime();
+
+        while (!isFinished() && opModeIsActive())
+        {
+            drive.updatePoseEstimate();
+
+            execute();
+        }
     }
 
     /**
