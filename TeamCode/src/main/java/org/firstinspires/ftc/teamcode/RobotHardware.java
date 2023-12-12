@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -67,6 +68,9 @@ public class RobotHardware {
 
     // Telemetry storage
     public Telemetry telemetry;
+    private double voltage = 0.0;
+    private ElapsedTime voltageTimer;
+
 
     // singleton go brrrr
     private static RobotHardware instance = null;
@@ -98,6 +102,8 @@ public class RobotHardware {
      * @param telemetry Saved for later in the event FTC Dashboard used
      */
     public void init(final HardwareMap hardwareMap, final Telemetry telemetry) {
+        voltageTimer = new ElapsedTime();
+
         if (Globals.USING_DASHBOARD) {
             this.telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
         } else {
@@ -168,6 +174,20 @@ public class RobotHardware {
         this.podLeft = new BetterEncoder(new MotorEx(hardwareMap, "mBR").encoder);
         this.podFront = new BetterEncoder(new MotorEx(hardwareMap, "mFR").encoder);
         this.podRight = new BetterEncoder(new MotorEx(hardwareMap, "mFL").encoder);
+
+        voltage = hardwareMap.voltageSensor.iterator().next().getVoltage();
+    }
+
+    public void loopVoltage(HardwareMap hardwareMap)
+    {
+        if (voltageTimer.seconds() > 5) {
+            voltageTimer.reset();
+            voltage = hardwareMap.voltageSensor.iterator().next().getVoltage();
+        }
+    }
+
+    public double getVoltage() {
+        return voltage;
     }
 
     public void read() {
