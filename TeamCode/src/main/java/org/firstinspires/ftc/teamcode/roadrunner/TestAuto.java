@@ -11,7 +11,8 @@ import org.firstinspires.ftc.teamcode.util.Pose;
 
 @Config
 public class TestAuto extends LinearOpMode {
-    Pose targetPose;
+    public static double x = 0, y = 0, h = 0;
+    Pose targetPose = new Pose(x,y,h);
 
     public static double xP = 0.0385;
     public static double xD = 0.005;
