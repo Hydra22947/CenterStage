@@ -6,7 +6,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -19,7 +18,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.util.Angle;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterEncoder;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterServo;
@@ -42,6 +40,8 @@ public class RobotHardware {
     public DcMotorEx elevatorMotorLeft;
 
     // intake
+    public BetterServo extensionServoRight;
+    public BetterServo extensionServoLeft;
     public BetterServo intakeClawLeftServo;
     public BetterServo intakeClawRightServo;
     public BetterServo intakeAngleServo;
@@ -82,7 +82,7 @@ public class RobotHardware {
 
     private double imuAngle, imuOffset = 0;
 
-    boolean readyToRetract = false, closeRight = false, closeLeft = false;
+    boolean has2Pixels = false, closeRight = false, closeLeft = false;
 
     /**
      * Creating the singleton the first time, instantiating.
@@ -135,6 +135,8 @@ public class RobotHardware {
 
 
         // INTAKE
+        this.extensionServoRight = new BetterServo(hardwareMap.get(Servo.class, "sER"));
+        this.extensionServoLeft = new BetterServo(hardwareMap.get(Servo.class, "sEL"));
         this.intakeAngleServo = new BetterServo(hardwareMap.get(Servo.class, "sIA"));
         intakeAngleServo.setDirection(Servo.Direction.REVERSE);
         this.intakeClawLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sICL"));
@@ -237,13 +239,13 @@ public class RobotHardware {
         return imuOffset;
     }
 
-    public boolean isReadyToRetract() {
+    public boolean has2Pixels() {
         // check for colors and closed
-        return readyToRetract;
+        return has2Pixels;
     }
 
-    public void setReadyToRetract(boolean readyToTransferPixels) {
-        this.readyToRetract = readyToTransferPixels;
+    public void setHas2Pixels(boolean has2Pixels) {
+        this.has2Pixels = has2Pixels;
     }
 
     public boolean isCloseRight() {

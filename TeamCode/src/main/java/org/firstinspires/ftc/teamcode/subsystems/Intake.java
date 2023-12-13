@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.subsystems;
-import android.graphics.Color;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
@@ -16,6 +15,7 @@ public class Intake {
     private final RobotHardware robot;
     public static double intakeHandPivot = 0.12, intakeAmmoPivot = 0.24;
     public static double outtakeHandPivot = .57, outtakeAmmoPivot = 0.77;
+    public static double midHandPivot = 0.57, midAmmoPivot = 0.24;
 
     public static double openRight = 0.55, closeRight = 0.37;
     public static double openLeft = 0.45, closeLeft = 0.63;
@@ -76,11 +76,11 @@ public class Intake {
 
         if(checkIfPixelIn(robot.colorRight) && checkIfPixelIn(robot.colorLeft))
         {
-            robot.setReadyToRetract(true);
+            robot.setHas2Pixels(true);
         }
         else
         {
-            robot.setReadyToRetract(false);
+            robot.setHas2Pixels(false);
         }
     }
 
@@ -177,10 +177,11 @@ public class Intake {
             case AMMO:
                 switch (angle) {
                     case INTAKE:
-                    case MID:
                         return intakeAmmoPivot;
                     case TRANSFER:
                         return outtakeAmmoPivot;
+                    case MID:
+                        return midAmmoPivot;
                     default:
                         return 0.0;
 
@@ -191,8 +192,9 @@ public class Intake {
                     case INTAKE:
                         return intakeHandPivot;
                     case TRANSFER:
-                    case MID:
                         return outtakeHandPivot;
+                    case MID:
+                        return midHandPivot;
                     default:
                         return 0.0;
                 }

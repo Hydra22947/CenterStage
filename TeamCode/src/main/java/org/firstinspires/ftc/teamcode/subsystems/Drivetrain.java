@@ -24,7 +24,7 @@ public class Drivetrain {
     private final RobotHardware robot;
     Vector2d input;
     PoseVelocity2d powers;
-    public static double maxPower = 0.5;
+    public static double maxPower = 0.6;
     double power = 0;
     boolean slow = false;
 
