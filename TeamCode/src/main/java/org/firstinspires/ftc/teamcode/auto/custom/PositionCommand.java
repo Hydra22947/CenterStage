@@ -52,7 +52,7 @@ public class PositionCommand extends CommandBase {
         Pose robotPose = getCurrentPos();
 
         Pose powers = getPower(robotPose);
-        drive.set(powers.x, powers.heading, powers.heading, 0);
+        drive.set(powers.x, powers.y, powers.heading, 0);
     }
 
     @Override

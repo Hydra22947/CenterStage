@@ -23,7 +23,7 @@ public class CustomAutoTest extends CommandOpMode {
     private MecanumDrive drivetrain;
     private double loopTime = 0.0;
 
-    public static double x = 0, y = 0, h = 0;
+    public static double x = 21.5, y = -23.25, h = 0;
 
     @Override
     public void initialize() {
@@ -31,7 +31,7 @@ public class CustomAutoTest extends CommandOpMode {
 
         robot.init(hardwareMap, telemetry);
         robot.enabled = true;
-        drivetrain = new MecanumDrive(hardwareMap, new Pose2d(x, y, h), robot);
+        drivetrain = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0), robot);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -44,7 +44,7 @@ public class CustomAutoTest extends CommandOpMode {
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
                         // go to yellow pixel scoring pos
-                        new PositionCommand(new Pose(5,0,Math.toRadians(0)),drivetrain),
+                        new PositionCommand(new Pose(x,y,h),drivetrain),
                         new WaitCommand(350)
                 )
         );
@@ -55,13 +55,13 @@ public class CustomAutoTest extends CommandOpMode {
         robot.read();
         super.run();
         robot.periodic();
-        PoseVelocity2d pose = drivetrain.updatePoseEstimate();
+        drivetrain.updatePoseEstimate();
 
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));
-        telemetry.addData("x", pose.linearVel.x);
-        telemetry.addData("y", pose.linearVel.y);
-        telemetry.addData("h", pose.angVel);
+        telemetry.addData("x", drivetrain.pose.position.x);
+        telemetry.addData("y", drivetrain.pose.position.y);
+        telemetry.addData("h", drivetrain.pose.heading.log());
         loopTime = loop;
         telemetry.update();
 

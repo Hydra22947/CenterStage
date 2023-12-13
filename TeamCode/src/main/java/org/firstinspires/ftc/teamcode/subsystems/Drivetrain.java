@@ -56,7 +56,7 @@ public class Drivetrain {
 
         powers = new PoseVelocity2d(
                 input,
-                Range.clip(_cGamepad1.right_stick_x, -power, power)
+                Range.clip(_cGamepad1.right_stick_x, -power * 0.8, power* 0.8)
         );
 
         if(_cGamepad1.XOnce())

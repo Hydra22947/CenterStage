@@ -238,10 +238,10 @@ public final class MecanumDrive {
             wheelSpeeds[RobotDrive.MotorType.kBackRight.value] /= max;
         }
 
-        leftFront.setPower(wheelSpeeds[0]);
-        rightFront.setPower(wheelSpeeds[1]);
-        leftBack.setPower(wheelSpeeds[2]);
-        rightBack.setPower(wheelSpeeds[3]);
+        leftBack.setPower(wheelSpeeds[RobotDrive.MotorType.kBackLeft.value]);
+        rightBack.setPower(wheelSpeeds[RobotDrive.MotorType.kBackRight.value]);
+        leftFront.setPower(wheelSpeeds[RobotDrive.MotorType.kFrontLeft.value]);
+        rightFront.setPower(wheelSpeeds[RobotDrive.MotorType.kFrontRight.value]);
     }
 
     public final class FollowTrajectoryAction implements Action {

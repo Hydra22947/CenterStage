@@ -48,6 +48,7 @@ public class OpMode extends CommandOpMode {
     int openedXTimes = 0;
     boolean retract = false;
     boolean goToMid = false;
+    boolean intakeMid = true;
     boolean canIntake = true;
     boolean startedDelayTransfer = false;
     public enum IntakeState {
@@ -87,9 +88,9 @@ public class OpMode extends CommandOpMode {
         intake = new Intake();
         intakeExtension = new IntakeExtension(gamepad1);
 
-        intake.setAngle(Intake.Angle.TRANSFER);
+        intake.setAngle(Intake.Angle.MID);
         intakeExtension.setCurrent(IntakeExtension.ExtensionState.MANUAL);
-        intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
+        intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
         claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
         outtake.setAngle(Outtake.Angle.INTAKE);
         elevator.setAuto(false);
@@ -97,6 +98,7 @@ public class OpMode extends CommandOpMode {
         intake.update();
         claw.update();
         outtake.update();
+        intakeExtension.update();
 
         while (opModeInInit())
         {
@@ -110,7 +112,7 @@ public class OpMode extends CommandOpMode {
 
     @Override
     public void run() {
-        //intakeExtension.update();
+        intakeExtension.update();
         betterGamepad1.update();
         betterGamepad2.update();
         drivetrain.update();
@@ -155,6 +157,7 @@ public class OpMode extends CommandOpMode {
 
                 if(startedDelayTransfer)
                 {
+                    intakeMid = false;
                     intake.move(Intake.Angle.TRANSFER);
                     startedDelayTransfer = false;
 
@@ -177,16 +180,18 @@ public class OpMode extends CommandOpMode {
                     claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
 
                     goToMid = false;
+
+                    intakeMid = true;
                 }
-                else if(liftState == LiftState.EXTRACT)
+                else if((liftState == LiftState.EXTRACT || liftState == LiftState.RETRACT) && intakeMid)
                 {
                     intake.move(Intake.Angle.MID);
                 }
-                else
-                {
-                    claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
-                    intake.move(Intake.Angle.TRANSFER);
-                }
+//                else
+//                {
+//                    claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
+//                    intake.move(Intake.Angle.TRANSFER);
+//                }
 
                 break;
             case INTAKE:

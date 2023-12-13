@@ -136,6 +136,7 @@ public class RobotHardware {
 
         // INTAKE
         this.extensionServoRight = new BetterServo(hardwareMap.get(Servo.class, "sER"));
+        extensionServoRight.setDirection(Servo.Direction.REVERSE);
         this.extensionServoLeft = new BetterServo(hardwareMap.get(Servo.class, "sEL"));
         this.intakeAngleServo = new BetterServo(hardwareMap.get(Servo.class, "sIA"));
         intakeAngleServo.setDirection(Servo.Direction.REVERSE);
@@ -148,7 +149,7 @@ public class RobotHardware {
         // HAND
         this.intakeHandPivotRightServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPR"));
         this.intakeHandPivotLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPL"));
-        intakeHandPivotRightServo.setDirection(Servo.Direction.REVERSE);
+        intakeHandPivotLeftServo.setDirection(Servo.Direction.REVERSE);
 
         // OUTTAKE
         // CLAW
