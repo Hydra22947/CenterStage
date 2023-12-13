@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.auto.custom.pathing.geometry;
 
 public class Vector2D {
     public double x,y;
@@ -10,6 +10,15 @@ public class Vector2D {
 
     public static Vector2D fromHeadingAndMagnitude(double h, double m){
         return new Vector2D(Math.cos(h) * m, Math.sin(h) * m);
+    }
+
+    public double angle() {
+        return Math.atan2(y, x);
+    }
+
+    public Vector2D deadzoneX(double val){
+        if(Math.abs(x) < val) return new Vector2D(0, y);
+        return this;
     }
 
     public Vector2D mult(double scalar) {
@@ -44,6 +53,16 @@ public class Vector2D {
 
     public double cross(Vector2D other) {
         return x * other.y - y * other.x;
+    }
+
+    public Vector2D project(Vector2D other) {
+        double magnitude = other.magnitude();
+        double angle = angle();
+        return new Vector2D(magnitude * Math.cos(angle), magnitude * Math.sin(angle));
+    }
+
+    public double magnitudeSquared() {
+        return x * x + y * y;
     }
 
     @Override

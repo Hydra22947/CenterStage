@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.auto.custom.pathing.geometry;
 
 public class Point {
     public double x, y;
@@ -24,7 +24,7 @@ public class Point {
         this.y = y;
     }
 
-    public Point() {
+    public Point(){
         this(0, 0);
     }
 
@@ -44,7 +44,7 @@ public class Point {
         return new Point(getX() - other.getX(), getY() - other.getY());
     }
 
-    public Point divide(double div) {
+    public Point divide(double div){
         return new Point(x / div, y / div);
     }
 
@@ -52,7 +52,7 @@ public class Point {
         return other.subtract(this).radius();
     }
 
-    public double atan() {
+    public double atan(){
         return Math.atan2(x, y);
     }
 
@@ -60,12 +60,12 @@ public class Point {
         return Math.hypot(x, y);
     }
 
-    public static Point polar(double r, double a) {
-        return new Point(Math.cos(a) * r, Math.sin(a) * r);
+    public static Point polar(double r, double a){
+        return new Point(Math.cos(a)*r, Math.sin(a)*r);
     }
 
-    public Point rotate(double amount) {
-        return Point.polar(radius(), atan() + amount);
+    public Point rotate(double amount){
+        return Point.polar(radius(), atan()+amount);
     }
 
     public String toString() {

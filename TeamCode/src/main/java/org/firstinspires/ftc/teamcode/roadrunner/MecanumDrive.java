@@ -30,9 +30,9 @@ import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
 import com.acmerobotics.roadrunner.ftc.PositionVelocityPair;
 import com.acmerobotics.roadrunner.ftc.RawEncoder;
 
+import com.arcrobotics.ftclib.drivebase.RobotDrive;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.Globals;
-import org.firstinspires.ftc.teamcode.util.Localizer;
+import org.firstinspires.ftc.teamcode.auto.custom.pathing.geometry.Vector2D;
 import org.firstinspires.ftc.teamcode.util.PoseMessage;
 
 import java.lang.Math;
@@ -211,6 +211,37 @@ public final class MecanumDrive {
         leftBack.setPower(wheelVels.leftBack.get(0) / maxPowerMag);
         rightBack.setPower(wheelVels.rightBack.get(0) / maxPowerMag);
         rightFront.setPower(wheelVels.rightFront.get(0) / maxPowerMag);
+    }
+
+    public void set(double strafeSpeed, double forwardSpeed,
+                    double turnSpeed, double gyroAngle) {
+
+        Vector2D input = new Vector2D(strafeSpeed, forwardSpeed).rotate(-gyroAngle);
+
+        strafeSpeed = input.x;
+        forwardSpeed = input.y;
+
+        double[] wheelSpeeds = new double[4];
+
+        wheelSpeeds[RobotDrive.MotorType.kFrontLeft.value] = forwardSpeed + strafeSpeed + turnSpeed;
+        wheelSpeeds[RobotDrive.MotorType.kFrontRight.value] = forwardSpeed - strafeSpeed - turnSpeed;
+        wheelSpeeds[RobotDrive.MotorType.kBackLeft.value] = (forwardSpeed - strafeSpeed + turnSpeed);
+        wheelSpeeds[RobotDrive.MotorType.kBackRight.value] = (forwardSpeed + strafeSpeed - turnSpeed);
+        // 1.06, 1.04
+
+        double max = Arrays.stream(wheelSpeeds).max().getAsDouble();
+
+        if (Math.abs(max) > 1) {
+            wheelSpeeds[RobotDrive.MotorType.kFrontLeft.value] /= max;
+            wheelSpeeds[RobotDrive.MotorType.kFrontRight.value] /= max;
+            wheelSpeeds[RobotDrive.MotorType.kBackLeft.value] /= max;
+            wheelSpeeds[RobotDrive.MotorType.kBackRight.value] /= max;
+        }
+
+        leftFront.setPower(wheelSpeeds[0]);
+        rightFront.setPower(wheelSpeeds[1]);
+        leftBack.setPower(wheelSpeeds[2]);
+        rightBack.setPower(wheelSpeeds[3]);
     }
 
     public final class FollowTrajectoryAction implements Action {

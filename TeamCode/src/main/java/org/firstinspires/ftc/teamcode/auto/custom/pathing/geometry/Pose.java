@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.auto.custom.pathing.geometry;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.util.Point;
-import org.firstinspires.ftc.teamcode.util.Vector2D;
+
+import java.util.Locale;
 
 public class Pose extends Point {
 
@@ -22,6 +22,12 @@ public class Pose extends Point {
 
     public Pose(){
         this(0, 0, 0);
+    }
+
+    public void set(Pose other) {
+        this.x = other.x;
+        this.y = other.y;
+        this.heading = other.heading;
     }
 
     public Pose add(Pose other) {
@@ -46,6 +52,6 @@ public class Pose extends Point {
 
     @Override
     public String toString() {
-        return String.format("%.2f %.2f %.2f", x, y, heading);
+        return String.format(Locale.ENGLISH, "%.2f %.2f %.2f", x, y, heading);
     }
 }
