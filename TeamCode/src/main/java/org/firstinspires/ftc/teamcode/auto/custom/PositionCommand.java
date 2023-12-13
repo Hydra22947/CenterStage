@@ -1,101 +1,433 @@
-package org.firstinspires.ftc.teamcode.auto.custom;
+package org.firstinspires.ftc.teamcode.roadrunner;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.command.CommandBase;
-import com.arcrobotics.ftclib.controller.PIDFController;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.*;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.DualNum;
+import com.acmerobotics.roadrunner.HolonomicController;
+import com.acmerobotics.roadrunner.MecanumKinematics;
+import com.acmerobotics.roadrunner.MinVelConstraint;
+import com.acmerobotics.roadrunner.MotorFeedforward;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Pose2dDual;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
+import com.acmerobotics.roadrunner.Time;
+import com.acmerobotics.roadrunner.TimeTrajectory;
+import com.acmerobotics.roadrunner.TimeTurn;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TurnConstraints;
+import com.acmerobotics.roadrunner.Twist2dDual;
+import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
+import com.acmerobotics.roadrunner.ftc.Encoder;
+import com.acmerobotics.roadrunner.ftc.FlightRecorder;
+import com.acmerobotics.roadrunner.ftc.LynxFirmware;
+import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
+import com.acmerobotics.roadrunner.ftc.PositionVelocityPair;
+import com.acmerobotics.roadrunner.ftc.RawEncoder;
 
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.auto.custom.pathing.geometry.Pose;
-import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Globals;
+import org.firstinspires.ftc.teamcode.util.Localizer;
+import org.firstinspires.ftc.teamcode.util.PoseMessage;
+
+import java.lang.Math;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 @Config
-public class PositionCommand extends CommandBase {
-    private final RobotHardware robot = RobotHardware.getInstance();
-    Pose targetPose;
-    MecanumDrive drive;
+public final class MecanumDrive {
+    public static class Params {
+        // drive model parameters
+        public double inPerTick = 0.00295717;
+        public double lateralInPerTick =  -0.0019354040659888406;
+        public double trackWidthTicks = 3697.102595585527;
 
-    public static double xP = 0.0385;
-    public static double xD = 0.005;
+        // feedforward parameters (in tick units)
+        public double kS = 0.9942662343427284;
+        public double kV = 0.0003860;
+        public double kA = 0.00009;
 
-    public static double yP = 0.0385;
-    public static double yD = 0.005;
+        // path profile parameters (in inches)
+        public double maxWheelVel = 50;
+        public double minProfileAccel = -30;
+        public double maxProfileAccel = 50;
 
-    public static double hP = 0.75;
-    public static double hD = 0.02;
+        // turn profile parameters (in radians)
+        public double maxAngVel = Math.PI; // shared with path
+        public double maxAngAccel = Math.PI;
 
-    public static double kStatic = 0.05;
+        // path controller gains
+        public double axialGain = 2.5;
+        public double lateralGain = 2;
+        public double headingGain =.5; // shared with turn
 
-    public static PIDFController xController = new PIDFController(xP, 0.0, xD, 0);
-    public static PIDFController yController = new PIDFController(yP, 0.0, yD, 0);
-    public static PIDFController hController = new PIDFController(hP, 0.0, hD, 0);
-
-    public static double ALLOWED_TRANSLATIONAL_ERROR = 1;
-    public static double ALLOWED_HEADING_ERROR = 0.03;
-
-    private ElapsedTime timer;
-    private ElapsedTime stable;
-
-    public PositionCommand(Pose targetPose, MecanumDrive drive) {
-        this.targetPose = targetPose;
-        this.drive = drive;
+        public double axialVelGain = 1.5;
+        public double lateralVelGain = .09;
+        public double headingVelGain = .6; // shared with turn
     }
 
-    /**
-     *
-     */
-    @Override
-    public void execute() {
-        if (timer == null) timer = new ElapsedTime();
-        if (stable == null) stable = new ElapsedTime();
+    public static Params PARAMS = new Params();
 
-        Pose robotPose = getCurrentPos();
+    public final MecanumKinematics kinematics = new MecanumKinematics(
+            PARAMS.inPerTick * PARAMS.trackWidthTicks, PARAMS.inPerTick / PARAMS.lateralInPerTick);
 
-        Pose powers = getPower(robotPose);
-        drive.set(powers.x, powers.heading, powers.heading, 0);
-    }
+    public final TurnConstraints defaultTurnConstraints = new TurnConstraints(
+            PARAMS.maxAngVel, -PARAMS.maxAngAccel, PARAMS.maxAngAccel);
+    public final VelConstraint defaultVelConstraint =
+            new MinVelConstraint(Arrays.asList(
+                    kinematics.new WheelVelConstraint(PARAMS.maxWheelVel),
+                    new AngularVelConstraint(PARAMS.maxAngVel)
+            ));
+    public final AccelConstraint defaultAccelConstraint =
+            new ProfileAccelConstraint(PARAMS.minProfileAccel, PARAMS.maxProfileAccel);
 
-    @Override
-    public boolean isFinished() {
-        Pose robotPose = getCurrentPos();
-        Pose delta = targetPose.subtract(robotPose);
+    public final DcMotorEx leftFront, leftBack, rightBack, rightFront;
 
-        if (delta.toVec2D().magnitude() > ALLOWED_TRANSLATIONAL_ERROR
-                || Math.abs(delta.heading) > ALLOWED_HEADING_ERROR) {
-            stable.reset();
+    public final VoltageSensor voltageSensor;
+
+    public final IMU imu;
+
+    public final Localizer localizer;
+    public Pose2d pose;
+
+    private final LinkedList<Pose2d> poseHistory = new LinkedList<>();
+
+    public class DriveLocalizer implements Localizer {
+        public final Encoder leftFront, leftBack, rightBack, rightFront;
+
+        private int lastLeftFrontPos, lastLeftBackPos, lastRightBackPos, lastRightFrontPos;
+        private Rotation2d lastHeading;
+
+        public DriveLocalizer() {
+
+
+            leftFront = new OverflowEncoder(new RawEncoder(MecanumDrive.this.leftFront));
+            leftBack = new OverflowEncoder(new RawEncoder(MecanumDrive.this.leftBack));
+            rightBack = new OverflowEncoder(new RawEncoder(MecanumDrive.this.rightBack));
+            rightFront = new OverflowEncoder(new RawEncoder(MecanumDrive.this.rightFront));
+
+
+            lastLeftFrontPos = leftFront.getPositionAndVelocity().position;
+            lastLeftBackPos = leftBack.getPositionAndVelocity().position;
+            lastRightBackPos = rightBack.getPositionAndVelocity().position;
+            lastRightFrontPos = rightFront.getPositionAndVelocity().position;
+
+            lastHeading = Rotation2d.exp(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
         }
 
-        return timer.milliseconds() > 5000 || stable.milliseconds() > 150;
+        @Override
+        public Twist2dDual<Time> update() {
+            PositionVelocityPair leftFrontPosVel = leftFront.getPositionAndVelocity();
+            PositionVelocityPair leftBackPosVel = leftBack.getPositionAndVelocity();
+            PositionVelocityPair rightBackPosVel = rightBack.getPositionAndVelocity();
+            PositionVelocityPair rightFrontPosVel = rightFront.getPositionAndVelocity();
+
+            Rotation2d heading = Rotation2d.exp(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+            double headingDelta = heading.minus(lastHeading);
+
+            Twist2dDual<Time> twist = kinematics.forward(new MecanumKinematics.WheelIncrements<>(
+                    new DualNum<Time>(new double[]{
+                            (leftFrontPosVel.position - lastLeftFrontPos),
+                            leftFrontPosVel.velocity,
+                    }).times(PARAMS.inPerTick),
+                    new DualNum<Time>(new double[]{
+                            (leftBackPosVel.position - lastLeftBackPos),
+                            leftBackPosVel.velocity,
+                    }).times(PARAMS.inPerTick),
+                    new DualNum<Time>(new double[]{
+                            (rightBackPosVel.position - lastRightBackPos),
+                            rightBackPosVel.velocity,
+                    }).times(PARAMS.inPerTick),
+                    new DualNum<Time>(new double[]{
+                            (rightFrontPosVel.position - lastRightFrontPos),
+                            rightFrontPosVel.velocity,
+                    }).times(PARAMS.inPerTick)
+            ));
+
+            lastLeftFrontPos = leftFrontPosVel.position;
+            lastLeftBackPos = leftBackPosVel.position;
+            lastRightBackPos = rightBackPosVel.position;
+            lastRightFrontPos = rightFrontPosVel.position;
+
+            lastHeading = heading;
+
+            return new Twist2dDual<>(
+                    twist.line,
+                    DualNum.cons(headingDelta, twist.angle.drop(1))
+            );
+        }
     }
 
-    public Pose getPower(Pose robotPose) {
-        Pose delta = targetPose.subtract(robotPose);
+    public MecanumDrive(HardwareMap hardwareMap, Pose2d pose, RobotHardware robot) {
+        Globals.USING_DASHBOARD = true;
 
-        double xPower = xController.calculate(robotPose.x, targetPose.x);
-        double yPower = yController.calculate(robotPose.y, targetPose.y);
-        double hPower = -hController.calculate(0, delta.heading);
+        this.pose = pose;
 
-        double x_rotated = xPower * Math.cos(robotPose.heading) - yPower * Math.sin(robotPose.heading);
-        double y_rotated = xPower * Math.sin(robotPose.heading) + yPower * Math.cos(robotPose.heading);
+        LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
 
-        if (Math.abs(x_rotated) < 0.01) x_rotated = 0;
-        else x_rotated += kStatic * Math.signum(x_rotated);
-        if (Math.abs(y_rotated) < 0.01) y_rotated = 0;
-        else y_rotated += kStatic * Math.signum(y_rotated);
-        if (Math.abs(hPower) < 0.01) hPower = 0;
-        else hPower += kStatic * Math.signum(hPower);
+        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
 
-        return new Pose((y_rotated / robot.getVoltage() * 12.5) *1.6, x_rotated / robot.getVoltage() * 12.5, hPower / robot.getVoltage() * 12.5);
+        leftFront = robot.dtFrontLeftMotor;
+        leftBack = robot.dtBackLeftMotor;
+        rightBack = robot.dtBackRightMotor;
+        rightFront = robot.dtFrontRightMotor;
+
+        imu = robot.imu;
+
+        voltageSensor = hardwareMap.voltageSensor.iterator().next();
+
+        localizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick);
+
+        FlightRecorder.write("MECANUM_PARAMS", PARAMS);
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        drive.set(0,0,0,0);
+    public void setDrivePowers(PoseVelocity2d powers) {
+        MecanumKinematics.WheelVelocities<Time> wheelVels = new MecanumKinematics(1).inverse(
+                PoseVelocity2dDual.constant(powers, 1));
+
+        double maxPowerMag = 1;
+        for (DualNum<Time> power : wheelVels.all()) {
+            maxPowerMag = Math.max(maxPowerMag, power.value());
+        }
+
+        leftFront.setPower(wheelVels.leftFront.get(0) / maxPowerMag);
+        leftBack.setPower(wheelVels.leftBack.get(0) / maxPowerMag);
+        rightBack.setPower(wheelVels.rightBack.get(0) / maxPowerMag);
+        rightFront.setPower(wheelVels.rightFront.get(0) / maxPowerMag);
     }
 
-    Pose getCurrentPos()
-    {
-        drive.updatePoseEstimate();
-        return new Pose(drive.pose.position.x, drive.pose.position.y, drive.pose.heading.log());
+    public final class FollowTrajectoryAction implements Action {
+        public final TimeTrajectory timeTrajectory;
+        private double beginTs = -1;
+
+        private final double[] xPoints, yPoints;
+
+        public FollowTrajectoryAction(TimeTrajectory t) {
+            timeTrajectory = t;
+
+            List<Double> disps = com.acmerobotics.roadrunner.Math.range(
+                    0, t.path.length(),
+                    Math.max(2, (int) Math.ceil(t.path.length() / 2)));
+            xPoints = new double[disps.size()];
+            yPoints = new double[disps.size()];
+            for (int i = 0; i < disps.size(); i++) {
+                Pose2d p = t.path.get(disps.get(i), 1).value();
+                xPoints[i] = p.position.x;
+                yPoints[i] = p.position.y;
+            }
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket p) {
+            double t;
+            if (beginTs < 0) {
+                beginTs = Actions.now();
+                t = 0;
+            } else {
+                t = Actions.now() - beginTs;
+            }
+
+            if (t >= timeTrajectory.duration) {
+                leftFront.setPower(0);
+                leftBack.setPower(0);
+                rightBack.setPower(0);
+                rightFront.setPower(0);
+
+                return false;
+            }
+
+            Pose2dDual<Time> txWorldTarget = timeTrajectory.get(t);
+
+            PoseVelocity2d robotVelRobot = updatePoseEstimate();
+
+            PoseVelocity2dDual<Time> command = new HolonomicController(
+                    PARAMS.axialGain, PARAMS.lateralGain, PARAMS.headingGain,
+                    PARAMS.axialVelGain, PARAMS.lateralVelGain, PARAMS.headingVelGain
+            )
+                    .compute(txWorldTarget, pose, robotVelRobot);
+
+            MecanumKinematics.WheelVelocities<Time> wheelVels = kinematics.inverse(command);
+            double voltage = voltageSensor.getVoltage();
+
+            final MotorFeedforward feedforward = new MotorFeedforward(PARAMS.kS, PARAMS.kV / PARAMS.inPerTick, PARAMS.kA / PARAMS.inPerTick);
+            leftFront.setPower(feedforward.compute(wheelVels.leftFront) / voltage);
+            leftBack.setPower(feedforward.compute(wheelVels.leftBack) / voltage);
+            rightBack.setPower(feedforward.compute(wheelVels.rightBack) / voltage);
+            rightFront.setPower(feedforward.compute(wheelVels.rightFront) / voltage);
+
+            FlightRecorder.write("TARGET_POSE", new PoseMessage(txWorldTarget.value()));
+
+            p.put("x", pose.position.x);
+            p.put("y", pose.position.y);
+            p.put("heading (deg)", Math.toDegrees(pose.heading.log()));
+
+            Pose2d error = txWorldTarget.value().minusExp(pose);
+            p.put("xError", error.position.x);
+            p.put("yError", error.position.y);
+            p.put("headingError (deg)", Math.toDegrees(error.heading.log()));
+
+            // only draw when active; only one drive action should be active at a time
+            Canvas c = p.fieldOverlay();
+            drawPoseHistory(c);
+
+            c.setStroke("#4CAF50");
+            drawRobot(c, txWorldTarget.value());
+
+            c.setStroke("#3F51B5");
+            drawRobot(c, pose);
+
+            c.setStroke("#4CAF50FF");
+            c.setStrokeWidth(1);
+            c.strokePolyline(xPoints, yPoints);
+
+            return true;
+        }
+
+        @Override
+        public void preview(Canvas c) {
+            c.setStroke("#4CAF507A");
+            c.setStrokeWidth(1);
+            c.strokePolyline(xPoints, yPoints);
+        }
+    }
+
+    public final class TurnAction implements Action {
+        private final TimeTurn turn;
+
+        private double beginTs = -1;
+
+        public TurnAction(TimeTurn turn) {
+            this.turn = turn;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket p) {
+            double t;
+            if (beginTs < 0) {
+                beginTs = Actions.now();
+                t = 0;
+            } else {
+                t = Actions.now() - beginTs;
+            }
+
+            if (t >= turn.duration) {
+                leftFront.setPower(0);
+                leftBack.setPower(0);
+                rightBack.setPower(0);
+                rightFront.setPower(0);
+
+                return false;
+            }
+
+            Pose2dDual<Time> txWorldTarget = turn.get(t);
+
+            PoseVelocity2d robotVelRobot = updatePoseEstimate();
+
+            PoseVelocity2dDual<Time> command = new HolonomicController(
+                    PARAMS.axialGain, PARAMS.lateralGain, PARAMS.headingGain,
+                    PARAMS.axialVelGain, PARAMS.lateralVelGain, PARAMS.headingVelGain
+            )
+                    .compute(txWorldTarget, pose, robotVelRobot);
+
+            MecanumKinematics.WheelVelocities<Time> wheelVels = kinematics.inverse(command);
+            double voltage = voltageSensor.getVoltage();
+            final MotorFeedforward feedforward = new MotorFeedforward(PARAMS.kS, PARAMS.kV / PARAMS.inPerTick, PARAMS.kA / PARAMS.inPerTick);
+            leftFront.setPower(feedforward.compute(wheelVels.leftFront) / voltage);
+            leftBack.setPower(feedforward.compute(wheelVels.leftBack) / voltage);
+            rightBack.setPower(feedforward.compute(wheelVels.rightBack) / voltage);
+            rightFront.setPower(feedforward.compute(wheelVels.rightFront) / voltage);
+
+            FlightRecorder.write("TARGET_POSE", new PoseMessage(txWorldTarget.value()));
+
+            Canvas c = p.fieldOverlay();
+            drawPoseHistory(c);
+
+            c.setStroke("#4CAF50");
+            drawRobot(c, txWorldTarget.value());
+
+            c.setStroke("#3F51B5");
+            drawRobot(c, pose);
+
+            c.setStroke("#7C4DFFFF");
+            c.fillCircle(turn.beginPose.position.x, turn.beginPose.position.y, 2);
+
+            return true;
+        }
+
+        @Override
+        public void preview(Canvas c) {
+            c.setStroke("#7C4DFF7A");
+            c.fillCircle(turn.beginPose.position.x, turn.beginPose.position.y, 2);
+        }
+    }
+
+    public PoseVelocity2d updatePoseEstimate() {
+        Twist2dDual<Time> twist = localizer.update();
+        pose = pose.plus(twist.value());
+
+        poseHistory.add(pose);
+        while (poseHistory.size() > 100) {
+            poseHistory.removeFirst();
+        }
+
+        FlightRecorder.write("ESTIMATED_POSE", new PoseMessage(pose));
+
+        return twist.velocity().value();
+    }
+
+    private void drawPoseHistory(Canvas c) {
+        double[] xPoints = new double[poseHistory.size()];
+        double[] yPoints = new double[poseHistory.size()];
+
+        int i = 0;
+        for (Pose2d t : poseHistory) {
+            xPoints[i] = t.position.x;
+            yPoints[i] = t.position.y;
+
+            i++;
+        }
+
+        c.setStrokeWidth(1);
+        c.setStroke("#3F51B5");
+        c.strokePolyline(xPoints, yPoints);
+    }
+
+    private static void drawRobot(Canvas c, Pose2d t) {
+        final double ROBOT_RADIUS = 9;
+
+        c.setStrokeWidth(1);
+        c.strokeCircle(t.position.x, t.position.y, ROBOT_RADIUS);
+
+        Vector2d halfv = t.heading.vec().times(0.5 * ROBOT_RADIUS);
+        Vector2d p1 = t.position.plus(halfv);
+        Vector2d p2 = p1.plus(halfv);
+        c.strokeLine(p1.x, p1.y, p2.x, p2.y);
+    }
+
+    public TrajectoryActionBuilder actionBuilder(Pose2d beginPose) {
+        return new TrajectoryActionBuilder(
+                TurnAction::new,
+                FollowTrajectoryAction::new,
+                beginPose, 1e-6, 0.0,
+                defaultTurnConstraints,
+                defaultVelConstraint, defaultAccelConstraint,
+                0.25, 0.1
+        );
     }
 }
