@@ -30,6 +30,7 @@ import java.util.Arrays;
 public class RobotHardware {
 
     //drivetrain
+    public HardwareMap hardwareMap;
     public DcMotorEx dtFrontLeftMotor;
     public DcMotorEx dtFrontRightMotor;
     public DcMotorEx dtBackLeftMotor;
@@ -102,6 +103,7 @@ public class RobotHardware {
      * @param telemetry Saved for later in the event FTC Dashboard used
      */
     public void init(final HardwareMap hardwareMap, final Telemetry telemetry) {
+        this.hardwareMap = hardwareMap;
         voltageTimer = new ElapsedTime();
 
         if (Globals.USING_DASHBOARD) {

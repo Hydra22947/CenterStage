@@ -69,13 +69,13 @@ public class MeepMeepTesting {
                                 .forward(47)
                                 .waitSeconds(.5)
                                 //Going for backdrop
-                                .lineToSplineHeading(a)
-                                .splineToConstantHeading(stageDoorVector, Math.toRadians(0))
+                                //.lineToSplineHeading(a)
+                                .splineTo(stageDoorVector, Math.toRadians(0))
                                 .splineToLinearHeading(placePixelPose, Math.toRadians(0))
 
                                 //Going for intake
                                 .waitSeconds(WAIT_TIME)
-                                .lineToSplineHeading(stageDoorPose)
+                                .splineTo(new Vector2d(stageDoorPose.getX(), stageDoorPose.getY()), Math.toRadians(0))
                                 .splineToConstantHeading(intakePixelVector, Math.toRadians(180))
 /*
                                 //Going for backdrop

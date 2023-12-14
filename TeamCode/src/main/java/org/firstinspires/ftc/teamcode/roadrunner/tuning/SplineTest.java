@@ -15,7 +15,7 @@ public final class SplineTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap, telemetry);
         if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
-            MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0), robot);
+            MecanumDrive drive = new MecanumDrive(new Pose2d(0, 0, 0), robot);
 
             waitForStart();
 

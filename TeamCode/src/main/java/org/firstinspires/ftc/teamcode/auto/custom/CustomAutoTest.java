@@ -31,7 +31,7 @@ public class CustomAutoTest extends CommandOpMode {
 
         robot.init(hardwareMap, telemetry);
         robot.enabled = true;
-        drivetrain = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0), robot);
+        drivetrain = new MecanumDrive(new Pose2d(0, 0, 0), robot);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
