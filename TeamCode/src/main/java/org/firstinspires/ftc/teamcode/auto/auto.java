@@ -20,9 +20,9 @@ public class auto extends LinearOpMode {
 
         Action goPlaceYellowPixel = drivetrain.actionBuilder(AutoConstants.startPoseLeft)
                 //Place purple pixel
-                .lineToX(AutoConstants.strafeLeftToLine)
+                .lineToY(AutoConstants.strafeLeftToLine)
                 .waitSeconds(AutoConstants.WAIT_TIME)
-                .lineToX(AutoConstants.strafeLeftToStageDoor)
+                //.lineToY(AutoConstants.strafeLeftToStageDoor)
                 .waitSeconds(AutoConstants.WAIT_TIME)
 
                 .build();

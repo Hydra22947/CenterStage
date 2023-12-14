@@ -28,8 +28,8 @@ public class LeftAutoDriveActions {
             //Place purple pixel
             .lineToX(AutoConstants.strafeLeftToLine)
             .waitSeconds(AutoConstants.WAIT_TIME)
-            .lineToX(AutoConstants.strafeLeftToStageDoor)
-            .waitSeconds(AutoConstants.WAIT_TIME)
+//            .lineToX(AutoConstants.strafeLeftToStageDoor)
+  //          .waitSeconds(AutoConstants.WAIT_TIME)
 
             .build();
 
