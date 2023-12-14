@@ -89,7 +89,7 @@ public class OpMode extends CommandOpMode {
         intakeExtension = new IntakeExtension(gamepad1);
 
         intake.setAngle(Intake.Angle.MID);
-        intakeExtension.setCurrent(IntakeExtension.ExtensionState.MANUAL);
+        intakeExtension.setCurrent(IntakeExtension.ExtensionState.CLOSE);
         intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
         claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
         outtake.setAngle(Outtake.Angle.INTAKE);
@@ -144,6 +144,7 @@ public class OpMode extends CommandOpMode {
     {
         switch (intakeState) {
             case RETRACT:
+                intakeExtension.setCurrent(IntakeExtension.ExtensionState.MANUAL);
 
                 if (betterGamepad1.rightBumperOnce() && !robot.has2Pixels() && canIntake) {
                     intakeState = IntakeState.INTAKE;
@@ -187,15 +188,11 @@ public class OpMode extends CommandOpMode {
                 {
                     intake.move(Intake.Angle.MID);
                 }
-//                else
-//                {
-//                    claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
-//                    intake.move(Intake.Angle.TRANSFER);
-//                }
 
                 break;
             case INTAKE:
                 intake.move(Intake.Angle.INTAKE);
+                intakeExtension.setCurrent(IntakeExtension.ExtensionState.CLOSE);
 
                 if (gamepad1.right_trigger != 0) {
                     intakeState = IntakeState.INTAKE_EXTEND;
@@ -232,6 +229,9 @@ public class OpMode extends CommandOpMode {
 
                 break;
             case INTAKE_EXTEND:
+                drivetrain.slow();
+
+                intakeExtension.setCurrent(IntakeExtension.ExtensionState.MANUAL);
                 intake.move(Intake.Angle.INTAKE);
                 claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
 
@@ -258,7 +258,7 @@ public class OpMode extends CommandOpMode {
 
                 if((getTime() - transferTimer) >= delayTransfer && startedDelayTransfer)
                 {
-                    intakeState = IntakeState.RETRACT;
+                    intakeState = IntakeState.INTAKE;
                 }
 
                 if (gamepad1.right_trigger == 0) {
