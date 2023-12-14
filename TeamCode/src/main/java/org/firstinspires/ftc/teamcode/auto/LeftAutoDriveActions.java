@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
@@ -13,7 +14,7 @@ public class LeftAutoDriveActions {
     private Markers markers;
 
     private MecanumDrive drivetrain;
-    public LeftAutoDriveActions()
+    public LeftAutoDriveActions(HardwareMap hardwareMap)
     {
         this.robot = RobotHardware.getInstance();
         this.markers = new Markers();
@@ -23,7 +24,7 @@ public class LeftAutoDriveActions {
 
 
     // TODO: add red trajectorys , shouldnt take long.
-    public Action goPlaceYellowPixel = drivetrain.actionBuilder(AutoConstants.startPoseLeft)
+     Action goPlaceYellowPixel = drivetrain.actionBuilder(AutoConstants.startPoseLeft)
             //Place purple pixel
             .lineToX(AutoConstants.strafeLeftToLine)
             .waitSeconds(AutoConstants.WAIT_TIME)
