@@ -1,41 +1,38 @@
 package org.firstinspires.ftc.teamcode.testing.hardware;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.ftc.Encoder;
-import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
-import com.acmerobotics.roadrunner.ftc.RawEncoder;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
-import org.firstinspires.ftc.teamcode.RobotHardware;
 
 
 @TeleOp(name="Dead Wheel Test", group="tests")
 @Config
 public class DeadWheelTest extends LinearOpMode {
 
-    public Encoder par0;
-    public Encoder par1;
-    public Encoder perp;
+    public DcMotorEx left;
+    public DcMotorEx right;
+    public DcMotorEx front;
 
 
     @Override
     public void runOpMode() {
-        perp = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "mFR"))); // front
-        par1 = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "mFL"))); // right
-        par0 = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "mBR"))); // left
+        front = hardwareMap.get(DcMotorEx.class, "mFR"); // front
+        right = hardwareMap.get(DcMotorEx.class, "mFL"); // right
+        left = hardwareMap.get(DcMotorEx.class, "mBR"); // left
 
-        par0.setDirection(DcMotorSimple.Direction.REVERSE);
+        left.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        right.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        front.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
+        left.setDirection(DcMotorEx.Direction.REVERSE);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            telemetry.addData("front", perp.getPositionAndVelocity().position);
-            telemetry.addData("pod left", par0.getPositionAndVelocity().position);
-            telemetry.addData("pod right", par1.getPositionAndVelocity().position);
+            telemetry.addData("front", front.getCurrentPosition());
+            telemetry.addData("pod left", left.getCurrentPosition());
+            telemetry.addData("pod right", right.getCurrentPosition());
             telemetry.update();
         }
     }

@@ -1,18 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.Rotation2d;
-import com.acmerobotics.roadrunner.Vector2d;
-import com.arcrobotics.ftclib.drivebase.RobotDrive;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
-import org.firstinspires.ftc.teamcode.Globals;
 
 @Config
 public class Drivetrain {
@@ -23,9 +16,8 @@ public class Drivetrain {
 
     private final RobotHardware robot;
     Vector2d input;
-    PoseVelocity2d powers;
     public static double maxPower = 0.6;
-    double power = 0;
+    double power = 0, twist = 0;
     boolean slow = false;
 
     //Constructor
@@ -49,25 +41,19 @@ public class Drivetrain {
         input = new Vector2d(
                 Range.clip(_cGamepad1.left_stick_y, -power, power),
                 Range.clip(-_cGamepad1.left_stick_x, -power, power)
-        );
+        ).rotated(-robot.getAngle());
 
-        input = Rotation2d.exp(-robot.getAngle()).inverse().times(
-                new Vector2d(input.x, input.y));
-
-        powers = new PoseVelocity2d(
-                input,
-                Range.clip(_cGamepad1.right_stick_x, -power * 0.8, power* 0.8)
-        );
+        twist = Range.clip(_cGamepad1.right_stick_x, -power * 0.8, power* 0.8);
 
         if(_cGamepad1.XOnce())
         {
             resetAngle();
         }
 
-        robot.dtFrontLeftMotor.setPower(powers.linearVel.x + powers.angVel + powers.linearVel.y);
-        robot.dtBackLeftMotor.setPower(powers.linearVel.x  + powers.angVel - powers.linearVel.y);
-        robot.dtFrontRightMotor.setPower(powers.linearVel.x  - powers.angVel - powers.linearVel.y);
-        robot.dtBackRightMotor.setPower(powers.linearVel.x  - powers.angVel + powers.linearVel.y);
+        robot.dtFrontLeftMotor.setPower(input.getX() + twist + input.getY());
+        robot.dtBackLeftMotor.setPower(input.getX()  + twist - input.getY());
+        robot.dtFrontRightMotor.setPower(input.getX()  - twist - input.getY());
+        robot.dtBackRightMotor.setPower(input.getX()  - twist + input.getY());
 
         robot.telemetry.addLine("" + slow);
         robot.telemetry.addData("heading H", Math.toDegrees(robot.getAngle()));

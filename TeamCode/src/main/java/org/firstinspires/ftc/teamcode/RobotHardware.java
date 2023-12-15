@@ -17,9 +17,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.util.Encoder;
 import org.firstinspires.ftc.teamcode.util.Angle;
-import org.firstinspires.ftc.teamcode.util.wrappers.BetterEncoder;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterServo;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 
@@ -35,7 +34,6 @@ public class RobotHardware {
     public DcMotorEx dtFrontRightMotor;
     public DcMotorEx dtBackLeftMotor;
     public DcMotorEx dtBackRightMotor;
-    public MecanumDrive drivetrain;
     // elevator
     public DcMotorEx elevatorMotorRight;
     public DcMotorEx elevatorMotorLeft;
@@ -63,9 +61,9 @@ public class RobotHardware {
     // TODO: ADD x3 Distance Sensors, webcam
 
     // odo pod encoders
-    public BetterEncoder podLeft;
-    public BetterEncoder podRight;
-    public BetterEncoder podFront;
+    public Encoder podLeft;
+    public Encoder podRight;
+    public Encoder podFront;
 
     // Telemetry storage
     public Telemetry telemetry;
@@ -175,9 +173,10 @@ public class RobotHardware {
         elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // ODO PODS
-        this.podLeft = new BetterEncoder(new MotorEx(hardwareMap, "mBR").encoder);
-        this.podFront = new BetterEncoder(new MotorEx(hardwareMap, "mFR").encoder);
-        this.podRight = new BetterEncoder(new MotorEx(hardwareMap, "mFL").encoder);
+
+        this.podLeft = new Encoder(hardwareMap.get(DcMotorEx.class, "mBR"));
+        this.podFront = new Encoder(hardwareMap.get(DcMotorEx.class, "mFR"));
+        this.podRight = new Encoder(hardwareMap.get(DcMotorEx.class, "mFL"));
 
         voltage = hardwareMap.voltageSensor.iterator().next().getVoltage();
     }

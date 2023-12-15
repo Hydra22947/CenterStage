@@ -26,13 +26,10 @@ public class Elevator {
     PIDFController controller, controller2;
     PIDFController.PIDCoefficients pidCoefficients = new PIDFController.PIDCoefficients();
 
-    boolean first = true, firstNoPID = true;
     boolean isAuto;
     public Elevator(Gamepad gamepad)
     {
         this.robot = RobotHardware.getInstance();
-
-
 
         this.gamepad = gamepad;
         this.cGamepad = new BetterGamepad(gamepad);
@@ -69,27 +66,10 @@ public class Elevator {
 
             if (usePID)
             {
-                if(first)
-                {
-                    robot.elevatorMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    robot.elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    first = false;
-                    firstNoPID = true;
-                }
-
-
                 setPidControl();
             }
             else
             {
-                if(firstNoPID)
-                {
-                    robot.elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    robot.elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    firstNoPID = false;
-                    first = true;
-                }
-
                 if(gamepad.left_stick_y != 0 && !gamepad.left_stick_button)
                 {
                     robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
