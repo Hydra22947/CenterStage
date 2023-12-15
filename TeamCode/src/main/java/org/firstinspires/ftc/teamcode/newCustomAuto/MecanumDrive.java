@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 
 @Config
 public class MecanumDrive implements IRobotModule {
@@ -25,7 +26,7 @@ public class MecanumDrive implements IRobotModule {
             headingPID = new PIDCoefficients(0.8,0,0.006);
     public final PIDController tpid= new PIDController(0,0,0), hpid = new PIDController(0,0,0);
 
-    public static double lateralMultiplier = 1.14;
+    public static double lateralMultiplier = SampleMecanumDrive.LATERAL_MULTIPLIER;
 
     public double overallMultiplier = 1;
 
