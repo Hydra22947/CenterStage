@@ -16,8 +16,8 @@ public class Globals {
     public static boolean USING_DASHBOARD = false;
 
     public static double START_ELEVATOR = 2;
-    public static double ELEVATOR_INCREMENT = 100;
-    public static double ERROR = 2;
+    public static double ELEVATOR_INCREMENT = 70;
+    public static double ERROR = 3;
     public static double WAIT_DELAY_TILL_OUTTAKE = 150;
     public static double WAIT_DELAY_TILL_CLOSE = 250;
 }

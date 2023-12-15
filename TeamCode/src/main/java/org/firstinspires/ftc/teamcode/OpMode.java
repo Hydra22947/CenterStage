@@ -38,6 +38,7 @@ public class OpMode extends CommandOpMode {
     public static double delayTransfer = 300;
     public static double delayRelease = 1200;
     public static double delayGoToMid = 500;
+    public static double delayGoToTransfer = 500;
 
     // variables
     double elevatorReset = 0;
@@ -45,12 +46,15 @@ public class OpMode extends CommandOpMode {
     double transferTimer = 0;
     double releaseTimer = 0;
     double goToMidTimer = 0;
+    double goToTransferTimer = 0;
     int openedXTimes = 0;
     boolean retract = false;
     boolean goToMid = false;
     boolean intakeMid = true;
     boolean canIntake = true;
     boolean startedDelayTransfer = false;
+    boolean heldExtension = false;
+    boolean had2Pixels = false;
     public enum IntakeState {
         RETRACT,
         INTAKE,
@@ -88,7 +92,7 @@ public class OpMode extends CommandOpMode {
         intake = new Intake();
         intakeExtension = new IntakeExtension(gamepad1);
 
-        intake.setAngle(Intake.Angle.MID);
+        intake.setAngle(Intake.Angle.TRANSFER);
         intakeExtension.setCurrent(IntakeExtension.ExtensionState.CLOSE);
         intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
         claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
@@ -144,11 +148,16 @@ public class OpMode extends CommandOpMode {
     {
         switch (intakeState) {
             case RETRACT:
-                intakeExtension.setCurrent(IntakeExtension.ExtensionState.MANUAL);
+                intakeExtension.setCurrent(IntakeExtension.ExtensionState.CLOSE);
+
+                if(gamepad1.right_trigger == 0)
+                {
+                    heldExtension = false;
+                }
 
                 if (betterGamepad1.rightBumperOnce() && !robot.has2Pixels() && canIntake) {
                     intakeState = IntakeState.INTAKE;
-                } else if (gamepad1.right_trigger != 0 && !robot.has2Pixels() && canIntake) {
+                } else if (gamepad1.right_trigger != 0 && !robot.has2Pixels() && canIntake && !heldExtension) {
                     intakeState = IntakeState.INTAKE_EXTEND;
                 }
                 else if(liftState == LiftState.RETRACT)
@@ -165,13 +174,15 @@ public class OpMode extends CommandOpMode {
                     releaseTimer = getTime();
                 }
 
-                if((getTime() - releaseTimer) >= delayRelease && robot.has2Pixels())
+                if((getTime() - releaseTimer) >= delayRelease && had2Pixels)
                 {
                     intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
 
                     goToMidTimer = getTime();
 
                     goToMid = true;
+
+                    had2Pixels = false;
                 }
 
 
@@ -184,9 +195,14 @@ public class OpMode extends CommandOpMode {
 
                     intakeMid = true;
                 }
-                else if((liftState == LiftState.EXTRACT || liftState == LiftState.RETRACT) && intakeMid)
+                else if(liftState == LiftState.EXTRACT && intakeMid)
                 {
                     intake.move(Intake.Angle.MID);
+                    goToTransferTimer = getTime();
+                }
+                else if(getTime() - goToTransferTimer >= delayGoToTransfer)
+                {
+                    intake.move(Intake.Angle.TRANSFER);
                 }
 
                 break;
@@ -203,6 +219,7 @@ public class OpMode extends CommandOpMode {
 
 
                 if (robot.has2Pixels() && !startedDelayTransfer) {
+                    had2Pixels = true;
                     transferTimer = getTime();
 
                     startedDelayTransfer = true;
@@ -229,6 +246,7 @@ public class OpMode extends CommandOpMode {
 
                 break;
             case INTAKE_EXTEND:
+                heldExtension = true;
                 drivetrain.slow();
 
                 intakeExtension.setCurrent(IntakeExtension.ExtensionState.MANUAL);
@@ -237,6 +255,8 @@ public class OpMode extends CommandOpMode {
 
 
                 if (robot.has2Pixels() && !startedDelayTransfer) {
+                    had2Pixels = true;
+
                     transferTimer = getTime();
 
                     startedDelayTransfer = true;
@@ -282,6 +302,7 @@ public class OpMode extends CommandOpMode {
 
                 if (betterGamepad1.YOnce())
                 {
+                    intake.move(Intake.Angle.MID);
                     previousElevator = getTime();
                     claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
                     liftState = LiftState.EXTRACT;

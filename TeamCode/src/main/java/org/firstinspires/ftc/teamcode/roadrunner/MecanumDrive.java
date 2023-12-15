@@ -57,7 +57,7 @@ import java.util.List;
 
             // drive model parameters
             public double inPerTick = 0.00295717;
-            public double lateralInPerTick =  -0.0019354040659888406;
+            public double lateralInPerTick =  0.0019354040659888406;
             public double trackWidthTicks = 3697.102595585527;
 
             // feedforward parameters (in tick units)

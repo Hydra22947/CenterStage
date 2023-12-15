@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 public class Elevator {
 
     private final RobotHardware robot;
-    public static double BASE_LEVEL = 1000;
+    public static double BASE_LEVEL = 800;
     public static double MAX_LEVEL = 1600;
     double currentTarget = 0;
     boolean usePID = true;
