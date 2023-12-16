@@ -14,7 +14,9 @@ import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kV;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
@@ -29,7 +31,6 @@ import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
-import com.arcrobotics.ftclib.drivebase.RobotDrive;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -41,9 +42,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.auto.customOld.pathing.geometry.Vector2D;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceRunner;
@@ -59,10 +58,10 @@ import java.util.List;
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
     RobotHardware robot = RobotHardware.getInstance();
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
 
-    public static double LATERAL_MULTIPLIER = -1.6934801016;
+    public static double LATERAL_MULTIPLIER = 1.6934801016;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -87,6 +86,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public SampleMecanumDrive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
+        robot.init(hardwareMap, new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry()));
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
                 new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
 
@@ -313,35 +313,4 @@ public class SampleMecanumDrive extends MecanumDrive {
         return new ProfileAccelerationConstraint(maxAccel);
     }
 
-
-    public void set(double strafeSpeed, double forwardSpeed,
-                    double turnSpeed, double gyroAngle) {
-
-        Vector2D input = new Vector2D(strafeSpeed, forwardSpeed).rotate(-gyroAngle);
-
-        strafeSpeed = input.x;
-        forwardSpeed = input.y;
-
-        double[] wheelSpeeds = new double[4];
-
-        wheelSpeeds[RobotDrive.MotorType.kFrontLeft.value] = forwardSpeed + strafeSpeed + turnSpeed;
-        wheelSpeeds[RobotDrive.MotorType.kFrontRight.value] = forwardSpeed - strafeSpeed - turnSpeed;
-        wheelSpeeds[RobotDrive.MotorType.kBackLeft.value] = (forwardSpeed - strafeSpeed + turnSpeed);
-        wheelSpeeds[RobotDrive.MotorType.kBackRight.value] = (forwardSpeed + strafeSpeed - turnSpeed);
-        // 1.06, 1.04
-
-        double max = Arrays.stream(wheelSpeeds).max().getAsDouble();
-
-        if (Math.abs(max) > 1) {
-            wheelSpeeds[RobotDrive.MotorType.kFrontLeft.value] /= max;
-            wheelSpeeds[RobotDrive.MotorType.kFrontRight.value] /= max;
-            wheelSpeeds[RobotDrive.MotorType.kBackLeft.value] /= max;
-            wheelSpeeds[RobotDrive.MotorType.kBackRight.value] /= max;
-        }
-
-        leftRear.setPower(wheelSpeeds[RobotDrive.MotorType.kBackLeft.value]);
-        rightRear.setPower(wheelSpeeds[RobotDrive.MotorType.kBackRight.value]);
-        leftFront.setPower(wheelSpeeds[RobotDrive.MotorType.kFrontLeft.value]);
-        rightFront.setPower(wheelSpeeds[RobotDrive.MotorType.kFrontRight.value]);
-    }
 }
