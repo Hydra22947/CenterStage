@@ -41,7 +41,7 @@ public class Drivetrain {
         input = new Vector2d(
                 Range.clip(_cGamepad1.left_stick_y, -power, power),
                 Range.clip(-_cGamepad1.left_stick_x, -power, power)
-        ).rotated(-robot.getAngle());
+        ).rotated(robot.getAngle());
 
         twist = Range.clip(_cGamepad1.right_stick_x, -power * 0.8, power* 0.8);
 
