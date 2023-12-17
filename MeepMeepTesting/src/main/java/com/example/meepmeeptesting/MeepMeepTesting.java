@@ -55,28 +55,29 @@ public class MeepMeepTesting {
     public static RoadRunnerBotEntity redLeftTraj(DefaultBotBuilder myBot)
     {
         Pose2d placePixelPose = new Pose2d(45, -33, Math.toRadians(0));
-        Pose2d stageDoorPose = new Pose2d(30, -21.5, Math.toRadians(0));
+        Pose2d stageDoorStartPose = new Pose2d(30, -21.5, Math.toRadians(0));
         Vector2d stageDoorVector = new Vector2d(0, -12);
-        Pose2d a = new Pose2d(-15, -12, Math.toRadians(0));
+        Pose2d stageDoorMidPose = new Pose2d(5, -12, Math.toRadians(90));
+        Pose2d stageDoorEndPose = new Pose2d(12, -12, Math.toRadians(0));
         Pose2d middleIntakePixelVector = new Pose2d(-45, -25);
         Vector2d intakePixelVector = new Vector2d(-34, -12);
 
-        return myBot.setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
+        return myBot.setConstraints(60, 60, Math.toRadians(360), Math.toRadians(180), 12.81)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-34, -60, Math.toRadians(90)))
-                                //Place purple pixel
-                               // .strafeLeft(30)
-                                .forward(47)
-                                .waitSeconds(.5)
-                                //Going for backdrop
-                                //.lineToSplineHeading(a)
-                                .splineTo(stageDoorVector, Math.toRadians(0))
-                                .splineToLinearHeading(placePixelPose, Math.toRadians(0))
+                                drive.trajectorySequenceBuilder(new Pose2d(-34, -60, Math.toRadians(90)))
+                                        //Place purple pixel
+                                        // .strafeLeft(30)
+                                        .forward(47)
+                                        .waitSeconds(.5)
+                                        //Going for backdrop
+                                        .lineToLinearHeading(stageDoorMidPose)
+                                        .lineToSplineHeading(stageDoorEndPose)
+                                        .splineToLinearHeading(placePixelPose, Math.toRadians(0))
 
-                                //Going for intake
-                                .waitSeconds(WAIT_TIME)
-                                .splineTo(new Vector2d(stageDoorPose.getX(), stageDoorPose.getY()), Math.toRadians(0))
-                                .splineToConstantHeading(intakePixelVector, Math.toRadians(180))
+                                        //Going for intake
+                                        .waitSeconds(WAIT_TIME)
+                                        .lineToSplineHeading(stageDoorStartPose)
+                                        .splineToConstantHeading(intakePixelVector, Math.toRadians(180))
 /*
                                 //Going for backdrop
                                 .waitSeconds(WAIT_TIME)
@@ -105,7 +106,7 @@ public class MeepMeepTesting {
                                 .splineToLinearHeading(stageDoorPose, Math.toRadians(0))
                                 .splineToSplineHeading(placePixelPose, Math.toRadians(0))
 */
-                                .build()
+                                        .build()
                 );
     }
 
@@ -115,7 +116,7 @@ public class MeepMeepTesting {
         MeepMeep meepMeep = new MeepMeep(700);
         RoadRunnerBotEntity leftRedBot = redLeftTraj(new DefaultBotBuilder(meepMeep));
         RoadRunnerBotEntity rightRedBot = redRightTraj(new DefaultBotBuilder(meepMeep));
-
+        leftRedBot.setDimensions(14, 15.75);
         setAnimation(meepMeep, leftRedBot);
     }
 }
