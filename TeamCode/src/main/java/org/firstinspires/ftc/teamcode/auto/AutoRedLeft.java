@@ -13,32 +13,41 @@ import org.firstinspires.ftc.teamcode.testing.harman.PoseStorage;
 public class AutoRedLeft extends LinearOpMode
 {
 
+    AutoConstants autoConstants;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        autoConstants = new AutoConstants();
         SampleMecanumDrive drivetrain = new SampleMecanumDrive(hardwareMap);
-        drivetrain.setPoseEstimate(AutoConstants.startPose);
+        drivetrain.setPoseEstimate(autoConstants.startPose);
 
-        TrajectorySequence placePurplePixel = drivetrain.trajectorySequenceBuilder(AutoConstants.startPose)
+        TrajectorySequence placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPose)
                 .forward(AutoConstants.strafeForPurplePixel)
                 .waitSeconds(AutoConstants.WAIT_EXTENSION)
                 .build();
         TrajectorySequence placePreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
                 //Going for backdrop
-                .lineToLinearHeading(AutoConstants.stageDoorMidPose)
-                .splineToSplineHeading(AutoConstants.stageDoorEndPose, Math.toRadians(0))
-                .splineToLinearHeading(AutoConstants.placePixelPose, Math.toRadians(0))
+                .lineToLinearHeading(autoConstants.stageDoorMidPose)
+                .splineToSplineHeading(autoConstants.stageDoorEndPose, Math.toRadians(0))
+                .splineToLinearHeading(autoConstants.placePixelPose, Math.toRadians(0))
+                .waitSeconds(1)
+                .build();
+
+        TrajectorySequence park = drivetrain.trajectorySequenceBuilder(placePreload.end())
+                //Going for backdrop
+                .lineToLinearHeading(autoConstants.park)
                 .build();
 
         TrajectorySequence goIntake = drivetrain.trajectorySequenceBuilder(placePreload.end())
                 .waitSeconds(AutoConstants.WAIT_EXTENSION)
-                .lineToSplineHeading(AutoConstants.stageDoorStartPose)
-                .splineToConstantHeading(AutoConstants.intakePixelVector, Math.toRadians(180))
+                .lineToSplineHeading(autoConstants.stageDoorStartPose)
+                .splineToConstantHeading(autoConstants.intakePixelVector, Math.toRadians(180))
                 .build();
         waitForStart();
         if (isStopRequested()) return;
         drivetrain.followTrajectorySequence(placePurplePixel);
         drivetrain.followTrajectorySequence(placePreload);
+        drivetrain.followTrajectorySequence(park);
         while(opModeIsActive());
     }
 }
