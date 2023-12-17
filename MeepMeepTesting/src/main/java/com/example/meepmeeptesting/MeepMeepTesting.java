@@ -55,12 +55,12 @@ public class MeepMeepTesting {
     public static RoadRunnerBotEntity redLeftTraj(DefaultBotBuilder myBot)
     {
         Pose2d placePixelPose = new Pose2d(45, -33, Math.toRadians(0));
-        Pose2d stageDoorStartPose = new Pose2d(30, -21.5, Math.toRadians(0));
+        Pose2d stageDoorStartPose = new Pose2d(40, -27, Math.toRadians(0));
         Vector2d stageDoorVector = new Vector2d(0, -12);
-        Pose2d stageDoorMidPose = new Pose2d(5, -12, Math.toRadians(90));
+        Pose2d stageDoorMidPose = new Pose2d(5, -12, Math.toRadians(0));
         Pose2d stageDoorEndPose = new Pose2d(12, -12, Math.toRadians(0));
         Pose2d middleIntakePixelVector = new Pose2d(-45, -25);
-        Vector2d intakePixelVector = new Vector2d(-34, -12);
+        Pose2d intakePixelVector = new Pose2d(-40, -8);
 
 
         return myBot.setConstraints(60, 60, Math.toRadians(360), Math.toRadians(180), 12.81)
@@ -68,17 +68,21 @@ public class MeepMeepTesting {
                                 drive.trajectorySequenceBuilder(new Pose2d(-34, -60, Math.toRadians(90)))
                                         //Place purple pixel
                                         // .strafeLeft(30)
-                                        .forward(47)
+                                        .forward(40)
                                         .waitSeconds(.5)
+
+
+
                                         //Going for backdrop
-                                        .lineToLinearHeading(stageDoorMidPose)
-                                        .splineToSplineHeading(stageDoorEndPose, Math.toRadians(0))
+                                        .splineToSplineHeading(stageDoorMidPose, Math.toRadians(0))
+                                        .splineToSplineHeading(stageDoorEndPose,Math.toRadians(0))
                                         .splineToLinearHeading(placePixelPose, Math.toRadians(0))
 
                                         //Going for intake
                                         .waitSeconds(WAIT_TIME)
                                         .lineToSplineHeading(stageDoorStartPose)
-                                        .splineToConstantHeading(intakePixelVector, Math.toRadians(180))
+                                        .splineToSplineHeading(intakePixelVector, Math.toRadians(180))
+
 /*
                                 //Going for backdrop
                                 .waitSeconds(WAIT_TIME)

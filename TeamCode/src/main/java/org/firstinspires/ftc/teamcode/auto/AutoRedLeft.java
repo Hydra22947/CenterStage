@@ -23,7 +23,7 @@ public class AutoRedLeft extends LinearOpMode
 
         TrajectorySequence placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPose)
                 .forward(AutoConstants.strafeForPurplePixel)
-                .waitSeconds(AutoConstants.WAIT_EXTENSION)
+                .waitSeconds(AutoConstants.WAIT)
                 .build();
         TrajectorySequence placePreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
                 //Going for backdrop
@@ -38,15 +38,18 @@ public class AutoRedLeft extends LinearOpMode
                 .lineToLinearHeading(autoConstants.park)
                 .build();
 
-        TrajectorySequence goIntake = drivetrain.trajectorySequenceBuilder(placePreload.end())
-                .waitSeconds(AutoConstants.WAIT_EXTENSION)
+        TrajectorySequence intake = drivetrain.trajectorySequenceBuilder(placePreload.end())
+                .waitSeconds(AutoConstants.WAIT)
                 .lineToSplineHeading(autoConstants.stageDoorStartPose)
-                .splineToConstantHeading(autoConstants.intakePixelVector, Math.toRadians(180))
+                .splineToSplineHeading(autoConstants.intakePixelVector, Math.toRadians(180))
+                .waitSeconds(AutoConstants.WAIT)
+
                 .build();
         waitForStart();
         if (isStopRequested()) return;
         drivetrain.followTrajectorySequence(placePurplePixel);
         drivetrain.followTrajectorySequence(placePreload);
+        drivetrain.followTrajectorySequence(intake);
         drivetrain.followTrajectorySequence(park);
         while(opModeIsActive());
     }
