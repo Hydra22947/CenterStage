@@ -57,7 +57,7 @@ public class MeepMeepTesting {
         Pose2d placePixelPose = new Pose2d(45, -33, Math.toRadians(0));
         Pose2d stageDoorStartPose = new Pose2d(30, -21.5, Math.toRadians(0));
         Vector2d stageDoorVector = new Vector2d(0, -12);
-        Pose2d stageDoorMidPose = new Pose2d(10, -12, Math.toRadians(90));
+        Pose2d stageDoorMidPose = new Pose2d(5, -12, Math.toRadians(90));
         Pose2d stageDoorEndPose = new Pose2d(12, -12, Math.toRadians(0));
         Pose2d middleIntakePixelVector = new Pose2d(-45, -25);
         Vector2d intakePixelVector = new Vector2d(-34, -12);
