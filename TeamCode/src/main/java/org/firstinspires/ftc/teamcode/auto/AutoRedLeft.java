@@ -1,31 +1,38 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import org.firstinspires.ftc.teamcode.auto.PoseStorage;
+
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.testing.harman.PoseStorage;
 
 @Config
 @Autonomous(name = "Auto Red Left")
 public class AutoRedLeft extends LinearOpMode
 {
-    public static final double startX = -34, startY = -60, startHeading = 90;
 
-    Pose2d startPose = new Pose2d(startX, startX, Math.toRadians(startHeading));
-
-    SampleMecanumDrive drivetrain = new SampleMecanumDrive(hardwareMap);
-    TrajectorySequence placePreload = drivetrain.trajectorySequenceBuilder(startPose)
-            .build();
 
     @Override
     public void runOpMode() throws InterruptedException {
+        SampleMecanumDrive drivetrain = new SampleMecanumDrive(hardwareMap);
+        drivetrain.setPoseEstimate(AutoConstants.startPose);
 
+        TrajectorySequence placePurplePixel = drivetrain.trajectorySequenceBuilder(AutoConstants.startPose)
+                .forward(AutoConstants.strafeForPurplePixel)
+                .waitSeconds(AutoConstants.WAIT_EXTENSION)
+                .build();
+        TrajectorySequence placePreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
+                //Going for backdrop
+                .lineToLinearHeading(AutoConstants.stageDoorMidPose)
+                .splineToSplineHeading(AutoConstants.stageDoorEndPose, Math.toRadians(0))
+                .splineToLinearHeading(AutoConstants.placePixelPose, Math.toRadians(0))
+                .build();
         waitForStart();
         if (isStopRequested()) return;
-
+        drivetrain.followTrajectorySequence(placePurplePixel);
+        drivetrain.followTrajectorySequence(placePreload);
         while(opModeIsActive());
     }
 }
