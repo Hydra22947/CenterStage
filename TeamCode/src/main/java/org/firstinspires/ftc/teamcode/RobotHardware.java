@@ -104,11 +104,7 @@ public class RobotHardware {
         this.hardwareMap = hardwareMap;
         voltageTimer = new ElapsedTime();
 
-        if (Globals.USING_DASHBOARD) {
-            this.telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
-        } else {
-            this.telemetry = telemetry;
-        }
+        this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         this.subsystems = new ArrayList<>();
 

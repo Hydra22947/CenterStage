@@ -5,7 +5,6 @@ import com.qualcomm.hardware.rev.RevColorSensorV3;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.Globals;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +18,7 @@ public class Intake {
 
     public static double openRight = 0.55, closeRight = 0.37;
     public static double openLeft = 0.45, closeLeft = 0.63;
-
+    public static double seeFarFrom = 2;
     public enum Angle
     {
         INTAKE,
@@ -167,7 +166,7 @@ public class Intake {
 
     public boolean checkIfPixelIn(RevColorSensorV3 sensor)
     {
-        return -Globals.ERROR <= sensor.getDistance(DistanceUnit.CM) && sensor.getDistance(DistanceUnit.CM) <= Globals.ERROR;
+        return -seeFarFrom <= sensor.getDistance(DistanceUnit.CM) && sensor.getDistance(DistanceUnit.CM) <= seeFarFrom;
     }
 
     private double getPosition(Angle angle, Type type)

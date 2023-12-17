@@ -39,6 +39,8 @@ public class OpMode extends CommandOpMode {
     public static double delayRelease = 1200;
     public static double delayGoToMid = 500;
     public static double delayGoToTransfer = 500;
+    public static double WAIT_DELAY_TILL_OUTTAKE = 150;
+    public static double WAIT_DELAY_TILL_CLOSE = 250;
 
     // variables
     double elevatorReset = 0;
@@ -75,7 +77,6 @@ public class OpMode extends CommandOpMode {
         CommandScheduler.getInstance().reset();
 
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
-        Globals.IS_USING_IMU = true;
 
         gamepadEx = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
@@ -312,9 +313,9 @@ public class OpMode extends CommandOpMode {
                 canIntake = false;
                 intakeState = IntakeState.RETRACT;
 
-                elevator.setTarget(Elevator.BASE_LEVEL + (openedXTimes * Globals.ELEVATOR_INCREMENT));
+                elevator.setTarget(Elevator.BASE_LEVEL + (openedXTimes * Elevator.ELEVATOR_INCREMENT));
 
-                if ((getTime() - previousElevator) >= Globals.WAIT_DELAY_TILL_OUTTAKE) {
+                if ((getTime() - previousElevator) >= WAIT_DELAY_TILL_OUTTAKE) {
                     outtake.setAngle(Outtake.Angle.OUTTAKE);
                 }
 
@@ -335,7 +336,7 @@ public class OpMode extends CommandOpMode {
 
                     elevatorReset = getTime();
                     retract = true;
-                } else if ((getTime() - elevatorReset) >= Globals.WAIT_DELAY_TILL_CLOSE && retract) {
+                } else if ((getTime() - elevatorReset) >= WAIT_DELAY_TILL_CLOSE && retract) {
                     retract = false;
                     liftState = LiftState.RETRACT;
                 }

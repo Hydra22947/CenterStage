@@ -1,19 +1,17 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.PIDFController;
-import org.firstinspires.ftc.teamcode.Globals;
-import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 
 @Config
 public class Elevator {
 
     private final RobotHardware robot;
+    public static double ELEVATOR_INCREMENT = 70;
     public static double BASE_LEVEL = 800;
     public static double MAX_LEVEL = 1600;
     double currentTarget = 0;

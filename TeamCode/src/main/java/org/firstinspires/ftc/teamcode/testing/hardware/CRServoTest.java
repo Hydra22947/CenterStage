@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="CRServo Test", group="tests")
 @Config
+@Disabled
 public class CRServoTest extends LinearOpMode {
 
     private CRServo servo = null;

@@ -1,17 +1,20 @@
 package org.firstinspires.ftc.teamcode.testing.hardware;
 
+import static org.firstinspires.ftc.teamcode.subsystems.Intake.seeFarFrom;
+
 import android.graphics.Color;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Globals;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @Config
 @TeleOp(name = "Sensor: REVColorDistance", group = "tests")
+@Disabled
 public class SensorREVColorDistance extends LinearOpMode {
 
     RevColorSensorV3 rightSensorColor;
@@ -78,6 +81,6 @@ public class SensorREVColorDistance extends LinearOpMode {
 //    }
     public boolean checkIfPixelIn(RevColorSensorV3 sensor)
     {
-        return -Globals.ERROR <= sensor.getDistance(DistanceUnit.CM) && sensor.getDistance(DistanceUnit.CM) <= Globals.ERROR;
+        return -seeFarFrom <= sensor.getDistance(DistanceUnit.CM) && sensor.getDistance(DistanceUnit.CM) <= seeFarFrom;
     }
 }

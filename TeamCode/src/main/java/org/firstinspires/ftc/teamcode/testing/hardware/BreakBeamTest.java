@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.testing.hardware;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 @TeleOp(name="Break Beam Test", group="tests")
 @Config
+@Disabled
 public class BreakBeamTest extends LinearOpMode {
 
     private DigitalChannel beam = null;
