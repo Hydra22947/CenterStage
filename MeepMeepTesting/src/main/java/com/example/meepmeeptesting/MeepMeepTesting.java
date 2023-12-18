@@ -59,8 +59,8 @@ public class MeepMeepTesting {
         Vector2d stageDoorVector = new Vector2d(0, -12);
         Pose2d stageDoorPose = new Pose2d(0, -12);
         Pose2d stageDoorMidPose = new Pose2d(8, -10, Math.toRadians(0));
-        Pose2d michael = new Pose2d(-15, -12, Math.toRadians(0));
-        Pose2d stageDoorEndPose = new Pose2d(15, -12, Math.toRadians(0));
+        Pose2d michael = new Pose2d(-15, -9, Math.toRadians(0));
+        Pose2d stageDoorEndPose = new Pose2d(15, -5, Math.toRadians(0));
         Pose2d middleIntakePixelVector = new Pose2d(-45, -25);
         Pose2d intakePixel = new Pose2d(-40, -12);
         Vector2d intakePixelVector = new Vector2d(-40, -12);
@@ -80,7 +80,6 @@ public class MeepMeepTesting {
                                         //Going for backdrop
                                      //   .splineToSplineHeading(stageDoorMidPose, Math.toRadians(0))
                                    //     .splineToSplineHeading(stageDoorEndPose,Math.toRadians(0))
-                                        .lineToSplineHeading(michael)
                                         .lineToSplineHeading(stageDoorEndPose)
                                     //    .lineToSplineHeading(stageDoorEndPose)
                                         .splineToLinearHeading(placePixelPose, Math.toRadians(0))

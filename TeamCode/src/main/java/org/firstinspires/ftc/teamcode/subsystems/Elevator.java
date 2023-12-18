@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
@@ -88,10 +89,24 @@ public class Elevator {
         }
         else
         {
-            setPidControl();
+            firstPID();
         }
     }
 
+    void firstPID()
+    {
+        robot.elevatorMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        robot.elevatorMotorRight.setTargetPosition((int)currentTarget);
+        robot.elevatorMotorLeft.setTargetPosition((int)currentTarget);
+
+        robot.elevatorMotorRight.setPower(1);
+        robot.elevatorMotorLeft.setPower(1);
+
+        robot.elevatorMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
     void setPidControl()
     {
         controller.updateError(currentTarget - robot.elevatorMotorRight.getCurrentPosition());
@@ -103,7 +118,6 @@ public class Elevator {
 
     public void setTarget(double target)
     {
-        setPidControl();
         if(target > MAX_LEVEL)
         {
             this.currentTarget = MAX_LEVEL;
@@ -112,8 +126,8 @@ public class Elevator {
         {
             this.currentTarget = target;
         }
-
     }
+
 
     public void setUsePID(boolean usePID) {
         this.usePID = usePID;

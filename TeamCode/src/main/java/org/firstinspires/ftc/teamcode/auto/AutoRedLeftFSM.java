@@ -59,6 +59,7 @@ public class AutoRedLeftFSM extends LinearOpMode
         drivetrain.followTrajectorySequenceAsync(placePurplePixel);
         while(opModeIsActive() && !isStopRequested())
         {
+            drivetrain.update();
 
             switch (currentState)
             {
@@ -89,8 +90,6 @@ public class AutoRedLeftFSM extends LinearOpMode
             }
         }
 
-        drivetrain.update();
         AutoConstants.currentPose = drivetrain.getPoseEstimate();
-
     }
 }

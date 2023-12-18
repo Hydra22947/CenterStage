@@ -70,4 +70,16 @@ public class IntakeExtension {
     public void setCurrent(ExtensionState current) {
         this.current = current;
     }
+
+    public void openExtension()
+    {
+        this.robot.extensionServoRight.setPosition(OPEN_EXTENSION);
+        this.robot.extensionServoLeft.setPosition(OPEN_EXTENSION);
+    }
+
+    public void closeExtension()
+    {
+        this.robot.extensionServoRight.setPosition(CLOSE_EXTENSION);
+        this.robot.extensionServoLeft.setPosition(CLOSE_EXTENSION);
+    }
 }

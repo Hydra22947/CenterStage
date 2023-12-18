@@ -42,6 +42,9 @@ public class Outtake {
 
     public void setAngle(@NotNull Angle angle) {
         this.angle = angle;
+
+        updateState(Type.HAND);
+        updateState(Type.CLAW);
     }
 
     public void updateState(@NotNull Type type) {

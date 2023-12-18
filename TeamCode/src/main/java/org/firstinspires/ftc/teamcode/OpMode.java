@@ -112,6 +112,7 @@ public class OpMode extends CommandOpMode {
         drivetrain.update();
         intake.update();
         outtake.update();
+        elevator.update();
 
         if (gamepad2.left_stick_y != 0) {
             elevator.setUsePID(false);

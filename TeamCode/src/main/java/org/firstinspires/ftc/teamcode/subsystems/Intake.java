@@ -98,6 +98,9 @@ public class Intake {
 
     public void setAngle(Angle angle) {
         this.angle = angle;
+
+        updateState(Type.AMMO);
+        updateState(Type.HAND);
     }
     public void updateState(@NotNull Type type) {
         double position = getPosition(angle, type);
