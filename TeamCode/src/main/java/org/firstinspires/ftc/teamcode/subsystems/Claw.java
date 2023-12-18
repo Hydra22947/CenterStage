@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
@@ -33,9 +34,11 @@ public class Claw
     public static double openRight = 0.57, closeRight = .65;
     double tempRight = closeRight;
     double tempLeft = closeLeft;
+    CommandOpMode opMode;
 
-    public Claw()
+    public Claw(CommandOpMode opMode)
     {
+        this.opMode = opMode;
         this.robot = RobotHardware.getInstance();
         updateState(ClawState.OPEN, ClawSide.BOTH);
     }
