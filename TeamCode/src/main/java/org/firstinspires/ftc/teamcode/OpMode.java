@@ -43,20 +43,9 @@ public class OpMode extends CommandOpMode {
     public static double WAIT_DELAY_TILL_CLOSE = 250;
 
     // variables
-    double elevatorReset = 0;
-    double previousElevator = 0;
-    double transferTimer = 0;
-    double releaseTimer = 0;
-    double goToMidTimer = 0;
-    double goToTransferTimer = 0;
+    double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, goToMidTimer = 0, goToTransferTimer = 0;
     int openedXTimes = 0;
-    boolean retract = false;
-    boolean goToMid = false;
-    boolean intakeMid = true;
-    boolean canIntake = true;
-    boolean startedDelayTransfer = false;
-    boolean heldExtension = false;
-    boolean had2Pixels = false;
+    boolean retract = false,  goToMid = false, intakeMid = true, canIntake = true, startedDelayTransfer = false, heldExtension = false, had2Pixels = false;
     public enum IntakeState {
         RETRACT,
         INTAKE,
@@ -89,7 +78,7 @@ public class OpMode extends CommandOpMode {
         drivetrain = new Drivetrain(gamepad1, true);
         elevator = new Elevator(gamepad2);
         outtake = new Outtake();
-        claw = new Claw(this);
+        claw = new Claw();
         intake = new Intake();
         intakeExtension = new IntakeExtension(gamepad1);
 
@@ -105,7 +94,7 @@ public class OpMode extends CommandOpMode {
         outtake.update();
         intakeExtension.update();
 
-        while (opModeInInit())
+        while (opModeInInit() && !isStopRequested())
         {
             telemetry.addLine("Initialized");
             telemetry.update();

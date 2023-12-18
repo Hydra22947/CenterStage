@@ -34,14 +34,10 @@ public class Claw
     double tempRight = closeRight;
     double tempLeft = closeLeft;
 
-    OpMode opMode;
-
-    public Claw(OpMode opMode)
+    public Claw()
     {
         this.robot = RobotHardware.getInstance();
         updateState(ClawState.OPEN, ClawSide.BOTH);
-
-        this.opMode = opMode;
     }
 
     public void update() {

@@ -36,8 +36,16 @@ public class IntakeExtension {
 
     }
 
+    public IntakeExtension() {
+        this.robot = RobotHardware.getInstance();
+        cGamepad = null;
+    }
+
     public void update() {
-        cGamepad.update();
+        if(cGamepad != null)
+        {
+            cGamepad.update();
+        }
 
         switch (current) {
             case OPEN:
