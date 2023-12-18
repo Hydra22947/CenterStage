@@ -6,20 +6,27 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.testing.harman.PoseStorage;
 
 @Config
-@Autonomous(name = "Auto Red Left")
-public class AutoRedLeft extends LinearOpMode
+@Autonomous(name = "Auto Red Left FSM")
+public class AutoRedLeftFSM extends LinearOpMode
 {
-
+    enum State
+    {
+      PLACE_PURPLE_PIXEL,
+      PLACE_PRELOAD,
+      INTAKE,
+      PARK
+    };
     AutoConstants autoConstants;
 
     @Override
     public void runOpMode() throws InterruptedException {
         autoConstants = new AutoConstants();
         SampleMecanumDrive drivetrain = new SampleMecanumDrive(hardwareMap);
+
         drivetrain.setPoseEstimate(autoConstants.startPose);
+        State currentState = State.PLACE_PURPLE_PIXEL;
 
         TrajectorySequence placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPose)
                 .forward(AutoConstants.strafeForPurplePixel)
@@ -46,13 +53,44 @@ public class AutoRedLeft extends LinearOpMode
                 .lineToLinearHeading(autoConstants.park)
                 .build();
 
-
         waitForStart();
         if (isStopRequested()) return;
-        drivetrain.followTrajectorySequence(placePurplePixel);
-        drivetrain.followTrajectorySequence(placePreloadAndIntake);
-        drivetrain.followTrajectorySequence(intake);
-        drivetrain.followTrajectorySequence(park);
-        while(opModeIsActive());
+
+        drivetrain.followTrajectorySequenceAsync(placePurplePixel);
+        while(opModeIsActive() && !isStopRequested())
+        {
+
+            switch (currentState)
+            {
+                case PLACE_PURPLE_PIXEL:
+                    if(!drivetrain.isBusy())
+                    {
+                        currentState = State.PLACE_PRELOAD;
+                        drivetrain.followTrajectorySequenceAsync(placePreloadAndIntake);
+                    }
+                    break;
+                case PLACE_PRELOAD:
+                    if(!drivetrain.isBusy())
+                    {
+                        currentState = State.INTAKE;
+                        drivetrain.followTrajectorySequenceAsync(intake);
+                    }
+                    break;
+                case INTAKE:
+                    if(!drivetrain.isBusy())
+                    {
+                        currentState = State.PARK;
+                        drivetrain.followTrajectorySequenceAsync(park);
+                    }
+                    break;
+                case PARK:
+
+                    break;
+            }
+        }
+
+        drivetrain.update();
+        AutoConstants.currentPose = drivetrain.getPoseEstimate();
+
     }
 }
