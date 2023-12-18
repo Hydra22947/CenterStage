@@ -94,7 +94,7 @@ public class AutoRedLeft extends CommandOpMode
 
         elevator = new Elevator();
         outtake = new Outtake();
-        claw = new Claw();
+        claw = new Claw(this);
         intake = new Intake();
         intakeExtension = new IntakeExtension();
 
@@ -136,16 +136,8 @@ public class AutoRedLeft extends CommandOpMode
 
         // TODO: add intake 1 pixel
 
-        placePreload = drivetrain.trajectorySequenceBuilder(/** CHANGE THE END*/placePurplePixel.end())
-                //Going for backdrop
-                .lineToLinearHeading(autoConstants.stageDoorMidPose)
-                .splineToSplineHeading(autoConstants.stageDoorEndPose, Math.toRadians(0))
-                .splineToLinearHeading(autoConstants.placePixelPose, Math.toRadians(0))
-                .waitSeconds(1)
-                .build();
-
-        goIntake = drivetrain.trajectorySequenceBuilder(placePreload.end())
-                .waitSeconds(AutoConstants.WAIT_EXTENSION)
+        goIntake = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
+                //.waitSeconds(AutoConstants.WAIT_EXTENSION)
                 .lineToSplineHeading(autoConstants.stageDoorStartPose)
                 .splineToConstantHeading(autoConstants.intakePixelVector, Math.toRadians(180))
                 .build();
@@ -153,10 +145,7 @@ public class AutoRedLeft extends CommandOpMode
         // TODO: add cycles
 
         park = drivetrain.trajectorySequenceBuilder(placePreload.end())
-                //Going for backdrop
-                .lineToLinearHeading(autoConstants.park)
                 .build();
-
 
         waitForStart();
         if (isStopRequested()) return;
@@ -187,6 +176,7 @@ public class AutoRedLeft extends CommandOpMode
             telemetry.addData("heading", poseEstimate.getHeading());
             telemetry.update();
         }
+        while(opModeIsActive());
     }
 
     void autoFSM()
