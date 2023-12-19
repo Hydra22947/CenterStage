@@ -74,14 +74,14 @@ public class MeepMeepTesting {
                                         .waitSeconds(.3)
                                         .lineToSplineHeading(stageDoorStartPose)
                                         .splineToLinearHeading(intakePixel, Math.toRadians(180))
-                                        .waitSeconds(1.5)
+                                        .waitSeconds(0.5)
                                         .lineToSplineHeading(stageDoorEndPose)
                                         .splineToLinearHeading(placePixelPose, Math.toRadians(0))
                                         .waitSeconds(.3)
                                         .lineToSplineHeading(stageDoorStartPose)
                                         .splineToLinearHeading(intakePixel, Math.toRadians(180))
                                         //Going for backdrop
-                                        .waitSeconds(1.5)
+                                        .waitSeconds(0.5)
                                         .lineToSplineHeading(stageDoorEndPose)
                                         .splineToLinearHeading(placePixelPose, Math.toRadians(0))
                                         //Going for intake
@@ -89,7 +89,7 @@ public class MeepMeepTesting {
                                         .lineToSplineHeading(stageDoorStartPose)
                                         .splineToLinearHeading(intakePixel, Math.toRadians(180))
                                         //Going for backdrop + park
-                                        .waitSeconds(1.5)
+                                        .waitSeconds(0.5)
                                         .lineToSplineHeading(stageDoorEndPose)
                                         .splineToLinearHeading(placePixelPose, Math.toRadians(0))
                                         .lineToLinearHeading(parkPose)

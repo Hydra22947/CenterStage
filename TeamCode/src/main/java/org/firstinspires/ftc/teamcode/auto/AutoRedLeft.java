@@ -102,10 +102,10 @@ public class AutoRedLeft extends CommandOpMode
                 .addTemporalMarker(() -> elevator.setTarget(0))
                 .addTemporalMarker(() -> elevator.update())
                 .addTemporalMarker(() -> moveIntakeByTraj())
-                .lineToSplineHeading(autoConstants.stageDoorStartPose)
                 .addTemporalMarker(2, () -> intakeExtension.openExtension())
+                .lineToSplineHeading(autoConstants.stageDoorStartPose)
                 .splineToLinearHeading(autoConstants.intakePixelVector, Math.toRadians(180))
-                .waitSeconds(1)
+                .waitSeconds(.2)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
                 .waitSeconds(AutoConstants.WAIT)
                 .build();
