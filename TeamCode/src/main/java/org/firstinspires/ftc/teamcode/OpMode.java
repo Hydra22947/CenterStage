@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.auto.AutoRedLeft;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
@@ -57,6 +58,14 @@ public class OpMode extends CommandOpMode {
         EXTRACT
     }
 
+    enum IntakeLevel
+    {
+        TOP_54,
+        TOP_32,
+        INTAKE
+    }
+
+    IntakeLevel intakeLevel = IntakeLevel.INTAKE;
     IntakeState intakeState = IntakeState.RETRACT;
     LiftState liftState = LiftState.RETRACT;
     double loopTime = 0;
@@ -120,6 +129,7 @@ public class OpMode extends CommandOpMode {
             elevator.setUsePID(true);
         }
 
+        changeIntakeLevels();
         intakeStateMachine();
         elevatorStateMachine();
 
@@ -133,6 +143,22 @@ public class OpMode extends CommandOpMode {
         CommandScheduler.getInstance().run();
 
         loopTime = System.nanoTime();
+    }
+
+    void changeIntakeLevels()
+    {
+        if(betterGamepad2.YOnce())
+        {
+            intakeLevel = IntakeLevel.TOP_54;
+        }
+        else if(betterGamepad2.BOnce())
+        {
+            intakeLevel = IntakeLevel.TOP_32;
+        }
+        else if(betterGamepad2.AOnce())
+        {
+            intakeLevel = IntakeLevel.INTAKE;
+        }
     }
 
     void intakeStateMachine()
@@ -198,18 +224,20 @@ public class OpMode extends CommandOpMode {
 
                 break;
             case INTAKE:
-                intake.move(Intake.Angle.INTAKE);
+                moveIntake();
+
                 intakeExtension.setCurrent(IntakeExtension.ExtensionState.CLOSE);
 
                 if (gamepad1.right_trigger != 0) {
                     intakeState = IntakeState.INTAKE_EXTEND;
-                } else if (betterGamepad1.rightBumperOnce()) {
+                }/* else if (betterGamepad1.rightBumperOnce()) {
                     intakeState = IntakeState.RETRACT;
-                }
+                }*/
+
                 claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
 
 
-                if (robot.has2Pixels() && !startedDelayTransfer) {
+                if ((robot.has2Pixels() && !startedDelayTransfer) || betterGamepad1.rightBumperOnce()) {
                     had2Pixels = true;
                     transferTimer = getTime();
 
@@ -241,11 +269,11 @@ public class OpMode extends CommandOpMode {
                 drivetrain.slow();
 
                 intakeExtension.setCurrent(IntakeExtension.ExtensionState.MANUAL);
-                intake.move(Intake.Angle.INTAKE);
+                moveIntake();
                 claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
 
 
-                if (robot.has2Pixels() && !startedDelayTransfer) {
+                if ((robot.has2Pixels() && !startedDelayTransfer) || gamepad1.right_trigger == 0) {
                     had2Pixels = true;
 
                     transferTimer = getTime();
@@ -271,10 +299,10 @@ public class OpMode extends CommandOpMode {
                 {
                     intakeState = IntakeState.INTAKE;
                 }
-
-                if (gamepad1.right_trigger == 0) {
-                    intakeState = IntakeState.RETRACT;
-                }
+//
+//                if (gamepad1.right_trigger == 0) {
+//                    intakeState = IntakeState.RETRACT;
+//                }
                 break;
             default:
                 intakeState = IntakeState.RETRACT;
@@ -341,6 +369,22 @@ public class OpMode extends CommandOpMode {
     double getTime()
     {
         return System.nanoTime() / 1000000;
+    }
+
+    void moveIntake()
+    {
+        switch(intakeLevel)
+        {
+            case TOP_54:
+                intake.move(Intake.Angle.TOP_54);
+                break;
+            case TOP_32:
+                intake.move(Intake.Angle.TOP_32);
+                break;
+            case INTAKE:
+                intake.move(Intake.Angle.INTAKE);
+                break;
+        }
     }
 
 
