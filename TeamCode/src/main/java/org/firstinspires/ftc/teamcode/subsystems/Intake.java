@@ -15,6 +15,8 @@ public class Intake {
     public static double intakeHandPivot = 0.08, intakeAmmoPivot = 0.14;
     public static double outtakeHandPivot = .63, outtakeAmmoPivot = 0.76;
     public static double midHandPivot = 0.55, midAmmoPivot = 0.2;
+    public static double top54HandPivot = 0.39, top54AmmoPivot = 0.18;
+    public static double top32HandPivot = 0.23, top32AmmoPivot = 0.16;
 
     public static double openRight = 0.55, closeRight = 0.37;
     public static double openLeft = 0.45, closeLeft = 0.63;
@@ -23,7 +25,8 @@ public class Intake {
     {
         INTAKE,
         TRANSFER,
-        MID
+        MID,
+        TOP_54, TOP_32, TOP_21
     }
 
     public enum ClawState
@@ -35,8 +38,7 @@ public class Intake {
     public enum Type
     {
         AMMO,
-        HAND,
-        CLAW
+        HAND
     }
 
     Angle angle = Angle.TRANSFER;
@@ -179,11 +181,16 @@ public class Intake {
             case AMMO:
                 switch (angle) {
                     case INTAKE:
+                    case TOP_21:
                         return intakeAmmoPivot;
                     case TRANSFER:
                         return outtakeAmmoPivot;
                     case MID:
                         return midAmmoPivot;
+                    case TOP_54:
+                        return top54AmmoPivot;
+                    case TOP_32:
+                        return top32AmmoPivot;
                     default:
                         return 0.0;
 
@@ -192,11 +199,16 @@ public class Intake {
             case HAND:
                 switch (angle) {
                     case INTAKE:
+                    case TOP_21:
                         return intakeHandPivot;
                     case TRANSFER:
                         return outtakeHandPivot;
                     case MID:
                         return midHandPivot;
+                    case TOP_54:
+                        return top54HandPivot;
+                    case TOP_32:
+                        return top32HandPivot;
                     default:
                         return 0.0;
                 }

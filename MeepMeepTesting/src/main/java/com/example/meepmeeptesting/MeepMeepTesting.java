@@ -50,75 +50,49 @@ public class MeepMeepTesting {
                                 .waitSeconds(WAIT_TIME)
                                 .lineToLinearHeading(placePixelPose)
                                 .waitSeconds(WAIT_TIME)
+                                .lineToLinearHeading(parkPose)
                                 .build());
     }
     public static RoadRunnerBotEntity redLeftTraj(DefaultBotBuilder myBot)
     {
-        Pose2d placePixelPose = new Pose2d(45, -33, Math.toRadians(0));
-        Pose2d stageDoorStartPose = new Pose2d(40, -27, Math.toRadians(0));
-        Vector2d stageDoorVector = new Vector2d(0, -12);
-        Pose2d stageDoorPose = new Pose2d(0, -12);
-        Pose2d stageDoorMidPose = new Pose2d(8, -10, Math.toRadians(0));
-        Pose2d michael = new Pose2d(-15, -9, Math.toRadians(0));
-        Pose2d stageDoorEndPose = new Pose2d(15, -5, Math.toRadians(0));
-        Pose2d middleIntakePixelVector = new Pose2d(-45, -25);
-        Pose2d intakePixel = new Pose2d(-40, -12);
-        Vector2d intakePixelVector = new Vector2d(-40, -12);
+        Pose2d placePixelPose = new Pose2d(47, -26, Math.toRadians(0));
+        Pose2d stageDoorStartPose = new Pose2d(30, -15, Math.toRadians(0));
+        Pose2d stageDoorEndPose = new Pose2d(12, -5, Math.toRadians(0));
+        Pose2d intakePixel = new Pose2d(-40, -8);
+        Pose2d parkPose = new Pose2d(51, -5, Math.toRadians(90));
 
 
-        return myBot.setConstraints(60, 60, Math.toRadians(360), Math.toRadians(180), 12.81)
+        return myBot.setConstraints(65, 65, Math.toRadians(360), Math.toRadians(360), 12.81)
                 .followTrajectorySequence(drive ->
-                                drive.trajectorySequenceBuilder(new Pose2d(-34, -60, Math.toRadians(90)))
-                                        //Place purple pixel
-                                        // .strafeLeft(30)
-                                        .forward(48)
-                                        .waitSeconds(.5)
-
-
-                                        .turn(Math.toRadians(-90))
-                                        .waitSeconds(1)
-                                        //Going for backdrop
-                                     //   .splineToSplineHeading(stageDoorMidPose, Math.toRadians(0))
-                                   //     .splineToSplineHeading(stageDoorEndPose,Math.toRadians(0))
+                                drive.trajectorySequenceBuilder(new Pose2d(-36, -62, Math.toRadians(90)))
+                                        .forward(52)
+                                        .waitSeconds(.6)
+                                        .lineToLinearHeading(new Pose2d(intakePixel.getX(), intakePixel.getY(),Math.toRadians(0)))
+                                        .waitSeconds(1.7)
                                         .lineToSplineHeading(stageDoorEndPose)
-                                    //    .lineToSplineHeading(stageDoorEndPose)
                                         .splineToLinearHeading(placePixelPose, Math.toRadians(0))
-
-                                        //Going for intake
-                                        .waitSeconds(WAIT_TIME)
+                                        .waitSeconds(.3)
                                         .lineToSplineHeading(stageDoorStartPose)
-                                        //.splineToSplineHeading(intakePixelVector, Math.toRadians(200))
                                         .splineToLinearHeading(intakePixel, Math.toRadians(180))
-
-
-                                //Going for backdrop
-                                .waitSeconds(WAIT_TIME)
-                                //.splineToConstantHeading(stageDoorVector, Math.toRadians(0))
-                                .lineToSplineHeading(stageDoorPose)
-                                .splineToLinearHeading(placePixelPose, Math.toRadians(0))
-/*
-                                //Going for intake
-                                .waitSeconds(WAIT_TIME)
-                                .lineToSplineHeading(stageDoorEndPose)
-                                .splineToConstantHeading(intakePixelVector, Math.toRadians(180))
-/*
-                                //Going for backdrop
-                                .waitSeconds(WAIT_TIME)
-                                .splineToConstantHeading(stageDoorVector, Math.toRadians(0))
-                                .splineToSplineHeading(placePixelPose, Math.toRadians(0))
-
-                                //Going for intake
-                                .waitSeconds(WAIT_TIME)
-                                .lineToSplineHeading(stageDoorPose)
-                                //.splineToConstantHeading(intakePixelVector, Math.toRadians(180))
-                                .splineToSplineHeading(middleIntakePixelVector, Math.toRadians(180))
-
-                                //Going for backdrop + park
-                                .waitSeconds(WAIT_TIME)
-                                //  .splineToConstantHeading(stageDoorVector, Math.toRadians(0))
-                                .splineToLinearHeading(stageDoorPose, Math.toRadians(0))
-                                .splineToSplineHeading(placePixelPose, Math.toRadians(0))
-*/
+                                        .waitSeconds(1.5)
+                                        .lineToSplineHeading(stageDoorEndPose)
+                                        .splineToLinearHeading(placePixelPose, Math.toRadians(0))
+                                        .waitSeconds(.3)
+                                        .lineToSplineHeading(stageDoorStartPose)
+                                        .splineToLinearHeading(intakePixel, Math.toRadians(180))
+                                        //Going for backdrop
+                                        .waitSeconds(1.5)
+                                        .lineToSplineHeading(stageDoorEndPose)
+                                        .splineToLinearHeading(placePixelPose, Math.toRadians(0))
+                                        //Going for intake
+                                        .waitSeconds(.3)
+                                        .lineToSplineHeading(stageDoorStartPose)
+                                        .splineToLinearHeading(intakePixel, Math.toRadians(180))
+                                        //Going for backdrop + park
+                                        .waitSeconds(1.5)
+                                        .lineToSplineHeading(stageDoorEndPose)
+                                        .splineToLinearHeading(placePixelPose, Math.toRadians(0))
+                                        .lineToLinearHeading(parkPose)
                                         .build()
                 );
     }
