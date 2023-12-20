@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "Auto Red Left")
+@Autonomous(name = "Better Auto Red Left")
 public class BetterAutoRedLeft extends CommandOpMode
 {
     private final RobotHardware robot = RobotHardware.getInstance();
