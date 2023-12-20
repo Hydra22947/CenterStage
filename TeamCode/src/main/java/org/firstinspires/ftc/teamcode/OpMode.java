@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@TeleOp(name = "OpMode Red")
+@TeleOp(name = "OpMode Blue")
 public class OpMode extends CommandOpMode {
 
     // robot
@@ -299,10 +299,10 @@ public class OpMode extends CommandOpMode {
                 {
                     intakeState = IntakeState.INTAKE;
                 }
-//
-//                if (gamepad1.right_trigger == 0) {
-//                    intakeState = IntakeState.RETRACT;
-//                }
+
+                if (gamepad1.right_trigger == 0) {
+                    intakeState = IntakeState.RETRACT;
+                }
                 break;
             default:
                 intakeState = IntakeState.RETRACT;

@@ -9,12 +9,12 @@ public class AutoConstants {
     //Coordinates
     public static double startX = -36, startY = -62, startHeading = 90;
     public static double strafeForPurplePixel = 52;
-    public static  double placePixelPoseX = 47, placePixelPoseY = -26;
-    public static double stageDoorStartPoseX = 30, stageDoorStartPoseY = -15;
+    public static  double placePixelPoseX = 48.5, placePixelPoseY = -26;
+    public static double stageDoorStartPoseX = 30, stageDoorStartPoseY = -13.5;
     public static double stageDoorMidPoseX = -15, stageDoorMidPoseY = -9, stageDoorMidPoseHeading = 0;
     public static double stageDoorEndPoseX = 12, stageDoorEndPoseY = -5;
     public static double parkX = 51, parkY = -5, parkHeading = 90;
-    public static double intakePixelVectorX = -40, intakePixelVectorY = -8;
+    public static double intakePixelVectorX = -39.2, intakePixelVectorY = -9.5;
 
     //WAIT TIME
     public static final double WAIT = .5;

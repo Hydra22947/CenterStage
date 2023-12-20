@@ -51,25 +51,25 @@ public class StandardTwoTrackingWheelLocalizer extends TwoTrackingWheelLocalizer
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
     // Perpendicular is perpendicular to the forward axis
-    private final Encoder leftEncoder/*, rightEncoder*/, frontEncoder;
+    private final Encoder /*leftEncoder, */rightEncoder, frontEncoder;
     IMU imu;
 
     public StandardTwoTrackingWheelLocalizer(RobotHardware robot) {
         super(Arrays.asList(
-                new Pose2d(0, LATERAL_DISTANCE / 2, 0), // left
-                //new Pose2d(0, -LATERAL_DISTANCE / 2, 0), // right
+                //new Pose2d(0, LATERAL_DISTANCE / 2, 0), // left
+                new Pose2d(0, -LATERAL_DISTANCE / 2, 0), // right
                 new Pose2d(FORWARD_OFFSET, 0, Math.toRadians(90)) // front
         ));
 
         this.imu = robot.imu;
 
-        leftEncoder = robot.podLeft;
-        //rightEncoder = robot.podRight;
+        //leftEncoder = robot.podLeft;
+        rightEncoder = robot.podRight;
         frontEncoder = robot.podFront;
 
+        //if(leftEncoderReversed) leftEncoder.setDirection(Encoder.Direction.REVERSE);
         if(frontEncoderReversed) frontEncoder.setDirection(Encoder.Direction.REVERSE);
-        if(leftEncoderReversed) leftEncoder.setDirection(Encoder.Direction.REVERSE);
-        //if(rightEncoderReversed) rightEncoder.setDirection(Encoder.Direction.REVERSE);
+        if(rightEncoderReversed) rightEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
     public static double encoderTicksToInches(double ticks) {
@@ -79,26 +79,26 @@ public class StandardTwoTrackingWheelLocalizer extends TwoTrackingWheelLocalizer
     @NonNull
     @Override
     public List<Double> getWheelPositions() {
-        int leftPos = leftEncoder.getCurrentPosition();
-        //int rightPos = rightEncoder.getCurrentPosition();
+        //int leftPos = leftEncoder.getCurrentPosition();
+        int rightPos = rightEncoder.getCurrentPosition();
         int frontPos = frontEncoder.getCurrentPosition();
 
         return Arrays.asList(
-                encoderTicksToInches(leftPos) * X_MULTIPLIER,
-                //encoderTicksToInches(rightPos) * X_MULTIPLIER,
+                //encoderTicksToInches(leftPos) * X_MULTIPLIER,
+                encoderTicksToInches(rightPos) * X_MULTIPLIER,
                 encoderTicksToInches(frontPos) * Y_MULTIPLIER
         );
     }
     @NonNull
     @Override
     public List<Double> getWheelVelocities() {
-        int leftVel = (int) leftEncoder.getRawVelocity();
-        //int rightVel = (int) rightEncoder.getRawVelocity();
+        //int leftVel = (int) leftEncoder.getRawVelocity();
+        int rightVel = (int) rightEncoder.getRawVelocity();
         int frontVel = (int) frontEncoder.getRawVelocity();
 
         return Arrays.asList(
-                encoderTicksToInches(leftVel) * X_MULTIPLIER,
-                //encoderTicksToInches(rightVel) * X_MULTIPLIER,
+                //encoderTicksToInches(leftVel) * X_MULTIPLIER,
+                encoderTicksToInches(rightVel) * X_MULTIPLIER,
                 encoderTicksToInches(frontVel) * Y_MULTIPLIER
         );
     }
