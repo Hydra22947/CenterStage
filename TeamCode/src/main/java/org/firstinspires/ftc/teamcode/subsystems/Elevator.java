@@ -17,7 +17,7 @@ public class Elevator {
     public static double MAX_LEVEL = 1600;
     double currentTarget = 0;
     boolean usePID = true;
-    public static double maxPower = 0.85;
+    public static double maxPower = 1;
     public static double kP = 0.005, kI = 0, kD = 0.0000001;
 
     Gamepad gamepad;
@@ -69,6 +69,7 @@ public class Elevator {
             }
             else
             {
+                // TODO: CHANGE TO LEFT!!!!!
                 if(gamepad.left_stick_y != 0 && !gamepad.left_stick_button)
                 {
                     robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
@@ -78,6 +79,42 @@ public class Elevator {
                 {
                     robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
                     robot.elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
+                }
+                else
+                {
+                    robot.elevatorMotorRight.setPower(0);
+                    robot.elevatorMotorLeft.setPower(0);
+                }
+
+            }
+        }
+        else
+        {
+            firstPID();
+        }
+    }
+
+    public void updateTest() {
+
+        if(!isAuto)
+        {
+            cGamepad.update();
+
+            if (usePID)
+            {
+                setPidControl();
+            }
+            else
+            {
+                if(gamepad.right_stick_y != 0 && !gamepad.left_stick_button)
+                {
+                    robot.elevatorMotorRight.setPower(Range.clip(-gamepad.right_stick_y, -maxPower, maxPower));
+                    robot.elevatorMotorLeft.setPower(Range.clip(-gamepad.right_stick_y, -maxPower, maxPower));
+                }
+                else if(gamepad.right_stick_y != 0 && gamepad.left_stick_button)
+                {
+                    robot.elevatorMotorRight.setPower(Range.clip(-gamepad.right_stick_y, -maxPower/2, maxPower/2));
+                    robot.elevatorMotorLeft.setPower(Range.clip(-gamepad.right_stick_y, -maxPower/2, maxPower/2));
                 }
                 else
                 {

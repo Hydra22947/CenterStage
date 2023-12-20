@@ -6,24 +6,18 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 
 @Config
 @TeleOp(name = "Elevator Test")
-@Disabled
 public class ElevatorTest extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
     Elevator elevator;
     BetterGamepad gamepadEx;
 
-    enum Lift
-    {
-        RETRACT, EXCTRACT
-    }
-
-    Lift liftState = Lift.RETRACT;
     @Override
     public void runOpMode() {
         CommandScheduler.getInstance().reset();
@@ -33,12 +27,14 @@ public class ElevatorTest extends LinearOpMode {
         robot.init(hardwareMap, telemetry);
 
         elevator = new Elevator(gamepad1);
-
+        Drivetrain drivetrain = new Drivetrain(gamepad1, true);
         waitForStart();
 
         while (opModeIsActive())
         {
-            if(gamepad2.left_stick_y != 0)
+            drivetrain.update();
+
+            if(gamepad1.right_stick_y != 0)
             {
                 elevator.setUsePID(false);
             }
@@ -47,27 +43,7 @@ public class ElevatorTest extends LinearOpMode {
                 elevator.setUsePID(true);
             }
 
-            switch (liftState) {
-                case RETRACT:
-                    elevator.setTarget(0);
-
-                    if (gamepadEx.YOnce()) {
-                        liftState = Lift.EXCTRACT;
-                    }
-                    break;
-                case EXCTRACT:
-                    elevator.setTarget(Elevator.BASE_LEVEL);
-
-                    if (gamepadEx.AOnce()) {
-                        liftState = Lift.RETRACT;
-                    }
-                    break;
-                default:
-                    liftState = Lift.RETRACT;
-                    break;
-            }
-
-            elevator.update();
+            elevator.updateTest();
             telemetry.update();
         }
     }
