@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 @Config
 public class Drivetrain {
 
-    boolean redAlliance;
+    boolean blueAlliance;
 
     private BetterGamepad _cGamepad1;
 
@@ -21,7 +21,7 @@ public class Drivetrain {
     boolean slow = false;
 
     //Constructor
-    public Drivetrain(Gamepad gamepad1, boolean redAlliance)
+    public Drivetrain(Gamepad gamepad1, boolean blueAlliance)
     {
         this.robot = RobotHardware.getInstance();
 
@@ -30,7 +30,7 @@ public class Drivetrain {
 
         power = maxPower;
 
-        this.redAlliance = redAlliance;
+        this.blueAlliance = blueAlliance;
 
         resetAngle();
     }
@@ -68,11 +68,11 @@ public class Drivetrain {
         robot.imu.resetYaw();
 
         // check if we are blue/red alliance and set zero angle - For centric drive
-        if(!redAlliance)
+        if(!blueAlliance)
         {
             robot.setImuOffset(-Math.PI);
         }
-        else if(redAlliance)
+        else if(blueAlliance)
         {
             robot.setImuOffset(Math.PI);
         }

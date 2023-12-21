@@ -165,6 +165,10 @@ public class Elevator {
         }
     }
 
+    public double getTarget()
+    {
+        return this.currentTarget;
+    }
 
     public void setUsePID(boolean usePID) {
         this.usePID = usePID;

@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.util.DashboardUtil;
  */
 @Config
 @TeleOp(group = "advanced")
-public class TeleOpAlignWithPoint extends LinearOpMode {
+public class TeleOpAlignWithAngle extends LinearOpMode {
 
     public static double DRAWING_TARGET_RADIUS = 2;
 
@@ -39,6 +39,8 @@ public class TeleOpAlignWithPoint extends LinearOpMode {
         ALIGN_TO_POINT
     }
 
+    double targetAngle = Math.toRadians(0);
+
     private Mode currentMode = Mode.NORMAL_CONTROL;
 
     // Declare a PIDF Controller to regulate heading
@@ -47,7 +49,7 @@ public class TeleOpAlignWithPoint extends LinearOpMode {
 
     // Declare a target vector you'd like your bot to align with
     // Can be any x/y coordinate of your choosing
-    private Vector2d targetPosition = new Vector2d(0, 0);
+    private Vector2d targetPosition = new Vector2d((float)Math.cos(targetAngle), (float)Math.sin(targetAngle));
 
     @Override
     public void runOpMode() throws InterruptedException {
