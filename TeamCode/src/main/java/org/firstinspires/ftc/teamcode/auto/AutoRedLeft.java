@@ -73,6 +73,7 @@ public class AutoRedLeft extends CommandOpMode
                 .waitSeconds(.1)
                 .addTemporalMarker(()-> intake.move(Intake.Angle.TOP_54))
                 .build();
+
         intakeAndPlacePreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
                 //Going for backdrop
                 .lineToLinearHeading(new Pose2d(autoConstants.intakePixelVector.getX(), autoConstants.intakePixelVector.getY(),Math.toRadians(0)))

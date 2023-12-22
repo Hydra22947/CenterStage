@@ -13,7 +13,7 @@ public class AutoConstants {
     public static double stageDoorStartPoseX = 30, stageDoorStartPoseY = -13.5;
     public static double stageDoorMidPoseX = -15, stageDoorMidPoseY = -9, stageDoorMidPoseHeading = 0;
     public static double stageDoorEndPoseX = 12, stageDoorEndPoseY = -5;
-    public static double parkX = 51, parkY = -5, parkHeading = 90;
+    public static double parkX = 54, parkY = -5, parkHeading = 90;
     public static double intakePixelVectorX = -39.2, intakePixelVectorY = -9.5;
 
     //WAIT TIME
