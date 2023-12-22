@@ -6,12 +6,16 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.profile.AccelerationConstraint;
+import com.acmerobotics.roadrunner.profile.VelocityConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.roadrunner.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
@@ -25,6 +29,8 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 @Autonomous(name = "Better Auto Red Left")
 public class BetterAutoRedLeft extends CommandOpMode
 {
+    VelocityConstraint smallVel;
+    AccelerationConstraint smallAccel;
     private final RobotHardware robot = RobotHardware.getInstance();
 
     // subsystems
@@ -62,6 +68,14 @@ public class BetterAutoRedLeft extends CommandOpMode
         intake = new Intake();
         intakeExtension = new IntakeExtension();
 
+        smallVel = new VelocityConstraint() {
+            @Override
+            public double get(double v) {
+                return 50;
+            }
+        };
+
+
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPose)
                 .forward(AutoConstants.strafeForPurplePixel)
                 .addTemporalMarker(0.5, () -> intake.move(Intake.Angle.INTAKE))
@@ -72,22 +86,27 @@ public class BetterAutoRedLeft extends CommandOpMode
                 .build();
         intakeAndPlacePreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
                 //Going for backdrop
-                .lineToLinearHeading(new Pose2d(autoConstants.intakePixelVector.getX(), autoConstants.intakePixelVector.getY(),Math.toRadians(0)))
+                .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(100))
+                .lineToLinearHeading(new Pose2d(autoConstants.intakePixelVector.getX(), autoConstants.intakePixelVector.getY(), Math.toRadians(0)),
+                        SampleMecanumDrive.getVelocityConstraint(20, Math.toRadians(100), DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(20))
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> intakeExtension.openExtension())
-                .UNSTABLE_addTemporalMarkerOffset(1.2, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
-                .UNSTABLE_addTemporalMarkerOffset(1.4, () -> intakeExtension.closeExtension())
-                .UNSTABLE_addTemporalMarkerOffset(1.9, () -> intake.move(Intake.Angle.TRANSFER))
-                .waitSeconds(3.5)
-                .lineToSplineHeading(autoConstants.stageDoorEndPose)
-                .splineToLinearHeading(autoConstants.placePixelPose, Math.toRadians(0))
-                .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
+                .UNSTABLE_addTemporalMarkerOffset(1.7, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
+                .UNSTABLE_addTemporalMarkerOffset(2, () -> intakeExtension.closeExtension())
+                .UNSTABLE_addTemporalMarkerOffset(2.7, () -> intake.move(Intake.Angle.TRANSFER))
+                .waitSeconds(3.3)
+                .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(360))
                 .waitSeconds(0.5)
+                .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
+                .waitSeconds(0.1)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
-                .addTemporalMarker(() -> elevator.setTarget(Elevator.BASE_LEVEL))
-                .addTemporalMarker(() -> elevator.update())
-                .addTemporalMarker(() -> intake.move(Intake.Angle.MID))
-                .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.OUTTAKE))
-                .waitSeconds(1.5)
+                .lineToSplineHeading(autoConstants.stageDoorEndPose)
+                .UNSTABLE_addDisplacementMarkerOffset(1,() -> elevator.setTarget(Elevator.BASE_LEVEL))
+                .UNSTABLE_addDisplacementMarkerOffset(1,() -> elevator.update())
+                .UNSTABLE_addDisplacementMarkerOffset(1, () -> intake.move(Intake.Angle.MID))
+                .UNSTABLE_addDisplacementMarkerOffset(1, () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
+                .splineToLinearHeading(autoConstants.placePixelPose, Math.toRadians(0))
+                .waitSeconds(0.8)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
                 .waitSeconds(0.5)
                 .build();
@@ -96,10 +115,11 @@ public class BetterAutoRedLeft extends CommandOpMode
                 .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.INTAKE))
                 .addTemporalMarker(() -> elevator.setTarget(0))
                 .addTemporalMarker(() -> elevator.update())
-                .addTemporalMarker(() -> moveIntakeByTraj())
-                .addTemporalMarker(2, () -> intakeExtension.openExtension())
                 .lineToSplineHeading(autoConstants.stageDoorStartPose)
+                .UNSTABLE_addDisplacementMarkerOffset(7, () -> moveIntakeByTraj())
+                .UNSTABLE_addDisplacementMarkerOffset(30, () -> intakeExtension.openExtension())
                 .splineToLinearHeading(autoConstants.intakePixelVector, Math.toRadians(180))
+
                 .waitSeconds(.2)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
                 .waitSeconds(AutoConstants.WAIT)
@@ -108,16 +128,17 @@ public class BetterAutoRedLeft extends CommandOpMode
          placeSecond = drivetrain.trajectorySequenceBuilder(intakeTraj.end())
                  .addTemporalMarker(() -> intakeExtension.closeExtension())
                  .addTemporalMarker(0.5, () -> intake.move(Intake.Angle.TRANSFER))
-                 .lineToSplineHeading(autoConstants.stageDoorEndPose)
+                 .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
+
+                  .lineToSplineHeading(autoConstants.stageDoorEndPose)
+                 .UNSTABLE_addDisplacementMarkerOffset(7,() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
+                 .UNSTABLE_addDisplacementMarkerOffset(7,() -> elevator.setTarget(Elevator.BASE_LEVEL))
+                 .UNSTABLE_addDisplacementMarkerOffset(7,() -> elevator.update())
+                 .UNSTABLE_addDisplacementMarkerOffset(7, () -> intake.move(Intake.Angle.MID))
+                 .UNSTABLE_addDisplacementMarkerOffset(7, () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
+
                  .splineToLinearHeading(autoConstants.placePixelPose, Math.toRadians(0))
-                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
-                 .waitSeconds(0.5)
-                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
-                 .addTemporalMarker(() -> elevator.setTarget(Elevator.BASE_LEVEL))
-                 .addTemporalMarker(() -> elevator.update())
-                 .addTemporalMarker(() -> intake.move(Intake.Angle.MID))
-                 .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.OUTTAKE))
-                 .waitSeconds(1.5)
+                 .waitSeconds(0.8)
                  .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
                  .waitSeconds(0.5)
                  .addTemporalMarker(() -> elevator.setTarget(0))
