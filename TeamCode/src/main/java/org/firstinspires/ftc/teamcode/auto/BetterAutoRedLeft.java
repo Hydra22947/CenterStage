@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.profile.AccelerationConstraint;
 import com.acmerobotics.roadrunner.profile.VelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
@@ -78,7 +79,7 @@ public class BetterAutoRedLeft extends CommandOpMode
 
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPose)
                 .forward(AutoConstants.strafeForPurplePixel)
-                .addTemporalMarker(0.5, () -> intake.move(Intake.Angle.INTAKE))
+                .addSpatialMarker(new Vector2d(-36, -39), () -> intake.move(Intake.Angle.INTAKE))
                 .waitSeconds(AutoConstants.WAIT)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.2)
@@ -101,10 +102,10 @@ public class BetterAutoRedLeft extends CommandOpMode
                 .waitSeconds(0.1)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
                 .lineToSplineHeading(autoConstants.stageDoorEndPose)
-                .UNSTABLE_addDisplacementMarkerOffset(1,() -> elevator.setTarget(Elevator.BASE_LEVEL))
-                .UNSTABLE_addDisplacementMarkerOffset(1,() -> elevator.update())
-                .UNSTABLE_addDisplacementMarkerOffset(1, () -> intake.move(Intake.Angle.MID))
-                .UNSTABLE_addDisplacementMarkerOffset(1, () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
+                .addSpatialMarker(new Vector2d(19, -6),() -> elevator.setTarget(Elevator.BASE_LEVEL))
+                .addSpatialMarker(new Vector2d(19, -6),() -> elevator.update())
+                .addSpatialMarker(new Vector2d(19, -6), () -> intake.move(Intake.Angle.MID))
+                .addSpatialMarker(new Vector2d(19, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
                 .splineToLinearHeading(autoConstants.placePixelPose, Math.toRadians(0))
                 .waitSeconds(0.8)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
@@ -129,14 +130,12 @@ public class BetterAutoRedLeft extends CommandOpMode
                  .addTemporalMarker(() -> intakeExtension.closeExtension())
                  .addTemporalMarker(0.5, () -> intake.move(Intake.Angle.TRANSFER))
                  .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
-
                   .lineToSplineHeading(autoConstants.stageDoorEndPose)
-                 .UNSTABLE_addDisplacementMarkerOffset(7,() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
-                 .UNSTABLE_addDisplacementMarkerOffset(7,() -> elevator.setTarget(Elevator.BASE_LEVEL))
-                 .UNSTABLE_addDisplacementMarkerOffset(7,() -> elevator.update())
-                 .UNSTABLE_addDisplacementMarkerOffset(7, () -> intake.move(Intake.Angle.MID))
-                 .UNSTABLE_addDisplacementMarkerOffset(7, () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
-
+                 .addSpatialMarker(new Vector2d(19, -6),() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
+                 .addSpatialMarker(new Vector2d(19, -6),() -> elevator.setTarget(Elevator.BASE_LEVEL))
+                 .addSpatialMarker(new Vector2d(19, -6),() -> elevator.update())
+                 .addSpatialMarker(new Vector2d(19, -6), () -> intake.move(Intake.Angle.MID))
+                 .addSpatialMarker(new Vector2d(19, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
                  .splineToLinearHeading(autoConstants.placePixelPose, Math.toRadians(0))
                  .waitSeconds(0.8)
                  .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
