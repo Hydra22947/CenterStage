@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto;
 
+import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ROBOT_ERROR_INTAKE;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -82,15 +84,16 @@ public class BetterAutoRedLeft extends CommandOpMode
                 .addSpatialMarker(new Vector2d(-36, -39), () -> intake.move(Intake.Angle.INTAKE))
                 .waitSeconds(AutoConstants.WAIT)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
-                .waitSeconds(.2)
+                .waitSeconds(.1)
                 .addTemporalMarker(()-> intake.move(Intake.Angle.TOP_54))
+                .waitSeconds(.2)
                 .build();
         intakeAndPlacePreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
                 //Going for backdrop
-                .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(100))
+                .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(40))
                 .lineToLinearHeading(new Pose2d(autoConstants.intakePixelVector.getX(), autoConstants.intakePixelVector.getY(), Math.toRadians(0)),
-                        SampleMecanumDrive.getVelocityConstraint(20, Math.toRadians(100), DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(20))
+                        SampleMecanumDrive.getVelocityConstraint(40, Math.toRadians(40), DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(40))
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> intakeExtension.openExtension())
                 .UNSTABLE_addTemporalMarkerOffset(1.7, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
                 .UNSTABLE_addTemporalMarkerOffset(2, () -> intakeExtension.closeExtension())
@@ -102,10 +105,10 @@ public class BetterAutoRedLeft extends CommandOpMode
                 .waitSeconds(0.1)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
                 .lineToSplineHeading(autoConstants.stageDoorEndPose)
-                .addSpatialMarker(new Vector2d(19, -6),() -> elevator.setTarget(Elevator.BASE_LEVEL))
-                .addSpatialMarker(new Vector2d(19, -6),() -> elevator.update())
-                .addSpatialMarker(new Vector2d(19, -6), () -> intake.move(Intake.Angle.MID))
-                .addSpatialMarker(new Vector2d(19, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
+                .addSpatialMarker(new Vector2d(10, -6),() -> elevator.setTarget(Elevator.BASE_LEVEL))
+                .addSpatialMarker(new Vector2d(10, -6),() -> elevator.update())
+                .addSpatialMarker(new Vector2d(10, -6), () -> intake.move(Intake.Angle.MID))
+                .addSpatialMarker(new Vector2d(10, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
                 .splineToLinearHeading(autoConstants.placePixelPose, Math.toRadians(0))
                 .waitSeconds(0.8)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
@@ -118,9 +121,8 @@ public class BetterAutoRedLeft extends CommandOpMode
                 .addTemporalMarker(() -> elevator.update())
                 .lineToSplineHeading(autoConstants.stageDoorStartPose)
                 .UNSTABLE_addDisplacementMarkerOffset(7, () -> moveIntakeByTraj())
-                .UNSTABLE_addDisplacementMarkerOffset(30, () -> intakeExtension.openExtension())
-                .splineToLinearHeading(autoConstants.intakePixelVector, Math.toRadians(180))
-
+                .splineToLinearHeading(new Pose2d(autoConstants.intakePixelVector.getX(), autoConstants.intakePixelVector.getY() + ROBOT_ERROR_INTAKE), Math.toRadians(180))
+                .addSpatialMarker(new Vector2d(20, -6), () -> intakeExtension.openExtension())
                 .waitSeconds(.2)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
                 .waitSeconds(AutoConstants.WAIT)
@@ -131,11 +133,11 @@ public class BetterAutoRedLeft extends CommandOpMode
                  .addTemporalMarker(0.5, () -> intake.move(Intake.Angle.TRANSFER))
                  .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
                   .lineToSplineHeading(autoConstants.stageDoorEndPose)
-                 .addSpatialMarker(new Vector2d(19, -6),() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
-                 .addSpatialMarker(new Vector2d(19, -6),() -> elevator.setTarget(Elevator.BASE_LEVEL))
-                 .addSpatialMarker(new Vector2d(19, -6),() -> elevator.update())
-                 .addSpatialMarker(new Vector2d(19, -6), () -> intake.move(Intake.Angle.MID))
-                 .addSpatialMarker(new Vector2d(19, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
+                 .addSpatialMarker(new Vector2d(1, -6),() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
+                 .addSpatialMarker(new Vector2d(1, -6),() -> elevator.setTarget(Elevator.BASE_LEVEL))
+                 .addSpatialMarker(new Vector2d(1, -6),() -> elevator.update())
+                 .addSpatialMarker(new Vector2d(1, -6), () -> intake.move(Intake.Angle.MID))
+                 .addSpatialMarker(new Vector2d(1, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
                  .splineToLinearHeading(autoConstants.placePixelPose, Math.toRadians(0))
                  .waitSeconds(0.8)
                  .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))

@@ -8,7 +8,6 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.auto.AutoRedLeft;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
@@ -38,11 +37,11 @@ public class OpMode extends CommandOpMode {
     BetterGamepad betterGamepad1, betterGamepad2;
 
     // delays
-    public static double delayTransfer = 300, delayRelease = 1200, delayGoToMid = 300, delayGoToTransfer = 500;
+    public static double delayTransfer = 300, delayRelease = 1200, delayCloseTransfer = 200, delayGoToTransfer = 500;
     public static double WAIT_DELAY_TILL_OUTTAKE = 150, WAIT_DELAY_TILL_CLOSE = 200;
 
     // variables
-    double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, goToMidTimer = 0, goToTransferTimer = 0;
+    double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
     double elevatorTarget = Elevator.BASE_LEVEL;
     int openedXTimes = 0;
     boolean retract = false,  goToMid = false, intakeMid = true, canIntake = true, startedDelayTransfer = false, heldExtension = false, had2Pixels = false;
@@ -196,7 +195,7 @@ public class OpMode extends CommandOpMode {
                 {
                     intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
 
-                    goToMidTimer = getTime();
+                    closeTransferTimer = getTime();
 
                     goToMid = true;
 
@@ -204,9 +203,8 @@ public class OpMode extends CommandOpMode {
                 }
 
 
-                if(getTime() - goToMidTimer >= delayGoToMid && goToMid)
+                if(getTime() - closeTransferTimer >= delayCloseTransfer && goToMid)
                 {
-                    intake.move(Intake.Angle.MID);
                     claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
 
                     goToMid = false;

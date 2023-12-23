@@ -22,9 +22,10 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 public class ElevatorReset extends LinearOpMode {
 
     private RobotHardware robot = RobotHardware.getInstance();
-    public static double stallCurrent = 9.2;
-    public static double power = -0.5;
+    public static double stallCurrent = 4;
+    public static double power = -1;
 
+    boolean stopLeft = false, stopRight = false;
     @Override
     public void runOpMode() {
         CommandScheduler.getInstance().reset();
@@ -43,8 +44,9 @@ public class ElevatorReset extends LinearOpMode {
             if(robot.elevatorMotorLeft.isOverCurrent())
             {
                 robot.elevatorMotorLeft.setPower(0);
+                stopLeft = true;
             }
-            else
+            else if(!stopLeft)
             {
                 robot.elevatorMotorLeft.setPower(power);
             }
@@ -52,8 +54,9 @@ public class ElevatorReset extends LinearOpMode {
             if(robot.elevatorMotorRight.isOverCurrent())
             {
                 robot.elevatorMotorRight.setPower(0);
+                stopRight = true;
             }
-            else
+            else if(!stopRight)
             {
                 robot.elevatorMotorRight.setPower(power);
             }

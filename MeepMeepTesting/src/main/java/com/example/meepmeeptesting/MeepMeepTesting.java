@@ -73,7 +73,7 @@ public class MeepMeepTesting {
                                         .splineToLinearHeading(placePixelPose, Math.toRadians(0))
                                         .waitSeconds(.3)
                                         .lineToSplineHeading(stageDoorStartPose)
-                                        .splineToLinearHeading(intakePixel, Math.toRadians(180))
+                                        //.splineToLinearHeading(intakePixel, Math.toRadians(180))
                                         .waitSeconds(0.5)
                                         .lineToSplineHeading(stageDoorEndPose)
                                         .splineToLinearHeading(placePixelPose, Math.toRadians(0))
