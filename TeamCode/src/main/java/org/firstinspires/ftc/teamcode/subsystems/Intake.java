@@ -20,7 +20,7 @@ public class Intake {
 
     public static double openRight = 0.55, closeRight = 0.37;
     public static double openLeft = 0.45, closeLeft = 0.63;
-    public static double seeFarFrom = 1;
+    public static double seeFarFrom = 2;
     public enum Angle
     {
         INTAKE,
