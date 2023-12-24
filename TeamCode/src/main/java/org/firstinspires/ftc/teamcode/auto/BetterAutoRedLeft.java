@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto;
 
-import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ROBOT_ERROR_INTAKE;
+import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ROBOT_ERROR_INTAKE_X;
+import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ROBOT_ERROR_INTAKE_Y;
 
 import androidx.annotation.NonNull;
 
@@ -30,8 +31,7 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
 @Autonomous(name = "Better Auto Red Left")
-public class BetterAutoRedLeft extends CommandOpMode
-{
+public class BetterAutoRedLeft extends CommandOpMode {
     VelocityConstraint smallVel;
     AccelerationConstraint smallAccel;
     private final RobotHardware robot = RobotHardware.getInstance();
@@ -45,8 +45,8 @@ public class BetterAutoRedLeft extends CommandOpMode
     IntakeExtension intakeExtension;
     AutoConstants autoConstants;
     TrajectorySequence placePurplePixel, intakeAndPlacePreload, intakeTraj, placeSecond, park;
-    enum IntakeLevel
-    {
+
+    enum IntakeLevel {
         TOP_54,
         TOP_32,
         TOP_21
@@ -85,7 +85,7 @@ public class BetterAutoRedLeft extends CommandOpMode
                 .waitSeconds(AutoConstants.WAIT)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.1)
-                .addTemporalMarker(()-> intake.move(Intake.Angle.TOP_54))
+                .addTemporalMarker(() -> intake.move(Intake.Angle.TOP_54))
                 .waitSeconds(.2)
                 .build();
         intakeAndPlacePreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
@@ -102,13 +102,13 @@ public class BetterAutoRedLeft extends CommandOpMode
                 .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(360))
                 .waitSeconds(0.5)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
-                .waitSeconds(0.1)
+                .waitSeconds(0.3)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
                 .lineToSplineHeading(autoConstants.stageDoorEndPose)
-                .addSpatialMarker(new Vector2d(10, -6),() -> elevator.setTarget(Elevator.BASE_LEVEL))
-                .addSpatialMarker(new Vector2d(10, -6),() -> elevator.update())
-                .addSpatialMarker(new Vector2d(10, -6), () -> intake.move(Intake.Angle.MID))
+                .addSpatialMarker(new Vector2d(10, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL))
+                .addSpatialMarker(new Vector2d(10, -6), () -> elevator.update())
                 .addSpatialMarker(new Vector2d(10, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
+                .addSpatialMarker(new Vector2d(10, -6), () -> intake.move(Intake.Angle.MID))
                 .splineToLinearHeading(autoConstants.placePixelPose, Math.toRadians(0))
                 .waitSeconds(0.8)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
@@ -120,43 +120,42 @@ public class BetterAutoRedLeft extends CommandOpMode
                 .addTemporalMarker(() -> elevator.setTarget(0))
                 .addTemporalMarker(() -> elevator.update())
                 .lineToSplineHeading(autoConstants.stageDoorStartPose)
-                .UNSTABLE_addDisplacementMarkerOffset(7, () -> moveIntakeByTraj())
-                .splineToLinearHeading(new Pose2d(autoConstants.intakePixelVector.getX(), autoConstants.intakePixelVector.getY() + ROBOT_ERROR_INTAKE), Math.toRadians(180))
-                .addSpatialMarker(new Vector2d(20, -6), () -> intakeExtension.openExtension())
-                .waitSeconds(.2)
+                .UNSTABLE_addDisplacementMarkerOffset(3, () -> moveIntakeByTraj())
+                .splineToLinearHeading(new Pose2d(autoConstants.intakePixelVector.getX() + ROBOT_ERROR_INTAKE_X, autoConstants.intakePixelVector.getY() + ROBOT_ERROR_INTAKE_Y), Math.toRadians(180))
+                //.addSpatialMarker(new Vector2d(-5, -6), () -> intakeExtension.openExtension())
+                .addTemporalMarker(() -> intakeExtension.openExtension())
+                .waitSeconds(1)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
-                .waitSeconds(AutoConstants.WAIT)
+                .waitSeconds(AutoConstants.WAIT + 0.2)
                 .build();
 
-         placeSecond = drivetrain.trajectorySequenceBuilder(intakeTraj.end())
-                 .addTemporalMarker(() -> intakeExtension.closeExtension())
-                 .addTemporalMarker(0.5, () -> intake.move(Intake.Angle.TRANSFER))
-                 .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
-                  .lineToSplineHeading(autoConstants.stageDoorEndPose)
-                 .addSpatialMarker(new Vector2d(1, -6),() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
-                 .addSpatialMarker(new Vector2d(1, -6),() -> elevator.setTarget(Elevator.BASE_LEVEL))
-                 .addSpatialMarker(new Vector2d(1, -6),() -> elevator.update())
-                 .addSpatialMarker(new Vector2d(1, -6), () -> intake.move(Intake.Angle.MID))
-                 .addSpatialMarker(new Vector2d(1, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
-                 .splineToLinearHeading(autoConstants.placePixelPose, Math.toRadians(0))
-                 .waitSeconds(0.8)
-                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
-                 .waitSeconds(0.5)
-                 .addTemporalMarker(() -> elevator.setTarget(0))
-                 .addTemporalMarker(() -> elevator.update())
-                 .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.INTAKE))
+        placeSecond = drivetrain.trajectorySequenceBuilder(intakeTraj.end())
+                .addTemporalMarker(() -> intakeExtension.closeExtension())
+                .addTemporalMarker(0.5, () -> intake.move(Intake.Angle.TRANSFER))
+                .addTemporalMarker(1.4, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
+                .lineToSplineHeading(autoConstants.stageDoorEndPose)
+                .addSpatialMarker(new Vector2d(6, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
+                .addSpatialMarker(new Vector2d(5, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL))
+                .addSpatialMarker(new Vector2d(5, -6), () -> elevator.update())
+                .addSpatialMarker(new Vector2d(8, -10), () -> intake.move(Intake.Angle.MID))
+                .addSpatialMarker(new Vector2d(15, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
+                .splineToLinearHeading(autoConstants.placePixelPose, Math.toRadians(0))
+                .waitSeconds(1)
+                .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
+                .waitSeconds(0.5)
+                .addTemporalMarker(() -> elevator.setTarget(0))
+                .addTemporalMarker(() -> elevator.update())
+                .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.INTAKE))
 
                 .build();
-         park = drivetrain.trajectorySequenceBuilder(placeSecond.end())
+        park = drivetrain.trajectorySequenceBuilder(placeSecond.end())
                 //Going for backdrop
                 .lineToLinearHeading(autoConstants.park)
-                 .addTemporalMarker(() -> intake.move(Intake.Angle.TRANSFER))
+                .addTemporalMarker(() -> intake.move(Intake.Angle.TRANSFER))
                 .build();
 
 
-
-        while (opModeInInit() && !isStopRequested())
-        {
+        while (opModeInInit() && !isStopRequested()) {
             intake.setAngle(Intake.Angle.TRANSFER);
             intakeExtension.closeExtension();
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
@@ -181,13 +180,11 @@ public class BetterAutoRedLeft extends CommandOpMode
         drivetrain.followTrajectorySequence(intakeTraj);
         drivetrain.followTrajectorySequence(placeSecond);
         drivetrain.followTrajectorySequence(park);
-        while(opModeIsActive());
+        while (opModeIsActive()) ;
     }
 
-    void moveIntakeByTraj()
-    {
-        switch (intakeLevel)
-        {
+    void moveIntakeByTraj() {
+        switch (intakeLevel) {
             case TOP_54:
                 intake.move(Intake.Angle.TOP_54);
                 break;
