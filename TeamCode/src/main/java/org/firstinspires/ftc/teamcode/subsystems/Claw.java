@@ -30,7 +30,7 @@ public class Claw
     public ClawState leftClaw = ClawState.OPEN;
     public ClawState rightClaw = ClawState.OPEN;
 
-    public static double openLeft = 0.47, closeLeft = .58;
+    public static double openLeft = 0.495, closeLeft = .575;
     public static double openRight = 0.57, closeRight = .65;
     double tempRight = closeRight;
     double tempLeft = closeLeft;
