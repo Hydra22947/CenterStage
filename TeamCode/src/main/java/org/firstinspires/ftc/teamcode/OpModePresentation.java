@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@TeleOp(name = "OpMode PRESENTATION")
+@TeleOp(name = "PRESENTATION")
 public class OpModePresentation extends CommandOpMode {
 
     // robot
@@ -324,7 +324,7 @@ public class OpModePresentation extends CommandOpMode {
                 }
                 break;
             case EXTRACT:
-                intakeState = IntakeState.RETRACT;
+                //intakeState = IntakeState.RETRACT;
 
                 elevator.setTarget(elevatorTarget + (openedXTimes * Elevator.ELEVATOR_INCREMENT));
 
