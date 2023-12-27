@@ -11,7 +11,7 @@ public class Outtake {
 
     private final RobotHardware robot;
 
-    public static double intakeHandPivot = 0.2, intakeClawPivot = 0.05;
+    public static double intakeHandPivot = 0.2, intakeClawPivot = 0.08;
     //public static double outtakeHandPivot = .8, outtakeClawPivot = .45;
     public static double outtakeHandPivot = .725, outtakeClawPivot = .91;
 

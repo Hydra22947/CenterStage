@@ -13,14 +13,14 @@ public class Intake {
 
     private final RobotHardware robot;
     public static double intakeHandPivot = 0.05, intakeAmmoPivot = 0.15;
-    public static double outtakeHandPivot = .56, outtakeAmmoPivot = 0.7;
+    public static double outtakeHandPivot = .54, outtakeAmmoPivot = 0.7;
     public static double midHandPivot = 0.5, midAmmoPivot = 0.425;
     public static double top54HandPivot = 0.18, top54AmmoPivot = 0.145;
     public static double top32HandPivot = 0.13, top32AmmoPivot = 0.145;
 
     public static double openRight = 0.55, closeRight = 0.37;
     public static double openLeft = 0.45, closeLeft = 0.63;
-    public static double seeFarFrom = 2;
+    public static double seeFarFrom = 2.5;
     public enum Angle
     {
         INTAKE,
