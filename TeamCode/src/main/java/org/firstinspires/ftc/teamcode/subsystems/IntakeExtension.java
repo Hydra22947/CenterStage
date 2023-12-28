@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
+import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.AbsoluteAnalogEncoder;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
@@ -71,15 +72,19 @@ public class IntakeExtension {
         this.current = current;
     }
 
-    public void openExtension()
+    public double openExtension()
     {
         this.robot.extensionServoRight.setPosition(OPEN_EXTENSION);
         this.robot.extensionServoLeft.setPosition(OPEN_EXTENSION);
+
+        return OPEN_EXTENSION;
     }
 
-    public void closeExtension()
+    public double closeExtension()
     {
         this.robot.extensionServoRight.setPosition(CLOSE_EXTENSION);
         this.robot.extensionServoLeft.setPosition(CLOSE_EXTENSION);
+
+        return CLOSE_EXTENSION;
     }
 }

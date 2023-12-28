@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.MAX_VEL;
 import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.MOTOR_VELO_PID;
 import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.RUN_USING_ENCODER;
 import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.TRACK_WIDTH;
+import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.WHEEL_BASE;
 import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.encoderTicksToInches;
 import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kA;
 import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kStatic;
@@ -85,7 +86,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     private List<Integer> lastEncVels = new ArrayList<>();
 
     public SampleMecanumDrive(HardwareMap hardwareMap) {
-        super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
+        super(kV, kA, kStatic, TRACK_WIDTH, WHEEL_BASE, LATERAL_MULTIPLIER);
 
         robot.init(hardwareMap, FtcDashboard.getInstance().getTelemetry());
         this.imu = robot.imu;
@@ -214,6 +215,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         return trajectorySequenceRunner.isBusy();
     }
 
+    public boolean isNotBusy() {
+        return !isBusy();
+    }
+
     public void setMode(DcMotor.RunMode runMode) {
         for (DcMotorEx motor : motors) {
             motor.setMode(runMode);
@@ -305,7 +310,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {
         return new MinVelocityConstraint(Arrays.asList(
                 new AngularVelocityConstraint(maxAngularVel),
-                new MecanumVelocityConstraint(maxVel, trackWidth)
+                new MecanumVelocityConstraint(maxVel, trackWidth, WHEEL_BASE)
         ));
     }
 
