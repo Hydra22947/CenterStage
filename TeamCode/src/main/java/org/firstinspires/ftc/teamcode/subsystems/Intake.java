@@ -15,9 +15,9 @@ public class Intake {
     public static double intakeHandPivot = 0.05, intakeAmmoPivot = 0.15;
     public static double outtakeHandPivot = .54, outtakeAmmoPivot = 0.7;
     public static double midHandPivot = 0.5, midAmmoPivot = 0.425;
-    public static double top5HandPivot = 0.18, top5AmmoPivot = 0.145;
+    public static double top5HandPivot = 0.187, top5AmmoPivot = 0.145;
     public static double top54HandPivot = 0.17, top54AmmoPivot = 0.145;
-    public static double top32HandPivot = 0.13, top32AmmoPivot = 0.145;
+    public static double top32HandPivot = 0.135, top32AmmoPivot = 0.145;
 
     public static double openRight = 0.55, closeRight = 0.37;
     public static double openLeft = 0.45, closeLeft = 0.63;
@@ -27,7 +27,7 @@ public class Intake {
         INTAKE,
         TRANSFER,
         MID,
-        TOP_54, TOP_32, TOP_21
+        TOP_54, TOP_32, TOP_21, TOP_5
     }
 
     public enum ClawState
@@ -192,6 +192,8 @@ public class Intake {
                         return midAmmoPivot;
                     case TOP_54:
                         return top54AmmoPivot;
+                    case TOP_5:
+                        return top5AmmoPivot;
                     case TOP_32:
                         return top32AmmoPivot;
                     default:
@@ -210,6 +212,8 @@ public class Intake {
                         return midHandPivot;
                     case TOP_54:
                         return top54HandPivot;
+                    case TOP_5:
+                        return top5HandPivot;
                     case TOP_32:
                         return top32HandPivot;
                     default:

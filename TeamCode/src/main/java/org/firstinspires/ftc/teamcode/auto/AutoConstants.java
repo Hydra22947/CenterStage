@@ -14,9 +14,9 @@ public class AutoConstants {
     public static double stageDoorMidPoseX = -15, stageDoorMidPoseY = -9, stageDoorMidPoseHeading = 0;
     public static double stageDoorEndPoseX = 12, stageDoorEndPoseY = -5;
     public static double parkX = 52, parkY = -5, parkHeading = 90;
-    public static double intakePixelVectorX = -40, intakePixelVectorY = -9.3;
-    public static double ROBOT_ERROR_INTAKE_Y = -1.5;
-    public static double ROBOT_ERROR_INTAKE_X = -1.755;
+    public static double intakePixelVectorX = -39.2, intakePixelVectorY = -8.7;
+    public static double ROBOT_ERROR_INTAKE_Y = -1.4;
+    public static double ROBOT_ERROR_INTAKE_X = -0.6;
     //WAIT TIME
     public static final double WAIT = .5;
 

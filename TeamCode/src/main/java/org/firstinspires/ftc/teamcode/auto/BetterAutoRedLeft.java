@@ -47,12 +47,12 @@ public class BetterAutoRedLeft extends CommandOpMode {
     TrajectorySequence placePurplePixel, intakeAndPlacePreload, intakeTraj, placeSecond, park;
 
     enum IntakeLevel {
-        TOP_54,
+        TOP_5,
         TOP_32,
         TOP_21
     }
 
-    IntakeLevel intakeLevel = IntakeLevel.TOP_54;
+    IntakeLevel intakeLevel = IntakeLevel.TOP_5;
 
     public void initialize() {
         CommandScheduler.getInstance().reset();
@@ -85,19 +85,19 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .waitSeconds(AutoConstants.WAIT)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.1)
-                .addTemporalMarker(() -> intake.move(Intake.Angle.TOP_54))
+                .addTemporalMarker(() -> intake.move(Intake.Angle.TOP_5))
                 .waitSeconds(.2)
                 .build();
         intakeAndPlacePreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
                 //Going for backdrop
                 .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(40))
-                .lineToLinearHeading(new Pose2d(autoConstants.intakePixelVector.getX(), autoConstants.intakePixelVector.getY(), Math.toRadians(0)),
+                .lineToLinearHeading(new Pose2d(autoConstants.intakePixelVector.getX(), autoConstants.intakePixelVector.getY()-0.15, Math.toRadians(0)),
                         SampleMecanumDrive.getVelocityConstraint(40, Math.toRadians(40), DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(40))
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> intakeExtension.openExtension())
                 .UNSTABLE_addTemporalMarkerOffset(1.7, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
+                .UNSTABLE_addTemporalMarkerOffset(1.9, () -> intake.move(Intake.Angle.TRANSFER))
                 .UNSTABLE_addTemporalMarkerOffset(2, () -> intakeExtension.closeExtension())
-                .UNSTABLE_addTemporalMarkerOffset(2.7, () -> intake.move(Intake.Angle.TRANSFER))
                 .waitSeconds(3.3)
                 .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(360))
                 .waitSeconds(0.5)
@@ -126,12 +126,13 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .addTemporalMarker(() -> intakeExtension.openExtension())
                 .waitSeconds(1)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
-                .waitSeconds(AutoConstants.WAIT + 0.2)
+                .waitSeconds(AutoConstants.WAIT + 0.5)
                 .build();
 
         placeSecond = drivetrain.trajectorySequenceBuilder(intakeTraj.end())
-                .addTemporalMarker(() -> intakeExtension.closeExtension())
                 .addTemporalMarker(() -> intake.move(Intake.Angle.TRANSFER))
+                .waitSeconds(0.1)
+                .addTemporalMarker(() -> intakeExtension.closeExtension())
                 .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
                 .lineToSplineHeading(autoConstants.stageDoorEndPose)
                 .addSpatialMarker(new Vector2d(6, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
@@ -156,9 +157,9 @@ public class BetterAutoRedLeft extends CommandOpMode {
 
 
         while (opModeInInit() && !isStopRequested()) {
+            intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             intake.setAngle(Intake.Angle.TRANSFER);
             intakeExtension.closeExtension();
-            intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");
@@ -185,8 +186,8 @@ public class BetterAutoRedLeft extends CommandOpMode {
 
     void moveIntakeByTraj() {
         switch (intakeLevel) {
-            case TOP_54:
-                intake.move(Intake.Angle.TOP_54);
+            case TOP_5:
+                intake.move(Intake.Angle.TOP_5);
                 break;
             case TOP_32:
                 intake.move(Intake.Angle.TOP_32);
