@@ -16,7 +16,7 @@ public class Intake {
     public static double outtakeHandPivot = .54, outtakeAmmoPivot = 0.7;
     public static double midHandPivot = 0.5, midAmmoPivot = 0.425;
     public static double top5HandPivot = 0.18, top5AmmoPivot = 0.145;
-    public static double top54HandPivot = 0.16, top54AmmoPivot = 0.145;
+    public static double top54HandPivot = 0.17, top54AmmoPivot = 0.145;
     public static double top32HandPivot = 0.13, top32AmmoPivot = 0.145;
 
     public static double openRight = 0.55, closeRight = 0.37;

@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.auto;
-
+/*
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -196,8 +196,8 @@ public class LeftSafe extends FataOpMode {
                 .state(AutoState.DRIVE_TO_DEPOSIT)
                 .time(350)
                 .onEnter(() -> {
-                    lift.setTarget(AutoLiftPositions.MIDDLE /*+ 60*/);
-                    deposit.setTurret(TURRET_ANGLE);
+                   // lift.setTarget(AutoLiftPositions.MIDDLE /*+ 60*///)//;
+  /*                  deposit.setTurret(TURRET_ANGLE);
                     deposit.setBasePosition(DepositBasePosition.AUTO);
                     if (remainingCones != 0) intake.setBase(IntakeHeight.values()[remainingCones - 1].basePosition);
                 })
@@ -387,9 +387,9 @@ public class LeftSafe extends FataOpMode {
                             withDelay(400, () -> intake.setSlides(0));
                             withDelay(700, this::stopOpMode);
                         })
-
+*/
 //                        .addDisplacementMarker(this::stopOpMode)
-
+/*
                         .build()
         );
     }
@@ -458,4 +458,4 @@ public class LeftSafe extends FataOpMode {
         TRANSFER_3,
         OPEN_CLAW
     }
-}
+}*/
