@@ -98,7 +98,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(1.7, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
                 .UNSTABLE_addTemporalMarkerOffset(1.9, () -> intake.move(Intake.Angle.TRANSFER))
                 .UNSTABLE_addTemporalMarkerOffset(2, () -> intakeExtension.closeExtension())
-                .waitSeconds(3.3)
+                .waitSeconds(autoConstants.TEMP)
                 .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(360))
                 .waitSeconds(0.5)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
