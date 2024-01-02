@@ -30,8 +30,9 @@ public class Claw
     public ClawState leftClaw = ClawState.OPEN;
     public ClawState rightClaw = ClawState.OPEN;
 
-    public static double openLeft = 0.495, closeLeft = .575;
-    public static double openRight = 0.57, closeRight = .65;
+    // LOOK FORM INTAKE
+    public static double openLeft = 0.505, closeLeft = .575;
+    public static double openRight = 0.6, closeRight = .65;
     double tempRight = closeRight;
     double tempLeft = closeLeft;
     CommandOpMode opMode;
