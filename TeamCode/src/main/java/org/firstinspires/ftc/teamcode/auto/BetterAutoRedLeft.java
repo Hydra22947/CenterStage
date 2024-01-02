@@ -88,6 +88,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .addTemporalMarker(() -> intake.move(Intake.Angle.TOP_5))
                 .waitSeconds(.2)
                 .build();
+
         intakeAndPlacePreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
                 //Going for backdrop
                 .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(40))
@@ -98,7 +99,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(1.7, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
                 .UNSTABLE_addTemporalMarkerOffset(1.9, () -> intake.move(Intake.Angle.TRANSFER))
                 .UNSTABLE_addTemporalMarkerOffset(2, () -> intakeExtension.closeExtension())
-                .waitSeconds(autoConstants.TEMP)
+                .waitSeconds(3)
                 .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(360))
                 .waitSeconds(0.5)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
@@ -120,7 +121,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .addTemporalMarker(() -> elevator.setTarget(0))
                 .addTemporalMarker(() -> elevator.update())
                 .lineToSplineHeading(autoConstants.stageDoorStartPose)
-                .UNSTABLE_addDisplacementMarkerOffset(6, () -> moveIntakeByTraj())
+                .UNSTABLE_addDisplacementMarkerOffset(autoConstants.TEMP, () -> moveIntakeByTraj())
                 .splineToLinearHeading(new Pose2d(autoConstants.intakePixelVector.getX() + ROBOT_ERROR_INTAKE_X, autoConstants.intakePixelVector.getY() + ROBOT_ERROR_INTAKE_Y), Math.toRadians(180))
                 //.addSpatialMarker(new Vector2d(-5, -6), () -> intakeExtension.openExtension())
                 .addTemporalMarker(() -> intakeExtension.openExtension())
