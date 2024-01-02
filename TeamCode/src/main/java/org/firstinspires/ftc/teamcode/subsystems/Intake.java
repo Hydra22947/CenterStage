@@ -18,6 +18,7 @@ public class Intake {
     public static double top5HandPivot = 0.187, top5AmmoPivot = 0.145;
     public static double top54HandPivot = 0.17, top54AmmoPivot = 0.145;
     public static double top32HandPivot = 0.135, top32AmmoPivot = 0.145;
+    public static double top21HandPivot = 0.05, top21AmmoPivot = 0.16;
 
     public static double openRight = 0.55, closeRight = 0.37;
     public static double openLeft = 0.45, closeLeft = 0.63;
@@ -184,12 +185,13 @@ public class Intake {
             case AMMO:
                 switch (angle) {
                     case INTAKE:
-                    case TOP_21:
                         return intakeAmmoPivot;
                     case TRANSFER:
                         return outtakeAmmoPivot;
                     case MID:
                         return midAmmoPivot;
+                    case TOP_21:
+                        return top21AmmoPivot;
                     case TOP_54:
                         return top54AmmoPivot;
                     case TOP_5:
@@ -204,12 +206,13 @@ public class Intake {
             case HAND:
                 switch (angle) {
                     case INTAKE:
-                    case TOP_21:
                         return intakeHandPivot;
                     case TRANSFER:
                         return outtakeHandPivot;
                     case MID:
                         return midHandPivot;
+                    case TOP_21:
+                        return top21HandPivot;
                     case TOP_54:
                         return top54HandPivot;
                     case TOP_5:
