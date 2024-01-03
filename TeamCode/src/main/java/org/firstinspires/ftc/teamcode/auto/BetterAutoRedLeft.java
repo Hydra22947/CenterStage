@@ -99,7 +99,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(1.7, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
                 .UNSTABLE_addTemporalMarkerOffset(1.9, () -> intake.move(Intake.Angle.TRANSFER))
                 .UNSTABLE_addTemporalMarkerOffset(2, () -> intakeExtension.closeExtension())
-                .waitSeconds(2)
+                .waitSeconds(2.5)
                 .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(360))
                 .waitSeconds(0.5)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
@@ -123,7 +123,6 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .lineToSplineHeading(autoConstants.stageDoorStartPose)
                 .UNSTABLE_addDisplacementMarkerOffset(autoConstants.TEMP, () -> moveIntakeByTraj())
                 .splineToLinearHeading(new Pose2d(autoConstants.intakePixelVector.getX() + ROBOT_ERROR_INTAKE_X, autoConstants.intakePixelVector.getY() + ROBOT_ERROR_INTAKE_Y), Math.toRadians(180))
-                //.addSpatialMarker(new Vector2d(-5, -6), () -> intakeExtension.openExtension())
                 .addTemporalMarker(() -> intakeExtension.openExtension())
                 .waitSeconds(1)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
@@ -137,7 +136,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
                 .lineToSplineHeading(autoConstants.stageDoorEndPose)
                 .addSpatialMarker(new Vector2d(6, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
-                .addSpatialMarker(new Vector2d(5, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL + 500))
+                .addSpatialMarker(new Vector2d(5, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL + 250))
                 .addSpatialMarker(new Vector2d(5, -6), () -> elevator.update())
                 .addSpatialMarker(new Vector2d(8, -10), () -> intake.move(Intake.Angle.MID))
                 .addSpatialMarker(new Vector2d(15, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
@@ -182,6 +181,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
         drivetrain.followTrajectorySequence(placeSecond);
         intakeLevel = IntakeLevel.TOP_21;
         drivetrain.followTrajectorySequence(intakeTraj);
+        //autoConstants.ROBOT_ERROR_INTAKE_Y += 0.1;
         drivetrain.followTrajectorySequence(placeSecond);
         //drivetrain.followTrajectorySequence(park);
         while (opModeIsActive()) ;

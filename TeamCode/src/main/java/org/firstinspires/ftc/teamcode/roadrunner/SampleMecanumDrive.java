@@ -60,8 +60,8 @@ import java.util.List;
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
     RobotHardware robot = RobotHardware.getInstance();
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(10, 0, 0.4);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(15, 0, .5);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0.4);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, .5);
 
     public static double LATERAL_MULTIPLIER = 1.6934801016;
 
