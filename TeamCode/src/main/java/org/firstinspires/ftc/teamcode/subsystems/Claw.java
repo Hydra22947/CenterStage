@@ -33,6 +33,7 @@ public class Claw
     // LOOK FORM INTAKE
     public static double openLeft = 0.505, closeLeft = .575;
     public static double openRight = 0.6, closeRight = .65;
+    public static double intermediateLeft = 0.5735, intermediateRight = .645;
     double tempRight = closeRight;
     double tempLeft = closeLeft;
     CommandOpMode opMode;
@@ -102,6 +103,8 @@ public class Claw
                 switch (state) {
                     case CLOSED:
                         return closeLeft;
+                    case INTERMEDIATE:
+                        return intermediateLeft;
                     case OPEN:
                         return openLeft;
                     default:
@@ -111,6 +114,8 @@ public class Claw
                 switch (state) {
                     case CLOSED:
                         return closeRight;
+                    case INTERMEDIATE:
+                        return intermediateRight;
                     case OPEN:
                         return openRight;
                     default:
