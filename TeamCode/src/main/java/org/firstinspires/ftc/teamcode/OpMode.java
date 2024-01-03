@@ -37,7 +37,7 @@ public class OpMode extends CommandOpMode {
     BetterGamepad betterGamepad1, betterGamepad2;
 
     // delays
-    public static double delayTransfer = 300, delayRelease = 1200, delayCloseTransfer = 500, delayGoToTransfer = 700;
+    public static double delayTransfer = 300, delayRelease = 1200, delayCloseTransfer = 300, delayGoToTransfer = 700;
     public static double WAIT_DELAY_TILL_OUTTAKE = 150, WAIT_DELAY_TILL_CLOSE = 200;
 
     // variables
