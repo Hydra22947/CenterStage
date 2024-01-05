@@ -60,6 +60,8 @@ import java.util.List;
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
     RobotHardware robot = RobotHardware.getInstance();
+    public static PIDCoefficients LATERAL_PID = new PIDCoefficients(8, 0, 0.4); // todo: maybe tune
+    public static PIDCoefficients AXIAL_PID = new PIDCoefficients(8, 0, 0.4); // todo: maybe tune
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0.4);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, .5);
 
@@ -90,8 +92,9 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         robot.init(hardwareMap, FtcDashboard.getInstance().getTelemetry());
         this.imu = robot.imu;
-        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
-                new Pose2d(0.5, 0.5, Math.toRadians(1.0)), 0.5);
+
+        follower = new HolonomicPIDVAFollower(AXIAL_PID, LATERAL_PID, HEADING_PID,
+                new Pose2d(0.5, 0.5, Math.toRadians(1)), 0.5);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
