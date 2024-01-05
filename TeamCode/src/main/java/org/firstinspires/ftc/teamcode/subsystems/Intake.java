@@ -15,10 +15,10 @@ public class Intake {
     public static double intakeHandPivot = 0.05, intakeAmmoPivot = 0.15;
     public static double outtakeHandPivot = .56, outtakeAmmoPivot = 0.7;
     public static double midHandPivot = 0.5, midAmmoPivot = 0.425;
-    public static double top5HandPivot = 0.187, top5AmmoPivot = 0.145;
-    public static double top54HandPivot = 0.17, top54AmmoPivot = 0.145;
-    public static double top32HandPivot = 0.137, top32AmmoPivot = 0.15;
-    public static double top21HandPivot = 0.06, top21AmmoPivot = 0.16;
+    public static double top5HandPivot = 0.195, top5AmmoPivot = 0.145;
+    public static double top54HandPivot = 0.145, top54AmmoPivot = 0.145;
+    public static double top32HandPivot = .13, top32AmmoPivot = 0.15;
+    public static double top21HandPivot = 0.065, top21AmmoPivot = 0.1;
 
     public static double openRight = 0.55, closeRight = 0.365;
     public static double openLeft = 0.45, closeLeft = 0.635;

@@ -9,7 +9,7 @@ public class AutoConstants {
     //Coordinates
     public static double startX = -36, startY = -62, startHeading = 90;
     public static double strafeForPurplePixel = 52;
-    public static  double placePixelPoseX = 51.4, placePixelPoseY = -29;
+    public   double placePixelPoseX = 51.4, placePixelPoseY = -28.8;
     public static double stageDoorStartPoseX = 30, stageDoorStartPoseY = -15;
     public static double stageDoorMidPoseX = -15, stageDoorMidPoseY = -9, stageDoorMidPoseHeading = 0;
     public static double stageDoorEndPoseX = 12, stageDoorEndPoseY = -9;
