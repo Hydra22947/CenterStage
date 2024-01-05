@@ -17,7 +17,8 @@ public class Intake {
     public static double midHandPivot = 0.5, midAmmoPivot = 0.425;
     public static double top5HandPivot = 0.195, top5AmmoPivot = 0.145;
     public static double top54HandPivot = 0.145, top54AmmoPivot = 0.145;
-    public static double top32HandPivot = .13, top32AmmoPivot = 0.15;
+    public static double top43HandPivot = .13, top43AmmoPivot = 0.15;
+    public static double top32HandPivot = .1, top32AmmoPivot = 0.14;
     public static double top21HandPivot = 0.065, top21AmmoPivot = 0.1;
 
     public static double openRight = 0.55, closeRight = 0.365;
@@ -28,7 +29,7 @@ public class Intake {
         INTAKE,
         TRANSFER,
         MID,
-        TOP_54, TOP_32, TOP_21, TOP_5
+        TOP_54, TOP_43, TOP_32, TOP_21, TOP_5
     }
 
     public enum ClawState
@@ -194,10 +195,12 @@ public class Intake {
                         return top21AmmoPivot;
                     case TOP_54:
                         return top54AmmoPivot;
-                    case TOP_5:
-                        return top5AmmoPivot;
                     case TOP_32:
                         return top32AmmoPivot;
+                    case TOP_5:
+                        return top5AmmoPivot;
+                    case TOP_43:
+                        return top43AmmoPivot;
                     default:
                         return 0.0;
 
@@ -213,12 +216,14 @@ public class Intake {
                         return midHandPivot;
                     case TOP_21:
                         return top21HandPivot;
+                    case TOP_32:
+                        return top32HandPivot;
                     case TOP_54:
                         return top54HandPivot;
                     case TOP_5:
                         return top5HandPivot;
-                    case TOP_32:
-                        return top32HandPivot;
+                    case TOP_43:
+                        return top43HandPivot;
                     default:
                         return 0.0;
                 }

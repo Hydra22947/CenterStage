@@ -25,16 +25,15 @@ public class AutoRedLeftFSM extends LinearOpMode
         autoConstants = new AutoConstants();
         SampleMecanumDrive drivetrain = new SampleMecanumDrive(hardwareMap);
 
-        drivetrain.setPoseEstimate(autoConstants.startPose);
+        drivetrain.setPoseEstimate(autoConstants.startPoseRedLeft);
         State currentState = State.PLACE_PURPLE_PIXEL;
 
-        TrajectorySequence placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPose)
+        TrajectorySequence placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseRedLeft)
                 .forward(AutoConstants.strafeForPurplePixel)
                 .waitSeconds(AutoConstants.WAIT)
                 .build();
         TrajectorySequence placePreloadAndIntake = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
                 //Going for backdrop
-                .lineToSplineHeading(autoConstants.stageDoorMidPose)
                 .lineToSplineHeading(autoConstants.stageDoorEndPose)
                 .splineToLinearHeading(autoConstants.placePixelPose, Math.toRadians(0))
                 .waitSeconds(1)
