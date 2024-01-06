@@ -72,6 +72,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
 
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseRedLeft)
 
+                // place purple pixel distance
                 .forward(52)
 
                 .addSpatialMarker(new Vector2d(-36, -39), () -> intake.move(Intake.Angle.INTAKE))
@@ -85,8 +86,9 @@ public class BetterAutoRedLeft extends CommandOpMode {
         intakeAnotherPreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
                 .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(40))
 
+                // go to intake pise
                 .lineToLinearHeading(new Pose2d(-38.8, -8.5, Math.toRadians(0)),
-                        SampleMecanumDrive.getVelocityConstraint(40, Math.toRadians(40), DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getVelocityConstraint(40, Math.toRadians(50), DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(40))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> intakeExtension.openExtension())
@@ -101,8 +103,9 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
                 .build();
 
-        placePreloadsOnBoard = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
+        placePreloadsOnBoard = drivetrain.trajectorySequenceBuilder(intakeAnotherPreload.end())
 
+                // truss pose next to board
                 .lineToSplineHeading(new Pose2d(12, -9, Math.toRadians(0)))
 
                 .addSpatialMarker(new Vector2d(10, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL))
@@ -110,6 +113,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .addSpatialMarker(new Vector2d(10, -6), () -> intake.move(Intake.Angle.MID))
                 .addSpatialMarker(new Vector2d(10, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
 
+                // backdrop pose
                 .splineToLinearHeading(new Pose2d(51.4, -28.8, Math.toRadians(0)), Math.toRadians(0))
 
                 .waitSeconds(0.6)
@@ -122,10 +126,12 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .addTemporalMarker(() -> elevator.setTarget(0))
                 .addTemporalMarker(() -> elevator.update())
 
+                // truss pose next to wing
                 .lineToSplineHeading(new Pose2d(30, -15, Math.toRadians(0)))
 
                 .UNSTABLE_addDisplacementMarkerOffset(autoConstants.TEMP, () -> moveIntakeByTraj())
 
+                // intake pose
                 .splineToLinearHeading(new Pose2d(-39, -9.9), Math.toRadians(180))
 
                 .addTemporalMarker(() -> intakeExtension.openExtension())
@@ -140,6 +146,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .addTemporalMarker(() -> intake.move(Intake.Angle.TRANSFER))
                 .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
 
+                // truss pose next to board
                 .lineToSplineHeading(new Pose2d(12, -9, Math.toRadians(0)))
 
                 .addSpatialMarker(new Vector2d(6, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
@@ -148,6 +155,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .addSpatialMarker(new Vector2d(8, -10), () -> intake.move(Intake.Angle.MID))
                 .addSpatialMarker(new Vector2d(15, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
 
+                // backdrop pose
                 .splineToLinearHeading(new Pose2d(51.4, -28.8, Math.toRadians(0)), Math.toRadians(0))
 
                 .waitSeconds(.4)
@@ -166,10 +174,12 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .addTemporalMarker(() -> elevator.setTarget(0))
                 .addTemporalMarker(() -> elevator.update())
 
+                // truss pose next to wing
                 .lineToSplineHeading(new Pose2d(30, -15, Math.toRadians(0)))
 
                 .UNSTABLE_addDisplacementMarkerOffset(autoConstants.TEMP, () -> moveIntakeByTraj())
 
+                // intake pose
                 .splineToLinearHeading(new Pose2d(-40, -9.9), Math.toRadians(180))
 
                 .addTemporalMarker(() -> intakeExtension.openExtension())
@@ -184,6 +194,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .addTemporalMarker(() -> intake.move(Intake.Angle.TRANSFER))
                 .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
 
+                // truss pose next to board
                 .lineToSplineHeading(new Pose2d(12, -9, Math.toRadians(0)))
 
                 .addSpatialMarker(new Vector2d(6, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
@@ -192,6 +203,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .addSpatialMarker(new Vector2d(8, -10), () -> intake.move(Intake.Angle.MID))
                 .addSpatialMarker(new Vector2d(15, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
 
+                // backdrop pose
                 .splineToLinearHeading(new Pose2d(51.9, -26.8, Math.toRadians(0)), Math.toRadians(0))
 
                 .waitSeconds(.4)
@@ -206,8 +218,9 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .build();
 
         park = drivetrain.trajectorySequenceBuilder(place21.end())
-                //Going for backdrop
+                //go park
                 .lineToLinearHeading(new Pose2d(51.5, -5, Math.toRadians(90)))
+
                 .addTemporalMarker(() -> intake.move(Intake.Angle.TRANSFER))
                 .build();
 
@@ -238,7 +251,14 @@ public class BetterAutoRedLeft extends CommandOpMode {
         drivetrain.followTrajectorySequence(intakeCycle21);
         drivetrain.followTrajectorySequence(place21);
         //drivetrain.followTrajectorySequence(park);
-        while (opModeIsActive()) ;
+        while (opModeIsActive())
+        {
+            drivetrain.update();
+
+            telemetry.addData("X error: ", drivetrain.getLastError().getX());
+            telemetry.addData("Y error: ", drivetrain.getLastError().getY());
+            telemetry.addData("H error: ", drivetrain.getLastError().getHeading());
+        }
     }
 
     void moveIntakeByTraj() {

@@ -60,10 +60,15 @@ import java.util.List;
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
     RobotHardware robot = RobotHardware.getInstance();
-    public static PIDCoefficients LATERAL_PID = new PIDCoefficients(8, 0, 0.4); // todo: maybe tune
-    public static PIDCoefficients AXIAL_PID = new PIDCoefficients(8, 0, 0.4); // todo: maybe tune
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0.4);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, .5);
+
+    public static PIDCoefficients LATERAL_PID = new PIDCoefficients(8, 0, 0.4); // todo: maybe tune, and use
+    public static PIDCoefficients AXIAL_PID = new PIDCoefficients(8, 0, 0.4); // todo: maybe tune, and use
+//    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0.4);
+//    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, .5);
+
+    // IF ROBOT GOES BING BONG - uncomment the 2 lines above and delete the line below.
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8.680, 0.8644, 0.3);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1.6934801016;
 
@@ -93,7 +98,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         robot.init(hardwareMap, FtcDashboard.getInstance().getTelemetry());
         this.imu = robot.imu;
 
-        follower = new HolonomicPIDVAFollower(AXIAL_PID, LATERAL_PID, HEADING_PID,
+        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
                 new Pose2d(0.5, 0.5, Math.toRadians(1)), 0.5);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
