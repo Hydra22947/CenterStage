@@ -12,22 +12,32 @@ import org.jetbrains.annotations.NotNull;
 public class Intake {
 
     private final RobotHardware robot;
-    public static double intakeHandPivot = 0.05, intakeAmmoPivot = 0.15;
+    public static double intakeHandPivot = 0.065, intakeAmmoPivot = 0.16;
     public static double outtakeHandPivot = .56, outtakeAmmoPivot = 0.7;
     public static double midHandPivot = 0.5, midAmmoPivot = 0.425;
-    public static double top5HandPivot = 0.1825, top5AmmoPivot = 0.15;
-    public static double top54HandPivot = 0.145, top54AmmoPivot = 0.145;
-    public static double top43HandPivot = .105, top43AmmoPivot = 0.17; // YHIS
-    public static double top32HandPivot = .0585, top32AmmoPivot = 0.1475;
-    public static double top21HandPivot = 0.05, top21AmmoPivot = 0.15;
+    public static double top5HandPivot = 0.1825, top5AmmoPivot = 0.15; // auto
+    public static double top54HandPivot = 0.157, top54AmmoPivot = 0.155;
+    public static double top43HandPivot = 0.13, top43AmmoPivot = 0.16; // auto
+    public static double top32HandPivot = 0.095, top32AmmoPivot = 0.165;
+    public static double top21HandPivot = 0.065, top21AmmoPivot = 0.16; // auto
 
-    public static double openRight = 0.55, closeRight = 0.365;
-    public static double openLeft = 0.45, closeLeft = 0.635;
+
+    public static double openRight = 0.55, openLeft = 0.45;
+    public static double closeRight = 0.365, closeLeft = 0.635;
+    public static double indeterminateRight = 0.4, indeterminateLeft = 0.55;
+
+
+    public static void setSeeFarFrom(double seeFarFrom) {
+        Intake.seeFarFrom = seeFarFrom;
+    }
+
     public static double seeFarFrom = 2.5;
+    public static final double maxSeeFarFrom = 2.5;
+    public static final double minSeeFarFrom = 1;
     public enum Angle
     {
         INTAKE,
-        TRANSFER,
+        OUTTAKE,
         MID,
         TOP_54, TOP_43, TOP_32, TOP_21, TOP_5
     }
@@ -35,6 +45,7 @@ public class Intake {
     public enum ClawState
     {
         OPEN,
+        INDETERMINATE,
         CLOSE
     }
 
@@ -44,7 +55,7 @@ public class Intake {
         HAND
     }
 
-    Angle angle = Angle.TRANSFER;
+    Angle angle = Angle.OUTTAKE;
     ClawState clawStateLeft = ClawState.OPEN;
     ClawState clawStateRight = ClawState.OPEN;
 
@@ -156,6 +167,8 @@ public class Intake {
                         return closeLeft;
                     case OPEN:
                         return openLeft;
+                    case INDETERMINATE:
+                        return indeterminateLeft;
                     default:
                         return 0.0;
                 }
@@ -165,6 +178,8 @@ public class Intake {
                         return closeRight;
                     case OPEN:
                         return openRight;
+                    case INDETERMINATE:
+                        return indeterminateRight;
                     default:
                         return 0.0;
                 }
@@ -187,7 +202,7 @@ public class Intake {
                 switch (angle) {
                     case INTAKE:
                         return intakeAmmoPivot;
-                    case TRANSFER:
+                    case OUTTAKE:
                         return outtakeAmmoPivot;
                     case MID:
                         return midAmmoPivot;
@@ -210,7 +225,7 @@ public class Intake {
                 switch (angle) {
                     case INTAKE:
                         return intakeHandPivot;
-                    case TRANSFER:
+                    case OUTTAKE:
                         return outtakeHandPivot;
                     case MID:
                         return midHandPivot;

@@ -3,17 +3,12 @@ package org.firstinspires.ftc.teamcode.auto;
 import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ROBOT_ERROR_INTAKE_X;
 import static org.firstinspires.ftc.teamcode.auto.AutoConstants.ROBOT_ERROR_INTAKE_Y;
 
-import androidx.annotation.NonNull;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.profile.AccelerationConstraint;
 import com.acmerobotics.roadrunner.profile.VelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -96,7 +91,7 @@ public class AutoRedLeft extends CommandOpMode {
                         SampleMecanumDrive.getAccelerationConstraint(40))
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> intakeExtension.openExtension())
                 .UNSTABLE_addTemporalMarkerOffset(1.7, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
-                .UNSTABLE_addTemporalMarkerOffset(1.9, () -> intake.move(Intake.Angle.TRANSFER))
+                .UNSTABLE_addTemporalMarkerOffset(1.9, () -> intake.move(Intake.Angle.OUTTAKE))
                 .UNSTABLE_addTemporalMarkerOffset(2, () -> intakeExtension.closeExtension())
                 .waitSeconds(2.5)
                 .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(360))
@@ -131,7 +126,7 @@ public class AutoRedLeft extends CommandOpMode {
         placeSecond = drivetrain.trajectorySequenceBuilder(intakeTraj.end())
                 .addTemporalMarker(() -> intakeExtension.closeExtension())
                 .waitSeconds(0.1)
-                .addTemporalMarker(() -> intake.move(Intake.Angle.TRANSFER))
+                .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
                 .lineToSplineHeading(autoConstants.stageDoorEndPose)
                 .addSpatialMarker(new Vector2d(6, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
@@ -154,13 +149,13 @@ public class AutoRedLeft extends CommandOpMode {
         park = drivetrain.trajectorySequenceBuilder(placeSecond.end())
                 //Going for backdrop
                 .lineToLinearHeading(autoConstants.park)
-                .addTemporalMarker(() -> intake.move(Intake.Angle.TRANSFER))
+                .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .build();
 
 
         while (opModeInInit() && !isStopRequested()) {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
-            intake.setAngle(Intake.Angle.TRANSFER);
+            intake.setAngle(Intake.Angle.OUTTAKE);
             intakeExtension.closeExtension();
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);

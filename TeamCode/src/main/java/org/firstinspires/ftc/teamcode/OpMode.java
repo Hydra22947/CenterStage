@@ -90,7 +90,7 @@ public class OpMode extends CommandOpMode {
         intake = new Intake();
         intakeExtension = new IntakeExtension(gamepad1);
 
-        intake.setAngle(Intake.Angle.TRANSFER);
+        intake.setAngle(Intake.Angle.OUTTAKE);
         intakeExtension.setCurrent(IntakeExtension.ExtensionState.CLOSE);
         intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
         claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
@@ -128,6 +128,8 @@ public class OpMode extends CommandOpMode {
         } else {
             elevator.setUsePID(true);
         }
+
+
 
         changeIntakeLevels();
         intakeStateMachine();
@@ -185,7 +187,7 @@ public class OpMode extends CommandOpMode {
                 if(startedDelayTransfer)
                 {
                     intakeMid = false;
-                    intake.move(Intake.Angle.TRANSFER);
+                    intake.move(Intake.Angle.OUTTAKE);
                     startedDelayTransfer = false;
 
                     releaseTimer = getTime();
@@ -193,7 +195,7 @@ public class OpMode extends CommandOpMode {
 
                 if((getTime() - releaseTimer) >= delayRelease && had2Pixels)
                 {
-                    intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
+                    intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH);
 
                     closeTransferTimer = getTime();
 
@@ -218,7 +220,7 @@ public class OpMode extends CommandOpMode {
                 }
                 else if(getTime() - goToTransferTimer >= delayGoToTransfer)
                 {
-                    intake.move(Intake.Angle.TRANSFER);
+                    intake.move(Intake.Angle.OUTTAKE);
                 }
 
                 break;
@@ -232,7 +234,6 @@ public class OpMode extends CommandOpMode {
                 }
 
                 claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
-
 
                 if ((robot.has2Pixels() && !startedDelayTransfer) || betterGamepad1.rightBumperOnce()) {
                     had2Pixels = true;
@@ -385,12 +386,16 @@ public class OpMode extends CommandOpMode {
         {
             case TOP_54:
                 intake.move(Intake.Angle.TOP_54);
+                intake.setSeeFarFrom(Intake.minSeeFarFrom);
                 break;
             case TOP_32:
                 intake.move(Intake.Angle.TOP_32);
+                intake.setSeeFarFrom(Intake.minSeeFarFrom);
+
                 break;
             case INTAKE:
                 intake.move(Intake.Angle.INTAKE);
+                intake.setSeeFarFrom(Intake.maxSeeFarFrom);
                 break;
         }
     }
