@@ -13,18 +13,19 @@ public class Intake {
 
     private final RobotHardware robot;
     public static double intakeHandPivot = 0.065, intakeAmmoPivot = 0.16;
-    public static double outtakeHandPivot = .56, outtakeAmmoPivot = 0.7;
+    public static double outtakeHandPivot = .55, outtakeAmmoPivot = 0.69;
     public static double midHandPivot = 0.5, midAmmoPivot = 0.425;
-    public static double top5HandPivot = 0.1825, top5AmmoPivot = 0.15; // auto
+    public static double top5HandPivot = 0.1825, top5AmmoPivot = 0.145; // auto
     public static double top54HandPivot = 0.157, top54AmmoPivot = 0.155;
-    public static double top43HandPivot = 0.13, top43AmmoPivot = 0.16; // auto
+    public static double top43HandPivot = 0.13, top43AmmoPivot = 0.155; // auto
     public static double top32HandPivot = 0.095, top32AmmoPivot = 0.165;
-    public static double top21HandPivot = 0.065, top21AmmoPivot = 0.16; // auto
+    public static double top21HandPivot = 0.065, top21AmmoPivot = 0.15; // auto
 
+    public static double STACK = 0.02;
 
     public static double openRight = 0.55, openLeft = 0.45;
-    public static double closeRight = 0.365, closeLeft = 0.635;
-    public static double indeterminateRight = 0.4, indeterminateLeft = 0.55;
+    public static double closeRight = 0.36, closeLeft = 0.64;
+    public static double indeterminateRight = 0.55, indeterminateLeft = 0.55;
 
 
     public static void setSeeFarFrom(double seeFarFrom) {
@@ -106,6 +107,14 @@ public class Intake {
         updateState(Type.AMMO);
         updateState(Type.HAND);
     }
+
+    public void moveStack()
+    {
+        this.robot.intakeAngleServo.setPosition((getPosition(angle, Type.AMMO) + STACK));
+        this.robot.intakeHandPivotLeftServo.setPosition(getPosition(angle, Type.HAND));
+        this.robot.intakeHandPivotRightServo.setPosition(getPosition(angle, Type.HAND));
+    }
+
 
 
     public Angle getAngle() {

@@ -90,16 +90,19 @@ public class BetterAutoRedLeft extends CommandOpMode {
         intakeAnotherPreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
                 .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(40))
                 .lineToLinearHeading(new Pose2d(-39.1, -8.1, Math.toRadians(0)),
-                        SampleMecanumDrive.getVelocityConstraint(40, Math.toRadians(40), DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getVelocityConstraint(40, Math.toRadians(35), DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(40))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> intakeExtension.openExtension())
                 .UNSTABLE_addTemporalMarkerOffset(1.7, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
-                .UNSTABLE_addTemporalMarkerOffset(1.9, () -> intakeExtension.closeExtension())
-                .UNSTABLE_addTemporalMarkerOffset(2, () -> intake.move(Intake.Angle.OUTTAKE))
+                .UNSTABLE_addTemporalMarkerOffset(1.8, () -> intake.moveStack())
+                .waitSeconds(0.1)
+                .UNSTABLE_addTemporalMarkerOffset(1.9, () -> intake.move(Intake.Angle.OUTTAKE))
+                .waitSeconds(0.1)
+                .UNSTABLE_addTemporalMarkerOffset(2, () -> intakeExtension.closeExtension())
                 .waitSeconds(2.2)
                 .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(360))
-                .waitSeconds(0.5)
+                .waitSeconds(0.7)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
                 .build();
 
@@ -135,6 +138,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 // intake pose
                 .splineToLinearHeading(new Pose2d(-39.8, -9.825), Math.toRadians(180))
 
+                .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .addTemporalMarker(() -> intakeExtension.openExtension())
                 .waitSeconds(1)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
@@ -143,14 +147,14 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .build();
 
         place43 = drivetrain.trajectorySequenceBuilder(intakeCycle43.end())
-                .addTemporalMarker(() -> intakeExtension.closeExtension())
-
-                .waitSeconds(0.1)
+                .addTemporalMarker(() -> intake.moveStack())
+                .waitSeconds(0.3)
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
+                .addTemporalMarker(() -> intakeExtension.closeExtension())
 
                 .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
 
-                .waitSeconds(0.1)
+                .waitSeconds(0.2)
 
                 // truss pose next to board
                 .lineToSplineHeading(new Pose2d(12, -9, Math.toRadians(0)))
@@ -189,6 +193,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 // intake pose
                 .splineToLinearHeading(new Pose2d(-40.5, -9.825), Math.toRadians(180))
 
+                .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .addTemporalMarker(() -> intakeExtension.openExtension())
                 .waitSeconds(1)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
@@ -197,13 +202,14 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .build();
 
         place21 = drivetrain.trajectorySequenceBuilder(intakeCycle21.end())
+                .addTemporalMarker(() -> intake.moveStack())
+                .waitSeconds(0.3)
+                .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .addTemporalMarker(() -> intakeExtension.closeExtension())
 
-                .waitSeconds(0.1)
-                .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
 
-                .waitSeconds(0.1)
+                .waitSeconds(0.2)
 
                 // truss pose next to board
                 .lineToSplineHeading(new Pose2d(12, -9, Math.toRadians(0)))

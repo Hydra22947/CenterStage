@@ -66,7 +66,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8.680, 0.8644, 0.3);
     //public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0.4);
 
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, .5);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8.680, 0, .5);
 
     // IF ROBOT GOES BING BONG - uncomment the 2 lines above and delete the line below.
 //    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8.680, 0.8644, 0.3);
