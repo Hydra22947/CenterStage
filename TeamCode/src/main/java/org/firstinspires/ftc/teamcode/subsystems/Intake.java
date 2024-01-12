@@ -13,7 +13,7 @@ public class Intake {
 
     private final RobotHardware robot;
     public static double intakeHandPivot = 0.08, intakeAmmoPivot = 0.145;
-    public static double outtakeHandPivot = .5715, outtakeAmmoPivot = 0.71;
+    public static double outtakeHandPivot = .5745, outtakeAmmoPivot = 0.71;
     public static double midHandPivot = 0.5, midAmmoPivot = 0.425;
     public static double top5HandPivot = .1975, top5AmmoPivot = 0.1495; // auto
     public static double top54HandPivot = 0.193, top54AmmoPivot = 0.155;
@@ -23,9 +23,9 @@ public class Intake {
 
     public static double STACK = 0.02;
 
-    public static double openRight = 0.62, openLeft = 0.57;
+    public static double openRight = 0.61, openLeft = 0.56;
     public static double closeRight = .9, closeLeft = .85;
-    public static double indeterminateRight = 0.75, indeterminateLeft = 0.71;
+    public static double indeterminateRight = 0.74, indeterminateLeft = 0.7;
 
 
     public static void setSeeFarFrom(double seeFarFrom) {
