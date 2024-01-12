@@ -138,6 +138,7 @@ public class RobotHardware {
         intakeAngleServo.setDirection(Servo.Direction.REVERSE);
         this.intakeClawLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sICL"));
         this.intakeClawRightServo = new BetterServo(hardwareMap.get(Servo.class, "sICR"));
+        this.intakeClawRightServo.setDirection(Servo.Direction.REVERSE);
         // COLOR/DS SENSORS
         this.colorRight = hardwareMap.get(RevColorSensorV3.class, "cR");
         this.colorLeft = hardwareMap.get(RevColorSensorV3.class, "cL");

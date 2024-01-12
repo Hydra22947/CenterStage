@@ -13,8 +13,7 @@ public class Elevator {
 
     private final RobotHardware robot;
     public static double ELEVATOR_INCREMENT = 70;
-    //public static double BASE_LEVEL = 300;
-    public static double BASE_LEVEL = 800;
+    public static double BASE_LEVEL = 900;
     public static double MAX_LEVEL = 1600;
     double currentTarget = 0;
     boolean usePID = true;

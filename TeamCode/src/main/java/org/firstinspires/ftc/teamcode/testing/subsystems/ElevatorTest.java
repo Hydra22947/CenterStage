@@ -32,6 +32,7 @@ public class ElevatorTest extends LinearOpMode {
 
         while (opModeIsActive())
         {
+            gamepadEx.update();
             drivetrain.update();
 
             if(gamepad1.right_stick_y != 0)

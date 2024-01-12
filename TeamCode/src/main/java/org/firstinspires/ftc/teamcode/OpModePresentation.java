@@ -42,7 +42,7 @@ public class OpModePresentation extends CommandOpMode {
 
     // variables
     double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
-    double elevatorTarget = Elevator.BASE_LEVEL;
+    double elevatorTarget = 1500;
     int openedXTimes = 0;
     boolean retract = false,  goToMid = false, intakeMid = true, startedDelayTransfer = false, heldExtension = false, had2Pixels = false;
     double loopTime = 0;
@@ -315,7 +315,6 @@ public class OpModePresentation extends CommandOpMode {
                 elevator.setTarget(0);
                 outtake.setAngle(Outtake.Angle.INTAKE);
 
-                canIntake = true;
 
                 if (betterGamepad1.YOnce())
                 {

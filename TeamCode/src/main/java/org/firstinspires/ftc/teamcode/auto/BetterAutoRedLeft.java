@@ -88,9 +88,9 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .build();
 
         intakeAnotherPreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
-                .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(40))
-                .lineToLinearHeading(new Pose2d(-39.1, -8.1, Math.toRadians(0)),
-                        SampleMecanumDrive.getVelocityConstraint(40, Math.toRadians(35), DriveConstants.TRACK_WIDTH),
+                .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(35))
+                .lineToLinearHeading(new Pose2d(-39.4, -8.1, Math.toRadians(0)),
+                        SampleMecanumDrive.getVelocityConstraint(40, Math.toRadians(37), DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(40))
 
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> intakeExtension.openExtension())
@@ -103,7 +103,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .waitSeconds(2.2)
                 .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(360))
                 .waitSeconds(0.7)
-                .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
+                .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
                 .build();
 
         placePreloadsOnBoard = drivetrain.trajectorySequenceBuilder(intakeAnotherPreload.end())
@@ -111,14 +111,14 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 // truss pose next to board
                 .lineToSplineHeading(new Pose2d(12, -9, Math.toRadians(0)))
 
-                .addSpatialMarker(new Vector2d(5, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
+                .addSpatialMarker(new Vector2d(8, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
                 .addSpatialMarker(new Vector2d(10, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL))
                 .addSpatialMarker(new Vector2d(10, -6), () -> elevator.update())
                 .addSpatialMarker(new Vector2d(10, -6), () -> intake.move(Intake.Angle.MID))
                 .addSpatialMarker(new Vector2d(10, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
 
                 // backdrop pose
-                .splineToLinearHeading(new Pose2d(51.3, -28.8, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(51.3, -29.8, Math.toRadians(0)), Math.toRadians(0))
 
                 .waitSeconds(0.2)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
@@ -136,7 +136,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .UNSTABLE_addDisplacementMarkerOffset(autoConstants.TEMP, () -> moveIntakeByTraj())
 
                 // intake pose
-                .splineToLinearHeading(new Pose2d(-39.8, -9.825), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-40, -9.2), Math.toRadians(180))
 
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .addTemporalMarker(() -> intakeExtension.openExtension())
@@ -152,15 +152,15 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .addTemporalMarker(() -> intakeExtension.closeExtension())
 
-                .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
+                .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
 
                 .waitSeconds(0.2)
 
                 // truss pose next to board
                 .lineToSplineHeading(new Pose2d(12, -9, Math.toRadians(0)))
 
-                .addSpatialMarker(new Vector2d(6, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
-                .addSpatialMarker(new Vector2d(5, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL + 250))
+                .addSpatialMarker(new Vector2d(9, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
+                .addSpatialMarker(new Vector2d(5, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL + 300))
                 .addSpatialMarker(new Vector2d(5, -6), () -> elevator.update())
                 .addSpatialMarker(new Vector2d(8, -10), () -> intake.move(Intake.Angle.MID))
                 .addSpatialMarker(new Vector2d(15, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
@@ -188,13 +188,15 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .lineToSplineHeading(new Pose2d(30, -15, Math.toRadians(0)))
                 .UNSTABLE_addDisplacementMarkerOffset(7, () -> intake.move(Intake.Angle.OUTTAKE))
 
-                .UNSTABLE_addDisplacementMarkerOffset(20, () -> intake.move(Intake.Angle.TOP_21))
+                .UNSTABLE_addDisplacementMarkerOffset(20, () -> intake.move(Intake.Angle.TOP_5))
 
                 // intake pose
-                .splineToLinearHeading(new Pose2d(-40.5, -9.825), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-40, -10.2), Math.toRadians(180))
 
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .addTemporalMarker(() -> intakeExtension.openExtension())
+                .waitSeconds(.25)
+                .addTemporalMarker(() -> intake.move(Intake.Angle.TOP_21))
                 .waitSeconds(1)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
                 //.waitSeconds(AutoConstants.WAIT + 0.4)
@@ -207,21 +209,21 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .addTemporalMarker(() -> intakeExtension.closeExtension())
 
-                .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
+                .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH))
 
                 .waitSeconds(0.2)
 
                 // truss pose next to board
                 .lineToSplineHeading(new Pose2d(12, -9, Math.toRadians(0)))
 
-                .addSpatialMarker(new Vector2d(6, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
-                .addSpatialMarker(new Vector2d(5, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL + 250))
+                .addSpatialMarker(new Vector2d(9, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
+                .addSpatialMarker(new Vector2d(5, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL + 350))
                 .addSpatialMarker(new Vector2d(5, -6), () -> elevator.update())
                 .addSpatialMarker(new Vector2d(8, -10), () -> intake.move(Intake.Angle.MID))
                 .addSpatialMarker(new Vector2d(15, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
 
                 // backdrop pose
-                .splineToLinearHeading(new Pose2d(53, -29, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(53, -29.3, Math.toRadians(0)), Math.toRadians(0))
 
                 .waitSeconds(.2)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.INTERMEDIATE, ClawSide.BOTH))

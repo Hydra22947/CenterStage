@@ -42,6 +42,8 @@ public class DrivetrainTest extends LinearOpMode {
 
         while (opModeIsActive())
         {
+            gamepadEx.update();
+
             if(gamepadEx.XOnce())
             {
                 drivetrain.resetAngle();

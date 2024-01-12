@@ -37,7 +37,7 @@ public class OpMode extends CommandOpMode {
     BetterGamepad betterGamepad1, betterGamepad2;
 
     // delays
-    public static double delayTransfer = 300, delayRelease = 1200, delayCloseTransfer = 300, delayGoToTransfer = 700;
+    public static double delayTransfer = 300, delayRelease = 1200, delayCloseTransfer = 350, delayGoToTransfer = 700;
     public static double WAIT_DELAY_TILL_OUTTAKE = 150, WAIT_DELAY_TILL_CLOSE = 200;
 
     // variables
@@ -329,7 +329,14 @@ public class OpMode extends CommandOpMode {
                 canIntake = false;
                 intakeState = IntakeState.RETRACT;
 
-                elevator.setTarget(elevatorTarget + (openedXTimes * Elevator.ELEVATOR_INCREMENT));
+                if(retract)
+                {
+                    elevator.setTarget(elevatorTarget + (openedXTimes * (Elevator.ELEVATOR_INCREMENT * 3.5)));
+                }
+                else
+                {
+                    elevator.setTarget(elevatorTarget + (openedXTimes * Elevator.ELEVATOR_INCREMENT));
+                }
 
                 if ((getTime() - previousElevator) >= WAIT_DELAY_TILL_OUTTAKE) {
                     outtake.setAngle(Outtake.Angle.OUTTAKE);

@@ -12,20 +12,20 @@ import org.jetbrains.annotations.NotNull;
 public class Intake {
 
     private final RobotHardware robot;
-    public static double intakeHandPivot = 0.065, intakeAmmoPivot = 0.16;
-    public static double outtakeHandPivot = .55, outtakeAmmoPivot = 0.69;
+    public static double intakeHandPivot = 0.08, intakeAmmoPivot = 0.145;
+    public static double outtakeHandPivot = .5715, outtakeAmmoPivot = 0.71;
     public static double midHandPivot = 0.5, midAmmoPivot = 0.425;
-    public static double top5HandPivot = 0.1825, top5AmmoPivot = 0.145; // auto
-    public static double top54HandPivot = 0.157, top54AmmoPivot = 0.155;
-    public static double top43HandPivot = 0.13, top43AmmoPivot = 0.155; // auto
+    public static double top5HandPivot = .2, top5AmmoPivot = 0.1495; // auto
+    public static double top54HandPivot = 0.193, top54AmmoPivot = 0.155;
+    public static double top43HandPivot = 0.137, top43AmmoPivot = 0.16; // auto
     public static double top32HandPivot = 0.095, top32AmmoPivot = 0.165;
-    public static double top21HandPivot = 0.065, top21AmmoPivot = 0.15; // auto
+    public static double top21HandPivot = 0.075, top21AmmoPivot = 0.1275; // auto
 
     public static double STACK = 0.02;
 
-    public static double openRight = 0.55, openLeft = 0.45;
-    public static double closeRight = 0.36, closeLeft = 0.64;
-    public static double indeterminateRight = 0.55, indeterminateLeft = 0.55;
+    public static double openRight = 0.64, openLeft = 0.59;
+    public static double closeRight = .9, closeLeft = .85;
+    public static double indeterminateRight = 0.78, indeterminateLeft = 0.73;
 
 
     public static void setSeeFarFrom(double seeFarFrom) {

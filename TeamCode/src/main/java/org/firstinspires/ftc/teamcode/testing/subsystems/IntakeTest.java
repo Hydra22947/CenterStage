@@ -40,32 +40,21 @@ public class IntakeTest extends LinearOpMode {
         while (opModeIsActive()) {
             drive.update();
             intake.update();
+            gamepadEx.update();
 
-            if(DEBUG)
+            intake.move(angles);
+
+            if(gamepadEx.rightBumperOnce())
             {
-              intake.move(angles);
-            }
-            else if(gamepadEx.rightBumperOnce())
-            {
-                intake.move(Intake.Angle.INTAKE);
-                intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
+                intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             }
             else if(gamepadEx.leftBumperOnce())
             {
-                intake.move(Intake.Angle.OUTTAKE);
-                intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
-            }
-            else if(gamepadEx.rightBumperOnce() && gamepadEx.right_trigger == 1)
-            {
-                intakeExtension.openExtension();
-                intake.move(Intake.Angle.INTAKE);
                 intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
             }
-            else if(gamepadEx.leftBumperOnce() && gamepadEx.right_trigger != 1)
+            else if(gamepadEx.right_trigger == 1)
             {
-                intakeExtension.closeExtension();
-                intake.move(Intake.Angle.OUTTAKE);
-                intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
+                intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH);
             }
 
 
