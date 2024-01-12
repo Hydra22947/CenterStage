@@ -89,7 +89,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
 
         intakeAnotherPreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
                 .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(35))
-                .lineToLinearHeading(new Pose2d(-39.4, -8.1, Math.toRadians(0)),
+                .lineToLinearHeading(new Pose2d(-39.8, -8.1, Math.toRadians(0)),
                         SampleMecanumDrive.getVelocityConstraint(40, Math.toRadians(37), DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(40))
 
@@ -136,7 +136,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .UNSTABLE_addDisplacementMarkerOffset(autoConstants.TEMP, () -> moveIntakeByTraj())
 
                 // intake pose
-                .splineToLinearHeading(new Pose2d(-40, -9.2), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-40.35, -9.335), Math.toRadians(180))
 
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .addTemporalMarker(() -> intakeExtension.openExtension())
@@ -191,7 +191,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .UNSTABLE_addDisplacementMarkerOffset(20, () -> intake.move(Intake.Angle.TOP_5))
 
                 // intake pose
-                .splineToLinearHeading(new Pose2d(-40, -10.2), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-41, -10.35), Math.toRadians(180))
 
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .addTemporalMarker(() -> intakeExtension.openExtension())
