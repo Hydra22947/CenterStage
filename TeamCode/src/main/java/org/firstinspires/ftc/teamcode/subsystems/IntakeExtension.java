@@ -15,7 +15,22 @@ import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 import org.jetbrains.annotations.NotNull;
 
 @Config
-public class IntakeExtension {
+public class IntakeExtension implements Subsystem{
+    @Override
+    public void play() {
+
+    }
+
+    @Override
+    public void loop(boolean allowMotors) {
+        update();
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
     public enum ExtensionState {
         OPEN,
         CLOSE,

@@ -14,12 +14,29 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.jetbrains.annotations.NotNull;
 
 @Config
-public class Claw
+public class Claw implements Subsystem
 {
     public static double delay = 500;
     boolean shouldOpen = false;
     private final RobotHardware robot;
     public boolean overwrite = false;
+
+    @Override
+    public void play() {
+
+    }
+
+    @Override
+    public void loop(boolean allowMotors) {
+        updateState(leftClaw, ClawSide.LEFT);
+        updateState(rightClaw, ClawSide.RIGHT);
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
     public enum ClawState
     {
         CLOSED,
@@ -43,6 +60,11 @@ public class Claw
         this.opMode = opMode;
         this.robot = RobotHardware.getInstance();
         updateState(ClawState.OPEN, ClawSide.BOTH);
+    }
+
+    public Claw()
+    {
+        this.robot = RobotHardware.getInstance();
     }
 
     public void update() {

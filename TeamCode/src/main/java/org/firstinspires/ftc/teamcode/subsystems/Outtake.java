@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 import org.jetbrains.annotations.NotNull;
 
 @Config
-public class Outtake {
+public class Outtake implements Subsystem{
 
     private final RobotHardware robot;
 
@@ -16,6 +16,21 @@ public class Outtake {
     public static double outtakeHandPivot = .725, outtakeClawPivot = 1;
 
     public static double power = 1;
+
+    @Override
+    public void play() {
+
+    }
+
+    @Override
+    public void loop(boolean allowMotors) {
+        update();
+    }
+
+    @Override
+    public void stop() {
+
+    }
 
     public enum Angle
     {

@@ -9,7 +9,8 @@ import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.PIDFController;
 
 @Config
-public class Elevator {
+public class Elevator implements Subsystem
+{
 
     private final RobotHardware robot;
     public static double ELEVATOR_INCREMENT = 70;
@@ -127,6 +128,7 @@ public class Elevator {
         else
         {
             firstPID();
+            // TODO: change to regular pid because we changed to FSM
         }
     }
 
@@ -177,5 +179,21 @@ public class Elevator {
     public void setAuto(boolean isAuto)
     {
         this.isAuto = isAuto;
+    }
+
+    @Override
+    public void play() {
+
+    }
+
+    @Override
+    public void loop(boolean allowMotors) {
+        isAuto = true;
+        update();
+    }
+
+    @Override
+    public void stop() {
+
     }
 }

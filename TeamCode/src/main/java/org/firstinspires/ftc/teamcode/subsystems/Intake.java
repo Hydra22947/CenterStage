@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.jetbrains.annotations.NotNull;
 
 @Config
-public class Intake {
+public class Intake implements Subsystem{
 
     private final RobotHardware robot;
     public static double intakeHandPivot = 0.08, intakeAmmoPivot = 0.145;
@@ -35,6 +35,23 @@ public class Intake {
     public static double seeFarFrom = 2.5;
     public static final double maxSeeFarFrom = 2.5;
     public static final double minSeeFarFrom = 1;
+
+    @Override
+    public void play() {
+
+    }
+
+    @Override
+    public void loop(boolean allowMotors) {
+        updateState(Type.AMMO);
+        updateState(Type.HAND);
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
     public enum Angle
     {
         INTAKE,

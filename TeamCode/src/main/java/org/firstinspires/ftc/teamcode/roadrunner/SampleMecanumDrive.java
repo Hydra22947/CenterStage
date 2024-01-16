@@ -49,6 +49,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.roadrunner.util.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.subsystems.Subsystem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,7 +59,7 @@ import java.util.List;
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
-public class SampleMecanumDrive extends MecanumDrive {
+public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
     RobotHardware robot = RobotHardware.getInstance();
 
 //    public static PIDCoefficients LATERAL_PID = new PIDCoefficients(8.680, 0.8644, 0.3); // todo: maybe tune, and use
@@ -328,4 +329,16 @@ public class SampleMecanumDrive extends MecanumDrive {
         return new ProfileAccelerationConstraint(maxAccel);
     }
 
+    @Override
+    public void play() {}
+
+    @Override
+    public void loop(boolean allowMotors) {
+        if (allowMotors) update();
+    }
+
+    @Override
+    public void stop() {
+        setDrivePower(new Pose2d());
+    }
 }
