@@ -164,7 +164,7 @@ public class RobotHardware {
         // ELEVATOR
         this.elevatorMotorRight = hardwareMap.get(DcMotorEx.class, "mER");
         this.elevatorMotorLeft = hardwareMap.get(DcMotorEx.class, "mEL");
-        elevatorMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        elevatorMotorRight.setDirection(DcMotorSimple.Direction.REVERSE);
         elevatorMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevatorMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

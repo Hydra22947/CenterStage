@@ -12,19 +12,19 @@ import org.jetbrains.annotations.NotNull;
 public class Intake implements Subsystem{
 
     private final RobotHardware robot;
-    public static double intakeHandPivot = 0.08, intakeAmmoPivot = 0.145;
-    public static double outtakeHandPivot = .5745, outtakeAmmoPivot = 0.71;
+    public static double intakeHandPivot = 0.09, intakeAmmoPivot = 0.115;
+    public static double outtakeHandPivot = .55, outtakeAmmoPivot = 0.67;
     public static double midHandPivot = 0.5, midAmmoPivot = 0.425;
-    public static double top5HandPivot = .1975, top5AmmoPivot = 0.1495; // auto
+    public static double top5HandPivot = .17, top5AmmoPivot = .13; // auto
     public static double top54HandPivot = 0.193, top54AmmoPivot = 0.155;
-    public static double top43HandPivot = 0.129, top43AmmoPivot = 0.15; // auto
+    public static double top43HandPivot = 0.1, top43AmmoPivot = 0.14; // auto
     public static double top32HandPivot = 0.095, top32AmmoPivot = 0.165;
-    public static double top21HandPivot = 0.074, top21AmmoPivot = 0.13; // auto
+    public static double top21HandPivot = 0.065, top21AmmoPivot = 0.11; // auto
 
     public static double STACK = 0.02;
 
     public static double openRight = 0.61, openLeft = 0.56;
-    public static double closeRight = .9, closeLeft = .85;
+    public static double closeRight = .9, closeLeft = .86;
     public static double indeterminateRight = 0.74, indeterminateLeft = 0.7;
 
 
@@ -32,8 +32,8 @@ public class Intake implements Subsystem{
         Intake.seeFarFrom = seeFarFrom;
     }
 
-    public static double seeFarFrom = 2.5;
-    public static final double maxSeeFarFrom = 2.5;
+    public static double seeFarFrom = 2.7;
+    public static final double maxSeeFarFrom = 2.7;
     public static final double minSeeFarFrom = 1;
 
     @Override
