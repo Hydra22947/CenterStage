@@ -136,7 +136,7 @@ public class AutoRedLeft extends CommandOpMode {
                 .UNSTABLE_addDisplacementMarkerOffset(autoConstants.TEMP, () -> moveIntakeByTraj())
 
                 // intake pose
-                .splineToLinearHeading(new Pose2d(-40.35, -9.335), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-40.35, -9.5), Math.toRadians(180))
 
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .addTemporalMarker(() -> intakeExtension.openExtension())
@@ -157,7 +157,7 @@ public class AutoRedLeft extends CommandOpMode {
                 .waitSeconds(0.3)
 
                 // truss pose next to board
-                .lineToSplineHeading(new Pose2d(12, -9, Math.toRadians(0)))
+                .lineToSplineHeading(new Pose2d(12.5, -9, Math.toRadians(0)))
 
                 .addSpatialMarker(new Vector2d(9, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
                 .addSpatialMarker(new Vector2d(5, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL + 300))
