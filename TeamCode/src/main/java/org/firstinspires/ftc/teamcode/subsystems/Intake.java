@@ -12,14 +12,14 @@ import org.jetbrains.annotations.NotNull;
 public class Intake implements Subsystem{
 
     private final RobotHardware robot;
-    public static double intakeHandPivot = 0.09, intakeAmmoPivot = 0.115;
+    public static double intakeHandPivot = 0.0885, intakeAmmoPivot = 0.125;
     public static double outtakeHandPivot = .55, outtakeAmmoPivot = 0.67;
     public static double midHandPivot = 0.5, midAmmoPivot = 0.425;
-    public static double top5HandPivot = .18, top5AmmoPivot = .14; // auto
+    public static double top5HandPivot = .18, top5AmmoPivot = .1375; // auto
     public static double top54HandPivot = 0.193, top54AmmoPivot = 0.155;
-    public static double top43HandPivot = 0.11, top43AmmoPivot = 0.15; // auto
+    public static double top43HandPivot = 0.115, top43AmmoPivot = 0.13; // auto
     public static double top32HandPivot = 0.095, top32AmmoPivot = 0.165;
-    public static double top21HandPivot = 0.75, top21AmmoPivot = 0.11; // auto
+    public static double top21HandPivot = 0.0865, top21AmmoPivot = 0.1; // auto
 
     public static double STACK = 0.02;
 
@@ -32,8 +32,8 @@ public class Intake implements Subsystem{
         Intake.seeFarFrom = seeFarFrom;
     }
 
-    public static double seeFarFrom = 2.7;
-    public static final double maxSeeFarFrom = 2.7;
+    public static double seeFarFrom = 3;
+    public static final double maxSeeFarFrom = 3;
     public static final double minSeeFarFrom = 1;
 
     @Override
@@ -220,6 +220,10 @@ public class Intake implements Subsystem{
         return -seeFarFrom <= sensor.getDistance(DistanceUnit.CM) && sensor.getDistance(DistanceUnit.CM) <= seeFarFrom;
     }
 
+    public boolean closedClaw()
+    {
+        return clawStateLeft == ClawState.CLOSE && clawStateRight == ClawState.CLOSE;
+    }
     private double getPosition(Angle angle, Type type)
     {
         switch (type)

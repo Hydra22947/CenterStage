@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 
 @Config
@@ -17,6 +18,7 @@ public class ElevatorTest extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     Elevator elevator;
     BetterGamepad gamepadEx;
+    public static double target = 0;
 
     @Override
     public void runOpMode() {
@@ -27,7 +29,9 @@ public class ElevatorTest extends LinearOpMode {
         robot.init(hardwareMap, telemetry);
 
         elevator = new Elevator(gamepad1);
+        elevator.setAuto(false);
         Drivetrain drivetrain = new Drivetrain(gamepad1, true);
+
         waitForStart();
 
         while (opModeIsActive())
@@ -44,7 +48,14 @@ public class ElevatorTest extends LinearOpMode {
                 elevator.setUsePID(true);
             }
 
-            elevator.updateTest();
+            elevator.setTarget(target);
+
+            elevator.update();
+
+            telemetry.addData("right motor", robot.elevatorMotorRight.getCurrentPosition());
+            telemetry.addData("left motor", robot.elevatorMotorLeft.getCurrentPosition());
+            telemetry.addData("right motor power", elevator.getController());
+            telemetry.addData("left motor power", elevator.getController2());
             telemetry.update();
         }
     }

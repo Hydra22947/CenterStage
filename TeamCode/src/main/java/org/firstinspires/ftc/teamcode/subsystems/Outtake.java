@@ -52,8 +52,9 @@ public class Outtake implements Subsystem{
 
 
     public void update() {
-        updateState(Type.CLAW);
         updateState(Type.HAND);
+        updateState(Type.CLAW);
+
     }
 
     public void setAngle(@NotNull Angle angle) {

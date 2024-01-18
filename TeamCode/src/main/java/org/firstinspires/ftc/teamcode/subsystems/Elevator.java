@@ -16,6 +16,8 @@ public class Elevator implements Subsystem
     public static double ELEVATOR_INCREMENT = 70;
     public static double BASE_LEVEL = 900;
     public static double MAX_LEVEL = 2550;
+    public static double HANG_OPEN = 1600;
+    public static double HANG = 1000;
     double currentTarget = 0;
     boolean usePID = true;
     public static double maxPower = 1;
@@ -70,7 +72,6 @@ public class Elevator implements Subsystem
             }
             else
             {
-                // TODO: CHANGE TO LEFT!!!!!
                 if(gamepad.left_stick_y != 0 && !gamepad.left_stick_button)
                 {
                     robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
@@ -92,43 +93,6 @@ public class Elevator implements Subsystem
         else
         {
             firstPID();
-        }
-    }
-
-    public void updateTest() {
-
-        if(!isAuto)
-        {
-            cGamepad.update();
-
-            if (usePID)
-            {
-                setPidControl();
-            }
-            else
-            {
-                if(gamepad.right_stick_y != 0 && !gamepad.left_stick_button)
-                {
-                    robot.elevatorMotorRight.setPower(Range.clip(-gamepad.right_stick_y, -maxPower, maxPower));
-                    robot.elevatorMotorLeft.setPower(Range.clip(-gamepad.right_stick_y, -maxPower, maxPower));
-                }
-                else if(gamepad.right_stick_y != 0 && gamepad.left_stick_button)
-                {
-                    robot.elevatorMotorRight.setPower(Range.clip(-gamepad.right_stick_y, -maxPower/2, maxPower/2));
-                    robot.elevatorMotorLeft.setPower(Range.clip(-gamepad.right_stick_y, -maxPower/2, maxPower/2));
-                }
-                else
-                {
-                    robot.elevatorMotorRight.setPower(0);
-                    robot.elevatorMotorLeft.setPower(0);
-                }
-
-            }
-        }
-        else
-        {
-            firstPID();
-            // TODO: change to regular pid because we changed to FSM
         }
     }
 
@@ -172,6 +136,11 @@ public class Elevator implements Subsystem
         return this.currentTarget;
     }
 
+    public double getPos()
+    {
+        return (robot.elevatorMotorLeft.getCurrentPosition() + robot.elevatorMotorLeft.getCurrentPosition()) / 2;
+    }
+
     public void setUsePID(boolean usePID) {
         this.usePID = usePID;
     }
@@ -195,5 +164,13 @@ public class Elevator implements Subsystem
     @Override
     public void stop() {
 
+    }
+
+    public PIDFController getController() {
+        return controller;
+    }
+
+    public PIDFController getController2() {
+        return controller2;
     }
 }

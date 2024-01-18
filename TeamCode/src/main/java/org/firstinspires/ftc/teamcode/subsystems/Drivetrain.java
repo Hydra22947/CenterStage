@@ -17,6 +17,7 @@ public class Drivetrain {
     private final RobotHardware robot;
     Vector2d input;
     public static double maxPower = 0.8;
+    public static double slowerSpin = 0.6;
     double power = 0, twist = 0;
     boolean slow = false;
 
@@ -43,7 +44,7 @@ public class Drivetrain {
                 Range.clip(-_cGamepad1.left_stick_x, -power, power)
         ).rotated(robot.getAngle());
 
-        twist = Range.clip(_cGamepad1.right_stick_x, -power * 0.7, power* 0.7);
+        twist = Range.clip(_cGamepad1.right_stick_x, -power * slowerSpin, power * slowerSpin);
 
         if(_cGamepad1.XOnce())
         {
@@ -83,10 +84,12 @@ public class Drivetrain {
     public void fast()
     {
         power = maxPower;
+        slowerSpin = 0.6;
     }
 
     public void slow()
     {
         power = maxPower / 2;
+        slowerSpin = 0.4;
     }
 }

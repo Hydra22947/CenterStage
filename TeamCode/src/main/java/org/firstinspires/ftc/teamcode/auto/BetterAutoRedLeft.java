@@ -89,15 +89,19 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .build();
 
         intakeAnotherPreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
-                .lineToLinearHeading(new Pose2d(-39.8, -8.1, Math.toRadians(0)))
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> intakeExtension.openExtension())
-                .UNSTABLE_addTemporalMarkerOffset(1.4, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
+                .lineTo(new Vector2d(-39.8, -8.1))
+                .turn(Math.toRadians(-90), Math.toRadians(180), Math.toRadians(90))
+                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> intakeExtension.openExtension())
+                .UNSTABLE_addTemporalMarkerOffset(1.7, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
                 .UNSTABLE_addTemporalMarkerOffset(1.8, () -> intake.moveStack())
                 .waitSeconds(0.1)
                 .UNSTABLE_addTemporalMarkerOffset(1.9, () -> intake.move(Intake.Angle.OUTTAKE))
                 .waitSeconds(0.1)
                 .UNSTABLE_addTemporalMarkerOffset(2, () -> intakeExtension.closeExtension())
-                .UNSTABLE_addTemporalMarkerOffset(3, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
+                .waitSeconds(2.2)
+                .addTemporalMarker(() -> DriveConstants.MAX_ANG_ACCEL = Math.toRadians(360))
+                .waitSeconds(0.7)
+                .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
                 .build();
 
         placePreloadsOnBoard = drivetrain.trajectorySequenceBuilder(intakeAnotherPreload.end())
@@ -129,7 +133,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
 
                 .UNSTABLE_addDisplacementMarkerOffset(autoConstants.TEMP, () -> moveIntakeByTraj())
                 .UNSTABLE_addDisplacementMarkerOffset(20, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
-                .UNSTABLE_addDisplacementMarkerOffset(20, () -> intakeExtension.openExtension())
+                .UNSTABLE_addDisplacementMarkerOffset(35, () -> intakeExtension.openExtension())
                 // intake pose
                 .splineToLinearHeading(new Pose2d(-40.35, -9.335), Math.toRadians(180))
                 .waitSeconds(.85)
@@ -178,11 +182,11 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .lineToSplineHeading(new Pose2d(30, -15, Math.toRadians(0)))
 
                 .UNSTABLE_addDisplacementMarkerOffset(20, () -> intake.move(Intake.Angle.TOP_5))
-                .UNSTABLE_addDisplacementMarkerOffset(autoConstants.TEMP, () -> moveIntakeByTraj())
+                .UNSTABLE_addDisplacementMarkerOffset(40, () -> moveIntakeByTraj())
                 .UNSTABLE_addDisplacementMarkerOffset(20, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
-                .UNSTABLE_addDisplacementMarkerOffset(20, () -> intakeExtension.openExtension())
+                .UNSTABLE_addDisplacementMarkerOffset(35, () -> intakeExtension.openExtension())
                 // intake pose
-                .splineToLinearHeading(new Pose2d(-41, -10.35), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-41, -10.15), Math.toRadians(180))
                 .waitSeconds(.85)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
                 //.waitSeconds(AutoConstants.WAIT + 0.4)
@@ -207,7 +211,7 @@ public class BetterAutoRedLeft extends CommandOpMode {
                 .addSpatialMarker(new Vector2d(15, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
 
                 // backdrop pose
-                .splineToLinearHeading(new Pose2d(53, -29.3, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(53.5, -29.3, Math.toRadians(0)), Math.toRadians(0))
 
                 .waitSeconds(.2)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.INTERMEDIATE, ClawSide.BOTH))
