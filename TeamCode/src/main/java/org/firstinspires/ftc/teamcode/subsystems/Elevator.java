@@ -21,12 +21,14 @@ public class Elevator implements Subsystem
     double currentTarget = 0;
     boolean usePID = true;
     public static double maxPower = 1;
-    public static double kP = 0.005, kI = 0, kD = 0.0000001;
+    public static double kPR = 0.0075, kIR = 0, kDR = 0.0000001;
+    public static double kPL = 0.005, kIL = 0, kDL = 0.0000001;
 
     Gamepad gamepad;
     BetterGamepad cGamepad;
-    PIDFController controller, controller2;
-    PIDFController.PIDCoefficients pidCoefficients = new PIDFController.PIDCoefficients();
+    PIDFController controllerR, controllerL;
+    PIDFController.PIDCoefficients pidCoefficientsR = new PIDFController.PIDCoefficients();
+    PIDFController.PIDCoefficients pidCoefficientsL = new PIDFController.PIDCoefficients();
 
     boolean isAuto;
     public Elevator(Gamepad gamepad)
@@ -36,12 +38,16 @@ public class Elevator implements Subsystem
         this.gamepad = gamepad;
         this.cGamepad = new BetterGamepad(gamepad);
 
-        pidCoefficients.kP = kP;
-        pidCoefficients.kI = kI;
-        pidCoefficients.kD = kD;
+        pidCoefficientsR.kP = kPR;
+        pidCoefficientsR.kI = kIR;
+        pidCoefficientsR.kD = kDR;
 
-        controller = new PIDFController(pidCoefficients);
-        controller2 = new PIDFController(pidCoefficients);
+        pidCoefficientsL.kP = kPL;
+        pidCoefficientsL.kI = kIL;
+        pidCoefficientsL.kD = kDL;
+
+        controllerR = new PIDFController(pidCoefficientsR);
+        controllerL = new PIDFController(pidCoefficientsL);
 
         isAuto = false;
     }
@@ -50,12 +56,16 @@ public class Elevator implements Subsystem
     {
         this.robot = RobotHardware.getInstance();
 
-        pidCoefficients.kP = kP;
-        pidCoefficients.kI = kI;
-        pidCoefficients.kD = kD;
+        pidCoefficientsR.kP = kPR;
+        pidCoefficientsR.kI = kIR;
+        pidCoefficientsR.kD = kDR;
 
-        controller = new PIDFController(pidCoefficients);
-        controller2 = new PIDFController(pidCoefficients);
+        pidCoefficientsL.kP = kPL;
+        pidCoefficientsL.kI = kIL;
+        pidCoefficientsL.kD = kDL;
+
+        controllerR = new PIDFController(pidCoefficientsR);
+        controllerL = new PIDFController(pidCoefficientsL);
 
         isAuto = true;
     }
@@ -112,11 +122,11 @@ public class Elevator implements Subsystem
     }
     void setPidControl()
     {
-        controller.updateError(currentTarget - robot.elevatorMotorRight.getCurrentPosition());
-        controller2.updateError(currentTarget - robot.elevatorMotorLeft.getCurrentPosition());
+        controllerR.updateError(currentTarget - robot.elevatorMotorRight.getCurrentPosition());
+        controllerL.updateError(currentTarget - robot.elevatorMotorLeft.getCurrentPosition());
 
-        robot.elevatorMotorRight.setPower(controller.update());
-        robot.elevatorMotorLeft.setPower(controller2.update());
+        robot.elevatorMotorRight.setPower(controllerR.update());
+        robot.elevatorMotorLeft.setPower(controllerL.update());
     }
 
     public void setTarget(double target)
@@ -166,11 +176,11 @@ public class Elevator implements Subsystem
 
     }
 
-    public PIDFController getController() {
-        return controller;
+    public PIDFController getControllerR() {
+        return controllerR;
     }
 
-    public PIDFController getController2() {
-        return controller2;
+    public PIDFController getControllerL() {
+        return controllerL;
     }
 }

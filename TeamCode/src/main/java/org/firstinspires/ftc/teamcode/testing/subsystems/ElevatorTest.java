@@ -2,13 +2,11 @@ package org.firstinspires.ftc.teamcode.testing.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 
 @Config
@@ -54,8 +52,8 @@ public class ElevatorTest extends LinearOpMode {
 
             telemetry.addData("right motor", robot.elevatorMotorRight.getCurrentPosition());
             telemetry.addData("left motor", robot.elevatorMotorLeft.getCurrentPosition());
-            telemetry.addData("right motor power", elevator.getController());
-            telemetry.addData("left motor power", elevator.getController2());
+            telemetry.addData("right motor power", elevator.getControllerR().update());
+            telemetry.addData("left motor power", elevator.getControllerL().update());
             telemetry.update();
         }
     }
