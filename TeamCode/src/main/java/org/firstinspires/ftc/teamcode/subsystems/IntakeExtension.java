@@ -38,7 +38,7 @@ public class IntakeExtension implements Subsystem{
     }
 
     public static double OPEN_EXTENSION = 0.62;
-    public static double CLOSE_EXTENSION = 0.2;
+    public static double CLOSE_EXTENSION = 0.15;
 
     private RobotHardware robot;
     private BetterGamepad cGamepad;
