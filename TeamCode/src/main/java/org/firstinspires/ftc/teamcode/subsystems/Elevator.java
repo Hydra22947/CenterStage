@@ -20,9 +20,9 @@ public class Elevator implements Subsystem
     public static double HANG = 1000;
     double currentTarget = 0;
     boolean usePID = true;
-    public static double maxPower = 1;
-    public static double kPR = 0.0075, kIR = 0, kDR = 0.0000001;
-    public static double kPL = 0.005, kIL = 0, kDL = 0.0000001;
+    public static double maxPower = .5;
+    public static double kPR = 0.0075, kIR = 0, kDR = 0.0000001; // todo: change kd
+    public static double kPL = 0.005, kIL = 0, kDL = 0.0000001;  // todo: change kd, test with elevator test
 
     Gamepad gamepad;
     BetterGamepad cGamepad;

@@ -288,8 +288,8 @@ public class OpMode extends CommandOpMode {
                 moveIntake();
                 claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
 
-
-                if ((robot.has2Pixels() && !startedDelayTransfer) || gamepad1.right_trigger == 0) {
+                if ((robot.has2Pixels() && !startedDelayTransfer) || gamepad1.right_trigger == 0 || (intake.closedClaw() && override))
+                {
                     had2Pixels = true;
 
                     transferTimer = getTime();
@@ -298,15 +298,15 @@ public class OpMode extends CommandOpMode {
 
                     intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
                 }
-                else if(robot.isCloseLeft() && !robot.has2Pixels())
+                else if(robot.isCloseLeft() && !robot.has2Pixels() && !override)
                 {
                     intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT);
                 }
-                else if(robot.isCloseRight() && !robot.has2Pixels())
+                else if(robot.isCloseRight() && !robot.has2Pixels() && !override)
                 {
                     intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);
                 }
-                else if(!startedDelayTransfer)
+                else if(!startedDelayTransfer && !override)
                 {
                     intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
                 }
@@ -318,6 +318,22 @@ public class OpMode extends CommandOpMode {
 
                 if (gamepad1.right_trigger == 0) {
                     intakeState = IntakeState.RETRACT;
+                }
+
+                if(betterGamepad2.dpadRightOnce())
+                {
+                    override = true;
+                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);
+                }
+                else if(betterGamepad2.dpadLeftOnce())
+                {
+                    override = true;
+                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT);
+                }
+
+                if(betterGamepad2.dpadDownOnce())
+                {
+                    override = !override;
                 }
                 break;
             default:
