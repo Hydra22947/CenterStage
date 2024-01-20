@@ -21,8 +21,8 @@ public class Elevator implements Subsystem
     double currentTarget = 0;
     boolean usePID = true;
     public static double maxPower = .5;
-    public static double kPR = 0.0075, kIR = 0, kDR = 0.0000001; // todo: change kd
-    public static double kPL = 0.005, kIL = 0, kDL = 0.0000001;  // todo: change kd, test with elevator test
+    public static double kPR = 0.0075, kIR = 0, kDR = 0.01;
+    public static double kPL = 0.005, kIL = 0, kDL = 0.01;
 
     Gamepad gamepad;
     BetterGamepad cGamepad;
@@ -84,8 +84,16 @@ public class Elevator implements Subsystem
             {
                 if(gamepad.left_stick_y != 0 && !gamepad.left_stick_button)
                 {
-                    robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
-                    robot.elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
+                    if((-gamepad.left_stick_y) < 0)
+                    {
+                        robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/8, maxPower/8));
+                        robot.elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/8, maxPower/8));
+                    }
+                    else
+                    {
+                        robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
+                        robot.elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
+                    }
                 }
                 else if(gamepad.left_stick_y != 0 && gamepad.left_stick_button)
                 {
