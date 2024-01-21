@@ -48,8 +48,8 @@ public class Claw implements Subsystem
     public ClawState rightClaw = ClawState.OPEN;
 
     // LOOK FORM INTAKE
-    public  static double openLeft = .23, closeLeft = .4;
-    public static double openRight = .45, closeRight = .67;
+    public  static double openLeft = .23, closeLeft = .43;
+    public static double openRight = .45, closeRight = .7;
     public static double intermediateLeft = .3, intermediateRight = .575;
     double tempRight = closeRight;
     double tempLeft = closeLeft;

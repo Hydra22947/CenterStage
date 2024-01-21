@@ -138,11 +138,8 @@ public class OpMode extends CommandOpMode {
         elevatorStateMachine();
 
         telemetry.addData("hz ", 1000000000 / (System.nanoTime() - loopTime));
-        telemetry.addData("ready", robot.has2Pixels());
-        telemetry.addData("startedDelayTransfer", startedDelayTransfer);
-        telemetry.addData("get time", getTime());
-        telemetry.addData("delay", transferTimer);
-        telemetry.addData("intakeState", intakeState.name());
+        telemetry.addData("closed claw", intake.closedClaw());
+        telemetry.addData("manual transfer", (intake.closedClaw() && override));
         telemetry.update();
         CommandScheduler.getInstance().run();
 
@@ -178,8 +175,10 @@ public class OpMode extends CommandOpMode {
 
                 if (betterGamepad1.rightBumperOnce() && !robot.has2Pixels() && canIntake) {
                     intakeState = IntakeState.INTAKE;
+                    override = false;
                 } else if (gamepad1.right_trigger != 0 && !robot.has2Pixels() && canIntake && !heldExtension) {
                     intakeState = IntakeState.INTAKE_EXTEND;
+                    override = false;
                 }
                 else if(liftState == LiftState.RETRACT)
                 {
@@ -257,13 +256,7 @@ public class OpMode extends CommandOpMode {
                 {
                     intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
                 }
-
-                if((getTime() - transferTimer) >= delayTransfer && startedDelayTransfer)
-                {
-                    intakeState = IntakeState.RETRACT;
-                }
-
-                if(betterGamepad2.dpadRightOnce())
+                else if(betterGamepad2.dpadRightOnce())
                 {
                     override = true;
                     intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);
@@ -273,6 +266,13 @@ public class OpMode extends CommandOpMode {
                     override = true;
                     intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT);
                 }
+
+
+                if((getTime() - transferTimer) >= delayTransfer && startedDelayTransfer)
+                {
+                    intakeState = IntakeState.RETRACT;
+                }
+
 
                 if(betterGamepad2.dpadDownOnce())
                 {
@@ -310,17 +310,7 @@ public class OpMode extends CommandOpMode {
                 {
                     intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
                 }
-
-                if((getTime() - transferTimer) >= delayTransfer && startedDelayTransfer)
-                {
-                    intakeState = IntakeState.INTAKE;
-                }
-
-                if (gamepad1.right_trigger == 0) {
-                    intakeState = IntakeState.RETRACT;
-                }
-
-                if(betterGamepad2.dpadRightOnce())
+                else if(betterGamepad2.dpadRightOnce())
                 {
                     override = true;
                     intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);
@@ -329,6 +319,15 @@ public class OpMode extends CommandOpMode {
                 {
                     override = true;
                     intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT);
+                }
+
+                if((getTime() - transferTimer) >= delayTransfer && startedDelayTransfer)
+                {
+                    intakeState = IntakeState.INTAKE;
+                }
+
+                if (gamepad1.right_trigger == 0) {
+                    intakeState = IntakeState.RETRACT;
                 }
 
                 if(betterGamepad2.dpadDownOnce())
@@ -403,11 +402,11 @@ public class OpMode extends CommandOpMode {
 
                 if(betterGamepad2.rightBumperOnce())
                 {
-                    outtake.outtakeClawPivot += 0.05;
+                    outtake.setOuttakeHandPivot(outtake.outtakeHandPivot += 0.015);
                 }
                 else if(betterGamepad2.leftBumperOnce())
                 {
-                    outtake.outtakeClawPivot -= 0.05;
+                    outtake.setOuttakeHandPivot(outtake.outtakeHandPivot -= 0.015);
                 }
 
                 if (betterGamepad1.AOnce() || betterGamepad1.leftBumperOnce())  {
