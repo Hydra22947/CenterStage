@@ -49,8 +49,8 @@ public class Claw implements Subsystem
 
     // LOOK FORM INTAKE
     public  static double openLeft = .23, closeLeft = .43;
-    public static double openRight = .45, closeRight = .7;
-    public static double intermediateLeft = .3, intermediateRight = .575;
+    public static double openRight = .45, closeRight = .6;
+    public static double intermediateLeft = .3, intermediateRight = .55;
     double tempRight = closeRight;
     double tempLeft = closeLeft;
     CommandOpMode opMode;

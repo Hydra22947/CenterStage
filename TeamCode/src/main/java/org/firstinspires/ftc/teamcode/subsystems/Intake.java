@@ -13,12 +13,14 @@ public class Intake implements Subsystem{
 
     private final RobotHardware robot;
     public static double intakeHandPivot = 0.15, intakeAmmoPivot = 0;
-    public static double outtakeHandPivot = .6, outtakeAmmoPivot = .575;
+    public static double outtakeHandPivot = .61, outtakeAmmoPivot = .56;
     public static double midHandPivot = 0.575, midAmmoPivot = 0.325;
     public static double top5HandPivot = .26, top5AmmoPivot = 0.01; // auto
-    public static double top54HandPivot = 0.23, top54AmmoPivot = 0.022;
+    public static double top54HandPivot = 0.225, top54AmmoPivot = 0;
+    public static double top54HandPivotAuto = 0.2, top54AmmoPivotAuto = 0.035;
     public static double top43HandPivot = 0.2, top43AmmoPivot = 0.0175; // auto
-    public static double top32HandPivot = 0.18, top32AmmoPivot = 0.02;
+    public static double top32HandPivot = 0.18, top32AmmoPivot = 0.03;
+    public static double top32HandPivotAuto = 0.18, top32AmmoPivotAuto = 0.02;
     public static double top21HandPivot = 0.15, top21AmmoPivot = 0.01; // auto
 
     public static double STACK = 0.02;
@@ -57,7 +59,8 @@ public class Intake implements Subsystem{
         INTAKE,
         OUTTAKE,
         MID,
-        TOP_54, TOP_43, TOP_32, TOP_21, TOP_5
+        TOP_54, TOP_43, TOP_32, TOP_21, TOP_5,
+        TOP_54_AUTO, TOP_32_AUTO
     }
 
     public enum ClawState
@@ -255,6 +258,10 @@ public class Intake implements Subsystem{
                         return top5AmmoPivot;
                     case TOP_43:
                         return top43AmmoPivot;
+                    case TOP_54_AUTO:
+                        return top54AmmoPivotAuto;
+                    case TOP_32_AUTO:
+                        return top32AmmoPivotAuto;
                     default:
                         return 0.0;
 
@@ -278,6 +285,10 @@ public class Intake implements Subsystem{
                         return top5HandPivot;
                     case TOP_43:
                         return top43HandPivot;
+                    case TOP_54_AUTO:
+                        return top54HandPivotAuto;
+                    case TOP_32_AUTO:
+                        return top32HandPivotAuto;
                     default:
                         return 0.0;
                 }
