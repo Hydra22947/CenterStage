@@ -139,6 +139,9 @@ public class OpMode extends CommandOpMode {
 
         telemetry.addData("hz ", 1000000000 / (System.nanoTime() - loopTime));
         telemetry.addData("closed claw", intake.closedClaw());
+        telemetry.addData("intake state", intakeState.name());
+        telemetry.addData("delay transfer", (getTime() - transferTimer) >= delayTransfer);
+        telemetry.addData("startedDelayTransfer", startedDelayTransfer);
         telemetry.addData("manual transfer", (intake.closedClaw() && override));
         telemetry.update();
         CommandScheduler.getInstance().run();
@@ -256,17 +259,36 @@ public class OpMode extends CommandOpMode {
                 {
                     intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
                 }
-                else if(betterGamepad2.dpadRightOnce())
+
+                if(betterGamepad2.dpadRightOnce())
                 {
                     override = true;
-                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);
+                    if(intake.getClawStateRight() == Intake.ClawState.OPEN)
+                    {
+                        intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);
+                    }
+                    else
+                    {
+                        intake.updateClawState(Intake.ClawState.OPEN, ClawSide.RIGHT);
+                    }
                 }
                 else if(betterGamepad2.dpadLeftOnce())
                 {
                     override = true;
-                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT);
+                    if(intake.getClawStateLeft() == Intake.ClawState.OPEN)
+                    {
+                        intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT);
+                    }
+                    else
+                    {
+                        intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT);
+                    }
                 }
 
+                if((intake.closedClaw() && override) && betterGamepad1.rightBumperOnce())
+                {
+                    intakeState = IntakeState.RETRACT;
+                }
 
                 if((getTime() - transferTimer) >= delayTransfer && startedDelayTransfer)
                 {
@@ -310,7 +332,8 @@ public class OpMode extends CommandOpMode {
                 {
                     intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
                 }
-                else if(betterGamepad2.dpadRightOnce())
+
+                if(betterGamepad2.dpadRightOnce())
                 {
                     override = true;
                     intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);

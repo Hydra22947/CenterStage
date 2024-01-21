@@ -13,7 +13,7 @@ public class Intake implements Subsystem{
 
     private final RobotHardware robot;
     public static double intakeHandPivot = 0.15, intakeAmmoPivot = 0;
-    public static double outtakeHandPivot = .6, outtakeAmmoPivot = .59;
+    public static double outtakeHandPivot = .6, outtakeAmmoPivot = .575;
     public static double midHandPivot = 0.575, midAmmoPivot = 0.325;
     public static double top5HandPivot = .26, top5AmmoPivot = 0.01; // auto
     public static double top54HandPivot = 0.23, top54AmmoPivot = 0.022;
@@ -183,6 +183,8 @@ public class Intake implements Subsystem{
         return position;
     }
 
+
+
     private double getClawStatePosition(ClawState state, ClawSide side)
     {
         switch (side)
@@ -214,6 +216,13 @@ public class Intake implements Subsystem{
         }
     }
 
+    public ClawState getClawStateLeft() {
+        return clawStateLeft;
+    }
+
+    public ClawState getClawStateRight() {
+        return clawStateRight;
+    }
 
     public boolean checkIfPixelIn(RevColorSensorV3 sensor)
     {
