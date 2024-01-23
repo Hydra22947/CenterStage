@@ -12,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 public class Intake implements Subsystem{
 
     private final RobotHardware robot;
-    public static double intakeHandPivot = 0.15, intakeAmmoPivot = 0;
-    public static double outtakeHandPivot = .61, outtakeAmmoPivot = .56;
+    public static double intakeHandPivot = 0.15, intakeAmmoPivot = 0.01;
+    public static double outtakeHandPivot = .61, outtakeAmmoPivot = .55;
     public static double midHandPivot = 0.575, midAmmoPivot = 0.325;
     public static double top5HandPivot = .26, top5AmmoPivot = 0.01; // auto
     public static double top54HandPivot = 0.225, top54AmmoPivot = 0;

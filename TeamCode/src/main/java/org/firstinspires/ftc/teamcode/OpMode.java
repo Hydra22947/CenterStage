@@ -42,7 +42,8 @@ public class OpMode extends CommandOpMode {
 
     // variables
     double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
-    double elevatorTarget = Elevator.BASE_LEVEL;
+    double elevatorTargetRight = Elevator.BASE_LEVEL;
+    double elevatorTargetLeft = Elevator.BASE_LEVEL;
     int openedXTimes = 0;
     boolean retract = false,  goToMid = false, intakeMid = true, canIntake = true, startedDelayTransfer = false, heldExtension = false;
     boolean override = false, had2Pixels = false, hang = false;
@@ -142,6 +143,8 @@ public class OpMode extends CommandOpMode {
         telemetry.addData("intake state", intakeState.name());
         telemetry.addData("delay transfer", (getTime() - transferTimer) >= delayTransfer);
         telemetry.addData("startedDelayTransfer", startedDelayTransfer);
+        telemetry.addData("elevator target", elevatorTargetRight);
+        telemetry.addData("elevator pos", elevator.getPosRight());
         telemetry.addData("manual transfer", (intake.closedClaw() && override));
         telemetry.update();
         CommandScheduler.getInstance().run();
@@ -380,7 +383,7 @@ public class OpMode extends CommandOpMode {
                     claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
                     liftState = LiftState.EXTRACT;
                 }
-                else if(betterGamepad1.dpadUpOnce())
+                else if(betterGamepad2.dpadUpOnce())
                 {
                     intake.move(Intake.Angle.MID);
                     liftState = LiftState.HANG;
@@ -392,16 +395,17 @@ public class OpMode extends CommandOpMode {
 
                 if(retract)
                 {
-                    elevator.setTarget(elevatorTarget + (openedXTimes * (Elevator.ELEVATOR_INCREMENT * 3.5)));
+                    elevator.setTarget(elevatorTargetRight + (openedXTimes * (Elevator.ELEVATOR_INCREMENT * 3.5)), elevatorTargetLeft + (openedXTimes * (Elevator.ELEVATOR_INCREMENT * 3.5)));
                 }
                 else
                 {
-                    elevator.setTarget(elevatorTarget + (openedXTimes * Elevator.ELEVATOR_INCREMENT));
+                    elevator.setTarget(elevatorTargetRight + (openedXTimes * (Elevator.ELEVATOR_INCREMENT)), elevatorTargetLeft + (openedXTimes * (Elevator.ELEVATOR_INCREMENT)));
                 }
 
                 if(gamepad2.left_stick_y != 0)
                 {
-                    elevatorTarget += elevator.getPos() - (elevatorTarget + (openedXTimes * Elevator.ELEVATOR_INCREMENT));
+                    elevatorTargetRight += elevator.getPosRight() - (elevatorTargetRight + (openedXTimes * Elevator.ELEVATOR_INCREMENT));
+                    elevatorTargetLeft += elevator.getPosLeft() - (elevatorTargetLeft + (openedXTimes * Elevator.ELEVATOR_INCREMENT));
                 }
 
                 if ((getTime() - previousElevator) >= WAIT_DELAY_TILL_OUTTAKE) {
@@ -432,8 +436,20 @@ public class OpMode extends CommandOpMode {
                     outtake.setOuttakeHandPivot(outtake.outtakeHandPivot -= 0.015);
                 }
 
-                if (betterGamepad1.AOnce() || betterGamepad1.leftBumperOnce())  {
-                    elevatorTarget = elevator.getTarget() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
+                if(betterGamepad1.rightBumperOnce())
+                {
+                    elevatorTargetRight += 85;
+                    elevatorTargetLeft += 85;
+                }
+                else if(betterGamepad1.leftBumperOnce())
+                {
+                    elevatorTargetRight -= 85;
+                    elevatorTargetLeft -= 85;
+                }
+
+                if (betterGamepad1.AOnce())  {
+                    elevatorTargetRight = elevator.getTargetRight() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
+                    elevatorTargetLeft = elevator.getTargetLeft() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
                     openedXTimes++;
                     claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
 
@@ -446,7 +462,7 @@ public class OpMode extends CommandOpMode {
                 break;
             case HANG:
 
-                if(betterGamepad1.dpadUpOnce()) {
+                if(betterGamepad2.dpadUpOnce()) {
                     hang = !hang;
                 }
 

@@ -18,7 +18,7 @@ public class Elevator implements Subsystem
     public static double MAX_LEVEL = 2550;
     public static double HANG_OPEN = 1600;
     public static double HANG = 1000;
-    double currentTarget = 0;
+    double currentTargetRight = 0, currentTargetLeft = 0;
     boolean usePID = true;
     public static double maxPower = .5;
     public static double kPR = 0.0075, kIR = 0, kDR = 0.01;
@@ -86,8 +86,8 @@ public class Elevator implements Subsystem
                 {
                     if((-gamepad.left_stick_y) < 0)
                     {
-                        robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/8, maxPower/8));
-                        robot.elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/8, maxPower/8));
+                        robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
+                        robot.elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
                     }
                     else
                     {
@@ -119,8 +119,8 @@ public class Elevator implements Subsystem
         robot.elevatorMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        robot.elevatorMotorRight.setTargetPosition((int)currentTarget);
-        robot.elevatorMotorLeft.setTargetPosition((int)currentTarget);
+        robot.elevatorMotorRight.setTargetPosition((int)currentTargetRight);
+        robot.elevatorMotorLeft.setTargetPosition((int)currentTargetLeft);
 
         robot.elevatorMotorRight.setPower(1);
         robot.elevatorMotorLeft.setPower(1);
@@ -130,8 +130,8 @@ public class Elevator implements Subsystem
     }
     void setPidControl()
     {
-        controllerR.updateError(currentTarget - robot.elevatorMotorRight.getCurrentPosition());
-        controllerL.updateError(currentTarget - robot.elevatorMotorLeft.getCurrentPosition());
+        controllerR.updateError(currentTargetRight - robot.elevatorMotorRight.getCurrentPosition());
+        controllerL.updateError(currentTargetLeft - robot.elevatorMotorLeft.getCurrentPosition());
 
         robot.elevatorMotorRight.setPower(controllerR.update());
         robot.elevatorMotorLeft.setPower(controllerL.update());
@@ -141,22 +141,55 @@ public class Elevator implements Subsystem
     {
         if(target > MAX_LEVEL)
         {
-            this.currentTarget = MAX_LEVEL;
+            this.currentTargetRight = MAX_LEVEL;
+            this.currentTargetLeft = MAX_LEVEL;
         }
         else
         {
-            this.currentTarget = target;
+            this.currentTargetRight = target;
+            this.currentTargetLeft = target;
         }
     }
 
-    public double getTarget()
+    public void setTarget(double targetRight, double targetLeft)
     {
-        return this.currentTarget;
+        if(targetRight > MAX_LEVEL)
+        {
+            this.currentTargetRight = MAX_LEVEL;
+        }
+        else
+        {
+            this.currentTargetRight = targetRight;
+        }
+
+        if(targetLeft > MAX_LEVEL)
+        {
+            this.currentTargetLeft = MAX_LEVEL;
+        }
+        else
+        {
+            this.currentTargetLeft = targetLeft;
+        }
     }
 
-    public double getPos()
+    public double getTargetRight()
     {
-        return (robot.elevatorMotorLeft.getCurrentPosition() + robot.elevatorMotorLeft.getCurrentPosition()) / 2;
+        return this.currentTargetRight;
+    }
+
+    public double getTargetLeft()
+    {
+        return this.currentTargetLeft;
+    }
+
+    public double getPosRight()
+    {
+        return robot.elevatorMotorRight.getCurrentPosition();
+    }
+
+    public double getPosLeft()
+    {
+        return robot.elevatorMotorLeft.getCurrentPosition();
     }
 
     public void setUsePID(boolean usePID) {
