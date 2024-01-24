@@ -42,8 +42,8 @@ public class OpMode extends CommandOpMode {
 
     // variables
     double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
-    double elevatorTargetRight = Elevator.BASE_LEVEL;
-    double elevatorTargetLeft = Elevator.BASE_LEVEL;
+    double elevatorTargetRight = 1300;
+    double elevatorTargetLeft = 1300;
     int openedXTimes = 0;
     boolean retract = false,  goToMid = false, intakeMid = true, canIntake = true, startedDelayTransfer = false, heldExtension = false;
     boolean override = false, had2Pixels = false, hang = false;

@@ -81,14 +81,11 @@ public class AutoRedLeftTest extends CommandOpMode {
                 .waitSeconds(AutoConstants.WAIT)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.1)
-                .addTemporalMarker(() -> intake.move(Intake.Angle.TOP_5))
-                .waitSeconds(.2)
+                .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .build();
 
         intakeAnotherPreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
-                .lineTo(new Vector2d(-40, -8.2))
-                .turn(Math.toRadians(-90), Math.toRadians(90), Math.toRadians(75))
-                .UNSTABLE_addTemporalMarkerOffset(0.05, () -> intake.move(Intake.Angle.OUTTAKE))
+                .lineToLinearHeading(new Pose2d(-40, -8.2, Math.toRadians(0)))
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
                 .build();
 

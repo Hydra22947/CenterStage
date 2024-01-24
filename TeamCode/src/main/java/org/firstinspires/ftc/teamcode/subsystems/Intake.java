@@ -24,18 +24,19 @@ public class Intake implements Subsystem{
     public static double top21HandPivot = 0.15, top21AmmoPivot = 0.01; // auto
 
     public static double STACK = 0.02;
+    public static double RIGHT_SENSOR_ERROR = 0.3;
 
     public static double openRight = 0.61, openLeft = 0.54;
-    public static double closeRight = .95, closeLeft = .915;
-    public static double indeterminateRight = 0.74, indeterminateLeft = 0.7;
+    public static double closeRight = .97, closeLeft = .82;
+    public static double indeterminateRight = 0.74, indeterminateLeft = 0.6;
 
 
     public static void setSeeFarFrom(double seeFarFrom) {
         Intake.seeFarFrom = seeFarFrom;
     }
 
-    public static double seeFarFrom = 3;
-    public static final double maxSeeFarFrom = 3;
+    public static double seeFarFrom = 2.7;
+    public static final double maxSeeFarFrom = 2.7;
     public static final double minSeeFarFrom = 1;
 
     @Override
@@ -91,7 +92,7 @@ public class Intake implements Subsystem{
         updateState(Type.HAND);
 
 
-        if(checkIfPixelIn(robot.colorRight))
+        if(checkIfPixelInRight(robot.colorRight))
         {
             robot.closeRight(true);
         }
@@ -110,7 +111,7 @@ public class Intake implements Subsystem{
         }
 
 
-        if(checkIfPixelIn(robot.colorRight) && checkIfPixelIn(robot.colorLeft))
+        if(checkIfPixelInRight(robot.colorRight) && checkIfPixelIn(robot.colorLeft))
         {
             robot.setHas2Pixels(true);
         }
@@ -230,6 +231,11 @@ public class Intake implements Subsystem{
     public boolean checkIfPixelIn(RevColorSensorV3 sensor)
     {
         return -seeFarFrom <= sensor.getDistance(DistanceUnit.CM) && sensor.getDistance(DistanceUnit.CM) <= seeFarFrom;
+    }
+
+    public boolean checkIfPixelInRight(RevColorSensorV3 sensor)
+    {
+        return -(seeFarFrom+RIGHT_SENSOR_ERROR) <= sensor.getDistance(DistanceUnit.CM) && sensor.getDistance(DistanceUnit.CM) <= (seeFarFrom+RIGHT_SENSOR_ERROR);
     }
 
     public boolean closedClaw()
