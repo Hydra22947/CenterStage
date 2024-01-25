@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
 @Autonomous(name = "Middle Auto Red Left")
-public class AutoRedLeftTest extends CommandOpMode {
+public class AutoRedLeftMiddle extends CommandOpMode {
     VelocityConstraint smallVel;
     private final RobotHardware robot = RobotHardware.getInstance();
 
@@ -38,7 +38,7 @@ public class AutoRedLeftTest extends CommandOpMode {
     Claw claw;
     IntakeExtension intakeExtension;
     AutoConstants autoConstants;
-    TrajectorySequence placePurplePixel, intakeAnotherPreload, placePreloadsOnBoard, intakeCycle43, intakeCycle21, place43, place21;
+    TrajectorySequence placePurplePixel, intakeAnotherPreload, placePreloadsOnBoard, intakeCycle43, intakeCycle21, place43, place21, park;
 
     enum IntakeLevel {
         TOP_54,
@@ -217,13 +217,12 @@ public class AutoRedLeftTest extends CommandOpMode {
                 .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.INTAKE))
                 .build();
 
-//        park = drivetrain.trajectorySequenceBuilder(place21.end())
-//                //go park
-//                .lineToLinearHeading(new Pose2d(51.5, -5, Math.toRadians(90)))
-//
-//                .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
-//                .build();
-
+        park = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
+                .lineToLinearHeading(new Pose2d(55, -10))
+                .addTemporalMarker(()->elevator.setTarget(0))
+                .addTemporalMarker(()->elevator.update())
+                .addTemporalMarker(()->outtake.setAngle(Outtake.Angle.INTAKE))
+                .build();
 
         while (opModeInInit() && !isStopRequested()) {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
@@ -247,6 +246,7 @@ public class AutoRedLeftTest extends CommandOpMode {
         drivetrain.followTrajectorySequence(placePurplePixel);
         drivetrain.followTrajectorySequence(intakeAnotherPreload);
         drivetrain.followTrajectorySequence(placePreloadsOnBoard);
+        drivetrain.followTrajectorySequence(park);
        /* intakeLevel = IntakeLevel.TOP_54;
         drivetrain.followTrajectorySequence(intakeCycle43);
         drivetrain.followTrajectorySequence(place43);
