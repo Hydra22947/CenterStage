@@ -111,20 +111,10 @@ public class MeepMeepTesting {
         return myBot.setConstraints(65, 65, Math.toRadians(360), Math.toRadians(360), 12.81)
                 .followTrajectorySequence(drive ->
                                 drive.trajectorySequenceBuilder(new Pose2d(-36, -62, Math.toRadians(90)))
-                                        .lineToLinearHeading(new Pose2d(-44, -30, Math.toRadians(90)))
-                                        .turn(Math.toRadians(90))
-                                        .back(5)
+                                        .lineToLinearHeading(new Pose2d(-38, -12, Math.toRadians(60)))
                                         .lineToLinearHeading(new Pose2d(-40, -8.2, Math.toRadians(0)))
-
-                                        // truss pose next to board
                                         .lineToSplineHeading(new Pose2d(12, -9, Math.toRadians(0)))
-
-
-                                        // backdrop pose
                                         .splineToLinearHeading(new Pose2d(52.5, -32.75, Math.toRadians(0)), Math.toRadians(0))
-
-
-
 
 
 
