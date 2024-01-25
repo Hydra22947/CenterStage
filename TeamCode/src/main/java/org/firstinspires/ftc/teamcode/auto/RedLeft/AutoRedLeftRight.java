@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.left;
+package org.firstinspires.ftc.teamcode.auto.RedLeft;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.auto.AutoConstants;
+import org.firstinspires.ftc.teamcode.auto.old_with_cycles.AutoConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "Middle Auto Red Left")
-public class AutoRedLeftMiddle extends CommandOpMode {
+@Autonomous(name = "Right 2+0 Auto Red Left")
+public class AutoRedLeftRight extends CommandOpMode {
     VelocityConstraint smallVel;
     private final RobotHardware robot = RobotHardware.getInstance();
 
@@ -74,15 +74,13 @@ public class AutoRedLeftMiddle extends CommandOpMode {
 
 
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseRedLeft)
-
                 // place purple pixel distance
-                .lineToSplineHeading(new Pose2d(-55,-30, Math.toRadians(90)))
-                .splineToLinearHeading(new Pose2d(-36,-10, Math.toRadians(90)), Math.toRadians(180))
-                .addSpatialMarker(new Vector2d(-36, -39), () -> intake.move(Intake.Angle.INTAKE))
+                .lineToLinearHeading(new Pose2d(-45.5, -15, Math.toRadians(70)))
                 .addTemporalMarker( () -> intake.move(Intake.Angle.INTAKE))
                 .waitSeconds(AutoConstants.WAIT)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.1)
+                .addTemporalMarker(()->intakeExtension.closeExtension())
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .build();
 
@@ -118,7 +116,7 @@ public class AutoRedLeftMiddle extends CommandOpMode {
                 // truss pose next to wing
                 .lineToSplineHeading(new Pose2d(30, -15, Math.toRadians(0)))
 
-                .UNSTABLE_addDisplacementMarkerOffset(autoConstants.TEMP, () -> moveIntakeByTraj())
+                .UNSTABLE_addDisplacementMarkerOffset(7, () -> moveIntakeByTraj())
 
                 // intake pose
                 .splineToLinearHeading(new Pose2d(-37.75, -10), Math.toRadians(180))
@@ -218,7 +216,7 @@ public class AutoRedLeftMiddle extends CommandOpMode {
                 .build();
 
         park = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
-                .lineToLinearHeading(new Pose2d(55, -10))
+                .lineToLinearHeading(new Pose2d(52, -10))
                 .addTemporalMarker(()->elevator.setTarget(0))
                 .addTemporalMarker(()->elevator.update())
                 .addTemporalMarker(()->outtake.setAngle(Outtake.Angle.INTAKE))

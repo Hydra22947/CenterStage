@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.RedLeft;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.auto.old_with_cycles.AutoConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
@@ -22,8 +23,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "2+4 Auto Red Left")
-public class AutoRedLeftTest extends CommandOpMode {
+@Autonomous(name = " Left 2+0 Auto Red Left")
+public class AutoRedLeftLeft extends CommandOpMode {
     VelocityConstraint smallVel;
     private final RobotHardware robot = RobotHardware.getInstance();
 
@@ -37,7 +38,7 @@ public class AutoRedLeftTest extends CommandOpMode {
     Claw claw;
     IntakeExtension intakeExtension;
     AutoConstants autoConstants;
-    TrajectorySequence placePurplePixel, intakeAnotherPreload, placePreloadsOnBoard, intakeCycle43, intakeCycle21, place43, place21;
+    TrajectorySequence placePurplePixel, intakeAnotherPreload, placePreloadsOnBoard, intakeCycle43, intakeCycle21, place43, place21, park;
 
     enum IntakeLevel {
         TOP_54,
@@ -75,11 +76,10 @@ public class AutoRedLeftTest extends CommandOpMode {
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseRedLeft)
 
                 // place purple pixel distance
-              //  .forward(52)
-                .lineToLinearHeading(new Pose2d(-52,-52, Math.toRadians(90)))
-
-                //.addSpatialMarker(new Vector2d(-36, -39), () -> intake.move(Intake.Angle.INTAKE))
-                .addSpatialMarker(new Vector2d(-40, -50), () -> intake.move(Intake.Angle.INTAKE))
+                .lineToLinearHeading(new Pose2d(-47, -30, Math.toRadians(90)))
+                .turn(Math.toRadians(90))
+                .addTemporalMarker(() -> intake.move(Intake.Angle.INTAKE))
+                .back(8)
                 .waitSeconds(AutoConstants.WAIT)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.1)
@@ -118,7 +118,7 @@ public class AutoRedLeftTest extends CommandOpMode {
                 // truss pose next to wing
                 .lineToSplineHeading(new Pose2d(30, -15, Math.toRadians(0)))
 
-                .UNSTABLE_addDisplacementMarkerOffset(autoConstants.TEMP, () -> moveIntakeByTraj())
+                .UNSTABLE_addDisplacementMarkerOffset(7, () -> moveIntakeByTraj())
 
                 // intake pose
                 .splineToLinearHeading(new Pose2d(-37.75, -10), Math.toRadians(180))
@@ -217,12 +217,12 @@ public class AutoRedLeftTest extends CommandOpMode {
                 .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.INTAKE))
                 .build();
 
-//        park = drivetrain.trajectorySequenceBuilder(place21.end())
-//                //go park
-//                .lineToLinearHeading(new Pose2d(51.5, -5, Math.toRadians(90)))
-//
-//                .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
-//                .build();
+        park = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
+                .lineToLinearHeading(new Pose2d(55, -10))
+                .addTemporalMarker(()->elevator.setTarget(0))
+                .addTemporalMarker(()->elevator.update())
+                .addTemporalMarker(()->outtake.setAngle(Outtake.Angle.INTAKE))
+                .build();
 
 
         while (opModeInInit() && !isStopRequested()) {
@@ -247,6 +247,7 @@ public class AutoRedLeftTest extends CommandOpMode {
         drivetrain.followTrajectorySequence(placePurplePixel);
         drivetrain.followTrajectorySequence(intakeAnotherPreload);
         drivetrain.followTrajectorySequence(placePreloadsOnBoard);
+        drivetrain.followTrajectorySequence(park);
        /* intakeLevel = IntakeLevel.TOP_54;
         drivetrain.followTrajectorySequence(intakeCycle43);
         drivetrain.followTrajectorySequence(place43);
@@ -256,8 +257,7 @@ public class AutoRedLeftTest extends CommandOpMode {
         *///drivetrain.followTrajectorySequence(park);
 
         double autoSeconds = time.seconds();
-        while (opModeIsActive())
-        {
+        while (opModeIsActive()) {
             drivetrain.update();
 
             telemetry.addData("Auto seconds: ", autoSeconds);
