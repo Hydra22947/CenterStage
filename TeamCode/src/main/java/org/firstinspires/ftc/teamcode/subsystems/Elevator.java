@@ -14,7 +14,7 @@ public class Elevator implements Subsystem
 
     private final RobotHardware robot;
     public static double ELEVATOR_INCREMENT = 70;
-    public static double BASE_LEVEL = 900;
+    public static double BASE_LEVEL = 1000;
     public static double MAX_LEVEL = 2550;
     public static double HANG_OPEN = 1600;
     public static double HANG = 1000;

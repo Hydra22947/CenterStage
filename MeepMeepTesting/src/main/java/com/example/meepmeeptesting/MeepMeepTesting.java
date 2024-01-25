@@ -111,7 +111,8 @@ public class MeepMeepTesting {
         return myBot.setConstraints(65, 65, Math.toRadians(360), Math.toRadians(360), 12.81)
                 .followTrajectorySequence(drive ->
                                 drive.trajectorySequenceBuilder(new Pose2d(-36, -62, Math.toRadians(90)))
-                                        .forward(52)
+                                        .lineToSplineHeading(new Pose2d(-46,-28, Math.toRadians(90)))
+                                        .splineToLinearHeading(new Pose2d(-36,-10, Math.toRadians(90)), Math.toRadians(180))
                                         .waitSeconds(.6)
                                         .lineToLinearHeading(new Pose2d(intakePixel.getX(), intakePixel.getY(),Math.toRadians(0)))
                                         .waitSeconds(1.7)
@@ -150,6 +151,6 @@ public class MeepMeepTesting {
         RoadRunnerBotEntity leftRedBot = redLeftTraj(new DefaultBotBuilder(meepMeep));
         RoadRunnerBotEntity rightRedBot = redRightTraj(new DefaultBotBuilder(meepMeep));
         leftRedBot.setDimensions(14, 15.75);
-        setAnimation(meepMeep, rightRedBot);
+        setAnimation(meepMeep, leftRedBot);
     }
 }

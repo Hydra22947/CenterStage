@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.left;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.auto.AutoConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
@@ -22,7 +23,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "2+4 Auto Red Left")
+@Autonomous(name = "Middle Auto Red Left")
 public class AutoRedLeftTest extends CommandOpMode {
     VelocityConstraint smallVel;
     private final RobotHardware robot = RobotHardware.getInstance();
@@ -75,11 +76,10 @@ public class AutoRedLeftTest extends CommandOpMode {
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseRedLeft)
 
                 // place purple pixel distance
-              //  .forward(52)
-                .lineToLinearHeading(new Pose2d(-52,-52, Math.toRadians(90)))
-
-                //.addSpatialMarker(new Vector2d(-36, -39), () -> intake.move(Intake.Angle.INTAKE))
-                .addSpatialMarker(new Vector2d(-40, -50), () -> intake.move(Intake.Angle.INTAKE))
+                .lineToSplineHeading(new Pose2d(-55,-30, Math.toRadians(90)))
+                .splineToLinearHeading(new Pose2d(-36,-10, Math.toRadians(90)), Math.toRadians(180))
+                .addSpatialMarker(new Vector2d(-36, -39), () -> intake.move(Intake.Angle.INTAKE))
+                .addTemporalMarker( () -> intake.move(Intake.Angle.INTAKE))
                 .waitSeconds(AutoConstants.WAIT)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.1)
