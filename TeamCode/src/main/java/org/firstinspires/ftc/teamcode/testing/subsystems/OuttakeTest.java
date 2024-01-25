@@ -26,21 +26,31 @@ public class OuttakeTest extends CommandOpMode {
     Claw claw;
     Drivetrain drivetrain;
 
+    public static Outtake.Angle angle = Outtake.Angle.INTAKE;
+    public static boolean DEBUG = true;
+
 
     @Override
     public void run() {
         outtake.update();
         drivetrain.update();
 
-        if(gamepad1.right_bumper)
+        if(!DEBUG)
         {
-            claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
-            outtake.setAngle(Outtake.Angle.OUTTAKE);
+            if(gamepad1.right_bumper)
+            {
+                claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
+                outtake.setAngle(Outtake.Angle.OUTTAKE);
+            }
+            else if(gamepad1.left_bumper)
+            {
+                outtake.setAngle(Outtake.Angle.INTAKE);
+                claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
+            }
         }
-        else if(gamepad1.left_bumper)
+        else
         {
-            outtake.setAngle(Outtake.Angle.INTAKE);
-            claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
+            outtake.setAngle(angle);
         }
 
         telemetry.update();

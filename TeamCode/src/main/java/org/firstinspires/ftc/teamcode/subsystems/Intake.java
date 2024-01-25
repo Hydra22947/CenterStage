@@ -15,10 +15,10 @@ public class Intake implements Subsystem{
     public static double intakeHandPivot = 0.15, intakeAmmoPivot = 0.01;
     public static double outtakeHandPivot = .61, outtakeAmmoPivot = .55;
     public static double midHandPivot = 0.575, midAmmoPivot = 0.325;
-    public static double top5HandPivot = .26, top5AmmoPivot = 0.01; // auto
+    public static double top5HandPivot = .28, top5AmmoPivot = 0.01; // auto
     public static double top54HandPivot = 0.225, top54AmmoPivot = 0;
-    public static double top54HandPivotAuto = 0.2, top54AmmoPivotAuto = 0.035;
-    public static double top43HandPivot = 0.2, top43AmmoPivot = 0.0175; // auto
+    public static double top54HandPivotAuto = 0.235, top54AmmoPivotAuto = 0.02;
+    public static double top43HandPivot = 0.225, top43AmmoPivot = 0.0175; // auto
     public static double top32HandPivot = 0.18, top32AmmoPivot = 0.03;
     public static double top32HandPivotAuto = 0.18, top32AmmoPivotAuto = 0.02;
     public static double top21HandPivot = 0.15, top21AmmoPivot = 0.01; // auto
@@ -27,8 +27,8 @@ public class Intake implements Subsystem{
     public static double RIGHT_SENSOR_ERROR = 0.3;
 
     public static double openRight = 0.61, openLeft = 0.54;
-    public static double closeRight = .97, closeLeft = .82;
-    public static double indeterminateRight = 0.74, indeterminateLeft = 0.6;
+    public static double closeRight = .78, closeLeft = .73;
+    public static double indeterminateRight = 0.67, indeterminateLeft = 0.585;
 
 
     public static void setSeeFarFrom(double seeFarFrom) {

@@ -95,13 +95,13 @@ public class AutoRedLeftTest extends CommandOpMode {
                 .lineToSplineHeading(new Pose2d(12, -9, Math.toRadians(0)))
 
                 .addSpatialMarker(new Vector2d(8, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
-                .addSpatialMarker(new Vector2d(9, -6), () -> elevator.setTarget(700))
+                .addSpatialMarker(new Vector2d(9, -6), () -> elevator.setTarget(850))
                 .addSpatialMarker(new Vector2d(9, -6), () -> elevator.update())
                 .addSpatialMarker(new Vector2d(10, -6), () -> intake.move(Intake.Angle.MID))
                 .addSpatialMarker(new Vector2d(10, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
 
                 // backdrop pose
-                .splineToLinearHeading(new Pose2d(52, -32.75, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(52.5, -32.75, Math.toRadians(0)), Math.toRadians(0))
 
                 .waitSeconds(0.25)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
@@ -119,7 +119,7 @@ public class AutoRedLeftTest extends CommandOpMode {
                 .UNSTABLE_addDisplacementMarkerOffset(autoConstants.TEMP, () -> moveIntakeByTraj())
 
                 // intake pose
-                .splineToLinearHeading(new Pose2d(-40.55, -9.8), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-40.25, -9.8), Math.toRadians(180))
 
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .addTemporalMarker(() -> intakeExtension.openExtension())
@@ -143,7 +143,7 @@ public class AutoRedLeftTest extends CommandOpMode {
                 .lineToSplineHeading(new Pose2d(12.5, -9, Math.toRadians(0)))
 
                 .addSpatialMarker(new Vector2d(9, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
-                .addSpatialMarker(new Vector2d(5, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL + 200))
+                .addSpatialMarker(new Vector2d(5, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL + 300))
                 .addSpatialMarker(new Vector2d(5, -6), () -> elevator.update())
                 .addSpatialMarker(new Vector2d(8, -10), () -> intake.move(Intake.Angle.MID))
                 .addSpatialMarker(new Vector2d(15, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
@@ -174,12 +174,12 @@ public class AutoRedLeftTest extends CommandOpMode {
                 .UNSTABLE_addDisplacementMarkerOffset(20, () -> intake.move(Intake.Angle.TOP_5))
 
                 // intake pose
-                .splineToLinearHeading(new Pose2d(-41, -10.35), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-40.75, -10.35), Math.toRadians(180))
 
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .addTemporalMarker(() -> intakeExtension.openExtension())
                 .waitSeconds(.25)
-                .addTemporalMarker(() -> intake.move(Intake.Angle.TOP_21))
+                .addTemporalMarker(() -> intake.move(Intake.Angle.TOP_32_AUTO))
                 .waitSeconds(.8)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
                 //.waitSeconds(AutoConstants.WAIT + 0.4)
@@ -200,7 +200,7 @@ public class AutoRedLeftTest extends CommandOpMode {
                 .lineToSplineHeading(new Pose2d(12, -9, Math.toRadians(0)))
 
                 .addSpatialMarker(new Vector2d(7.5, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
-                .addSpatialMarker(new Vector2d(5, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL + 250))
+                .addSpatialMarker(new Vector2d(5, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL + 350))
                 .addSpatialMarker(new Vector2d(5, -6), () -> elevator.update())
                 .addSpatialMarker(new Vector2d(8, -10), () -> intake.move(Intake.Angle.MID))
                 .addSpatialMarker(new Vector2d(15, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
