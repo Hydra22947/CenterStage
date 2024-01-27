@@ -58,6 +58,8 @@ public class MeepMeepTesting {
                                 .waitSeconds(0.5)
                                 .lineToConstantHeading(new Vector2d(36,-32))
 */
+                                .lineToLinearHeading(new Pose2d(45, -30.75, Math.toRadians(0)))
+
                                 // place yellow and purple pixel distance
                                 .lineToLinearHeading(new Pose2d(52.5, -32.75, Math.toRadians(0)))
                                 .waitSeconds(1.5)

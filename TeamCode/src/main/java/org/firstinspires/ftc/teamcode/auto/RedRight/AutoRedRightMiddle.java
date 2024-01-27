@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "Right 2+0 Auto Red Right")
-public class RightAutoRedRight extends CommandOpMode {
+@Autonomous(name = "Middle 2+0 Auto Red Right")
+public class AutoRedRightMiddle extends CommandOpMode {
     VelocityConstraint smallVel;
     private final RobotHardware robot = RobotHardware.getInstance();
 
@@ -75,7 +75,7 @@ public class RightAutoRedRight extends CommandOpMode {
 
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseRedRight)
                 .addTemporalMarker(()->claw.updateState(Claw.ClawState.CLOSED, ClawSide.RIGHT))
-                .lineToLinearHeading(new Pose2d(45, -30.75, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(35, -20.75, Math.toRadians(0)))
                 .addTemporalMarker( () -> intake.move(Intake.Angle.INTAKE))
                 .addTemporalMarker(() -> intakeExtension.openExtension())
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
