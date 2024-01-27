@@ -46,9 +46,9 @@ public class Claw implements Subsystem {
     public ClawState rightClaw = ClawState.OPEN;
 
     // LOOK FORM INTAKE
-    public static double openLeft = .18, closeLeft = .32;
-    public static double openRight = .385, closeRight = .53;
-    public static double intermediateLeft = .275, intermediateRight = .5;
+    public static double openLeft = .18, closeLeft = .3;
+    public static double openRight = .43, closeRight = .53;
+    public static double intermediateLeft = .25, intermediateRight = .48;
 
     public Claw() {
         this.robot = RobotHardware.getInstance();
