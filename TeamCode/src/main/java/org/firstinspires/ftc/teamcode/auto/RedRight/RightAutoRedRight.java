@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.profile.VelocityConstraint;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -23,9 +24,9 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
-@Autonomous(name = "Right RedRight 2 + 0")
 @Config
-public class RightAutoRedRight extends CommandOpMode {
+@Autonomous(name = "Right 2+0 Auto Red Right")
+public class RightAutoRedRight extends LinearOpMode {
     VelocityConstraint smallVel;
     private final RobotHardware robot = RobotHardware.getInstance();
 
@@ -49,7 +50,8 @@ public class RightAutoRedRight extends CommandOpMode {
 
     RightAutoRedRight.IntakeLevel intakeLevel = RightAutoRedRight.IntakeLevel.TOP_54;
 
-    public void initialize() {
+    @Override
+    public void runOpMode() {
         time = new ElapsedTime();
         CommandScheduler.getInstance().reset();
         drivetrain = new SampleMecanumDrive(hardwareMap);
@@ -63,7 +65,7 @@ public class RightAutoRedRight extends CommandOpMode {
 
         elevator = new Elevator();
         outtake = new Outtake();
-        claw = new Claw(this);
+        claw = new Claw();
         intake = new Intake();
         intakeExtension = new IntakeExtension();
 
@@ -119,11 +121,6 @@ public class RightAutoRedRight extends CommandOpMode {
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");
         }
-    }
-
-    @Override
-    public void runOpMode() {
-        initialize();
 
         waitForStart();
         if (isStopRequested()) return;
@@ -132,14 +129,6 @@ public class RightAutoRedRight extends CommandOpMode {
 
         drivetrain.followTrajectorySequence(placePurplePixel);
         drivetrain.followTrajectorySequence(intakeAnotherPreload);
-      //  drivetrain.followTrajectorySequence(placePreloadsOnBoard);
-       /* intakeLevel = IntakeLevel.TOP_54;
-        drivetrain.followTrajectorySequence(intakeCycle43);
-        drivetrain.followTrajectorySequence(place43);
-        intakeLevel = IntakeLevel.TOP_32;
-        drivetrain.followTrajectorySequence(intakeCycle21);
-        drivetrain.followTrajectorySequence(place21);
-        *///drivetrain.followTrajectorySequence(park);
 
         double autoSeconds = time.seconds();
         while (opModeIsActive()) {
@@ -148,8 +137,8 @@ public class RightAutoRedRight extends CommandOpMode {
             telemetry.addData("Auto seconds: ", autoSeconds);
             telemetry.update();
         }
-
-
     }
+
+
 }
 

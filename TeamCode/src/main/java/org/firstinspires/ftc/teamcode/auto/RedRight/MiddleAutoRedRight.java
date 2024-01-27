@@ -7,6 +7,8 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.profile.VelocityConstraint;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -20,7 +22,8 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
-public class MiddleAutoRedRight extends CommandOpMode {
+@Autonomous(name = "Middle 2+0 Auto Red Right")
+public class MiddleAutoRedRight extends LinearOpMode {
 
     VelocityConstraint smallVel;
     private final RobotHardware robot = RobotHardware.getInstance();
@@ -46,7 +49,8 @@ public class MiddleAutoRedRight extends CommandOpMode {
 
     MiddleAutoRedRight.IntakeLevel intakeLevel = MiddleAutoRedRight.IntakeLevel.TOP_54;
 
-    public void initialize() {
+    @Override
+    public void runOpMode() {
         time = new ElapsedTime();
         CommandScheduler.getInstance().reset();
         drivetrain = new SampleMecanumDrive(hardwareMap);
@@ -60,7 +64,7 @@ public class MiddleAutoRedRight extends CommandOpMode {
 
         elevator = new Elevator();
         outtake = new Outtake();
-        claw = new Claw(this);
+        claw = new Claw();
         intake = new Intake();
         intakeExtension = new IntakeExtension();
 
@@ -71,12 +75,7 @@ public class MiddleAutoRedRight extends CommandOpMode {
             }
         };
 
-
-
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseRedRight)
-
-
-
                 .lineToConstantHeading(new Vector2d(36, -50))
                 .addTemporalMarker(0.5, () -> intake.move(Intake.Angle.INTAKE))
                 .waitSeconds(0.5)
@@ -88,14 +87,7 @@ public class MiddleAutoRedRight extends CommandOpMode {
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .build();
 
-
-
-
-
         placePreloadsOnBoard = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
-
-
-
                 // truss pose next to board
                 .lineToLinearHeading(new Pose2d(12, -9, Math.toRadians(0)))
                 .addSpatialMarker(new Vector2d(8, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
@@ -114,8 +106,6 @@ public class MiddleAutoRedRight extends CommandOpMode {
 
 
 
-
-
         while (opModeInInit() && !isStopRequested()) {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             intake.setAngle(Intake.Angle.OUTTAKE);
@@ -124,6 +114,12 @@ public class MiddleAutoRedRight extends CommandOpMode {
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");
         }
+
+        waitForStart();
+
+        // run trajs
+
+        if(isStopRequested()) return;
     }
 }
 

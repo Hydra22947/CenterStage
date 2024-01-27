@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.profile.VelocityConstraint;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -24,7 +25,7 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
 @Autonomous(name = "2+5 Auto Red Left")
-public class AutoRedLeft extends CommandOpMode {
+public class AutoRedLeft extends LinearOpMode {
     VelocityConstraint smallVel;
     private final RobotHardware robot = RobotHardware.getInstance();
 
@@ -48,7 +49,8 @@ public class AutoRedLeft extends CommandOpMode {
 
     IntakeLevel intakeLevel = IntakeLevel.TOP_5;
 
-    public void initialize() {
+    @Override
+    public void runOpMode() {
         time = new ElapsedTime();
         CommandScheduler.getInstance().reset();
         drivetrain = new SampleMecanumDrive(hardwareMap);
@@ -62,7 +64,7 @@ public class AutoRedLeft extends CommandOpMode {
 
         elevator = new Elevator();
         outtake = new Outtake();
-        claw = new Claw(this);
+        claw = new Claw();
         intake = new Intake();
         intakeExtension = new IntakeExtension();
 
@@ -247,11 +249,6 @@ public class AutoRedLeft extends CommandOpMode {
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");
         }
-    }
-
-    @Override
-    public void runOpMode() {
-        initialize();
 
         waitForStart();
         if (isStopRequested()) return;
@@ -267,7 +264,6 @@ public class AutoRedLeft extends CommandOpMode {
         intakeLevel = IntakeLevel.TOP_21;
         drivetrain.followTrajectorySequence(intakeCycle21);
         drivetrain.followTrajectorySequence(place21);
-        //drivetrain.followTrajectorySequence(park);
 
         double autoSeconds = time.seconds();
         while (opModeIsActive())

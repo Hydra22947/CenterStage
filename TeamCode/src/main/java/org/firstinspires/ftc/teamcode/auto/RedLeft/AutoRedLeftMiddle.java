@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.profile.VelocityConstraint;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -24,7 +25,7 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
 @Autonomous(name = "Middle 2+0 Auto Red Left")
-public class AutoRedLeftMiddle extends CommandOpMode {
+public class AutoRedLeftMiddle extends LinearOpMode {
     VelocityConstraint smallVel;
     private final RobotHardware robot = RobotHardware.getInstance();
 
@@ -47,7 +48,8 @@ public class AutoRedLeftMiddle extends CommandOpMode {
 
     IntakeLevel intakeLevel = IntakeLevel.TOP_54;
 
-    public void initialize() {
+    @Override
+    public void runOpMode() {
         time = new ElapsedTime();
         CommandScheduler.getInstance().reset();
         drivetrain = new SampleMecanumDrive(hardwareMap);
@@ -61,7 +63,7 @@ public class AutoRedLeftMiddle extends CommandOpMode {
 
         elevator = new Elevator();
         outtake = new Outtake();
-        claw = new Claw(this);
+        claw = new Claw();
         intake = new Intake();
         intakeExtension = new IntakeExtension();
 
@@ -232,11 +234,6 @@ public class AutoRedLeftMiddle extends CommandOpMode {
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");
         }
-    }
-
-    @Override
-    public void runOpMode() {
-        initialize();
 
         waitForStart();
         if (isStopRequested()) return;
@@ -247,13 +244,6 @@ public class AutoRedLeftMiddle extends CommandOpMode {
         drivetrain.followTrajectorySequence(intakeAnotherPreload);
         drivetrain.followTrajectorySequence(placePreloadsOnBoard);
         drivetrain.followTrajectorySequence(park);
-       /* intakeLevel = IntakeLevel.TOP_54;
-        drivetrain.followTrajectorySequence(intakeCycle43);
-        drivetrain.followTrajectorySequence(place43);
-        intakeLevel = IntakeLevel.TOP_32;
-        drivetrain.followTrajectorySequence(intakeCycle21);
-        drivetrain.followTrajectorySequence(place21);
-        *///drivetrain.followTrajectorySequence(park);
 
         double autoSeconds = time.seconds();
         while (opModeIsActive())

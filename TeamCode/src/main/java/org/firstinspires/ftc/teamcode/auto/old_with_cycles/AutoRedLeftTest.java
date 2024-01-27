@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.profile.VelocityConstraint;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -23,7 +24,7 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
 @Autonomous(name = "2+4 Auto Red Left")
-public class AutoRedLeftTest extends CommandOpMode {
+public class AutoRedLeftTest extends LinearOpMode {
     VelocityConstraint smallVel;
     private final RobotHardware robot = RobotHardware.getInstance();
 
@@ -46,7 +47,8 @@ public class AutoRedLeftTest extends CommandOpMode {
 
     IntakeLevel intakeLevel = IntakeLevel.TOP_54;
 
-    public void initialize() {
+    @Override
+    public void runOpMode() {
         time = new ElapsedTime();
         CommandScheduler.getInstance().reset();
         drivetrain = new SampleMecanumDrive(hardwareMap);
@@ -60,7 +62,7 @@ public class AutoRedLeftTest extends CommandOpMode {
 
         elevator = new Elevator();
         outtake = new Outtake();
-        claw = new Claw(this);
+        claw = new Claw();
         intake = new Intake();
         intakeExtension = new IntakeExtension();
 
@@ -233,11 +235,6 @@ public class AutoRedLeftTest extends CommandOpMode {
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");
         }
-    }
-
-    @Override
-    public void runOpMode() {
-        initialize();
 
         waitForStart();
         if (isStopRequested()) return;
@@ -264,7 +261,6 @@ public class AutoRedLeftTest extends CommandOpMode {
             telemetry.update();
         }
     }
-
     void moveIntakeByTraj() {
         switch (intakeLevel) {
             case TOP_54:

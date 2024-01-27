@@ -63,7 +63,7 @@ public class OuttakeTest extends CommandOpMode {
 
         drivetrain = new Drivetrain(gamepad1, true);
         outtake = new Outtake();
-        claw = new Claw(this);
+        claw = new Claw();
     }
 
 }
