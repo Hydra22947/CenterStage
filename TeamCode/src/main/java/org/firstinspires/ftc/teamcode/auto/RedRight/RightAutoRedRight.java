@@ -29,14 +29,14 @@ public class RightAutoRedRight extends CommandOpMode {
     VelocityConstraint smallVel;
     private final RobotHardware robot = RobotHardware.getInstance();
 
-    public static double temp = 50 ,temp2 = -30;
+    public static double temp = 50, temp2 = -30;
     ElapsedTime time;
 
     // subsystems
     SampleMecanumDrive drivetrain;
     Elevator elevator;
-    Intake intake;
     Outtake outtake;
+    Intake intake;
     Claw claw;
     IntakeExtension intakeExtension;
     AutoConstants autoConstants;
@@ -75,43 +75,40 @@ public class RightAutoRedRight extends CommandOpMode {
         };
 
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseRedRight)
-                .lineToLinearHeading(new Pose2d(temp, temp2, Math.toRadians(0)))
-                .addTemporalMarker(0.5, () -> intake.move(Intake.Angle.INTAKE))
-                .waitSeconds(0.5)
-                .lineToConstantHeading(new Vector2d(28,-32))
-                .waitSeconds(0.5)
-                .lineToConstantHeading(new Vector2d(36,-32))
-                .waitSeconds(AutoConstants.WAIT)
-                .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
+                .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT))
+
+                .lineToLinearHeading(new Pose2d(62, -32.75, Math.toRadians(0)))
                 .waitSeconds(.1)
-                .addTemporalMarker(()->intakeExtension.closeExtension())
+                .addTemporalMarker(() -> intake.move(Intake.Angle.INTAKE))
+                .addTemporalMarker(() -> intakeExtension.openExtension())
+                .waitSeconds(1)
+
+                .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
+                .waitSeconds(.5)
+
+                .addTemporalMarker(() -> intakeExtension.closeExtension())
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
+                .waitSeconds(.5)
                 .build();
 
 
-      //  intakeAnotherPreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
-            //    .lineToSplineHeading(new Pose2d(-40, -8.2, Math.toRadians(0)))
-                //.UNSTABLE_addTemporalMarkerOffset(0.5, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
-             //   .build();
+        //  intakeAnotherPreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
+        //    .lineToSplineHeading(new Pose2d(-40, -8.2, Math.toRadians(0)))
+        //.UNSTABLE_addTemporalMarkerOffset(0.5, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
+        //   .build();
 
-        placePreloadsOnBoard = drivetrain.trajectorySequenceBuilder(intakeAnotherPreload.end())
+        placePreloadsOnBoard = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
 
                 // truss pose next to board
-                .lineToLinearHeading(new Pose2d(12, -9, Math.toRadians(0)))
-                .addSpatialMarker(new Vector2d(8, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
-                .addSpatialMarker(new Vector2d(9, -6), () -> elevator.setTarget(1050))
-                .addSpatialMarker(new Vector2d(9, -6), () -> elevator.update())
-                .addSpatialMarker(new Vector2d(10, -6), () -> intake.move(Intake.Angle.MID))
-                .addSpatialMarker(new Vector2d(10, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
-
-                // backdrop pose
-                .splineToLinearHeading(new Pose2d(52.5, -32.75, Math.toRadians(0)), Math.toRadians(0))
-
+                .addTemporalMarker(() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
+                .addTemporalMarker(() -> elevator.setTarget(1050))
+                .addTemporalMarker(() -> elevator.update())
+                .addTemporalMarker(() -> intake.move(Intake.Angle.MID))
+                .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.OUTTAKE))
                 .waitSeconds(0.25)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
                 .waitSeconds(0.15)
                 .build();
-
 
 
         while (opModeInInit() && !isStopRequested()) {
@@ -135,8 +132,7 @@ public class RightAutoRedRight extends CommandOpMode {
 
         drivetrain.followTrajectorySequence(placePurplePixel);
         drivetrain.followTrajectorySequence(intakeAnotherPreload);
-        drivetrain.followTrajectorySequence(placePreloadsOnBoard);
-        drivetrain.followTrajectorySequence(park);
+      //  drivetrain.followTrajectorySequence(placePreloadsOnBoard);
        /* intakeLevel = IntakeLevel.TOP_54;
         drivetrain.followTrajectorySequence(intakeCycle43);
         drivetrain.followTrajectorySequence(place43);

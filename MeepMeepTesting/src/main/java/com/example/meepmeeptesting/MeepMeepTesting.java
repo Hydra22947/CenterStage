@@ -52,9 +52,14 @@ public class MeepMeepTesting {
                                 .waitSeconds(WAIT_TIME)
                                 .lineToLinearHeading(parkPose)
   */
-
+                             /*   .lineToLinearHeading(new Pose2d(50, -30, Math.toRadians(0)))
+                                .waitSeconds(0.5)
+                                .lineToConstantHeading(new Vector2d(28,-32))
+                                .waitSeconds(0.5)
+                                .lineToConstantHeading(new Vector2d(36,-32))
+*/
                                 // place yellow and purple pixel distance
-                                .lineToLinearHeading((new Pose2d(51.6, -40, Math.toRadians(0))))
+                                .lineToLinearHeading(new Pose2d(52.5, -32.75, Math.toRadians(0)))
                                 .waitSeconds(1.5)
 
                                 //Intake
@@ -111,16 +116,11 @@ public class MeepMeepTesting {
         return myBot.setConstraints(65, 65, Math.toRadians(360), Math.toRadians(360), 12.81)
                 .followTrajectorySequence(drive ->
                                 drive.trajectorySequenceBuilder(new Pose2d(-36, -62, Math.toRadians(90)))
-                                        .lineToLinearHeading(new Pose2d(-38, -12, Math.toRadians(60)))
-                                        .lineToLinearHeading(new Pose2d(-40, -8.2, Math.toRadians(0)))
-                                        .lineToSplineHeading(new Pose2d(12, -9, Math.toRadians(0)))
-                                        .splineToLinearHeading(new Pose2d(52.5, -32.75, Math.toRadians(0)), Math.toRadians(0))
-
-
-
-
-
-
+                                        .lineToLinearHeading(new Pose2d(50, -30, Math.toRadians(0)))
+                                        .waitSeconds(0.5)
+                                        .lineToConstantHeading(new Vector2d(28,-32))
+                                        .waitSeconds(0.5)
+                                        .lineToConstantHeading(new Vector2d(36,-32))
 
 
 
@@ -162,6 +162,6 @@ public class MeepMeepTesting {
         RoadRunnerBotEntity leftRedBot = redLeftTraj(new DefaultBotBuilder(meepMeep));
         RoadRunnerBotEntity rightRedBot = redRightTraj(new DefaultBotBuilder(meepMeep));
         leftRedBot.setDimensions(14, 15.75);
-        setAnimation(meepMeep, leftRedBot);
+        setAnimation(meepMeep, rightRedBot);
     }
 }
