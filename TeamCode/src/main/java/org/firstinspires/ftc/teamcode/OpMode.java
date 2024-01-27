@@ -6,7 +6,9 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
@@ -19,7 +21,7 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
 @TeleOp(name = "OpMode Blue")
-public class OpMode extends CommandOpMode {
+public class OpMode extends LinearOpMode {
 
     // robot
     private final RobotHardware robot = RobotHardware.getInstance();
@@ -31,6 +33,7 @@ public class OpMode extends CommandOpMode {
     Outtake outtake;
     Claw claw;
     IntakeExtension intakeExtension;
+    ElapsedTime codeTime;
 
     // gamepads
     GamepadEx gamepadEx, gamepadEx2;
@@ -47,7 +50,6 @@ public class OpMode extends CommandOpMode {
     int openedXTimes = 0;
     boolean retract = false,  goToMid = false, intakeMid = true, canIntake = true, startedDelayTransfer = false, heldExtension = false;
     boolean override = false, had2Pixels = false, hang = false;
-    double loopTime = 0;
 
     public enum IntakeState {
         RETRACT,
@@ -73,7 +75,7 @@ public class OpMode extends CommandOpMode {
     LiftState liftState = LiftState.RETRACT;
 
     @Override
-    public void initialize() {
+    public void runOpMode() {
         CommandScheduler.getInstance().reset();
 
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
@@ -89,14 +91,14 @@ public class OpMode extends CommandOpMode {
         drivetrain = new Drivetrain(gamepad1, true);
         elevator = new Elevator(gamepad2);
         outtake = new Outtake();
-        claw = new Claw(this);
+        claw = new Claw();
         intake = new Intake();
         intakeExtension = new IntakeExtension(gamepad1);
-
+        codeTime = new ElapsedTime();
         intake.setAngle(Intake.Angle.OUTTAKE);
         intakeExtension.setCurrent(IntakeExtension.ExtensionState.CLOSE);
         intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
-        claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
+        claw.setBothClaw(Claw.ClawState.OPEN);
         outtake.setAngle(Outtake.Angle.INTAKE);
         elevator.setAuto(false);
 
@@ -114,42 +116,32 @@ public class OpMode extends CommandOpMode {
             outtake.update();
             intakeExtension.update();
         }
-    }
 
-    @Override
-    public void run() {
-        intakeExtension.update();
-        betterGamepad1.update();
-        betterGamepad2.update();
-        drivetrain.update();
-        intake.update();
-        outtake.update();
-        elevator.update();
+        codeTime.reset();
 
-        if (gamepad2.left_stick_y != 0) {
-            elevator.setUsePID(false);
-        } else {
-            elevator.setUsePID(true);
+        waitForStart();
+
+        while (opModeIsActive())
+        {
+            intakeExtension.update();
+            betterGamepad1.update();
+            betterGamepad2.update();
+            drivetrain.update();
+            intake.update();
+            outtake.update();
+            elevator.update();
+            claw.update();
+
+            if (gamepad2.left_stick_y != 0) {
+                elevator.setUsePID(false);
+            } else {
+                elevator.setUsePID(true);
+            }
+
+            changeIntakeLevels();
+            intakeStateMachine();
+            elevatorStateMachine();
         }
-
-
-
-        changeIntakeLevels();
-        intakeStateMachine();
-        elevatorStateMachine();
-
-        telemetry.addData("hz ", 1000000000 / (System.nanoTime() - loopTime));
-        telemetry.addData("closed claw", intake.closedClaw());
-        telemetry.addData("intake state", intakeState.name());
-        telemetry.addData("delay transfer", (getTime() - transferTimer) >= delayTransfer);
-        telemetry.addData("startedDelayTransfer", startedDelayTransfer);
-        telemetry.addData("elevator target", elevatorTargetRight);
-        telemetry.addData("elevator pos", elevator.getPosRight());
-        telemetry.addData("manual transfer", (intake.closedClaw() && override));
-        telemetry.update();
-        CommandScheduler.getInstance().run();
-
-        loopTime = System.nanoTime();
     }
 
     void changeIntakeLevels()
@@ -179,10 +171,13 @@ public class OpMode extends CommandOpMode {
                     heldExtension = false;
                 }
 
-                if (betterGamepad1.rightBumperOnce() && !robot.has2Pixels() && canIntake) {
+                if (betterGamepad1.rightBumperOnce() && !robot.has2Pixels() && canIntake)
+                {
                     intakeState = IntakeState.INTAKE;
                     override = false;
-                } else if (gamepad1.right_trigger != 0 && !robot.has2Pixels() && canIntake && !heldExtension) {
+                }
+                else if (gamepad1.right_trigger != 0 && !robot.has2Pixels() && canIntake && !heldExtension)
+                {
                     intakeState = IntakeState.INTAKE_EXTEND;
                     override = false;
                 }
@@ -214,7 +209,7 @@ public class OpMode extends CommandOpMode {
 
                 if(getTime() - closeTransferTimer >= delayCloseTransfer && goToMid)
                 {
-                    claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
+                    claw.setBothClaw(Claw.ClawState.CLOSED);
 
                     goToMid = false;
 
@@ -236,13 +231,15 @@ public class OpMode extends CommandOpMode {
 
                 intakeExtension.setCurrent(IntakeExtension.ExtensionState.CLOSE);
 
-                if (gamepad1.right_trigger != 0) {
+                if (gamepad1.right_trigger != 0)
+                {
                     intakeState = IntakeState.INTAKE_EXTEND;
                 }
 
-                claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
+                claw.setBothClaw(Claw.ClawState.OPEN);
 
-                if ((robot.has2Pixels() && !startedDelayTransfer) || betterGamepad1.rightBumperOnce() || (intake.closedClaw() && override)) {
+                if ((robot.has2Pixels() && !startedDelayTransfer) || betterGamepad1.rightBumperOnce() || (intake.closedClaw() && override))
+                {
                     had2Pixels = true;
                     transferTimer = getTime();
 
@@ -263,29 +260,25 @@ public class OpMode extends CommandOpMode {
                     intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
                 }
 
-                if(betterGamepad2.dpadRightOnce())
+                if(betterGamepad2.dpadRightOnce() && intake.getClawStateRight() == Intake.ClawState.OPEN)
                 {
                     override = true;
-                    if(intake.getClawStateRight() == Intake.ClawState.OPEN)
-                    {
-                        intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);
-                    }
-                    else
-                    {
-                        intake.updateClawState(Intake.ClawState.OPEN, ClawSide.RIGHT);
-                    }
+                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);
                 }
-                else if(betterGamepad2.dpadLeftOnce())
+                else if(betterGamepad1.dpadRightOnce())
                 {
                     override = true;
-                    if(intake.getClawStateLeft() == Intake.ClawState.OPEN)
-                    {
-                        intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT);
-                    }
-                    else
-                    {
-                        intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT);
-                    }
+                    intake.updateClawState(Intake.ClawState.OPEN, ClawSide.RIGHT);
+                }
+                if(betterGamepad2.dpadLeftOnce() && intake.getClawStateLeft() == Intake.ClawState.OPEN)
+                {
+                    override = true;
+                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT);
+                }
+                else if(betterGamepad1.dpadLeftOnce())
+                {
+                    override = true;
+                    intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT);
                 }
 
                 if((intake.closedClaw() && override) && betterGamepad1.rightBumperOnce())
@@ -311,7 +304,7 @@ public class OpMode extends CommandOpMode {
 
                 intakeExtension.setCurrent(IntakeExtension.ExtensionState.MANUAL);
                 moveIntake();
-                claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
+                claw.setBothClaw(Claw.ClawState.OPEN);
 
                 if ((robot.has2Pixels() && !startedDelayTransfer) || gamepad1.right_trigger == 0 || (intake.closedClaw() && override))
                 {
@@ -380,7 +373,7 @@ public class OpMode extends CommandOpMode {
                 {
                     intake.move(Intake.Angle.MID);
                     previousElevator = getTime();
-                    claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
+                    claw.setBothClaw(Claw.ClawState.CLOSED);
                     liftState = LiftState.EXTRACT;
                 }
                 else if(betterGamepad2.dpadUpOnce())
@@ -416,15 +409,15 @@ public class OpMode extends CommandOpMode {
 
                 if(betterGamepad1.dpadRightOnce())
                 {
-                    claw.updateState(Claw.ClawState.OPEN, ClawSide.RIGHT);
+                    claw.setRightClaw(Claw.ClawState.OPEN);
                 }
                 else if(betterGamepad1.dpadLeftOnce())
                 {
-                    claw.updateState(Claw.ClawState.OPEN, ClawSide.LEFT);
+                    claw.setLeftClaw(Claw.ClawState.OPEN);
                 }
                 else if(betterGamepad1.dpadDownOnce())
                 {
-                    claw.updateState(Claw.ClawState.INTERMEDIATE, ClawSide.BOTH);
+                    claw.setBothClaw(Claw.ClawState.INTERMEDIATE);
                 }
 
                 if(betterGamepad2.rightBumperOnce())
@@ -451,18 +444,20 @@ public class OpMode extends CommandOpMode {
                     elevatorTargetRight = elevator.getTargetRight() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
                     elevatorTargetLeft = elevator.getTargetLeft() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
                     openedXTimes++;
-                    claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
+                    claw.setBothClaw(Claw.ClawState.OPEN);
 
                     elevatorReset = getTime();
                     retract = true;
-                } else if ((getTime() - elevatorReset) >= WAIT_DELAY_TILL_CLOSE && retract) {
+                } else if ((getTime() - elevatorReset) >= WAIT_DELAY_TILL_CLOSE && retract)
+                {
                     retract = false;
                     liftState = LiftState.RETRACT;
                 }
                 break;
             case HANG:
 
-                if(betterGamepad2.dpadUpOnce()) {
+                if(betterGamepad2.dpadUpOnce())
+                {
                     hang = !hang;
                 }
 
@@ -490,7 +485,8 @@ public class OpMode extends CommandOpMode {
 
     double getTime()
     {
-        return System.nanoTime() / 1000000;
+        //TODO: check if code doesn't go boom boom because nano seconds
+        return codeTime.nanoseconds() / 1000000;
     }
 
     void moveIntake()

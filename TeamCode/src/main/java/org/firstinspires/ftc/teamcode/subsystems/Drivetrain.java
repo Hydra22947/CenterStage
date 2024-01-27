@@ -55,12 +55,6 @@ public class Drivetrain {
         robot.dtBackLeftMotor.setPower(input.getX()  + twist - input.getY());
         robot.dtFrontRightMotor.setPower(input.getX()  - twist - input.getY());
         robot.dtBackRightMotor.setPower(input.getX()  - twist + input.getY());
-
-        robot.telemetry.addLine("" + slow);
-        robot.telemetry.addData("heading H", Math.toDegrees(robot.getAngle()));
-        robot.telemetry.addData("offset", robot.getImuOffset());
-        robot.telemetry.addData("power", power);
-        robot.telemetry.addData("max power", maxPower);
     }
 
 
@@ -77,8 +71,6 @@ public class Drivetrain {
         {
             robot.setImuOffset(Math.PI);
         }
-
-        robot.telemetry.update();
     }
 
     public void fast()
