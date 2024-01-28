@@ -55,8 +55,6 @@ public class RobotHardware {
     public BetterServo outtakeClawPivotServo;
     public BetterServo outtakeHandRightServo;
     public BetterServo outtakeHandLeftServo;
-    public DigitalChannel breakbeamRight;  // Touch sensor Object
-    public DigitalChannel breakbeamLeft;  // Touch sensor Object
 
     // TODO: ADD x3 Distance Sensors, webcam
 
@@ -158,9 +156,6 @@ public class RobotHardware {
         // HAND
         this.outtakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
         this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
-        // BEAMS
-        this.breakbeamRight = hardwareMap.get(DigitalChannel.class, "bbR");
-        this.breakbeamLeft = hardwareMap.get(DigitalChannel.class, "bbL");
         // ELEVATOR
         this.elevatorMotorRight = hardwareMap.get(DcMotorEx.class, "mER");
         this.elevatorMotorLeft = hardwareMap.get(DcMotorEx.class, "mEL");
