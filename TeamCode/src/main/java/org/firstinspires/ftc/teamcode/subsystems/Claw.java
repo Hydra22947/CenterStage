@@ -15,10 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Config
 public class Claw implements Subsystem {
-    public static double delay = 500;
-    boolean shouldOpen = false;
     private final RobotHardware robot;
-    public boolean overwrite = false;
 
     @Override
     public void play() {
@@ -39,6 +36,7 @@ public class Claw implements Subsystem {
     public enum ClawState {
         CLOSED,
         INTERMEDIATE,
+        INTAKE,
         OPEN
     }
 
@@ -46,8 +44,9 @@ public class Claw implements Subsystem {
     public ClawState rightClaw = ClawState.OPEN;
 
     // LOOK FORM INTAKE
-    public static double openLeft = .18, closeLeft = .3;
-    public static double openRight = .43, closeRight = .53;
+    public static double openLeft = .17, closeLeft = .3;
+    public static double intakeRight = .45, intakeLeft = .2;
+    public static double openRight = .42, closeRight = .53;
     public static double intermediateLeft = .25, intermediateRight = .48;
 
     public Claw() {
@@ -93,6 +92,8 @@ public class Claw implements Subsystem {
                         return closeLeft;
                     case INTERMEDIATE:
                         return intermediateLeft;
+                    case INTAKE:
+                        return intakeLeft;
                     case OPEN:
                         return openLeft;
                     default:
@@ -104,6 +105,8 @@ public class Claw implements Subsystem {
                         return closeRight;
                     case INTERMEDIATE:
                         return intermediateRight;
+                    case INTAKE:
+                        return intakeRight;
                     case OPEN:
                         return openRight;
                     default:
