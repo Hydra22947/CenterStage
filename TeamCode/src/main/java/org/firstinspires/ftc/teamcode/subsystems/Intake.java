@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public class Intake implements Subsystem{
 
     private final RobotHardware robot;
-    public static double intakeHandPivot = 0.15, intakeAmmoPivot = 0.01;
+    public static double intakeHandPivot = 0.175, intakeAmmoPivot = 0.01;
     public static double outtakeHandPivot = .61, outtakeAmmoPivot = .55;
     public static double midHandPivot = 0.575, midAmmoPivot = 0.325;
     public static double top5HandPivot = .28, top5AmmoPivot = 0.01; // auto
@@ -26,7 +26,7 @@ public class Intake implements Subsystem{
     public static double STACK = 0.02;
     public static double RIGHT_SENSOR_ERROR = 0.3;
 
-    public static double openRight = 0.61, openLeft = 0.54;
+    public static double openRight = 0.595, openLeft = 0.525;
     public static double closeRight = .78, closeLeft = .73;
     public static double indeterminateRight = 0.67, indeterminateLeft = 0.585;
 
