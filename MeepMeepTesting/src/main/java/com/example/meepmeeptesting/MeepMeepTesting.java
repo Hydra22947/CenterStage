@@ -29,7 +29,10 @@ public class MeepMeepTesting {
         Pose2d parkPose = new Pose2d(50, -55);
         return myBot.setConstraints(65, 45, Math.toRadians(180), Math.toRadians(180), 13.915)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.toRadians(90)))
+                        drive.trajectorySequenceBuilder(new Pose2d(12, -62, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(35, -20.75, Math.toRadians(0)))
+
+
 /*                                .strafeLeft(25)
                                 .waitSeconds(.5)
                                 .lineToLinearHeading(placePixelPose)
@@ -58,7 +61,7 @@ public class MeepMeepTesting {
                                 .waitSeconds(0.5)
                                 .lineToConstantHeading(new Vector2d(36,-32))
 */
-                                .lineToLinearHeading(new Pose2d(45, -30.75, Math.toRadians(0)))
+                            //\    .lineToLinearHeading(new Pose2d(35, -20.75, Math.toRadians(0)))
 
                                 // place yellow and purple pixel distance
                                 .lineToLinearHeading(new Pose2d(52.5, -32.75, Math.toRadians(0)))
