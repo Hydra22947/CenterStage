@@ -13,52 +13,51 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 public class PropPipeline implements VisionProcessor {
-    public enum Location {
-        LEFT, CENTER, RIGHT, BLUE, RED, FAR, CLOSE
-    }
-    private static final boolean DEBUG = false;
-
-    private volatile Location location = Location.RIGHT;
-
-    private final Mat hsv = new Mat();
-
-    public static int redLeftX = (int) (815 / 1.5);
-    public static int redLeftY = (int) (550 / 1.5);
-
-    public static int redCenterX = (int) (1365 / 1.5);
-    public static int redCenterY = (int) (475 / 1.5);
-
-    public static int blueLeftX = (int) (240 / 1.5);
-    public static int blueLeftY = (int) (525 / 1.5);
-
-    public static int blueCenterX = (int) (925 / 1.5);
-    public static int blueCenterY = (int) (485 / 1.5);
-
-    public static int leftWidth = (int) (175 / 1.5);
-    public static int leftHeight = (int) (100 / 1.5);
-
-    public static int centerWidth = (int) (125 / 1.5);
-    public static int centerHeight = (int) (125 / 1.5);
-
+    private static final boolean DEBUG = true;
+    public static int redLeftX = (int) (815);
+    public static int redLeftY = (int) (550);
+    public static int redCenterX = (int) (1365);
+    public static int redCenterY = (int) (475);
+    public static int blueLeftX = (int) (240);
+    public static int blueLeftY = (int) (525);
+    public static int blueCenterX = (int) (925);
+    public static int blueCenterY = (int) (485);
+    public static int leftWidth = (int) (175);
+    public static int leftHeight = (int) (100);
+    public static int centerWidth = (int) (125);
+    public static int centerHeight = (int) (125);
     public static double BLUE_TRESHOLD = 70;
     public static double RED_TRESHOLD = 100;
-
+    private final Mat hsv = new Mat();
     public double leftColor = 0.0;
     public double centerColor = 0.0;
-
     public Scalar left = new Scalar(0, 0, 0);
     public Scalar center = new Scalar(0, 0, 0);
-
     Telemetry telemetry;
 
-//    Location ALLIANCE = Location.RED;
-
-    public PropPipeline() {
-        this(null);
+    enum Location
+    {
+        LEFT,
+        RIGHT,
+        CENTER
     }
 
-    public PropPipeline(Telemetry telemetry) {
+    enum Alliance
+    {
+        RED,
+        BLUE
+    }
+    Alliance alliance = Alliance.RED;
+    private volatile Location location = Location.CENTER;
+
+
+    public PropPipeline(Alliance alliance) {
+        this(null, alliance);
+    }
+
+    public PropPipeline(Telemetry telemetry, Alliance alliance) {
         this.telemetry = telemetry;
+        this.alliance =  alliance;
     }
 
     @Override
@@ -70,10 +69,15 @@ public class PropPipeline implements VisionProcessor {
     public Object processFrame(Mat frame, long captureTimeNanos) {
         Rect leftZoneArea;
         Rect centerZoneArea;
-        //TODO:ADD FOR BOTH SIDES.
-        leftZoneArea = new Rect(redLeftX, redLeftY, leftWidth, leftHeight);
-        centerZoneArea = new Rect(redCenterX, redCenterY, centerWidth, centerHeight);
 
+
+//        if (ALLIANCE == Location.RED && SIDE == Location.FAR || ALLIANCE == Location.BLUE && SIDE == Location.CLOSE) {
+            leftZoneArea = new Rect(redLeftX, redLeftY, leftWidth, leftHeight);
+            centerZoneArea = new Rect(redCenterX, redCenterY, centerWidth, centerHeight);
+//        } else {
+         //   leftZoneArea = new Rect(blueLeftX, blueLeftY, leftWidth, leftHeight);
+//         //   centerZoneArea = new Rect(blueCenterX, blueCenterY, centerWidth, centerHeight);
+//        }
 
         Mat leftZone = frame.submat(leftZoneArea);
         Mat centerZone = frame.submat(centerZoneArea);
@@ -98,9 +102,8 @@ public class PropPipeline implements VisionProcessor {
             telemetry.update();
         }
 
-        //TODO:CHANGE TO MATCH BOTH SIDES
-        double threshold = RED_TRESHOLD;
-        int idx = 0 ;
+        double threshold = alliance == Alliance.RED ? RED_TRESHOLD : BLUE_TRESHOLD;
+        int idx = alliance == Alliance.RED ? 0 : 2;
 
         leftColor = left.val[idx];
         centerColor = center.val[idx];

@@ -92,12 +92,15 @@ public class RightAutoRedRight extends CommandOpMode {
                 .waitSeconds(0.15)
                 .addTemporalMarker(() -> intakeExtension.closeExtension())
                 .addTemporalMarker(() -> intake.move(Intake.Angle.MID))
+                .splineToLinearHeading(new Pose2d(52.5, -55, Math.toRadians(0)), Math.toRadians(0))
+
                 .waitSeconds(.5)
                 .build();
 
 
 
         placePreloadsOnBoard = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
+
                 .addTemporalMarker(() -> elevator.setTarget(1050))
                 .addTemporalMarker(() -> elevator.update())
                 .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.OUTTAKE))
