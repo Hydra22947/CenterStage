@@ -35,14 +35,14 @@ public class PropPipeline implements VisionProcessor {
     public Scalar center = new Scalar(0, 0, 0);
     Telemetry telemetry;
 
-    enum Location
+    public enum Location
     {
         LEFT,
         RIGHT,
         CENTER
     }
 
-    enum Alliance
+    public enum Alliance
     {
         RED,
         BLUE
