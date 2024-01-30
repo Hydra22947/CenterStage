@@ -98,7 +98,7 @@ public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
     public SampleMecanumDrive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, WHEEL_BASE, LATERAL_MULTIPLIER);
 
-        robot.init(hardwareMap, FtcDashboard.getInstance().getTelemetry());
+        robot.init(hardwareMap, FtcDashboard.getInstance().getTelemetry(), true);
         this.imu = robot.imu;
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,

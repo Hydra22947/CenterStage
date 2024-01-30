@@ -53,7 +53,7 @@ public class OuttakeTest extends CommandOpMode {
     @Override
     public void initialize() {
         gamepadEx = new BetterGamepad(gamepad1);
-        robot.init(hardwareMap, telemetry);
+        robot.init(hardwareMap, telemetry, false);
 
         drivetrain = new Drivetrain(gamepad1, true);
         outtake = new Outtake();

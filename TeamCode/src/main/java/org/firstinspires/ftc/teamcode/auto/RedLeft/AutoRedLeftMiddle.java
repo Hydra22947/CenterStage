@@ -56,7 +56,7 @@ public class AutoRedLeftMiddle extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
 
-        robot.init(hardwareMap, telemetry);
+        robot.init(hardwareMap, telemetry, true);
 
         autoConstants = new AutoConstants();
         drivetrain.setPoseEstimate(autoConstants.startPoseRedLeft);
@@ -220,7 +220,7 @@ public class AutoRedLeftMiddle extends LinearOpMode {
                 .build();
 
         park = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
-                .lineToLinearHeading(new Pose2d(55, -10))
+                .lineToLinearHeading(new Pose2d(55, -10, Math.toRadians(autoConstants.startPoseRedLeft.getHeading())))
                 .addTemporalMarker(()->elevator.setTarget(0))
                 .addTemporalMarker(()->elevator.update())
                 .addTemporalMarker(()->outtake.setAngle(Outtake.Angle.INTAKE))

@@ -1,10 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.function.Consumer;
+import org.firstinspires.ftc.robotcore.external.function.Continuation;
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
+import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
@@ -12,8 +17,12 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-public class PropPipeline implements VisionProcessor {
+import java.util.concurrent.atomic.AtomicReference;
+
+public class PropPipeline implements VisionProcessor, CameraStreamSource {
     private static final boolean DEBUG = true;
+
+    // TODO: change x , y of cubes
     public static int redLeftX = (int) (815);
     public static int redLeftY = (int) (550);
     public static int redCenterX = (int) (1365);
@@ -26,6 +35,8 @@ public class PropPipeline implements VisionProcessor {
     public static int leftHeight = (int) (100);
     public static int centerWidth = (int) (125);
     public static int centerHeight = (int) (125);
+
+    //
     public static double BLUE_TRESHOLD = 70;
     public static double RED_TRESHOLD = 100;
     private final Mat hsv = new Mat();
@@ -34,6 +45,15 @@ public class PropPipeline implements VisionProcessor {
     public Scalar left = new Scalar(0, 0, 0);
     public Scalar center = new Scalar(0, 0, 0);
     Telemetry telemetry;
+
+    private final AtomicReference<Bitmap> lastFrame =
+            new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
+
+
+    @Override
+    public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation) {
+        continuation.dispatch(bitmapConsumer -> bitmapConsumer.accept(lastFrame.get()));
+    }
 
     public enum Location
     {
@@ -47,7 +67,14 @@ public class PropPipeline implements VisionProcessor {
         RED,
         BLUE
     }
+    public enum Side
+    {
+        farmFromBackdrop,
+        closeFromBackdrop
+    }
+
     Alliance alliance = Alliance.RED;
+    Side side = Side.farmFromBackdrop;
     private volatile Location location = Location.CENTER;
 
 
@@ -62,7 +89,7 @@ public class PropPipeline implements VisionProcessor {
 
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
-
+        lastFrame.set(Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565));
     }
 
     @Override
@@ -71,13 +98,13 @@ public class PropPipeline implements VisionProcessor {
         Rect centerZoneArea;
 
 
-//        if (ALLIANCE == Location.RED && SIDE == Location.FAR || ALLIANCE == Location.BLUE && SIDE == Location.CLOSE) {
+        if (alliance == Alliance.RED && side == Side.farmFromBackdrop || alliance == Alliance.BLUE && side == Side.farmFromBackdrop) {
             leftZoneArea = new Rect(redLeftX, redLeftY, leftWidth, leftHeight);
             centerZoneArea = new Rect(redCenterX, redCenterY, centerWidth, centerHeight);
-//        } else {
-         //   leftZoneArea = new Rect(blueLeftX, blueLeftY, leftWidth, leftHeight);
-//         //   centerZoneArea = new Rect(blueCenterX, blueCenterY, centerWidth, centerHeight);
-//        }
+        } else {
+            leftZoneArea = new Rect(blueLeftX, blueLeftY, leftWidth, leftHeight);
+            centerZoneArea = new Rect(blueCenterX, blueCenterY, centerWidth, centerHeight);
+        }
 
         Mat leftZone = frame.submat(leftZoneArea);
         Mat centerZone = frame.submat(centerZoneArea);
@@ -121,8 +148,15 @@ public class PropPipeline implements VisionProcessor {
             location = Location.RIGHT;
         }
 
+
+
         leftZone.release();
         centerZone.release();
+
+
+        Bitmap b = Bitmap.createBitmap(frame.width(), frame.height(), Bitmap.Config.RGB_565);
+        Utils.matToBitmap(frame, b);
+        lastFrame.set(b);
 
         return null;
     }

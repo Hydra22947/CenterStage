@@ -92,7 +92,7 @@ public class AutoRedLeftCamera extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
 
-        robot.init(hardwareMap, telemetry);
+        robot.init(hardwareMap, telemetry, true);
 
         autoConstants = new AutoConstants();
         drivetrain.setPoseEstimate(autoConstants.startPoseRedLeft);

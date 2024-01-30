@@ -93,12 +93,12 @@ public class RobotHardware {
     }
 
     /**
-     * Created at the start of every OpMode.
+     * Created at the start of every OpModeBlue.
      *
      * @param hardwareMap The HardwareMap of the robot, storing all hardware devices
      * @param telemetry Saved for later in the event FTC Dashboard used
      */
-    public void init(final HardwareMap hardwareMap, final Telemetry telemetry) {
+    public void init(final HardwareMap hardwareMap, final Telemetry telemetry, boolean isAuto) {
         this.hardwareMap = hardwareMap;
         voltageTimer = new ElapsedTime();
 
@@ -160,10 +160,13 @@ public class RobotHardware {
         this.elevatorMotorRight = hardwareMap.get(DcMotorEx.class, "mER");
         this.elevatorMotorLeft = hardwareMap.get(DcMotorEx.class, "mEL");
         elevatorMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        elevatorMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        elevatorMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if(isAuto)
+        {
+            elevatorMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            elevatorMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
 
         // ODO PODS
 

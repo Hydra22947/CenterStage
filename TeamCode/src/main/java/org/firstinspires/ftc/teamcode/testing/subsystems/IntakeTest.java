@@ -30,7 +30,7 @@ public class IntakeTest extends LinearOpMode {
         CommandScheduler.getInstance().reset();
 
         gamepadEx = new BetterGamepad(gamepad1);
-        robot.init(hardwareMap, telemetry);
+        robot.init(hardwareMap, telemetry, false);
 
         intake = new Intake();
         drive = new Drivetrain(gamepad1, true);

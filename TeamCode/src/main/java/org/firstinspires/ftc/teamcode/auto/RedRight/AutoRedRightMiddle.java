@@ -54,7 +54,7 @@ public class AutoRedRightMiddle extends CommandOpMode {
 
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
 
-        robot.init(hardwareMap, telemetry);
+        robot.init(hardwareMap, telemetry, true);
 
         autoConstants = new AutoConstants();
         drivetrain.setPoseEstimate(autoConstants.startPoseRedRight);
@@ -105,7 +105,7 @@ public class AutoRedRightMiddle extends CommandOpMode {
                 .addTemporalMarker(() -> elevator.setTarget(0))
                 .addTemporalMarker(() -> elevator.update())
                 .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.INTAKE))
-                .lineToLinearHeading(new Pose2d(55, -60))
+                .lineToLinearHeading(new Pose2d(55, -60, Math.toRadians(autoConstants.startPoseRedRight.getHeading())))
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .build();
 

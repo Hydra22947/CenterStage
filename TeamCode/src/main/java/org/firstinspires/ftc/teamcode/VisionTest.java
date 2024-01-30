@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 @TeleOp(name = "Vision Test", group = "Vision")
 public class VisionTest extends LinearOpMode {
@@ -29,6 +31,8 @@ public class VisionTest extends LinearOpMode {
                 .enableLiveView(true)
                 .setAutoStopLiveView(true)
                 .build();
+
+        FtcDashboard.getInstance().startCameraStream(vision, 0);
 
 
         waitForStart();

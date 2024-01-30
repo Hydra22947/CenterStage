@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -20,8 +19,8 @@ import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@TeleOp(name = "OpMode Blue")
-public class OpMode extends LinearOpMode {
+@TeleOp(name = "OpModeBlue Blue")
+public class OpModeBlue extends LinearOpMode {
 
     // robot
     private final RobotHardware robot = RobotHardware.getInstance();
@@ -86,7 +85,7 @@ public class OpMode extends LinearOpMode {
         betterGamepad1 = new BetterGamepad(gamepad1);
         betterGamepad2 = new BetterGamepad(gamepad2);
 
-        robot.init(hardwareMap, telemetry);
+        robot.init(hardwareMap, telemetry, false);
 
         drivetrain = new Drivetrain(gamepad1, true);
         elevator = new Elevator(gamepad2);

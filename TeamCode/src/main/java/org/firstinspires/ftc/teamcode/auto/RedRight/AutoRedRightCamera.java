@@ -82,7 +82,7 @@ public class AutoRedRightCamera extends CommandOpMode {
 
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
 
-        robot.init(hardwareMap, telemetry);
+        robot.init(hardwareMap, telemetry, true);
 
         autoConstants = new AutoConstants();
         drivetrain.setPoseEstimate(autoConstants.startPoseRedRight);
