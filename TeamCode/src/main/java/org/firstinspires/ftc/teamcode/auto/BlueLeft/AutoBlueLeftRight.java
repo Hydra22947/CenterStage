@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.RedLeft;
+package org.firstinspires.ftc.teamcode.auto.BlueLeft;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "Right 2+0 Auto Red Left")
-public class AutoRedLeftRight extends LinearOpMode {
+@Autonomous(name = "Right 2+0 Auto Blue Left")
+public class AutoBlueLeftRight extends LinearOpMode {
     VelocityConstraint smallVel;
     private final RobotHardware robot = RobotHardware.getInstance();
 
@@ -76,7 +76,7 @@ public class AutoRedLeftRight extends LinearOpMode {
 
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseRedLeft)
                 // place purple pixel distance
-                .lineToLinearHeading(new Pose2d(-45.5, -15, Math.toRadians(70)))
+                .lineToLinearHeading(new Pose2d(-45.5, 15, Math.toRadians(70)))
                 .addTemporalMarker( () -> intake.move(Intake.Angle.INTAKE))
                 .waitSeconds(AutoConstants.WAIT)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
@@ -86,23 +86,23 @@ public class AutoRedLeftRight extends LinearOpMode {
                 .build();
 
         intakeAnotherPreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
-                .lineToLinearHeading(new Pose2d(-40, -8.2, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(-40, 8.2, Math.toRadians(0)))
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
                 .build();
 
         placePreloadsOnBoard = drivetrain.trajectorySequenceBuilder(intakeAnotherPreload.end())
 
                 // truss pose next to board
-                .lineToSplineHeading(new Pose2d(12, -9, Math.toRadians(0)))
+                .lineToSplineHeading(new Pose2d(12, 9, Math.toRadians(0)))
 
-                .addSpatialMarker(new Vector2d(8, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
-                .addSpatialMarker(new Vector2d(9, -6), () -> elevator.setTarget(1050))
-                .addSpatialMarker(new Vector2d(9, -6), () -> elevator.update())
-                .addSpatialMarker(new Vector2d(10, -6), () -> intake.move(Intake.Angle.MID))
-                .addSpatialMarker(new Vector2d(10, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
+                .addSpatialMarker(new Vector2d(8, 6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
+                .addSpatialMarker(new Vector2d(9, 6), () -> elevator.setTarget(1050))
+                .addSpatialMarker(new Vector2d(9, 6), () -> elevator.update())
+                .addSpatialMarker(new Vector2d(10, 6), () -> intake.move(Intake.Angle.MID))
+                .addSpatialMarker(new Vector2d(10, 6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
 
                 // backdrop pose
-                .splineToLinearHeading(new Pose2d(52.5, -32.75, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(52.5, 32.75, Math.toRadians(0)), Math.toRadians(0))
 
                 .waitSeconds(0.25)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))

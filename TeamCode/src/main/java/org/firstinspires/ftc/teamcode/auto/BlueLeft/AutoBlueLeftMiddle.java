@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.RedLeft;
+package org.firstinspires.ftc.teamcode.auto.BlueLeft;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "Right 2+0 Auto Red Left")
-public class AutoRedLeftRight extends LinearOpMode {
+@Autonomous(name = "Middle 2+0 Auto Blue Left")
+public class AutoBlueLeftMiddle extends LinearOpMode {
     VelocityConstraint smallVel;
     private final RobotHardware robot = RobotHardware.getInstance();
 
@@ -58,7 +58,7 @@ public class AutoRedLeftRight extends LinearOpMode {
         robot.init(hardwareMap, telemetry, true);
 
         autoConstants = new AutoConstants();
-        drivetrain.setPoseEstimate(autoConstants.startPoseRedLeft);
+        drivetrain.setPoseEstimate(autoConstants.startPoseBlueLeft);
 
         elevator = new Elevator();
         outtake = new Outtake();
@@ -75,13 +75,15 @@ public class AutoRedLeftRight extends LinearOpMode {
 
 
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseRedLeft)
+
                 // place purple pixel distance
-                .lineToLinearHeading(new Pose2d(-45.5, -15, Math.toRadians(70)))
+                .lineToSplineHeading(new Pose2d(-55,-30, Math.toRadians(90)))
+                .splineToLinearHeading(new Pose2d(-36,-10, Math.toRadians(90)), Math.toRadians(180))
+                .addSpatialMarker(new Vector2d(-36, -39), () -> intake.move(Intake.Angle.INTAKE))
                 .addTemporalMarker( () -> intake.move(Intake.Angle.INTAKE))
                 .waitSeconds(AutoConstants.WAIT)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.1)
-                .addTemporalMarker(()->intakeExtension.closeExtension())
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .build();
 
@@ -120,7 +122,7 @@ public class AutoRedLeftRight extends LinearOpMode {
                 .UNSTABLE_addDisplacementMarkerOffset(7, () -> moveIntakeByTraj())
 
                 // intake pose
-                .splineToLinearHeading(new Pose2d(37.75, 10), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-37.75, -10), Math.toRadians(180))
 
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .addTemporalMarker(() -> intakeExtension.openExtension())
@@ -251,7 +253,6 @@ public class AutoRedLeftRight extends LinearOpMode {
             telemetry.update();
         }
     }
-
 
     void moveIntakeByTraj() {
         switch (intakeLevel) {
