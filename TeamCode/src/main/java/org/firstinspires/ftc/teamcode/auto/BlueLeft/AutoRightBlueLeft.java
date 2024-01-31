@@ -106,7 +106,7 @@ public class AutoRightBlueLeft extends CommandOpMode {
 
         park = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
                 .lineTo(new Vector2d(48 , 28))
-                .lineToLinearHeading(new Pose2d(55, 58, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(51, 58, Math.toRadians(-90)))
 
 
                 .build();

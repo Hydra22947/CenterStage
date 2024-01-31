@@ -224,7 +224,7 @@ public class AutoBlueRightMiddle extends LinearOpMode {
 
         park = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
                 .lineTo(new Vector2d(45,28))
-                .lineToLinearHeading(new Pose2d(60, 11, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(57, 7, Math.toRadians(-90)))
                 .lineTo(new Vector2d(65,12))
                 .build();
 

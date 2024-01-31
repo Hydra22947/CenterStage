@@ -93,7 +93,7 @@ public class AutoBlueLeftMiddle extends CommandOpMode {
 
         placePreloadsOnBoard = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
                 // backdrop pose
-                .splineToLinearHeading(new Pose2d(52.5, 35, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(52.5, 33, Math.toRadians(0)), Math.toRadians(0))
                 .waitSeconds(0.25)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
                 .waitSeconds(0.5)
@@ -107,7 +107,7 @@ public class AutoBlueLeftMiddle extends CommandOpMode {
 
         park = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
                 .lineTo(new Vector2d(48 , 36))
-                .lineToLinearHeading(new Pose2d(55, 58, Math.toRadians((-90))))
+                .lineToLinearHeading(new Pose2d(51, 58, Math.toRadians((-90))))
                 .build();
 
         while (opModeInInit() && !isStopRequested()) {

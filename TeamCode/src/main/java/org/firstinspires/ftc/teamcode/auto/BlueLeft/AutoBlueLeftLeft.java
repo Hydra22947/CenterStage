@@ -79,10 +79,11 @@ public class AutoBlueLeftLeft extends CommandOpMode {
                 .addTemporalMarker(() -> elevator.setTarget(1050))
                 .addTemporalMarker(() -> elevator.update())
                 .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.OUTTAKE))
-                .lineToLinearHeading(new Pose2d(52.5, 42, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(51.5, 38, Math.toRadians(0)))
 
+                .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
                 .addTemporalMarker(() -> intake.move(Intake.Angle.INTAKE))
-                .addTemporalMarker(() -> intakeExtension.openExtension())
+                .addTemporalMarker(() -> intakeExtension.openExtensionAuto())
                 .waitSeconds(.5)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.5)
@@ -95,7 +96,6 @@ public class AutoBlueLeftLeft extends CommandOpMode {
         placePreloadsOnBoard = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
 
                 .waitSeconds(0.25)
-                .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
                 .waitSeconds(0.5)
                 .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.INTAKE))
                 .addTemporalMarker(() -> elevator.setTarget(0))

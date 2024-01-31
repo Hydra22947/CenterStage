@@ -79,9 +79,9 @@ public class AutoRedLeftMiddle extends LinearOpMode {
 
                 // place purple pixel distance
                 .lineToSplineHeading(new Pose2d(-55,-30, Math.toRadians(90)))
-                .splineToLinearHeading(new Pose2d(-36,10, Math.toRadians(90)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-36,-15, Math.toRadians(90)), Math.toRadians(180))
                 .addSpatialMarker(new Vector2d(-36, -39), () -> intake.move(Intake.Angle.INTAKE))
-                .addTemporalMarker( () -> intake.move(Intake.Angle.INTAKE))
+                .forward(5.25)
                 .waitSeconds(AutoConstants.WAIT)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.1)
@@ -105,7 +105,7 @@ public class AutoRedLeftMiddle extends LinearOpMode {
                 .addSpatialMarker(new Vector2d(10, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
 
                 // backdrop pose
-                .splineToLinearHeading(new Pose2d(52.5, -32.75, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(52.5, -32.5, Math.toRadians(0)), Math.toRadians(0))
 
                 .waitSeconds(0.25)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
@@ -220,7 +220,7 @@ public class AutoRedLeftMiddle extends LinearOpMode {
                 .build();
 
         park = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
-                .lineToLinearHeading(new Pose2d(55, -10, Math.toRadians(autoConstants.startPoseRedLeft.getHeading())))
+                .lineToLinearHeading(new Pose2d(55, -10, Math.toRadians(-90)))
                 .addTemporalMarker(()->elevator.setTarget(0))
                 .addTemporalMarker(()->elevator.update())
                 .addTemporalMarker(()->outtake.setAngle(Outtake.Angle.INTAKE))

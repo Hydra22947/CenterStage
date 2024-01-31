@@ -80,8 +80,11 @@ public class AutoRedRightMiddle extends CommandOpMode {
                 .addTemporalMarker(() -> intake.move(Intake.Angle.INTAKE))
                 .addTemporalMarker(() -> intakeExtension.openExtension())
                 .waitSeconds(.5)
+                .addTemporalMarker(() -> elevator.setTarget(1050))
+                .addTemporalMarker(() -> elevator.update())
+                .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.OUTTAKE))
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
-                .waitSeconds(.5)
+                .waitSeconds(.7)
                 .addTemporalMarker(() -> intakeExtension.closeExtension())
                 .addTemporalMarker(() -> intake.move(Intake.Angle.MID))
                 .waitSeconds(.2)
@@ -89,15 +92,13 @@ public class AutoRedRightMiddle extends CommandOpMode {
 
 
         placePreloadsOnBoard = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
-                .addTemporalMarker(() -> elevator.setTarget(1050))
-                .addTemporalMarker(() -> elevator.update())
-                .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.OUTTAKE))
 
                 // backdrop pose
-                .splineToLinearHeading(new Pose2d(52.5, -28.8, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(52.5, -34, Math.toRadians(0)), Math.toRadians(0))
                 .waitSeconds(0.25)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
                 .waitSeconds(0.15)
+                .back(8)
                 .build();
 
 
@@ -105,7 +106,7 @@ public class AutoRedRightMiddle extends CommandOpMode {
                 .addTemporalMarker(() -> elevator.setTarget(0))
                 .addTemporalMarker(() -> elevator.update())
                 .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.INTAKE))
-                .lineToLinearHeading(new Pose2d(55, -60, Math.toRadians(autoConstants.startPoseRedRight.getHeading())))
+                .lineToLinearHeading(new Pose2d(55, -60, Math.toRadians(-90)))
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .build();
 

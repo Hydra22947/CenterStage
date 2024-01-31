@@ -77,9 +77,9 @@ public class AutoBlueRightLeft extends LinearOpMode {
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseBlueRight)
 
                 // place purple pixel distance
-                .lineToLinearHeading(new Pose2d(-45.5, 30, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-45.8, 30, Math.toRadians(180)))
                 .addTemporalMarker(() -> intake.move(Intake.Angle.INTAKE))
-                .back(8)
+                .back(9.2)
                 .waitSeconds(AutoConstants.WAIT)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.4)
@@ -103,7 +103,8 @@ public class AutoBlueRightLeft extends LinearOpMode {
                 .addSpatialMarker(new Vector2d(10, 6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
 
                 // backdrop pose
-                .splineToLinearHeading(new Pose2d(53.5, 40, Math.toRadians(0)), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(51, 40, Math.toRadians(0)), Math.toRadians(90))
+                .forward(2)
 
                 .waitSeconds(0.25)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
@@ -224,7 +225,7 @@ public class AutoBlueRightLeft extends LinearOpMode {
 
         park = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
                 .lineTo(new Vector2d(45,28))
-                .lineToLinearHeading(new Pose2d(60, 11, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(55, 7, Math.toRadians(-90)))
                 .lineTo(new Vector2d(65,12))
                 .build();
 

@@ -39,6 +39,9 @@ public class IntakeExtension implements Subsystem{
 
     public static double OPEN_EXTENSION_R = 0.62, HALF_OPEN_R = .52;
     public static double OPEN_EXTENSION_L = 0.6, HALF_OPEN_L = .5;
+
+    public static double AUTO_OPEN_EXTENSION_R = 0.58;
+    public static double AUTO_OPEN_EXTENSION_L = 0.48;
     public static double CLOSE_EXTENSION_R = 0.17;
     public static double CLOSE_EXTENSION_L = 0.15;
 
@@ -93,6 +96,12 @@ public class IntakeExtension implements Subsystem{
     {
         this.robot.extensionServoRight.setPosition(OPEN_EXTENSION_R);
         this.robot.extensionServoLeft.setPosition(OPEN_EXTENSION_L);
+    }
+
+    public void openExtensionAuto()
+    {
+        this.robot.extensionServoRight.setPosition(AUTO_OPEN_EXTENSION_R);
+        this.robot.extensionServoLeft.setPosition(AUTO_OPEN_EXTENSION_L);
     }
     public void halfOpenExtension()
     {

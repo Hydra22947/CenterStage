@@ -77,16 +77,22 @@ public class AutoRedLeftLeft extends LinearOpMode {
 
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseRedLeft)
 
+
                 // place purple pixel distance
-                .lineToLinearHeading(new Pose2d(-47, -30, Math.toRadians(90)))
-                .turn(Math.toRadians(90))
-                .addTemporalMarker(() -> intake.move(Intake.Angle.INTAKE))
-                .back(8)
+
+         .lineToLinearHeading(new Pose2d(-45.5, -15, Math.toRadians(80)))
+                .addTemporalMarker( () -> intake.move(Intake.Angle.INTAKE))
                 .waitSeconds(AutoConstants.WAIT)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.1)
+                .addTemporalMarker(()->intakeExtension.closeExtension())
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .build();
+
+
+
+
+
 
         intakeAnotherPreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
                 .lineToLinearHeading(new Pose2d(-40, -8.2, Math.toRadians(0)))
@@ -105,7 +111,7 @@ public class AutoRedLeftLeft extends LinearOpMode {
                 .addSpatialMarker(new Vector2d(10, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
 
                 // backdrop pose
-                .splineToLinearHeading(new Pose2d(52.5, -30, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(53, -27, Math.toRadians(0)), Math.toRadians(0))
 
                 .waitSeconds(0.25)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
@@ -221,7 +227,7 @@ public class AutoRedLeftLeft extends LinearOpMode {
 
         park = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
                 .lineTo(new Vector2d(50, -9))
-                .lineToLinearHeading(new Pose2d(55, -10, Math.toRadians(autoConstants.startPoseRedLeft.getHeading())))
+                .lineToLinearHeading(new Pose2d(60, -10, Math.toRadians(-90)))
                 .addTemporalMarker(()->elevator.setTarget(0))
                 .addTemporalMarker(()->elevator.update())
                 .addTemporalMarker(()->outtake.setAngle(Outtake.Angle.INTAKE))

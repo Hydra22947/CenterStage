@@ -74,11 +74,15 @@ public class LeftAutoRedRight extends CommandOpMode {
 
 
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseRedRight)
-                .lineToLinearHeading(new Pose2d(29, -28, Math.toRadians(0)))
+
+                .lineToLinearHeading(new Pose2d(29, -30, Math.toRadians(0)))
 
                 .addTemporalMarker(() -> intake.move(Intake.Angle.INTAKE))
                 .addTemporalMarker(() -> intakeExtension.openExtension())
                 .waitSeconds(.5)
+                .addTemporalMarker(() -> elevator.setTarget(1050))
+                .addTemporalMarker(() -> elevator.update())
+                .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.OUTTAKE))
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.5)
                 .addTemporalMarker(() -> intakeExtension.closeExtension())
@@ -87,24 +91,25 @@ public class LeftAutoRedRight extends CommandOpMode {
                 .build();
 
 
+
         placePreloadsOnBoard = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
-                .addTemporalMarker(() -> elevator.setTarget(1050))
-                .addTemporalMarker(() -> elevator.update())
-                .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.OUTTAKE))
                 // backdrop pose
-                .splineToLinearHeading(new Pose2d(53, -45, Math.toRadians(0)), Math.toRadians(0))
-
-
+                .waitSeconds(.5)
+                .splineToLinearHeading(new Pose2d(53, -39, Math.toRadians(0)), Math.toRadians(0))
                 .waitSeconds(0.25)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
+                .waitSeconds(0.5)
+                .back(8)
+                .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.INTAKE))
+                .addTemporalMarker(() -> elevator.setTarget(0))
+                .addTemporalMarker(() -> elevator.update())
                 .waitSeconds(0.15)
+                .back(8)
                 .build();
 
         park = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
-                .addTemporalMarker(() -> elevator.setTarget(0))
-                .addTemporalMarker(() -> elevator.update())
-                .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.INTAKE))
-                .lineToLinearHeading(new Pose2d(55, -60, Math.toRadians(autoConstants.startPoseRedRight.getHeading())))
+
+                .lineToLinearHeading(new Pose2d(55, -60, Math.toRadians(-90)))
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .build();
 

@@ -76,12 +76,13 @@ public class AutoRedLeftRight extends LinearOpMode {
 
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseRedLeft)
                 // place purple pixel distance
-                .lineToLinearHeading(new Pose2d(-45.5, -15, Math.toRadians(70)))
-                .addTemporalMarker( () -> intake.move(Intake.Angle.INTAKE))
+                .lineToLinearHeading(new Pose2d(-46, -30, Math.toRadians(90)))
+                .turn(Math.toRadians(90))
+                .addTemporalMarker(() -> intake.move(Intake.Angle.INTAKE))
+                .back(8)
                 .waitSeconds(AutoConstants.WAIT)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.1)
-                .addTemporalMarker(()->intakeExtension.closeExtension())
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .build();
 
@@ -102,7 +103,7 @@ public class AutoRedLeftRight extends LinearOpMode {
                 .addSpatialMarker(new Vector2d(10, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
 
                 // backdrop pose
-                .splineToLinearHeading(new Pose2d(52.5, -32.75, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(52.5, -32, Math.toRadians(0)), Math.toRadians(0))
 
                 .waitSeconds(0.25)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
@@ -217,7 +218,8 @@ public class AutoRedLeftRight extends LinearOpMode {
                 .build();
 
         park = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
-                .lineToLinearHeading(new Pose2d(55, -10, Math.toRadians(autoConstants.startPoseRedLeft.getHeading())))
+                .lineTo(new Vector2d(50, -9))
+                .lineToLinearHeading(new Pose2d(60, -10, Math.toRadians(-90)))
                 .addTemporalMarker(()->elevator.setTarget(0))
                 .addTemporalMarker(()->elevator.update())
                 .addTemporalMarker(()->outtake.setAngle(Outtake.Angle.INTAKE))
