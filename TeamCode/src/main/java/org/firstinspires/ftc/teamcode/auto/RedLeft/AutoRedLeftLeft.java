@@ -105,7 +105,7 @@ public class AutoRedLeftLeft extends LinearOpMode {
                 .addSpatialMarker(new Vector2d(10, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
 
                 // backdrop pose
-                .splineToLinearHeading(new Pose2d(52.5, -32.75, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(52.5, -30, Math.toRadians(0)), Math.toRadians(0))
 
                 .waitSeconds(0.25)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
@@ -220,6 +220,7 @@ public class AutoRedLeftLeft extends LinearOpMode {
                 .build();
 
         park = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
+                .lineTo(new Vector2d(50, -9))
                 .lineToLinearHeading(new Pose2d(55, -10, Math.toRadians(autoConstants.startPoseRedLeft.getHeading())))
                 .addTemporalMarker(()->elevator.setTarget(0))
                 .addTemporalMarker(()->elevator.update())

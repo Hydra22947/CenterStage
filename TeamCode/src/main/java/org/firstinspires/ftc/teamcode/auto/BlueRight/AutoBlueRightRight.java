@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.BlueLeft;
+package org.firstinspires.ftc.teamcode.auto.BlueRight;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "Right 2+0 Auto Blue Left")
-public class AutoBlueLeftRight extends LinearOpMode {
+@Autonomous(name = "Right 2+0 Auto Blue Right")
+public class AutoBlueRightRight extends LinearOpMode {
     VelocityConstraint smallVel;
     private final RobotHardware robot = RobotHardware.getInstance();
 
@@ -58,7 +58,7 @@ public class AutoBlueLeftRight extends LinearOpMode {
         robot.init(hardwareMap, telemetry, true);
 
         autoConstants = new AutoConstants();
-        drivetrain.setPoseEstimate(autoConstants.startPoseRedLeft);
+        drivetrain.setPoseEstimate(autoConstants.startPoseBlueRight);
 
         elevator = new Elevator();
         outtake = new Outtake();
@@ -74,11 +74,12 @@ public class AutoBlueLeftRight extends LinearOpMode {
         };
 
 
-        placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseRedLeft)
+        placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseBlueRight)
                 // place purple pixel distance
-                .lineToLinearHeading(new Pose2d(-45.5, 15, Math.toRadians(70)))
+                .lineToLinearHeading(new Pose2d(-37, 10, Math.toRadians(-70)))
                 .addTemporalMarker( () -> intake.move(Intake.Angle.INTAKE))
                 .waitSeconds(AutoConstants.WAIT)
+                .lineTo(new Vector2d(-40,20))
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.1)
                 .addTemporalMarker(()->intakeExtension.closeExtension())
@@ -102,11 +103,14 @@ public class AutoBlueLeftRight extends LinearOpMode {
                 .addSpatialMarker(new Vector2d(10, 6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
 
                 // backdrop pose
-                .splineToLinearHeading(new Pose2d(52.5, 32.75, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(53.8, 29, Math.toRadians(0)), Math.toRadians(0))
 
                 .waitSeconds(0.25)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
                 .waitSeconds(0.15)
+                .addTemporalMarker(()->outtake.setAngle(Outtake.Angle.INTAKE))
+                .addTemporalMarker(()->elevator.setTarget(0))
+                .addTemporalMarker(()->elevator.update())
                 .build();
 
         intakeCycle43 = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
@@ -169,7 +173,7 @@ public class AutoBlueLeftRight extends LinearOpMode {
                 .addTemporalMarker(() -> elevator.update())
 
                 // truss pose next to wing
-                .lineToSplineHeading(new Pose2d(30, -15, Math.toRadians(0)))
+                .lineToSplineHeading(new Pose2d(-30, -15, Math.toRadians(0)))
                 .UNSTABLE_addDisplacementMarkerOffset(7, () -> intake.move(Intake.Angle.OUTTAKE))
 
                 // intake pose
@@ -211,16 +215,12 @@ public class AutoBlueLeftRight extends LinearOpMode {
                 .waitSeconds(0.1)
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
                 .waitSeconds(.2)
-                .addTemporalMarker(() -> elevator.setTarget(0))
-                .addTemporalMarker(() -> elevator.update())
-                .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.INTAKE))
                 .build();
 
         park = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
-                .lineToLinearHeading(new Pose2d(55, -10, Math.toRadians(autoConstants.startPoseRedLeft.getHeading())))
-                .addTemporalMarker(()->elevator.setTarget(0))
-                .addTemporalMarker(()->elevator.update())
-                .addTemporalMarker(()->outtake.setAngle(Outtake.Angle.INTAKE))
+                .lineTo(new Vector2d(45,28))
+                .lineToLinearHeading(new Pose2d(60, 9, Math.toRadians(-90)))
+                .lineTo(new Vector2d(65,12))
                 .build();
 
         while (opModeInInit() && !isStopRequested()) {

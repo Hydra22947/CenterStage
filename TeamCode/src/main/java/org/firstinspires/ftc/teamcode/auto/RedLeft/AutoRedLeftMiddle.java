@@ -79,7 +79,7 @@ public class AutoRedLeftMiddle extends LinearOpMode {
 
                 // place purple pixel distance
                 .lineToSplineHeading(new Pose2d(-55,-30, Math.toRadians(90)))
-                .splineToLinearHeading(new Pose2d(-36,-10, Math.toRadians(90)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-36,10, Math.toRadians(90)), Math.toRadians(180))
                 .addSpatialMarker(new Vector2d(-36, -39), () -> intake.move(Intake.Angle.INTAKE))
                 .addTemporalMarker( () -> intake.move(Intake.Angle.INTAKE))
                 .waitSeconds(AutoConstants.WAIT)
