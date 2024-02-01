@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
@@ -18,23 +20,27 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.concurrent.atomic.AtomicReference;
+@Config
 
-public class PropPipeline implements VisionProcessor, CameraStreamSource {
+public class PropPipelineRedRightBlueLeft implements VisionProcessor, CameraStreamSource {
     private static final boolean DEBUG = true;
 
-    // TODO: change x , y of cubes
-    public static int redLeftX = (int) (815);
-    public static int redLeftY = (int) (550);
-    public static int redCenterX = (int) (1365);
-    public static int redCenterY = (int) (475);
+    public static int redCenterX = (int) (300);
+    public static int redCenterY = (int) (300);
+    public static int redRightX = (int) (965);
+    public static int redRightY = (int) (475);
+
+
     public static int blueLeftX = (int) (240);
     public static int blueLeftY = (int) (525);
     public static int blueCenterX = (int) (925);
     public static int blueCenterY = (int) (485);
-    public static int leftWidth = (int) (175);
-    public static int leftHeight = (int) (100);
-    public static int centerWidth = (int) (125);
-    public static int centerHeight = (int) (125);
+
+
+    public static int leftWidth = (int) (400);
+    public static int leftHeight = (int) (300);
+    public static int centerWidth = (int) (300);
+    public static int centerHeight = (int) (300);
 
     //
     public static double BLUE_TRESHOLD = 70;
@@ -78,11 +84,11 @@ public class PropPipeline implements VisionProcessor, CameraStreamSource {
     private volatile Location location = Location.CENTER;
 
 
-    public PropPipeline(Alliance alliance) {
+    public PropPipelineRedRightBlueLeft(Alliance alliance) {
         this(null, alliance);
     }
 
-    public PropPipeline(Telemetry telemetry, Alliance alliance) {
+    public PropPipelineRedRightBlueLeft(Telemetry telemetry, Alliance alliance) {
         this.telemetry = telemetry;
         this.alliance =  alliance;
     }
@@ -99,7 +105,7 @@ public class PropPipeline implements VisionProcessor, CameraStreamSource {
 
 
         if (alliance == Alliance.RED && side == Side.farmFromBackdrop || alliance == Alliance.BLUE && side == Side.farmFromBackdrop) {
-            leftZoneArea = new Rect(redLeftX, redLeftY, leftWidth, leftHeight);
+            leftZoneArea = new Rect(redRightX, redRightY, leftWidth, leftHeight);
             centerZoneArea = new Rect(redCenterX, redCenterY, centerWidth, centerHeight);
         } else {
             leftZoneArea = new Rect(blueLeftX, blueLeftY, leftWidth, leftHeight);

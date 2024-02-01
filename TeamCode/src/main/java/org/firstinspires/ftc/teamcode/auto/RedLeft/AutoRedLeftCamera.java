@@ -10,14 +10,13 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.profile.VelocityConstraint;
-import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.PropPipeline;
+import org.firstinspires.ftc.teamcode.PropPipelineRedLeftBlueRight;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.PoseStorage;
 import org.firstinspires.ftc.teamcode.auto.old_with_cycles.AutoConstants;
@@ -49,9 +48,9 @@ public class AutoRedLeftCamera extends LinearOpMode {
     AutoConstants autoConstants;
 
     TrajectorySequence placePurplePixel, intakeAnotherPreload, placePreloadsOnBoard, intakeCycle43, intakeCycle21, place43, place21, park;
-    PropPipeline vision;
+    PropPipelineRedLeftBlueRight vision;
     VisionPortal portal;
-    PropPipeline.Location teamPropLocation;
+    PropPipelineRedLeftBlueRight.Location teamPropLocation;
     Pose2d boardPose;
 
     enum IntakeLevel {
@@ -63,7 +62,7 @@ public class AutoRedLeftCamera extends LinearOpMode {
     public void cameraSetup() {
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
 
-        vision = new PropPipeline(telemetry, PropPipeline.Alliance.RED);
+        vision = new PropPipelineRedLeftBlueRight(telemetry, PropPipelineRedLeftBlueRight.Alliance.RED);
 
         portal = new VisionPortal.Builder().setCamera(hardwareMap.get(WebcamName.class, "Webcam 1")).setCameraResolution(new Size(1600, 1200)).addProcessors(vision).setStreamFormat(VisionPortal.StreamFormat.MJPEG).enableLiveView(true).setAutoStopLiveView(true).build();
     }
