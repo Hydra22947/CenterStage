@@ -55,31 +55,41 @@ public class CameraTemplateBlueLeft extends LinearOpMode {
 
     public void initialize() {
 
+
+
+    }
+
+
+    void locationScore ()
+    {
+
+        switch (locationTraj)
+        {
+            case LEFT:
+                drivetrain.followTrajectorySequence(trajLeft);
+                break;
+
+            case RIGHT:
+                drivetrain.followTrajectorySequence(trajRight);
+                break;
+
+            case MIDDLE:
+                drivetrain.followTrajectorySequence(trajMiddle);
+                break;
+
+            default:
+                drivetrain.followTrajectorySequence(trajMiddle);
+
+        }
+
+    }
+
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+
+
         locationTraj = locationTraj.MIDDLE;
-
-        time = new ElapsedTime();
-        CommandScheduler.getInstance().reset();
-        drivetrain = new SampleMecanumDrive(hardwareMap);
-
-        telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
-
-        robot.init(hardwareMap, telemetry, true);
-
-        autoConstants = new AutoConstants();
-        drivetrain.setPoseEstimate(autoConstants.startPoseBlueLeft);
-
-        elevator = new Elevator();
-        outtake = new Outtake();
-        claw = new Claw();
-        intake = new Intake();
-        intakeExtension = new IntakeExtension();
-
-        smallVel = new VelocityConstraint() {
-            @Override
-            public double get(double v) {
-                return 50;
-            }
-        };
 
         trajLeft = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseBlueLeft)
 
@@ -174,41 +184,45 @@ public class CameraTemplateBlueLeft extends LinearOpMode {
                 .lineTo(new Vector2d(48, 28))
                 .lineToLinearHeading(new Pose2d(51, 58, Math.toRadians(-90)))
                 .build();
-    }
+
+        time = new ElapsedTime();
+        CommandScheduler.getInstance().reset();
+        drivetrain = new SampleMecanumDrive(hardwareMap);
+
+        telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
+
+        robot.init(hardwareMap, telemetry, true);
+
+        autoConstants = new AutoConstants();
+        drivetrain.setPoseEstimate(autoConstants.startPoseBlueLeft);
+
+        elevator = new Elevator();
+        outtake = new Outtake();
+        claw = new Claw();
+        intake = new Intake();
+        intakeExtension = new IntakeExtension();
+
+        smallVel = new VelocityConstraint() {
+            @Override
+            public double get(double v) {
+                return 50;
+            }
+        };
 
 
-    void locationScore ()
-    {
-
-        switch (locationTraj)
-        {
-            case LEFT:
-                drivetrain.followTrajectorySequence(trajLeft);
-                break;
-
-            case RIGHT:
-                drivetrain.followTrajectorySequence(trajRight);
-                break;
-
-            case MIDDLE:
-                drivetrain.followTrajectorySequence(trajMiddle);
-                break;
-
-            default:
-                drivetrain.followTrajectorySequence(trajMiddle);
-
+        while (opModeInInit() && !isStopRequested()) {
+            intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
+            intake.setAngle(Intake.Angle.OUTTAKE);
+            intakeExtension.closeExtension();
+            claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
+            outtake.setAngle(Outtake.Angle.INTAKE);
+            telemetry.addLine("Initialized");
         }
 
-    }
-
-
-    @Override
-    public void runOpMode() throws InterruptedException {
-
-        initialize();
-
         waitForStart();
-        if (isStopRequested()) return;
+
+        if(isStopRequested()) { return; }
+
 
         time.reset();
 

@@ -56,6 +56,49 @@ public class CameraTemplateBlueRight extends LinearOpMode {
 
     public void initialize() {
 
+
+    }
+
+
+    void locationScore ()
+    {
+
+        switch (locationTraj)
+        {
+            case LEFT:
+                drivetrain.followTrajectorySequence(trajLeft);
+                break;
+
+            case RIGHT:
+                drivetrain.followTrajectorySequence(trajRight);
+                break;
+
+            case MIDDLE:
+                drivetrain.followTrajectorySequence(trajMiddle);
+                break;
+
+            default:
+                drivetrain.followTrajectorySequence(trajMiddle);
+
+        }
+
+
+        while (opModeInInit() && !isStopRequested()) {
+            intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
+            intake.setAngle(Intake.Angle.OUTTAKE);
+            intakeExtension.closeExtension();
+            claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
+            outtake.setAngle(Outtake.Angle.INTAKE);
+            telemetry.addLine("Initialized");
+
+        }
+    }
+
+
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+
         locationTraj = locationTraj.MIDDLE;
 
         time = new ElapsedTime();
@@ -197,30 +240,6 @@ public class CameraTemplateBlueRight extends LinearOpMode {
                 .lineTo(new Vector2d(65,12))
 
                 .build();
-    }
-
-
-    void locationScore ()
-    {
-
-        switch (locationTraj)
-        {
-            case LEFT:
-                drivetrain.followTrajectorySequence(trajLeft);
-                break;
-
-            case RIGHT:
-                drivetrain.followTrajectorySequence(trajRight);
-                break;
-
-            case MIDDLE:
-                drivetrain.followTrajectorySequence(trajMiddle);
-                break;
-
-            default:
-                drivetrain.followTrajectorySequence(trajMiddle);
-
-        }
 
 
         while (opModeInInit() && !isStopRequested()) {
@@ -230,19 +249,11 @@ public class CameraTemplateBlueRight extends LinearOpMode {
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");
-
         }
-    }
-
-
-
-    @Override
-    public void runOpMode() throws InterruptedException {
-
-        initialize();
 
         waitForStart();
         if (isStopRequested()) return;
+
 
         time.reset();
 

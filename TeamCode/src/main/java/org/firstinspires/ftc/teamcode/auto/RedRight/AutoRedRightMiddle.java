@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.profile.VelocityConstraint;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -24,8 +25,9 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
 @Autonomous(name = "Middle 2+0 Auto Red Right")
-public class AutoRedRightMiddle extends CommandOpMode {
-    VelocityConstraint smallVel;
+public class AutoRedRightMiddle extends LinearOpMode {
+
+
     private final RobotHardware robot = RobotHardware.getInstance();
 
     ElapsedTime time;
@@ -47,7 +49,11 @@ public class AutoRedRightMiddle extends CommandOpMode {
 
     IntakeLevel intakeLevel = IntakeLevel.TOP_54;
 
-    public void initialize() {
+
+    @Override
+    public void runOpMode() {
+
+
         time = new ElapsedTime();
         CommandScheduler.getInstance().reset();
         drivetrain = new SampleMecanumDrive(hardwareMap);
@@ -65,13 +71,13 @@ public class AutoRedRightMiddle extends CommandOpMode {
         intake = new Intake();
         intakeExtension = new IntakeExtension();
 
-        smallVel = new VelocityConstraint() {
+        VelocityConstraint smallVel = new VelocityConstraint() {
             @Override
             public double get(double v) {
                 return 50;
             }
-        };
 
+        };
 
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseRedRight)
                 .lineToLinearHeading(new Pose2d(36, -22, Math.toRadians(0)))
@@ -110,19 +116,17 @@ public class AutoRedRightMiddle extends CommandOpMode {
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .build();
 
+
+
+
         while (opModeInInit() && !isStopRequested()) {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             intake.setAngle(Intake.Angle.OUTTAKE);
             intakeExtension.closeExtension();
-            claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
+            claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");
         }
-    }
-
-    @Override
-    public void runOpMode() {
-        initialize();
 
         waitForStart();
         if (isStopRequested()) return;
@@ -141,13 +145,20 @@ public class AutoRedRightMiddle extends CommandOpMode {
         *///drivetrain.followTrajectorySequence(park);
 
         double autoSeconds = time.seconds();
-        while (opModeIsActive()) {
-            drivetrain.update();
+        while (opModeIsActive())
 
-            telemetry.addData("Auto seconds: ", autoSeconds);
-            telemetry.update();
-        }
-    }
+            {
+                drivetrain.update();
+
+                telemetry.addData("Auto seconds: ", autoSeconds);
+                telemetry.update();
+            }
+
+
+            };
+
+
+
 
     void moveIntakeByTraj() {
         switch (intakeLevel) {
