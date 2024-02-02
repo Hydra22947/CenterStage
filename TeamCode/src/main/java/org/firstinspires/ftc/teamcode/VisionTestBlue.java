@@ -10,15 +10,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-@TeleOp(name = "Vision Test", group = "Vision")
-public class VisionTest extends LinearOpMode {
+@TeleOp(name = "Vision Test Blue", group = "Vision")
+public class VisionTestBlue extends LinearOpMode {
     public PropPipelineRedRightBlueLeft vision;
     private VisionPortal portal;
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
 
-        vision = new PropPipelineRedRightBlueLeft(telemetry, PropPipelineRedRightBlueLeft.Alliance.RED);
+        vision = new PropPipelineRedRightBlueLeft(telemetry, PropPipelineRedRightBlueLeft.Alliance.BLUE);
 
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))

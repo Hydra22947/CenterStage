@@ -25,10 +25,10 @@ import java.util.concurrent.atomic.AtomicReference;
 public class PropPipelineRedRightBlueLeft implements VisionProcessor, CameraStreamSource {
     private static final boolean DEBUG = true;
 
-    public static int redCenterX = (int) (300);
-    public static int redCenterY = (int) (300);
-    public static int redRightX = (int) (965);
-    public static int redRightY = (int) (475);
+    public static int redCenterX = (int) (200);
+    public static int redCenterY = (int) (100);
+    public static int redRightX = (int) (500);
+    public static int redRightY = (int) (200);
 
 
     public static int blueLeftX = (int) (240);
@@ -37,14 +37,14 @@ public class PropPipelineRedRightBlueLeft implements VisionProcessor, CameraStre
     public static int blueCenterY = (int) (485);
 
 
-    public static int leftWidth = (int) (400);
-    public static int leftHeight = (int) (300);
-    public static int centerWidth = (int) (300);
-    public static int centerHeight = (int) (300);
+    public static int leftWidth = (int) (100);
+    public static int leftHeight = (int) (100);
+    public static int centerWidth = (int) (200);
+    public static int centerHeight = (int) (100);
 
     //
     public static double BLUE_TRESHOLD = 70;
-    public static double RED_TRESHOLD = 100;
+    public static double RED_TRESHOLD = 0;
     private final Mat hsv = new Mat();
     public double leftColor = 0.0;
     public double centerColor = 0.0;
@@ -143,7 +143,7 @@ public class PropPipelineRedRightBlueLeft implements VisionProcessor, CameraStre
 
         if (leftColor > threshold && (left.val[0] + left.val[1] + left.val[2] - left.val[idx] < left.val[idx])) {
             // left zone has it
-            location = Location.LEFT;
+            location = Location.RIGHT;
             Imgproc.rectangle(frame, leftZoneArea, new Scalar(255, 255, 255), 10);
         } else if (centerColor > threshold && (center.val[0] + center.val[1] + center.val[2] - center.val[idx] < center.val[idx])) {
             // center zone has it
@@ -151,7 +151,7 @@ public class PropPipelineRedRightBlueLeft implements VisionProcessor, CameraStre
             Imgproc.rectangle(frame, centerZoneArea, new Scalar(255, 255, 255), 10);
         } else {
             // right zone has it
-            location = Location.RIGHT;
+            location = Location.LEFT;
         }
 
 
