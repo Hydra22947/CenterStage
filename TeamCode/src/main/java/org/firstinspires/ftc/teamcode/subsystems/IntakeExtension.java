@@ -70,16 +70,16 @@ public class IntakeExtension implements Subsystem{
 
         switch (current) {
             case OPEN:
-                this.robot.extensionServoRight.setPosition(OPEN_EXTENSION_R);
-                this.robot.extensionServoLeft.setPosition(OPEN_EXTENSION_L);
+//                this.robot.extensionServoRight.setPosition(OPEN_EXTENSION_R);
+//                this.robot.extensionServoLeft.setPosition(OPEN_EXTENSION_L);
                 break;
             case CLOSE:
-                this.robot.extensionServoRight.setPosition(CLOSE_EXTENSION_R);
-                this.robot.extensionServoLeft.setPosition(CLOSE_EXTENSION_L);
+//                this.robot.extensionServoRight.setPosition(CLOSE_EXTENSION_R);
+//                this.robot.extensionServoLeft.setPosition(CLOSE_EXTENSION_L);
                 break;
             case MANUAL:
-                this.robot.extensionServoRight.setPosition(Range.clip(cGamepad.right_trigger, CLOSE_EXTENSION_R, OPEN_EXTENSION_R));
-                this.robot.extensionServoLeft.setPosition(Range.clip(cGamepad.right_trigger, CLOSE_EXTENSION_L, OPEN_EXTENSION_L));
+//                this.robot.extensionServoRight.setPosition(Range.clip(cGamepad.right_trigger, CLOSE_EXTENSION_R, OPEN_EXTENSION_R));
+//                this.robot.extensionServoLeft.setPosition(Range.clip(cGamepad.right_trigger, CLOSE_EXTENSION_L, OPEN_EXTENSION_L));
                 break;
         }
     }
@@ -94,23 +94,23 @@ public class IntakeExtension implements Subsystem{
 
     public void openExtension()
     {
-        this.robot.extensionServoRight.setPosition(OPEN_EXTENSION_R);
-        this.robot.extensionServoLeft.setPosition(OPEN_EXTENSION_L);
+//        this.robot.extensionServoRight.setPosition(OPEN_EXTENSION_R);
+//        this.robot.extensionServoLeft.setPosition(OPEN_EXTENSION_L);
     }
 
     public void openExtensionAuto()
     {
-        this.robot.extensionServoRight.setPosition(AUTO_OPEN_EXTENSION_R);
-        this.robot.extensionServoLeft.setPosition(AUTO_OPEN_EXTENSION_L);
+//        this.robot.extensionServoRight.setPosition(AUTO_OPEN_EXTENSION_R);
+//        this.robot.extensionServoLeft.setPosition(AUTO_OPEN_EXTENSION_L);
     }
     public void halfOpenExtension()
     {
-        this.robot.extensionServoRight.setPosition(HALF_OPEN_R);
-        this.robot.extensionServoLeft.setPosition(HALF_OPEN_L);
+//        this.robot.extensionServoRight.setPosition(HALF_OPEN_R);
+//        this.robot.extensionServoLeft.setPosition(HALF_OPEN_L);
     }
     public void closeExtension()
     {
-        this.robot.extensionServoRight.setPosition(CLOSE_EXTENSION_R);
-        this.robot.extensionServoLeft.setPosition(CLOSE_EXTENSION_L);
+//        this.robot.extensionServoRight.setPosition(CLOSE_EXTENSION_R);
+//        this.robot.extensionServoLeft.setPosition(CLOSE_EXTENSION_L);
     }
 }

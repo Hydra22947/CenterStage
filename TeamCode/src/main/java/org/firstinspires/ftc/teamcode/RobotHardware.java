@@ -39,8 +39,6 @@ public class RobotHardware {
     public DcMotorEx elevatorMotorLeft;
 
     // intake
-    public BetterServo extensionServoRight;
-    public BetterServo extensionServoLeft;
     public BetterServo intakeClawLeftServo;
     public BetterServo intakeClawRightServo;
     public BetterServo intakeAngleServo;
@@ -60,7 +58,6 @@ public class RobotHardware {
 
     // odo pod encoders
     public Encoder podLeft;
-    public Encoder podRight;
     public Encoder podFront;
 
     // Telemetry storage
@@ -129,9 +126,6 @@ public class RobotHardware {
 
 
         // INTAKE
-        this.extensionServoRight = new BetterServo(hardwareMap.get(Servo.class, "sER"));
-        extensionServoRight.setDirection(Servo.Direction.REVERSE);
-        this.extensionServoLeft = new BetterServo(hardwareMap.get(Servo.class, "sEL"));
         this.intakeAngleServo = new BetterServo(hardwareMap.get(Servo.class, "sIA"));
         intakeAngleServo.setDirection(Servo.Direction.REVERSE);
         this.intakeClawLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sICL"));
@@ -171,8 +165,7 @@ public class RobotHardware {
         // ODO PODS
 
         this.podLeft = new Encoder(hardwareMap.get(DcMotorEx.class, "mBR"));
-        this.podFront = new Encoder(hardwareMap.get(DcMotorEx.class, "mFR"));
-        this.podRight = new Encoder(hardwareMap.get(DcMotorEx.class, "mFL"));
+        this.podFront = new Encoder(hardwareMap.get(DcMotorEx.class, "mBL"));
 
         voltage = hardwareMap.voltageSensor.iterator().next().getVoltage();
     }
