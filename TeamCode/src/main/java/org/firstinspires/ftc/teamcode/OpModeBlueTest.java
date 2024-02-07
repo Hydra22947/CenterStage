@@ -40,7 +40,7 @@ public class OpModeBlueTest extends LinearOpMode {
 
     // delays
     public static double delayTransfer = 300, delayRelease = 1200, delayCloseTransfer = 350, delayGoToTransfer = 800;
-    public static double WAIT_DELAY_TILL_OUTTAKE = 200, WAIT_DELAY_TILL_CLOSE = 200;
+    public static double WAIT_DELAY_TILL_OUTTAKE = 200, WAIT_DELAY_TILL_CLOSE = 200, ELEVATOR_ZERO_MAX = 15, INTAKE_ZERO_MAX = 10;
 
     // variables
     double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
@@ -221,7 +221,7 @@ public class OpModeBlueTest extends LinearOpMode {
                     releaseTimer = getTime();
                 }
 
-                if((getTime() - releaseTimer) >= delayRelease && had2Pixels)
+                if(/*(getTime() - releaseTimer) >= delayRelease*/(intakeExtension.getPos() >= 0 && intakeExtension.getPos() <= INTAKE_ZERO_MAX) && had2Pixels)
                 {
                     intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH);
 
@@ -246,7 +246,7 @@ public class OpModeBlueTest extends LinearOpMode {
                     intake.move(Intake.Angle.MID);
                     goToTransferTimer = getTime();
                 }
-                else if(getTime() - goToTransferTimer >= delayGoToTransfer)
+                else if(/*getTime() - goToTransferTimer >= delayGoToTransfer*/elevator.getPos() >= 0 && elevator.getPos() <= ELEVATOR_ZERO_MAX)
                 {
                     intake.move(Intake.Angle.OUTTAKE);
                 }

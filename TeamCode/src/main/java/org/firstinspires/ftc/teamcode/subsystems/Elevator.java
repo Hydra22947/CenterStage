@@ -192,6 +192,11 @@ public class Elevator implements Subsystem
         return robot.elevatorMotorLeft.getCurrentPosition();
     }
 
+    public double getPos()
+    {
+        return (getPosLeft() + getPosRight()) / 2;
+    }
+
     public void setUsePID(boolean usePID) {
         this.usePID = usePID;
     }
