@@ -1,21 +1,150 @@
 package org.firstinspires.ftc.teamcode.subsystems;
-
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.util.AbsoluteAnalogEncoder;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.PIDFController;
-import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
-import org.jetbrains.annotations.NotNull;
 
 @Config
-public class IntakeExtension implements Subsystem{
+public class IntakeExtension implements Subsystem
+{
+
+    private final RobotHardware robot;
+    public static double BASE = 0;
+    public static double MAX_LEVEL = 1000;
+    double currentTarget = 0;
+    boolean usePID = true;
+    public static double maxPower = 1;
+    public static double kP = 0.0075, kI = 0, kD = 0.01;
+
+    Gamepad gamepad;
+    BetterGamepad cGamepad;
+    PIDFController controller;
+    PIDFController.PIDCoefficients pidCoefficients = new PIDFController.PIDCoefficients();
+
+    boolean isAuto;
+    public IntakeExtension(Gamepad gamepad)
+    {
+        this.robot = RobotHardware.getInstance();
+
+        this.gamepad = gamepad;
+        this.cGamepad = new BetterGamepad(gamepad);
+
+        pidCoefficients.kP = kP;
+        pidCoefficients.kI = kI;
+        pidCoefficients.kD = kD;
+
+        controller = new PIDFController(pidCoefficients);
+
+        isAuto = false;
+    }
+
+    public IntakeExtension()
+    {
+        this.robot = RobotHardware.getInstance();
+
+        pidCoefficients.kP = kP;
+        pidCoefficients.kI = kI;
+        pidCoefficients.kD = kD;
+
+        controller = new PIDFController(pidCoefficients);
+
+        isAuto = true;
+    }
+
+    public void update() {
+
+        if(!isAuto)
+        {
+            cGamepad.update();
+
+            if (usePID)
+            {
+                setPidControl();
+            }
+            else
+            {
+                if(gamepad.left_stick_y != 0 && !gamepad.left_stick_button)
+                {
+                    if((-gamepad.left_stick_y) < 0)
+                    {
+                        robot.extensionMotor.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
+                    }
+                    else
+                    {
+                        robot.extensionMotor.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
+                    }
+                }
+                else if(gamepad.left_stick_y != 0 && gamepad.left_stick_button)
+                {
+                    robot.extensionMotor.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
+                }
+                else
+                {
+                    robot.extensionMotor.setPower(0);
+                }
+
+            }
+        }
+        else
+        {
+            firstPID();
+        }
+    }
+
+    void firstPID()
+    {
+        robot.extensionMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        robot.extensionMotor.setTargetPosition((int)currentTarget);
+
+        robot.elevatorMotorRight.setPower(1);
+        robot.elevatorMotorLeft.setPower(1);
+
+        robot.extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+    void setPidControl()
+    {
+        controller.updateError(currentTarget - robot.extensionMotor.getCurrentPosition());
+
+        robot.extensionMotor.setPower(controller.update());
+    }
+
+    public void setTarget(double target)
+    {
+        if(target > MAX_LEVEL)
+        {
+            this.currentTarget = MAX_LEVEL;
+        }
+        else
+        {
+            this.currentTarget = target;
+        }
+    }
+
+    public double getTarget()
+    {
+        return this.currentTarget;
+    }
+
+    public double getPos()
+    {
+        return robot.extensionMotor.getCurrentPosition();
+    }
+
+
+    public void setUsePID(boolean usePID) {
+        this.usePID = usePID;
+    }
+
+    public void setAuto(boolean isAuto)
+    {
+        this.isAuto = isAuto;
+    }
+
     @Override
     public void play() {
 
@@ -23,6 +152,7 @@ public class IntakeExtension implements Subsystem{
 
     @Override
     public void loop(boolean allowMotors) {
+        isAuto = true;
         update();
     }
 
@@ -31,86 +161,8 @@ public class IntakeExtension implements Subsystem{
 
     }
 
-    public enum ExtensionState {
-        OPEN,
-        CLOSE,
-        MANUAL
+    public PIDFController getController() {
+        return controller;
     }
 
-    public static double OPEN_EXTENSION_R = 0.62, HALF_OPEN_R = .52;
-    public static double OPEN_EXTENSION_L = 0.6, HALF_OPEN_L = .5;
-
-    public static double AUTO_OPEN_EXTENSION_R = 0.58;
-    public static double AUTO_OPEN_EXTENSION_L = 0.48;
-    public static double CLOSE_EXTENSION_R = 0.17;
-    public static double CLOSE_EXTENSION_L = 0.15;
-
-    private RobotHardware robot;
-    private BetterGamepad cGamepad;
-
-    public static ExtensionState current = ExtensionState.CLOSE;
-
-    public IntakeExtension(Gamepad gamepad) {
-        this.robot = RobotHardware.getInstance();
-
-        this.cGamepad = new BetterGamepad(gamepad);
-
-    }
-
-    public IntakeExtension() {
-        this.robot = RobotHardware.getInstance();
-        cGamepad = null;
-    }
-
-    public void update() {
-        if(cGamepad != null)
-        {
-            cGamepad.update();
-        }
-
-        switch (current) {
-            case OPEN:
-//                this.robot.extensionServoRight.setPosition(OPEN_EXTENSION_R);
-//                this.robot.extensionServoLeft.setPosition(OPEN_EXTENSION_L);
-                break;
-            case CLOSE:
-//                this.robot.extensionServoRight.setPosition(CLOSE_EXTENSION_R);
-//                this.robot.extensionServoLeft.setPosition(CLOSE_EXTENSION_L);
-                break;
-            case MANUAL:
-//                this.robot.extensionServoRight.setPosition(Range.clip(cGamepad.right_trigger, CLOSE_EXTENSION_R, OPEN_EXTENSION_R));
-//                this.robot.extensionServoLeft.setPosition(Range.clip(cGamepad.right_trigger, CLOSE_EXTENSION_L, OPEN_EXTENSION_L));
-                break;
-        }
-    }
-
-    public ExtensionState getCurrent() {
-        return current;
-    }
-
-    public void setCurrent(ExtensionState current) {
-        this.current = current;
-    }
-
-    public void openExtension()
-    {
-//        this.robot.extensionServoRight.setPosition(OPEN_EXTENSION_R);
-//        this.robot.extensionServoLeft.setPosition(OPEN_EXTENSION_L);
-    }
-
-    public void openExtensionAuto()
-    {
-//        this.robot.extensionServoRight.setPosition(AUTO_OPEN_EXTENSION_R);
-//        this.robot.extensionServoLeft.setPosition(AUTO_OPEN_EXTENSION_L);
-    }
-    public void halfOpenExtension()
-    {
-//        this.robot.extensionServoRight.setPosition(HALF_OPEN_R);
-//        this.robot.extensionServoLeft.setPosition(HALF_OPEN_L);
-    }
-    public void closeExtension()
-    {
-//        this.robot.extensionServoRight.setPosition(CLOSE_EXTENSION_R);
-//        this.robot.extensionServoLeft.setPosition(CLOSE_EXTENSION_L);
-    }
 }

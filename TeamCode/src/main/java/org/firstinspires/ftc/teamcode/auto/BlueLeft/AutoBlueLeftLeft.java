@@ -83,11 +83,11 @@ public class AutoBlueLeftLeft extends CommandOpMode {
 
                 .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
                 .addTemporalMarker(() -> intake.move(Intake.Angle.INTAKE))
-                .addTemporalMarker(() -> intakeExtension.openExtensionAuto())
+//                .addTemporalMarker(() -> intakeExtension.openExtensionAuto()) // TODO: now we have motor new pos please
                 .waitSeconds(.5)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.5)
-                .addTemporalMarker(() -> intakeExtension.closeExtension())
+//                .addTemporalMarker(() -> intakeExtension.closeExtension()) // TODO: now we have motor new pos please
                 .addTemporalMarker(() -> intake.move(Intake.Angle.MID))
                 .waitSeconds(.2)
                 .build();
@@ -110,10 +110,12 @@ public class AutoBlueLeftLeft extends CommandOpMode {
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
                 .build();
 
+        elevator.setAuto(true);
+        intakeExtension.setAuto(true);
+
         while (opModeInInit() && !isStopRequested()) {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             intake.setAngle(Intake.Angle.OUTTAKE);
-            intakeExtension.closeExtension();
             claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");

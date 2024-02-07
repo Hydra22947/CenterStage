@@ -37,6 +37,7 @@ public class RobotHardware {
     // elevator
     public DcMotorEx elevatorMotorRight;
     public DcMotorEx elevatorMotorLeft;
+    public DcMotorEx extensionMotor;
 
     // intake
     public BetterServo intakeClawLeftServo;
@@ -140,6 +141,11 @@ public class RobotHardware {
         this.intakeHandPivotLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPL"));
         intakeHandPivotLeftServo.setDirection(Servo.Direction.REVERSE);
 
+        // EXTENSION
+        this.extensionMotor = hardwareMap.get(DcMotorEx.class, "mE");
+        extensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         // OUTTAKE
         // CLAW
         this.outtakeClawLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sCL"));
@@ -156,6 +162,8 @@ public class RobotHardware {
         elevatorMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.elevatorMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.elevatorMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         if(isAuto)
         {
             elevatorMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

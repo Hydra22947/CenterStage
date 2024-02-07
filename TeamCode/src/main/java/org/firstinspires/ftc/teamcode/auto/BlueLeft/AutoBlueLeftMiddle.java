@@ -81,11 +81,11 @@ public class AutoBlueLeftMiddle extends CommandOpMode {
                 .lineToLinearHeading(new Pose2d(36, 25, Math.toRadians(0)))
 
                 .addTemporalMarker(() -> intake.move(Intake.Angle.INTAKE))
-                .addTemporalMarker(() -> intakeExtension.openExtension())
+//                .addTemporalMarker(() -> intakeExtension.openExtension()) // TODO: now we have motor new pos please
                 .waitSeconds(.5)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.5)
-                .addTemporalMarker(() -> intakeExtension.closeExtension())
+//                .addTemporalMarker(() -> intakeExtension.closeExtension()) // TODO: now we have motor new pos please
                 .addTemporalMarker(() -> intake.move(Intake.Angle.MID))
                 .waitSeconds(.2)
                 .build();
@@ -110,10 +110,12 @@ public class AutoBlueLeftMiddle extends CommandOpMode {
                 .lineToLinearHeading(new Pose2d(51, 58, Math.toRadians((-90))))
                 .build();
 
+        elevator.setAuto(true);
+        intakeExtension.setAuto(true);
+
         while (opModeInInit() && !isStopRequested()) {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             intake.setAngle(Intake.Angle.OUTTAKE);
-            intakeExtension.closeExtension();
             claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");
@@ -123,6 +125,7 @@ public class AutoBlueLeftMiddle extends CommandOpMode {
     @Override
     public void runOpMode() {
         initialize();
+
 
         waitForStart();
         if (isStopRequested()) return;

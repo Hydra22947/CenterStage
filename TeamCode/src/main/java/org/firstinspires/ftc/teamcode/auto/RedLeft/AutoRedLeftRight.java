@@ -124,7 +124,7 @@ public class AutoRedLeftRight extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(37.75, 10), Math.toRadians(180))
 
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
-                .addTemporalMarker(() -> intakeExtension.openExtension())
+//                .addTemporalMarker(() -> intakeExtension.openExtension()) // TODO: now we have motor new pos please
                 .waitSeconds(0.8)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
                 //.waitSeconds(AutoConstants.WAIT + 0.5)
@@ -135,7 +135,7 @@ public class AutoRedLeftRight extends LinearOpMode {
                 .addTemporalMarker(() -> intake.moveStack())
                 .waitSeconds(0.3)
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
-                .addTemporalMarker(() -> intakeExtension.closeExtension())
+//                .addTemporalMarker(() -> intakeExtension.closeExtension()) // TODO: now we have motor new pos please
 
                 .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
 
@@ -177,7 +177,7 @@ public class AutoRedLeftRight extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-37.7, -9), Math.toRadians(180))
 
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
-                .addTemporalMarker(() -> intakeExtension.openExtension())
+//                .addTemporalMarker(() -> intakeExtension.openExtension()) // TODO: now we have motor new pos please
                 .addTemporalMarker(() -> intake.move(Intake.Angle.TOP_32_AUTO))
                 .waitSeconds(.8)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
@@ -189,7 +189,7 @@ public class AutoRedLeftRight extends LinearOpMode {
                 .addTemporalMarker(() -> intake.moveStack())
                 .waitSeconds(0.3)
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
-                .addTemporalMarker(() -> intakeExtension.closeExtension())
+//                .addTemporalMarker(() -> intakeExtension.closeExtension()) // TODO: now we have motor new pos please
 
                 .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
 
@@ -225,10 +225,12 @@ public class AutoRedLeftRight extends LinearOpMode {
                 .addTemporalMarker(()->outtake.setAngle(Outtake.Angle.INTAKE))
                 .build();
 
+        intakeExtension.setAuto(true);
+        elevator.setAuto(true);
+
         while (opModeInInit() && !isStopRequested()) {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             intake.setAngle(Intake.Angle.OUTTAKE);
-            intakeExtension.closeExtension();
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");

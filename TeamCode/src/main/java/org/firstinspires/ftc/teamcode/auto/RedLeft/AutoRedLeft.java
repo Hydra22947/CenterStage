@@ -6,7 +6,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.profile.VelocityConstraint;
-import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -92,13 +91,13 @@ public class AutoRedLeft extends LinearOpMode {
         intakeAnotherPreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
                 .lineTo(new Vector2d(-40, -8.2))
                 .turn(Math.toRadians(-90), Math.toRadians(90), Math.toRadians(75))
-                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> intakeExtension.openExtension())
+//                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> intakeExtension.openExtension()) // TODO: now we have motor new pos please
                 .UNSTABLE_addTemporalMarkerOffset(1.2, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
                 .UNSTABLE_addTemporalMarkerOffset(1.35, () -> intake.moveStack())
                 .waitSeconds(0.1)
                 .UNSTABLE_addTemporalMarkerOffset(1.4, () -> intake.move(Intake.Angle.OUTTAKE))
                 .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(1.7, () -> intakeExtension.closeExtension())
+//                .UNSTABLE_addTemporalMarkerOffset(1.7, () -> intakeExtension.closeExtension()) // TODO: now we have motor new pos please
                 .waitSeconds(2.4)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
                 .build();
@@ -136,7 +135,7 @@ public class AutoRedLeft extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-40.55, -9.8), Math.toRadians(180))
 
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
-                .addTemporalMarker(() -> intakeExtension.openExtension())
+//                .addTemporalMarker(() -> intakeExtension.openExtension()) // TODO: now we have motor new pos please
                 .waitSeconds(1)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
                 //.waitSeconds(AutoConstants.WAIT + 0.5)
@@ -147,7 +146,7 @@ public class AutoRedLeft extends LinearOpMode {
                 .addTemporalMarker(() -> intake.moveStack())
                 .waitSeconds(0.3)
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
-                .addTemporalMarker(() -> intakeExtension.closeExtension())
+//                .addTemporalMarker(() -> intakeExtension.closeExtension()) // TODO: now we have motor new pos please
 
                 .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
 
@@ -191,7 +190,7 @@ public class AutoRedLeft extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-41, -10.35), Math.toRadians(180))
 
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
-                .addTemporalMarker(() -> intakeExtension.openExtension())
+//                .addTemporalMarker(() -> intakeExtension.openExtension()) // TODO: now we have motor new pos please
                 .waitSeconds(.25)
                 .addTemporalMarker(() -> intake.move(Intake.Angle.TOP_21))
                 .waitSeconds(1)
@@ -204,7 +203,7 @@ public class AutoRedLeft extends LinearOpMode {
                 .addTemporalMarker(() -> intake.moveStack())
                 .waitSeconds(0.3)
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
-                .addTemporalMarker(() -> intakeExtension.closeExtension())
+//                .addTemporalMarker(() -> intakeExtension.closeExtension()) // TODO: now we have motor new pos please
 
                 .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
 
@@ -240,11 +239,12 @@ public class AutoRedLeft extends LinearOpMode {
 //                .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
 //                .build();
 
+        elevator.setAuto(true);
+        intakeExtension.setAuto(true);
 
         while (opModeInInit() && !isStopRequested()) {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             intake.setAngle(Intake.Angle.OUTTAKE);
-            intakeExtension.closeExtension();
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");

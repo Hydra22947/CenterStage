@@ -118,7 +118,7 @@ public class CameraTemplateRedLeft extends LinearOpMode {
                 .waitSeconds(AutoConstants.WAIT)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.1)
-                .addTemporalMarker(()->intakeExtension.closeExtension())
+                .addTemporalMarker(()->intakeExtension.setTarget(0))
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
 
                 .lineToLinearHeading(new Pose2d(-40, -8.2, Math.toRadians(0)))
@@ -225,10 +225,11 @@ public class CameraTemplateRedLeft extends LinearOpMode {
 
                 .build();
 
+        elevator.setAuto(true);
+        intakeExtension.setAuto(true);
         while (opModeInInit() && !isStopRequested()) {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             intake.setAngle(Intake.Angle.OUTTAKE);
-            intakeExtension.closeExtension();
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");

@@ -4,9 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.profile.VelocityConstraint;
-import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -84,14 +82,14 @@ public class AutoRedRightMiddle extends LinearOpMode {
 
 
                 .addTemporalMarker(() -> intake.move(Intake.Angle.INTAKE))
-                .addTemporalMarker(() -> intakeExtension.openExtension())
+//                .addTemporalMarker(() -> intakeExtension.openExtension()) // TODO: now we have motor new pos please
                 .waitSeconds(.5)
                 .addTemporalMarker(() -> elevator.setTarget(1050))
                 .addTemporalMarker(() -> elevator.update())
                 .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.OUTTAKE))
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
                 .waitSeconds(.7)
-                .addTemporalMarker(() -> intakeExtension.closeExtension())
+//                .addTemporalMarker(() -> intakeExtension.closeExtension()) // TODO: now we have motor new pos please
                 .addTemporalMarker(() -> intake.move(Intake.Angle.MID))
                 .waitSeconds(.2)
                 .build();
@@ -119,10 +117,14 @@ public class AutoRedRightMiddle extends LinearOpMode {
 
 
 
+        intakeExtension.setAuto(true);
+        elevator.setAuto(true);
+
+
         while (opModeInInit() && !isStopRequested()) {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             intake.setAngle(Intake.Angle.OUTTAKE);
-            intakeExtension.closeExtension();
+//            intakeExtension.closeExtension();
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");

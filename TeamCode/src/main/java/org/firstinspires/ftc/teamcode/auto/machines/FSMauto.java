@@ -6,7 +6,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.profile.VelocityConstraint;
-import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -77,7 +76,7 @@ public class FSMauto extends LinearOpMode {
                 //Retracting intake
                 .time(100)
                 .onExit(() -> {
-                    intakeExtension.closeExtension();
+                    intakeExtension.setTarget(0);
                     intake.move(Intake.Angle.OUTTAKE);
                 })
                 .state(AutoState.PLACE_PRELOAD)
@@ -173,7 +172,7 @@ public class FSMauto extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-37.75, -10), Math.toRadians(180))
 
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
-                .addTemporalMarker(() -> intakeExtension.openExtension())
+                .addTemporalMarker(() -> intakeExtension.setTarget(100))
                 .waitSeconds(0.8)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
                 //.waitSeconds(AutoConstants.WAIT + 0.5)
@@ -184,7 +183,7 @@ public class FSMauto extends LinearOpMode {
                 .addTemporalMarker(() -> intake.moveStack())
                 .waitSeconds(0.3)
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
-                .addTemporalMarker(() -> intakeExtension.closeExtension())
+                .addTemporalMarker(() -> intakeExtension.setTarget(0))
 
                 .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
 
@@ -226,7 +225,7 @@ public class FSMauto extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-37.7, -9), Math.toRadians(180))
 
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
-                .addTemporalMarker(() -> intakeExtension.openExtension())
+                .addTemporalMarker(() -> intakeExtension.setTarget(100))
                 .addTemporalMarker(() -> intake.move(Intake.Angle.TOP_32_AUTO))
                 .waitSeconds(.8)
                 .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
@@ -238,7 +237,7 @@ public class FSMauto extends LinearOpMode {
                 .addTemporalMarker(() -> intake.moveStack())
                 .waitSeconds(0.3)
                 .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
-                .addTemporalMarker(() -> intakeExtension.closeExtension())
+                .addTemporalMarker(() -> intakeExtension.setTarget(0))
 
                 .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
 
@@ -278,7 +277,6 @@ public class FSMauto extends LinearOpMode {
         while (opModeInInit() && !isStopRequested()) {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             intake.setAngle(Intake.Angle.OUTTAKE);
-            intakeExtension.closeExtension();
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");
@@ -294,6 +292,8 @@ public class FSMauto extends LinearOpMode {
         double autoSeconds = time.seconds();
         while (opModeIsActive()) {
             drivetrain.update();
+            elevator.update();
+            intakeExtension.update();
 
             telemetry.addData("Auto seconds: ", autoSeconds);
             telemetry.update();

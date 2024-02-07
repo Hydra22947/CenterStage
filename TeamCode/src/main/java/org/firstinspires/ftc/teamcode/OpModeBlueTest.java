@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@TeleOp(name = "DEBUG OpModeBlue Blue")
+@TeleOp(name = "DEBUG OpMode Blue")
 public class OpModeBlueTest extends LinearOpMode {
 
     // robot
@@ -85,21 +85,21 @@ public class OpModeBlueTest extends LinearOpMode {
         betterGamepad1 = new BetterGamepad(gamepad1);
         betterGamepad2 = new BetterGamepad(gamepad2);
 
-        robot.init(hardwareMap, telemetry, false);
+        robot.init(hardwareMap, telemetry, true); // TODO: change to false
 
         drivetrain = new Drivetrain(gamepad1, true);
         elevator = new Elevator(gamepad2);
         outtake = new Outtake();
         claw = new Claw();
         intake = new Intake();
-        intakeExtension = new IntakeExtension(gamepad1);
+        intakeExtension = new IntakeExtension(gamepad2);
         codeTime = new ElapsedTime();
         intake.setAngle(Intake.Angle.OUTTAKE);
-        intakeExtension.setCurrent(IntakeExtension.ExtensionState.CLOSE);
         intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
         claw.setBothClaw(Claw.ClawState.INTAKE);
         outtake.setAngle(Outtake.Angle.INTAKE);
         elevator.setAuto(false);
+        intakeExtension.setAuto(false);
 
         intake.update();
         claw.update();
@@ -127,6 +127,7 @@ public class OpModeBlueTest extends LinearOpMode {
             betterGamepad2.update();
             drivetrain.update();
             intake.update();
+            intakeExtension.update();
             outtake.update();
             elevator.update();
             claw.update();
@@ -163,7 +164,7 @@ public class OpModeBlueTest extends LinearOpMode {
     {
         switch (intakeState) {
             case RETRACT:
-                intakeExtension.setCurrent(IntakeExtension.ExtensionState.CLOSE);
+                intakeExtension.setTarget(0);
 
                 if(gamepad1.left_trigger != 0 && resetLeftTrigger)
                 {
@@ -254,7 +255,7 @@ public class OpModeBlueTest extends LinearOpMode {
             case INTAKE:
                 moveIntake();
 
-                intakeExtension.setCurrent(IntakeExtension.ExtensionState.CLOSE);
+                intakeExtension.setTarget(0);
 
                 if (gamepad1.right_trigger != 0)
                 {
@@ -327,7 +328,8 @@ public class OpModeBlueTest extends LinearOpMode {
                 heldExtension = true;
                 drivetrain.slow();
 
-                intakeExtension.setCurrent(IntakeExtension.ExtensionState.MANUAL);
+                intakeExtension.setTarget(gamepad1.right_trigger * intakeExtension.MAX_LEVEL);
+                
                 moveIntake();
                 claw.setBothClaw(Claw.ClawState.INTAKE);
 

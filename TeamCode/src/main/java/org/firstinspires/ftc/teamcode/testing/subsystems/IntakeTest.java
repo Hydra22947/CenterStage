@@ -18,7 +18,6 @@ public class IntakeTest extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
     Intake intake;
-    IntakeExtension intakeExtension;
     BetterGamepad gamepadEx;
     Drivetrain drive;
     public static boolean DEBUG = true;
