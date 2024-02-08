@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.util.Stopwatch;
 
 import java.util.function.Supplier;
 
-public class TimedState<E extends Enum<E>> extends State<E> {
+public class    TimedState<E extends Enum<E>> extends State<E> {
     private final Stopwatch stopwatch;
     private final long runningMS;
 
