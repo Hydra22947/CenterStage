@@ -24,7 +24,7 @@ public class ElevatorTest extends LinearOpMode {
 
         robot.init(hardwareMap, telemetry, true);
 
-        elevator = new Elevator(gamepad1);
+        elevator = new Elevator(gamepad1, true);
         elevator.setAuto(false);
         Drivetrain drivetrain = new Drivetrain(gamepad1, true);
 
@@ -48,8 +48,6 @@ public class ElevatorTest extends LinearOpMode {
 
             elevator.update();
 
-            telemetry.addData("right motor", robot.elevatorMotorRight.getCurrentPosition());
-            telemetry.addData("left motor", robot.elevatorMotorLeft.getCurrentPosition());
             telemetry.addData("right motor power", elevator.getControllerR().update());
             telemetry.addData("left motor power", elevator.getControllerL().update());
             telemetry.update();

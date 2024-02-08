@@ -25,8 +25,7 @@ public class IntakeExtensionTest extends LinearOpMode {
 
         robot.init(hardwareMap, telemetry, true);
 
-        intakeExtension = new IntakeExtension(gamepad1);
-        intakeExtension.setAuto(false);
+        intakeExtension = new IntakeExtension(gamepad1, true);
         Drivetrain drivetrain = new Drivetrain(gamepad1, true);
 
         waitForStart();
@@ -49,9 +48,7 @@ public class IntakeExtensionTest extends LinearOpMode {
 
             intakeExtension.update();
 
-            telemetry.addData("motor", robot.extensionMotor.getCurrentPosition());
             telemetry.addData("motor power", intakeExtension.getController().update());
-            robot.extensionMotor.setPower(intakeExtension.getController().update());
             telemetry.update();
         }
     }

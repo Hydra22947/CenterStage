@@ -88,11 +88,11 @@ public class OpModeBlueTest extends LinearOpMode {
         robot.init(hardwareMap, telemetry, true); // TODO: change to false
 
         drivetrain = new Drivetrain(gamepad1, true);
-        elevator = new Elevator(gamepad2);
+        elevator = new Elevator(gamepad2, true);
         outtake = new Outtake();
         claw = new Claw();
         intake = new Intake();
-        intakeExtension = new IntakeExtension(gamepad2);
+        intakeExtension = new IntakeExtension(gamepad2, true);
         codeTime = new ElapsedTime();
         intake.setAngle(Intake.Angle.OUTTAKE);
         intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
@@ -127,6 +127,8 @@ public class OpModeBlueTest extends LinearOpMode {
             betterGamepad2.update();
             drivetrain.update();
             intake.update();
+            intake.updateClawState(intake.getClawStateLeft(), ClawSide.LEFT);
+            intake.updateClawState(intake.getClawStateRight(), ClawSide.RIGHT);
             intakeExtension.update();
             outtake.update();
             elevator.update();
@@ -221,7 +223,7 @@ public class OpModeBlueTest extends LinearOpMode {
                     releaseTimer = getTime();
                 }
 
-                if(/*(getTime() - releaseTimer) >= delayRelease*/(intakeExtension.getPos() >= 0 && intakeExtension.getPos() <= INTAKE_ZERO_MAX) && had2Pixels)
+                if((getTime() - releaseTimer) >= delayRelease/*(intakeExtension.getPos() >= 0 && intakeExtension.getPos() <= INTAKE_ZERO_MAX)*/ && had2Pixels)
                 {
                     intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH);
 
@@ -246,7 +248,7 @@ public class OpModeBlueTest extends LinearOpMode {
                     intake.move(Intake.Angle.MID);
                     goToTransferTimer = getTime();
                 }
-                else if(/*getTime() - goToTransferTimer >= delayGoToTransfer*/elevator.getPos() >= 0 && elevator.getPos() <= ELEVATOR_ZERO_MAX)
+                else if(getTime() - goToTransferTimer >= delayGoToTransfer/*elevator.getPos() >= 0 && elevator.getPos() <= ELEVATOR_ZERO_MAX*/)
                 {
                     intake.move(Intake.Angle.OUTTAKE);
                 }

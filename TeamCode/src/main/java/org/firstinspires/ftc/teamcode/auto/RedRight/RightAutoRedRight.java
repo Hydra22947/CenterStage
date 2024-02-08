@@ -58,11 +58,11 @@ public class RightAutoRedRight extends CommandOpMode {
         autoConstants = new AutoConstants();
         drivetrain.setPoseEstimate(autoConstants.startPoseRedRight);
 
-        elevator = new Elevator();
+        elevator = new Elevator(true);
         outtake = new Outtake();
         claw = new Claw();
         intake = new Intake();
-        intakeExtension = new IntakeExtension();
+        intakeExtension = new IntakeExtension(true);
 
         smallVel = new VelocityConstraint() {
             @Override

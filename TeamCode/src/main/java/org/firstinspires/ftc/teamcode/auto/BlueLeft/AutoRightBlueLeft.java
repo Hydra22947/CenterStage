@@ -59,11 +59,11 @@ public class AutoRightBlueLeft extends CommandOpMode {
         autoConstants = new AutoConstants();
         drivetrain.setPoseEstimate(autoConstants.startPoseBlueLeft);
 
-        elevator = new Elevator();
+        elevator = new Elevator(true);
         outtake = new Outtake();
         claw = new Claw();
         intake = new Intake();
-        intakeExtension = new IntakeExtension();
+        intakeExtension = new IntakeExtension(true);
 
         smallVel = new VelocityConstraint() {
             @Override

@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
@@ -12,11 +14,12 @@ import org.firstinspires.ftc.teamcode.util.PIDFController;
 public class IntakeExtension implements Subsystem
 {
 
+    DcMotorEx extensionMotor;
     private final RobotHardware robot = RobotHardware.getInstance();
-    public static double MAX_LEVEL = 1000;
+    public static double MAX_LEVEL = 1640;
     double currentTarget = 0;
     boolean usePID = true;
-    public static double maxPower = .5;
+    public static double maxPower = 1;
     public static double kP = 0.0075, kI = 0, kD = 0.01;
 
     Gamepad gamepad;
@@ -24,9 +27,25 @@ public class IntakeExtension implements Subsystem
     PIDFController controller;
     PIDFController.PIDCoefficients pidCoefficients = new PIDFController.PIDCoefficients();
 
-    boolean isAuto;
-    public IntakeExtension(Gamepad gamepad)
+    boolean isAuto, firstPID = false;
+    public IntakeExtension(Gamepad gamepad, boolean isAuto)
     {
+        this.isAuto = isAuto;
+
+        // EXTENSION
+        this.extensionMotor = robot.hardwareMap.get(DcMotorEx.class, "mE");
+        extensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        if(isAuto)
+        {
+            this.extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        else
+        {
+            extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
         this.gamepad = gamepad;
         this.cGamepad = new BetterGamepad(gamepad);
 
@@ -35,12 +54,19 @@ public class IntakeExtension implements Subsystem
         pidCoefficients.kD = kD;
 
         controller = new PIDFController(pidCoefficients);
-
-        isAuto = false;
     }
 
-    public IntakeExtension()
+    public IntakeExtension(boolean isAuto)
     {
+        this.isAuto = isAuto;
+
+        // EXTENSION
+        this.extensionMotor = robot.hardwareMap.get(DcMotorEx.class, "mE");
+        extensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         pidCoefficients.kP = kP;
         pidCoefficients.kI = kI;
         pidCoefficients.kD = kD;
@@ -50,9 +76,13 @@ public class IntakeExtension implements Subsystem
         isAuto = true;
     }
 
+    public void setFirstPID(boolean firstPID) {
+        this.firstPID = firstPID;
+    }
+
     public void update() {
 
-        if(!isAuto)
+        if(!firstPID)
         {
             cGamepad.update();
 
@@ -66,20 +96,20 @@ public class IntakeExtension implements Subsystem
                 {
                     if((-gamepad.left_stick_y) < 0)
                     {
-                        robot.extensionMotor.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
+                        extensionMotor.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
                     }
                     else
                     {
-                        robot.extensionMotor.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
+                        extensionMotor.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
                     }
                 }
                 else if(gamepad.left_stick_y != 0 && gamepad.left_stick_button)
                 {
-                    robot.extensionMotor.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
+                    extensionMotor.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
                 }
                 else
                 {
-                    robot.extensionMotor.setPower(0);
+                    extensionMotor.setPower(0);
                 }
 
             }
@@ -92,19 +122,21 @@ public class IntakeExtension implements Subsystem
 
     void firstPID()
     {
-        robot.extensionMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        extensionMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        robot.extensionMotor.setTargetPosition((int)currentTarget);
+        extensionMotor.setTargetPosition((int)currentTarget);
 
-        robot.extensionMotor.setPower(1);
+        extensionMotor.setPower(1);
 
-        robot.extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
     void setPidControl()
     {
-        controller.updateError(currentTarget - robot.extensionMotor.getCurrentPosition());
+        controller.updateError(currentTarget - extensionMotor.getCurrentPosition());
 
-        robot.extensionMotor.setPower(controller.update());
+        extensionMotor.setPower(controller.update());
+
+        robot.telemetry.addData("POS", extensionMotor.getCurrentPosition());
     }
 
     public void setTarget(double target)
@@ -127,7 +159,7 @@ public class IntakeExtension implements Subsystem
 
     public double getPos()
     {
-        return robot.extensionMotor.getCurrentPosition();
+        return extensionMotor.getCurrentPosition();
     }
 
 

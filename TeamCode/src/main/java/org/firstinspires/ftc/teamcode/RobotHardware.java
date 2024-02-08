@@ -35,9 +35,6 @@ public class RobotHardware {
     public DcMotorEx dtBackLeftMotor;
     public DcMotorEx dtBackRightMotor;
     // elevator
-    public DcMotor elevatorMotorRight;
-    public DcMotor elevatorMotorLeft;
-    public DcMotor extensionMotor;
 
     // intake
     public BetterServo intakeClawLeftServo;
@@ -151,28 +148,7 @@ public class RobotHardware {
         // HAND
         this.outtakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
         this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
-        // ELEVATOR
-        this.elevatorMotorRight = hardwareMap.get(DcMotor.class, "mER");
-        this.elevatorMotorLeft = hardwareMap.get(DcMotor.class, "mEL");
-        elevatorMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        this.elevatorMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.elevatorMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // EXTENSION
-        this.extensionMotor = hardwareMap.get(DcMotor.class, "mE");
-         extensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        this.extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        if(isAuto)
-        {
-            elevatorMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            elevatorMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
 
         // ODO PODS
 

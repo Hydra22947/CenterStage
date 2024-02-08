@@ -60,11 +60,11 @@ public class AutoBlueRightMiddle extends LinearOpMode {
         autoConstants = new AutoConstants();
         drivetrain.setPoseEstimate(autoConstants.startPoseBlueRight);
 
-        elevator = new Elevator();
+        elevator = new Elevator(true);
         outtake = new Outtake();
         claw = new Claw();
         intake = new Intake();
-        intakeExtension = new IntakeExtension();
+        intakeExtension = new IntakeExtension(true);
 
         smallVel = new VelocityConstraint() {
             @Override

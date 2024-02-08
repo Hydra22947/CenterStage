@@ -60,9 +60,9 @@ public class AutoBase extends LinearOpMode {
         subsystems.addAll(Arrays.asList(
                 drive = new SampleMecanumDrive(hardwareMap),
                 claw = new Claw(),
-                elevator = new Elevator(),
+                elevator = new Elevator(true),
                 intake = new Intake(),
-                intakeExtension = new IntakeExtension(),
+                intakeExtension = new IntakeExtension(true),
                 outtake = new Outtake()
         ));
 

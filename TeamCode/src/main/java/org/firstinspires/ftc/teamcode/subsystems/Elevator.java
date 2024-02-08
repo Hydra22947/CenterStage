@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
@@ -23,16 +25,38 @@ public class Elevator implements Subsystem
     public static double maxPower = .5;
     public static double kPR = 0.0075, kIR = 0, kDR = 0.01;
     public static double kPL = 0.005, kIL = 0, kDL = 0.01;
-
+    public DcMotorEx elevatorMotorRight;
+    public DcMotorEx elevatorMotorLeft;
     Gamepad gamepad;
     BetterGamepad cGamepad;
     PIDFController controllerR, controllerL;
     PIDFController.PIDCoefficients pidCoefficientsR = new PIDFController.PIDCoefficients();
     PIDFController.PIDCoefficients pidCoefficientsL = new PIDFController.PIDCoefficients();
 
-    boolean isAuto;
-    public Elevator(Gamepad gamepad)
+    boolean isAuto, firstPID = false;
+    public Elevator(Gamepad gamepad, boolean isAuto)
     {
+        this.isAuto = isAuto;
+        this.elevatorMotorRight = robot.hardwareMap.get(DcMotorEx.class, "mER");
+        this.elevatorMotorLeft = robot.hardwareMap.get(DcMotorEx.class, "mEL");
+        elevatorMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        if (isAuto)
+        {
+            elevatorMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            elevatorMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        else
+        {
+            elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
+        this.elevatorMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.elevatorMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         this.gamepad = gamepad;
         this.cGamepad = new BetterGamepad(gamepad);
 
@@ -47,11 +71,30 @@ public class Elevator implements Subsystem
         controllerR = new PIDFController(pidCoefficientsR);
         controllerL = new PIDFController(pidCoefficientsL);
 
-        isAuto = false;
     }
 
-    public Elevator()
+    public Elevator(boolean isAuto)
     {
+        this.isAuto = isAuto;
+
+        this.elevatorMotorRight = robot.hardwareMap.get(DcMotorEx.class, "mER");
+        this.elevatorMotorLeft = robot.hardwareMap.get(DcMotorEx.class, "mEL");
+        elevatorMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        if (isAuto)
+        {
+            elevatorMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            elevatorMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        else
+        {
+            elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        this.elevatorMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.elevatorMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         pidCoefficientsR.kP = kPR;
         pidCoefficientsR.kI = kIR;
         pidCoefficientsR.kD = kDR;
@@ -62,13 +105,15 @@ public class Elevator implements Subsystem
 
         controllerR = new PIDFController(pidCoefficientsR);
         controllerL = new PIDFController(pidCoefficientsL);
+    }
 
-        isAuto = true;
+    public void setFirstPID(boolean firstPID) {
+        this.firstPID = firstPID;
     }
 
     public void update() {
 
-        if(!isAuto)
+        if(!firstPID)
         {
             cGamepad.update();
 
@@ -82,24 +127,24 @@ public class Elevator implements Subsystem
                 {
                     if((-gamepad.left_stick_y) < 0)
                     {
-                        robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
-                        robot.elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
+                        elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
+                        elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
                     }
                     else
                     {
-                        robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
-                        robot.elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
+                        elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
+                        elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
                     }
                 }
                 else if(gamepad.left_stick_y != 0 && gamepad.left_stick_button)
                 {
-                    robot.elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
-                    robot.elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
+                    elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
+                    elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
                 }
                 else
                 {
-                    robot.elevatorMotorRight.setPower(0);
-                    robot.elevatorMotorLeft.setPower(0);
+                    elevatorMotorRight.setPower(0);
+                    elevatorMotorLeft.setPower(0);
                 }
 
             }
@@ -112,25 +157,25 @@ public class Elevator implements Subsystem
 
     void firstPID()
     {
-        robot.elevatorMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        elevatorMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        robot.elevatorMotorRight.setTargetPosition((int)currentTargetRight);
-        robot.elevatorMotorLeft.setTargetPosition((int)currentTargetLeft);
+        elevatorMotorRight.setTargetPosition((int)currentTargetRight);
+        elevatorMotorLeft.setTargetPosition((int)currentTargetLeft);
 
-        robot.elevatorMotorRight.setPower(1);
-        robot.elevatorMotorLeft.setPower(1);
+        elevatorMotorRight.setPower(1);
+        elevatorMotorLeft.setPower(1);
 
-        robot.elevatorMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elevatorMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
     void setPidControl()
     {
-        controllerR.updateError(currentTargetRight - robot.elevatorMotorRight.getCurrentPosition());
-        controllerL.updateError(currentTargetLeft - robot.elevatorMotorLeft.getCurrentPosition());
+        controllerR.updateError(currentTargetRight - elevatorMotorRight.getCurrentPosition());
+        controllerL.updateError(currentTargetLeft - elevatorMotorLeft.getCurrentPosition());
 
-        robot.elevatorMotorRight.setPower(controllerR.update());
-        robot.elevatorMotorLeft.setPower(controllerL.update());
+        elevatorMotorRight.setPower(controllerR.update());
+        elevatorMotorLeft.setPower(controllerL.update());
     }
 
     public void setTarget(double target)
@@ -180,12 +225,12 @@ public class Elevator implements Subsystem
 
     public double getPosRight()
     {
-        return robot.elevatorMotorRight.getCurrentPosition();
+        return elevatorMotorRight.getCurrentPosition();
     }
 
     public double getPosLeft()
     {
-        return robot.elevatorMotorLeft.getCurrentPosition();
+        return elevatorMotorLeft.getCurrentPosition();
     }
 
     public double getPos()
