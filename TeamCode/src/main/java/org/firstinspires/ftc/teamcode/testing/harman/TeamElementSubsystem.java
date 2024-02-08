@@ -14,8 +14,8 @@ import org.openftc.easyopencv.OpenCvWebcam;
 public class TeamElementSubsystem {
     OpenCvWebcam camera;
     SplitAveragePipeline splitAveragePipeline;
-    int camW = 1920;
-    int camH = 1080;
+    int camW = 640;
+    int camH = 480;
 
     int zone = 1;
 

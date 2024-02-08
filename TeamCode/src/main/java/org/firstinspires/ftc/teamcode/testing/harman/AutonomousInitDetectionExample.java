@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.testing.harman;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -25,13 +26,14 @@ public class AutonomousInitDetectionExample extends LinearOpMode
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        FtcDashboard.getInstance().startCameraStream(webcam, 0);
 
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
-                webcam.startStreaming(1920,1080, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(640,480, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -51,7 +53,7 @@ public class AutonomousInitDetectionExample extends LinearOpMode
         }
 
         waitForStart();
-        
+
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */
         while (opModeIsActive())
         {

@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "autoFSM")
+@Autonomous(name = "autoFSM fata")
 public class FSMautoFata extends LinearOpMode {
     VelocityConstraint smallVel;
     private final RobotHardware robot = RobotHardware.getInstance();
@@ -113,11 +113,11 @@ public class FSMautoFata extends LinearOpMode {
         autoConstants = new AutoConstants();
         drivetrain.setPoseEstimate(autoConstants.startPoseRedLeft);
 
-        elevator = new Elevator();
+        elevator = new Elevator(true);
         outtake = new Outtake();
         claw = new Claw();
         intake = new Intake();
-        intakeExtension = new IntakeExtension();
+        intakeExtension = new IntakeExtension(true);
 
         smallVel = new VelocityConstraint() {
             @Override
