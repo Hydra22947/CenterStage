@@ -146,7 +146,12 @@ public class Elevator implements Subsystem
             this.currentTargetLeft = target;
         }
     }
-
+    //Move elevator for auto
+    public void move(double target)
+    {
+        this.setTarget(target);
+        this.update();
+    }
     public void setTarget(double targetRight, double targetLeft)
     {
         if(targetRight > MAX_LEVEL)

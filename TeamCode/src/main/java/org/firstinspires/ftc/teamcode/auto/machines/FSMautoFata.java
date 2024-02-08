@@ -10,10 +10,8 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.sun.tools.javac.Main;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.auto.PoseStorage;
 import org.firstinspires.ftc.teamcode.auto.old_with_cycles.AutoConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
@@ -23,21 +21,18 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
-import org.firstinspires.ftc.teamcode.util.Stopwatch;
-
-import java.util.function.Consumer;
 
 @Config
 @Autonomous(name = "autoFSM")
-public class FSMauto extends LinearOpMode {
+public class FSMautoFata extends LinearOpMode {
     VelocityConstraint smallVel;
     private final RobotHardware robot = RobotHardware.getInstance();
-    Stopwatch timer;
+
     ElapsedTime time;
 
     // subsystems
     SampleMecanumDrive drivetrain;
-    static Elevator elevator;
+    Elevator elevator;
     Intake intake;
     Outtake outtake;
     Claw claw;
@@ -63,120 +58,47 @@ public class FSMauto extends LinearOpMode {
         TOP_32
     }
 
-    ;
-
-
-    enum ElevatorLevel {
-        TOP_54,
-        TOP_32
-    }
-
-    ;
-
-    public enum DepositeState {
-        OPEN_ELEVATOR,
-        RESET_INTAKE_OUTTAKE,
-        PLACE_PIXEL,
-        RETRACT
-    }
-
-    ;
-
-    enum IntakeState {
-        READY,
-        EXTEND_INTAKE,
-        CLOSE_CLAW,
-        RETRACT,
-        TRANSFER
-    }
-
-    ;
-
-    enum Cycles {
-        PRELOAD,
-        FIRST_CYCLE,
-        SECOND_CYCLE
-    }
-
-    ;
-
     IntakeLevel intakeLevel = IntakeLevel.TOP_54;
-    Cycles currentCycle = Cycles.PRELOAD;
-    DepositeState depositeState = DepositeState.OPEN_ELEVATOR;
-    IntakeState intakeState = IntakeState.READY;
 
-    void moveElevatorByTraj() {
-        switch (currentCycle) {
-            case PRELOAD:
-                elevator.move(1050);
-                break;
-            case FIRST_CYCLE:
-                elevator.move(1500);
-                break;
-            case SECOND_CYCLE:
-                elevator.move(1550);
-                break;
-        }
+
+    private StateMachineBuilder<AutoState> buildFSM() {
+        return new StateMachineBuilder<AutoState>()
+                //Going for purple preload
+                .state(AutoState.PLACE_PURPLE)
+                .sample(drivetrain::isNotBusy)
+                .onEnter(() -> drivetrain.followTrajectorySequenceAsync(placePurplePixel))
+                .time(350)
+                //Place Purple Preload
+                .onExit(() -> {
+                    intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT);
+                })
+                .exitTo(() -> AutoState.RETACT)
+                //Retracting intake
+                .time(100)
+                .onExit(() -> {
+                    intakeExtension.setTarget(0);
+                    intake.move(Intake.Angle.OUTTAKE);
+                })
+                .state(AutoState.PLACE_PRELOAD)
+                //Go to board
+                .onEnter(() ->
+                {
+                    drivetrain.followTrajectorySequenceAsync(intakeAnotherPreload);
+                    drivetrain.followTrajectorySequenceAsync(placePreloadsOnBoard);
+                })
+                //Place pixel on board
+                .time(250)
+                .onExit(() -> {
+                    claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
+                })
+                .time(150)
+                //Go park
+                .exitTo(() -> AutoState.PARK)
+                .onEnter(() -> drivetrain.followTrajectorySequenceAsync(park))
+                .onExit(this::stop);
+
+
     }
-
-    void moveIntakeByTraj() {
-        switch (intakeLevel) {
-            case TOP_54:
-                intake.move(Intake.Angle.TOP_54_AUTO);
-                break;
-            case TOP_32:
-                intake.move(Intake.Angle.TOP_32_AUTO);
-                break;
-        }
-    }
-
-    //This function will prepare the intake and outtake  for deposit
-    private void resetIntakeOuttake() {
-        intake.move(Intake.Angle.MID);
-        outtake.setAngle(Outtake.Angle.OUTTAKE);
-    }
-
-
-    //This function will get the function, its parameters and the delay and execute
-    //this function with the delay.
-    private void activateSystem(Runnable systemFunction, long delay, Object... parameters) {
-        timer.reset();
-        if (timer.hasTimePassed(delay)) {
-            systemFunction.run();
-            timer.reset();
-        }
-    }
-
-
-    private void depositFSM() {
-        timer = new Stopwatch();
-
-        switch (depositeState) {
-            case OPEN_ELEVATOR:
-                activateSystem(() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH), 0);
-                activateSystem(() -> moveElevatorByTraj(), 500);
-                depositeState = DepositeState.RESET_INTAKE_OUTTAKE;
-                break;
-            case RESET_INTAKE_OUTTAKE:
-                activateSystem(() -> resetIntakeOuttake(), 500);
-                depositeState = DepositeState.PLACE_PIXEL;
-                break;
-            case PLACE_PIXEL:
-                activateSystem(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), 1000);
-                break;
-        }
-    }
-
-
-    private void intakeFSM() {
-        timer = new Stopwatch();
-
-        switch (intakeState) {
-            case READY:
-
-        }
-    }
-
 
     @Override
     public void runOpMode() {
@@ -204,8 +126,6 @@ public class FSMauto extends LinearOpMode {
             }
         };
 
-
-        //Trajectories
 
         placePurplePixel = drivetrain.trajectorySequenceBuilder(autoConstants.startPoseRedLeft)
 
@@ -366,6 +286,7 @@ public class FSMauto extends LinearOpMode {
         if (isStopRequested()) return;
 
         time.reset();
+        buildFSM().build();
 
 
         double autoSeconds = time.seconds();
@@ -376,6 +297,17 @@ public class FSMauto extends LinearOpMode {
 
             telemetry.addData("Auto seconds: ", autoSeconds);
             telemetry.update();
+        }
+    }
+
+    void moveIntakeByTraj() {
+        switch (intakeLevel) {
+            case TOP_54:
+                intake.move(Intake.Angle.TOP_54_AUTO);
+                break;
+            case TOP_32:
+                intake.move(Intake.Angle.TOP_32_AUTO);
+                break;
         }
     }
 

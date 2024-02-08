@@ -10,4 +10,8 @@ public class PoseStorage {
     public static Pose2d blueightBoard = new Pose2d();
     public static Pose2d blueMidBoard = new Pose2d();
     public static Pose2d blueLeftBoard = new Pose2d();
+
+    //Marker Poses
+
+    public static Pose2d elevatorTrussPose = new Pose2d(8, -6);
 }
