@@ -22,8 +22,6 @@ public class DrivetrainTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        CommandScheduler.getInstance().reset();
-
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
 
         gamepadEx = new BetterGamepad(gamepad1);

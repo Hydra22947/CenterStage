@@ -26,8 +26,6 @@ public class IntakeTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        CommandScheduler.getInstance().reset();
-
         gamepadEx = new BetterGamepad(gamepad1);
         robot.init(hardwareMap, telemetry, false);
 

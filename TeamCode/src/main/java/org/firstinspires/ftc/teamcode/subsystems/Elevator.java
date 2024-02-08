@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.util.PIDFController;
 public class Elevator implements Subsystem
 {
 
-    private final RobotHardware robot;
+    private final RobotHardware robot = RobotHardware.getInstance();
     public static double ELEVATOR_INCREMENT = 70;
     public static double BASE_LEVEL = 1000;
     public static double MAX_LEVEL = 3450;
@@ -33,8 +33,6 @@ public class Elevator implements Subsystem
     boolean isAuto;
     public Elevator(Gamepad gamepad)
     {
-        this.robot = RobotHardware.getInstance();
-
         this.gamepad = gamepad;
         this.cGamepad = new BetterGamepad(gamepad);
 
@@ -54,8 +52,6 @@ public class Elevator implements Subsystem
 
     public Elevator()
     {
-        this.robot = RobotHardware.getInstance();
-
         pidCoefficientsR.kP = kPR;
         pidCoefficientsR.kI = kIR;
         pidCoefficientsR.kD = kDR;

@@ -7,14 +7,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 
 @Config
-@TeleOp(name = "Elevator Test")
-public class ElevatorTest extends LinearOpMode {
+@TeleOp(name = "Intake Extension Test")
+public class IntakeExtensionTest extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
-    Elevator elevator;
+    IntakeExtension intakeExtension;
     BetterGamepad gamepadEx;
     public static double target = 0;
 
@@ -24,8 +25,8 @@ public class ElevatorTest extends LinearOpMode {
 
         robot.init(hardwareMap, telemetry, true);
 
-        elevator = new Elevator(gamepad1);
-        elevator.setAuto(false);
+        intakeExtension = new IntakeExtension(gamepad1);
+        intakeExtension.setAuto(false);
         Drivetrain drivetrain = new Drivetrain(gamepad1, true);
 
         waitForStart();
@@ -37,21 +38,20 @@ public class ElevatorTest extends LinearOpMode {
 
             if(gamepad1.right_stick_y != 0)
             {
-                elevator.setUsePID(false);
+                intakeExtension.setUsePID(false);
             }
             else
             {
-                elevator.setUsePID(true);
+                intakeExtension.setUsePID(true);
             }
 
-            elevator.setTarget(target);
+            intakeExtension.setTarget(target);
 
-            elevator.update();
+            intakeExtension.update();
 
-            telemetry.addData("right motor", robot.elevatorMotorRight.getCurrentPosition());
-            telemetry.addData("left motor", robot.elevatorMotorLeft.getCurrentPosition());
-            telemetry.addData("right motor power", elevator.getControllerR().update());
-            telemetry.addData("left motor power", elevator.getControllerL().update());
+            telemetry.addData("motor", robot.extensionMotor.getCurrentPosition());
+            telemetry.addData("motor power", intakeExtension.getController().update());
+            robot.extensionMotor.setPower(intakeExtension.getController().update());
             telemetry.update();
         }
     }

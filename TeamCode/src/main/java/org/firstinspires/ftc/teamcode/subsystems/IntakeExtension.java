@@ -12,12 +12,11 @@ import org.firstinspires.ftc.teamcode.util.PIDFController;
 public class IntakeExtension implements Subsystem
 {
 
-    private final RobotHardware robot;
-    public static double BASE = 0;
+    private final RobotHardware robot = RobotHardware.getInstance();
     public static double MAX_LEVEL = 1000;
     double currentTarget = 0;
     boolean usePID = true;
-    public static double maxPower = 1;
+    public static double maxPower = .5;
     public static double kP = 0.0075, kI = 0, kD = 0.01;
 
     Gamepad gamepad;
@@ -28,8 +27,6 @@ public class IntakeExtension implements Subsystem
     boolean isAuto;
     public IntakeExtension(Gamepad gamepad)
     {
-        this.robot = RobotHardware.getInstance();
-
         this.gamepad = gamepad;
         this.cGamepad = new BetterGamepad(gamepad);
 
@@ -44,8 +41,6 @@ public class IntakeExtension implements Subsystem
 
     public IntakeExtension()
     {
-        this.robot = RobotHardware.getInstance();
-
         pidCoefficients.kP = kP;
         pidCoefficients.kI = kI;
         pidCoefficients.kD = kD;
@@ -101,8 +96,7 @@ public class IntakeExtension implements Subsystem
 
         robot.extensionMotor.setTargetPosition((int)currentTarget);
 
-        robot.elevatorMotorRight.setPower(1);
-        robot.elevatorMotorLeft.setPower(1);
+        robot.extensionMotor.setPower(1);
 
         robot.extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
@@ -124,6 +118,7 @@ public class IntakeExtension implements Subsystem
             this.currentTarget = target;
         }
     }
+
 
     public double getTarget()
     {
@@ -161,8 +156,8 @@ public class IntakeExtension implements Subsystem
 
     }
 
+
     public PIDFController getController() {
         return controller;
     }
-
 }

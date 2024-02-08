@@ -35,9 +35,9 @@ public class RobotHardware {
     public DcMotorEx dtBackLeftMotor;
     public DcMotorEx dtBackRightMotor;
     // elevator
-    public DcMotorEx elevatorMotorRight;
-    public DcMotorEx elevatorMotorLeft;
-    public DcMotorEx extensionMotor;
+    public DcMotor elevatorMotorRight;
+    public DcMotor elevatorMotorLeft;
+    public DcMotor extensionMotor;
 
     // intake
     public BetterServo intakeClawLeftServo;
@@ -107,7 +107,7 @@ public class RobotHardware {
         this.imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         this.imu.initialize(parameters);
 
         // DRIVETRAIN
@@ -141,11 +141,6 @@ public class RobotHardware {
         this.intakeHandPivotLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPL"));
         intakeHandPivotLeftServo.setDirection(Servo.Direction.REVERSE);
 
-        // EXTENSION
-        this.extensionMotor = hardwareMap.get(DcMotorEx.class, "mE");
-        extensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        this.extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         // OUTTAKE
         // CLAW
         this.outtakeClawLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sCL"));
@@ -157,17 +152,26 @@ public class RobotHardware {
         this.outtakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
         this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
         // ELEVATOR
-        this.elevatorMotorRight = hardwareMap.get(DcMotorEx.class, "mER");
-        this.elevatorMotorLeft = hardwareMap.get(DcMotorEx.class, "mEL");
+        this.elevatorMotorRight = hardwareMap.get(DcMotor.class, "mER");
+        this.elevatorMotorLeft = hardwareMap.get(DcMotor.class, "mEL");
         elevatorMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         this.elevatorMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.elevatorMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // EXTENSION
+        this.extensionMotor = hardwareMap.get(DcMotor.class, "mE");
+         extensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         if(isAuto)
         {
             elevatorMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             elevatorMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
 
         // ODO PODS
