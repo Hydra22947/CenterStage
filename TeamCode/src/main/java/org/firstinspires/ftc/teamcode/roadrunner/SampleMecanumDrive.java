@@ -59,10 +59,10 @@ import java.util.List;
 @Config
 public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
     private final RobotHardware robot = RobotHardware.getInstance();
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
 
-    public static double LATERAL_MULTIPLIER = 1;
+    public static double LATERAL_MULTIPLIER = 1.8380611781;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -128,7 +128,7 @@ public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
         List<Integer> lastTrackingEncVels = new ArrayList<>();
 
-        setLocalizer(new StandardTwoTrackingWheelLocalizer(robot));
+        setLocalizer(new StandardTwoTrackingWheelLocalizer(hardwareMap, this));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(
                 follower, HEADING_PID, batteryVoltageSensor,

@@ -1,104 +1,87 @@
-package org.firstinspires.ftc.teamcode.roadrunner;/*
- * Sample tracking wheel localizer implementation assuming the standard configuration:
- *
- *    ^
- *    |
- *    | ( x direction)
- *    |
- *    v
- *    <----( y direction )---->
-
- *        (forward)
- *    /--------------\
- *    |     ____     |
- *    |     ----     |    <- Perpendicular Wheel
- *    | ||        || |
- *    | ||        || |    <- Parallel Wheel
- *    |              |
- *    |              |
- *    \--------------/
- *
- */
+package org.firstinspires.ftc.teamcode.roadrunner;
 
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
-import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.roadrunner.util.Encoder;
 
 import java.util.Arrays;
 import java.util.List;
-
 @Config
+
 public class StandardTwoTrackingWheelLocalizer extends TwoTrackingWheelLocalizer {
     public static double TICKS_PER_REV = 2000;
     public static double WHEEL_RADIUS = 0.944882; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double LATERAL_DISTANCE = 9.64566929; // in; distance between the left and right wheels
-    public static double FORWARD_OFFSET = 7.08661; // in; offset of the lateral wheel
+    // left
+    public static double PARALLEL_X = 0; // X is the up and down direction
+    public static double PARALLEL_Y = 4.822834645; // Y is the strafe direction
 
-    public static double X_MULTIPLIER = 0.99703995355; // Multiplier in the X direction
-    public static double Y_MULTIPLIER = 0.98747085841; // Multiplier in the Y direction
-    public static boolean leftEncoderReversed = false, frontEncoderReversed = true;
+    // front
+    public static double PERPENDICULAR_X = 7.08661;
+    public static double PERPENDICULAR_Y = 0;
 
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
     // Perpendicular is perpendicular to the forward axis
-    private final Encoder leftEncoder, frontEncoder;
-    IMU imu;
+    private Encoder parallelEncoder, perpendicularEncoder;
 
-    public StandardTwoTrackingWheelLocalizer(RobotHardware robot) {
+    private SampleMecanumDrive drive;
+    public StandardTwoTrackingWheelLocalizer(HardwareMap hardwareMap, SampleMecanumDrive drive) {
         super(Arrays.asList(
-                new Pose2d(0, LATERAL_DISTANCE / 2, 0), // left
-//                new Pose2d(0, -LATERAL_DISTANCE / 2, 0), // right
-                new Pose2d(FORWARD_OFFSET, 0, Math.toRadians(90)) // front
+                new Pose2d(PARALLEL_X, PARALLEL_Y, 0),
+                new Pose2d(PERPENDICULAR_X, PERPENDICULAR_Y, Math.toRadians(90))
         ));
 
-        this.imu = robot.imu;
+        this.drive = drive;
 
-        leftEncoder = robot.podLeft;
-        frontEncoder = robot.podFront;
+        parallelEncoder = RobotHardware.getInstance().podLeft;
+        perpendicularEncoder = RobotHardware.getInstance().podFront;
 
-        if(leftEncoderReversed) leftEncoder.setDirection(Encoder.Direction.REVERSE);
-        if(frontEncoderReversed) frontEncoder.setDirection(Encoder.Direction.REVERSE);
+        perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
     }
 
+    @Override
+    public double getHeading() {
+        return drive.getRawExternalHeading();
+    }
+
+    @Override
+    public Double getHeadingVelocity() {
+        return drive.getExternalHeadingVelocity();
+    }
+
     @NonNull
     @Override
     public List<Double> getWheelPositions() {
-        int leftPos = leftEncoder.getCurrentPosition();
-        int frontPos = frontEncoder.getCurrentPosition();
-
         return Arrays.asList(
-                encoderTicksToInches(leftPos) * X_MULTIPLIER,
-                encoderTicksToInches(frontPos) * Y_MULTIPLIER
+                encoderTicksToInches(parallelEncoder.getCurrentPosition()),
+                encoderTicksToInches(perpendicularEncoder.getCurrentPosition())
         );
     }
+
     @NonNull
     @Override
     public List<Double> getWheelVelocities() {
-        int leftVel = (int) leftEncoder.getCorrectedVelocity();
-        int frontVel = (int) frontEncoder.getCorrectedVelocity();
+        // TODO: If your encoder velocity can exceed 32767 counts / second (such as the REV Through Bore and other
+        //  competing magnetic encoders), change Encoder.getRawVelocity() to Encoder.getCorrectedVelocity() to enable a
+        //  compensation method
 
         return Arrays.asList(
-                encoderTicksToInches(leftVel) * X_MULTIPLIER,
-                encoderTicksToInches(frontVel) * Y_MULTIPLIER
+                encoderTicksToInches(parallelEncoder.getRawVelocity()),
+                encoderTicksToInches(perpendicularEncoder.getRawVelocity())
         );
-    }
-
-    @Override
-    public double getHeading() {
-        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
     }
 }
