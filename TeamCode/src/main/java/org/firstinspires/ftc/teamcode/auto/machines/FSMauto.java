@@ -84,10 +84,8 @@ public class FSMauto extends LinearOpMode {
 
     enum IntakeState {
         READY,
-        EXTEND_INTAKE,
-        CLOSE_CLAW,
+        INTAKE,
         RETRACT,
-        TRANSFER
     }
 
     ;
@@ -137,6 +135,11 @@ public class FSMauto extends LinearOpMode {
     }
 
 
+    public void retractElevator() {
+        outtake.setAngle(Outtake.Angle.INTAKE);
+        elevator.move(0);
+    }
+
     //This function will get the function, its parameters and the delay and execute
     //this function with the delay.
     private void activateSystem(Runnable systemFunction, long delay, Object... parameters) {
@@ -147,7 +150,7 @@ public class FSMauto extends LinearOpMode {
         }
     }
 
-
+    //FSM for every time u need to place a pixel.
     private void depositFSM() {
         timer = new Stopwatch();
 
@@ -163,21 +166,38 @@ public class FSMauto extends LinearOpMode {
                 break;
             case PLACE_PIXEL:
                 activateSystem(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), 1000);
+                depositeState = DepositeState.RETRACT;
+                break;
+            case RETRACT:
+                activateSystem(() -> retractElevator(), 800);
                 break;
         }
     }
 
-
+    //FSM for every time u need to intake.
     private void intakeFSM() {
         timer = new Stopwatch();
 
         switch (intakeState) {
             case READY:
-
+                activateSystem(() -> moveElevatorByTraj(), 0);
+                activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT), 0);
+                intakeState = IntakeState.INTAKE;
+                break;
+            case INTAKE:
+                activateSystem(() -> intakeExtension.setTarget(300), 600);
+                activateSystem(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT), 500);
+                intakeState = IntakeState.RETRACT;
+                break;
+            case RETRACT:
+                activateSystem(() -> intake.moveStack(), 0);
+                activateSystem(() -> intake.move(Intake.Angle.OUTTAKE), 300);
+                activateSystem(() -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH), 1000);
+                break;
         }
     }
 
-
+    
     @Override
     public void runOpMode() {
         time = new ElapsedTime();
