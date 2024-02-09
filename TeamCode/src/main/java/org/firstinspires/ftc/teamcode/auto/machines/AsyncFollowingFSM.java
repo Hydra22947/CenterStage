@@ -80,7 +80,7 @@ public class AsyncFollowingFSM extends LinearOpMode {
                 .build();
 
         Trajectory park = drive.trajectoryBuilder(goToBoard.end())
-                .lineTo(new Vector2d(45, 0))
+                .lineToLinearHeading(new Pose2d(45, 0, Math.toRadians(-90)))
                 .build();
 
         intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
