@@ -41,12 +41,12 @@ public class StandardTwoTrackingWheelLocalizer extends TwoTrackingWheelLocalizer
     public static double WHEEL_RADIUS = 0.944882; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double LATERAL_DISTANCE = 9.204896708548267; // in; distance between the left and right wheels
+    public static double LATERAL_DISTANCE = 9.64566929; // in; distance between the left and right wheels
     public static double FORWARD_OFFSET = 7.08661; // in; offset of the lateral wheel
 
-    public static double X_MULTIPLIER = 0.99241546; // Multiplier in the X direction
-    public static double Y_MULTIPLIER = 0.98182109; // Multiplier in the Y direction
-    public static boolean leftEncoderReversed = true, frontEncoderReversed = true;
+    public static double X_MULTIPLIER = 0.99703995355; // Multiplier in the X direction
+    public static double Y_MULTIPLIER = 0.98747085841; // Multiplier in the Y direction
+    public static boolean leftEncoderReversed = false, frontEncoderReversed = true;
 
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
@@ -88,8 +88,8 @@ public class StandardTwoTrackingWheelLocalizer extends TwoTrackingWheelLocalizer
     @NonNull
     @Override
     public List<Double> getWheelVelocities() {
-        int leftVel = (int) leftEncoder.getRawVelocity();
-        int frontVel = (int) frontEncoder.getRawVelocity();
+        int leftVel = (int) leftEncoder.getCorrectedVelocity();
+        int frontVel = (int) frontEncoder.getCorrectedVelocity();
 
         return Arrays.asList(
                 encoderTicksToInches(leftVel) * X_MULTIPLIER,

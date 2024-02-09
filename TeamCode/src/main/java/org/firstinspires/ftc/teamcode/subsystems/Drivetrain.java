@@ -16,7 +16,7 @@ public class Drivetrain {
 
     private final RobotHardware robot;
     Vector2d input;
-    public static double maxPower = 0.9;
+    public static double maxPower = 1;
     public static double slowerSpin = 0.5;
     double power = 0, twist = 0;
     boolean slow = false;
@@ -82,6 +82,6 @@ public class Drivetrain {
     public void slow()
     {
         power = maxPower / 2;
-        slowerSpin = 0.6;
+        slowerSpin = 0.85;
     }
 }

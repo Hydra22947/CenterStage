@@ -9,15 +9,14 @@ import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.RUN_USING
 import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.TRACK_WIDTH;
 import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.WHEEL_BASE;
 import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.encoderTicksToInches;
-import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kA;
 import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kStatic;
 import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kV;
+import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kA;
 
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
@@ -36,7 +35,6 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -60,25 +58,15 @@ import java.util.List;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
-    RobotHardware robot = RobotHardware.getInstance();
+    private final RobotHardware robot = RobotHardware.getInstance();
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
-//    public static PIDCoefficients LATERAL_PID = new PIDCoefficients(8.680, 0.8644, 0.3); // todo: maybe tune, and use
-//    public static PIDCoefficients AXIAL_PID = new PIDCoefficients(8, 0, 0.4); // todo: maybe tune, and use
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8.680, 0.8644, 0.3);
-    //public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0.4);
-
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8.680, 0, .5);
-
-    // IF ROBOT GOES BING BONG - uncomment the 2 lines above and delete the line below.
-//    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8.680, 0.8644, 0.3);
-//    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
-
-    public static double LATERAL_MULTIPLIER = 1.6934801016;
+    public static double LATERAL_MULTIPLIER = 1;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
-    IMU imu;
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
@@ -90,6 +78,7 @@ public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
 
+    private IMU imu;
     private VoltageSensor batteryVoltageSensor;
 
     private List<Integer> lastEncPositions = new ArrayList<>();
@@ -99,10 +88,9 @@ public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
         super(kV, kA, kStatic, TRACK_WIDTH, WHEEL_BASE, LATERAL_MULTIPLIER);
 
         robot.init(hardwareMap, FtcDashboard.getInstance().getTelemetry(), true);
-        this.imu = robot.imu;
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
-                new Pose2d(0.5, 0.5, Math.toRadians(1)), 0.5);
+                new Pose2d(0.5, 0.5, Math.toRadians(1.0)), 0.5);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
@@ -111,6 +99,8 @@ public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
+
+        imu = robot.imu;
 
         leftFront = robot.dtFrontLeftMotor;
         leftRear = robot.dtBackLeftMotor;
@@ -135,14 +125,10 @@ public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
         }
 
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
         List<Integer> lastTrackingEncVels = new ArrayList<>();
 
-        //setLocalizer(new StandardTrackingWheelLocalizer(RobotHardware.getInstance()));
-        setLocalizer(new StandardTwoTrackingWheelLocalizer(RobotHardware.getInstance()));
+        setLocalizer(new StandardTwoTrackingWheelLocalizer(robot));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(
                 follower, HEADING_PID, batteryVoltageSensor,
@@ -169,8 +155,6 @@ public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
                 MAX_ANG_VEL, MAX_ANG_ACCEL
         );
     }
-
-
 
     public void turnAsync(double angle) {
         trajectorySequenceRunner.followTrajectorySequenceAsync(
@@ -287,6 +271,7 @@ public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
         return wheelPositions;
     }
 
+    @NonNull
     @Override
     public List<Double> getWheelVelocities() {
         lastEncVels.clear();
@@ -330,7 +315,9 @@ public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
     }
 
     @Override
-    public void play() {}
+    public void play() {
+
+    }
 
     @Override
     public void loop(boolean allowMotors) {
@@ -340,5 +327,6 @@ public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
     @Override
     public void stop() {
         setDrivePower(new Pose2d());
+
     }
 }
