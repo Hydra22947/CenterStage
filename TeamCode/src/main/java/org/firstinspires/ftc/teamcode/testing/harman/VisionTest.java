@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name="Vision Test", group="Auto")
-public class  VisiotTest extends LinearOpMode{
+public class VisionTest extends LinearOpMode{
 
     public int element_zone = 1;
 
