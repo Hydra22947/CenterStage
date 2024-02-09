@@ -41,14 +41,14 @@ public class OpModeBlueTest extends LinearOpMode {
     // delays
     public static double delayTransfer = 300, delayRelease = 1200, delayCloseTransfer = 350, delayGoToTransfer = 800;
     public static double WAIT_DELAY_TILL_OUTTAKE = 200, WAIT_DELAY_TILL_CLOSE = 200, ELEVATOR_ZERO_MAX = 15, INTAKE_ZERO_MAX = 10;
-
+    public static double INTAKE_EXTEND_PRECENTAGE = 60;
     // variables
     double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
     double elevatorTargetRight = 1300;
     double elevatorTargetLeft = 1300;
     int openedXTimes = 0;
     boolean retract = false,  goToMid = false, intakeMid = true, canIntake = true, startedDelayTransfer = false, heldExtension = false;
-    boolean override = false, had2Pixels = false, hang = false, resetLeftTrigger = true, closeClaw = false, wasClosed = false;
+    boolean override = false, had2Pixels = false, hang = false, resetRightTrigger = true, closeClaw = false, wasClosed = false, firstExtend = true;
 
     public enum IntakeState {
         RETRACT,
@@ -135,6 +135,12 @@ public class OpModeBlueTest extends LinearOpMode {
             claw.update();
 
             if (gamepad2.left_stick_y != 0) {
+                intakeExtension.setUsePID(false);
+            } else {
+                intakeExtension.setUsePID(true);
+            }
+
+            if (gamepad2.right_stick_y != 0) {
                 elevator.setUsePID(false);
             } else {
                 elevator.setUsePID(true);
@@ -168,7 +174,7 @@ public class OpModeBlueTest extends LinearOpMode {
             case RETRACT:
                 intakeExtension.setTarget(0);
 
-                if(gamepad1.left_trigger != 0 && resetLeftTrigger)
+                if(gamepad2.right_trigger != 0 && resetRightTrigger)
                 {
                     if(claw.leftClaw == Claw.ClawState.CLOSED && claw.rightClaw == Claw.ClawState.CLOSED)
                     {
@@ -177,20 +183,20 @@ public class OpModeBlueTest extends LinearOpMode {
 
                     claw.setBothClaw(Claw.ClawState.OPEN);
 
-                    resetLeftTrigger = false;
+                    resetRightTrigger = false;
                     closeClaw = false;
                 }
 
-                if(gamepad1.left_trigger == 0 && wasClosed)
+                if(gamepad2.right_trigger == 0 && wasClosed)
                 {
                     claw.setBothClaw(Claw.ClawState.CLOSED);
                     wasClosed = false;
-                    resetLeftTrigger = true;
+                    resetRightTrigger = true;
                     closeClaw = true;
                 }
-                else if(gamepad1.left_trigger == 0)
+                else if(gamepad2.right_trigger == 0)
                 {
-                    resetLeftTrigger = true;
+                    resetRightTrigger = true;
                     closeClaw = true;
                 }
 
@@ -206,6 +212,8 @@ public class OpModeBlueTest extends LinearOpMode {
                 }
                 else if (gamepad1.right_trigger != 0 && !robot.has2Pixels() && canIntake && !heldExtension)
                 {
+                    moveIntake();
+                    claw.setBothClaw(Claw.ClawState.INTAKE);
                     intakeState = IntakeState.INTAKE_EXTEND;
                     override = false;
                 }
@@ -261,6 +269,8 @@ public class OpModeBlueTest extends LinearOpMode {
 
                 if (gamepad1.right_trigger != 0)
                 {
+                    moveIntake();
+                    claw.setBothClaw(Claw.ClawState.INTAKE);
                     intakeState = IntakeState.INTAKE_EXTEND;
                 }
 
@@ -330,10 +340,17 @@ public class OpModeBlueTest extends LinearOpMode {
                 heldExtension = true;
                 drivetrain.slow();
 
-                intakeExtension.setTarget(gamepad1.right_trigger * intakeExtension.MAX_LEVEL);
+                if(firstExtend)
+                {
+                    intakeExtension.setTarget(gamepad1.right_trigger * intakeExtension.MAX_LEVEL * (INTAKE_EXTEND_PRECENTAGE/100));
+                }
+                else if(gamepad2.left_stick_y != 0)
+                {
+                    intakeExtension.setUsePID(false);
+                    intakeExtension.setTarget(intakeExtension.getPos());
+                }
                 
-                moveIntake();
-                claw.setBothClaw(Claw.ClawState.INTAKE);
+
 
                 if ((robot.has2Pixels() && !startedDelayTransfer) || gamepad1.right_trigger == 0 || (intake.closedClaw() && override))
                 {
@@ -375,6 +392,7 @@ public class OpModeBlueTest extends LinearOpMode {
                 }
 
                 if (gamepad1.right_trigger == 0) {
+                    firstExtend = true;
                     intakeState = IntakeState.RETRACT;
                 }
 
@@ -424,12 +442,6 @@ public class OpModeBlueTest extends LinearOpMode {
                     elevator.setTarget(elevatorTargetRight + (openedXTimes * (Elevator.ELEVATOR_INCREMENT)), elevatorTargetLeft + (openedXTimes * (Elevator.ELEVATOR_INCREMENT)));
                 }
 
-                if(gamepad2.left_stick_y != 0)
-                {
-                    elevatorTargetRight += elevator.getPosRight() - (elevatorTargetRight + (openedXTimes * Elevator.ELEVATOR_INCREMENT));
-                    elevatorTargetLeft += elevator.getPosLeft() - (elevatorTargetLeft + (openedXTimes * Elevator.ELEVATOR_INCREMENT));
-                }
-
                 if ((getTime() - previousElevator) >= WAIT_DELAY_TILL_OUTTAKE) {
                     outtake.setAngle(Outtake.Angle.OUTTAKE);
                 }
@@ -448,15 +460,6 @@ public class OpModeBlueTest extends LinearOpMode {
                 {
                     claw.setBothClaw(Claw.ClawState.INTERMEDIATE);
                 }
-
-//                if(betterGamepad2.rightBumperOnce())
-//                {
-//                    outtake.setOuttakeHandPivot(outtake.outtakeHandPivot += 0.015);
-//                }
-//                else if(betterGamepad2.leftBumperOnce())
-//                {
-//                    outtake.setOuttakeHandPivot(outtake.outtakeHandPivot -= 0.015);
-//                }
 
                 if(betterGamepad2.rightBumperOnce())
                 {
@@ -514,7 +517,6 @@ public class OpModeBlueTest extends LinearOpMode {
 
     double getTime()
     {
-        //TODO: check if code doesn't go boom boom because nano seconds
         return codeTime.nanoseconds() / 1000000;
     }
 

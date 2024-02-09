@@ -12,9 +12,9 @@ public class AutoConstants {
 
 
     //Poses
-    public Pose2d startPoseRedLeft = new Pose2d(-40, -62, Math.toRadians(90)); // ok
+    public static Pose2d startPoseRedLeft = new Pose2d(-40, -62, Math.toRadians(90)); // ok
     public Pose2d startPoseRedRight = new Pose2d(16, -62, Math.toRadians(90)); // ok
-    public Pose2d startPoseBlueLeft = new Pose2d(16, 62, Math.toRadians(-90)); // ok
+    public static Pose2d startPoseBlueLeft = new Pose2d(16, 62, Math.toRadians(-90)); // ok
     public Pose2d startPoseBlueRight = new Pose2d(-40, 62, Math.toRadians(-90)); // ok
     public static Pose2d currentPose = new Pose2d(0,0);
 }

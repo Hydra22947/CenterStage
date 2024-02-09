@@ -38,7 +38,7 @@ public class AutoBlueLeftMiddle extends CommandOpMode {
     Claw claw;
     IntakeExtension intakeExtension;
     AutoConstants autoConstants;
-    TrajectorySequence placePurplePixel, intakeAnotherPreload, placePreloadsOnBoard, intakeCycle43, intakeCycle21, place43, place21, park;
+    TrajectorySequence placePurplePixel, placePreloadsOnBoard, park;
 
     enum IntakeLevel {
         TOP_54,
