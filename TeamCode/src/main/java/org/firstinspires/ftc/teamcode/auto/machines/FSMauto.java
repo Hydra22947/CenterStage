@@ -48,7 +48,7 @@ public class FSMauto extends LinearOpMode {
 
     enum AutoState {
         PLACE_PURPLE,
-        RETACT,
+        RETRACT,
         PLACE_PRELOAD,
         PLACE_PIXEL,
         INTAKE,
@@ -77,15 +77,18 @@ public class FSMauto extends LinearOpMode {
         OPEN_ELEVATOR,
         RESET_INTAKE_OUTTAKE,
         PLACE_PIXEL,
-        RETRACT
+        RETRACT,
+        IDLE
     }
 
     ;
 
     enum IntakeState {
+        PLACE_PURPLE,
         READY,
         INTAKE,
         RETRACT,
+        IDLE
     }
 
     ;
@@ -100,8 +103,9 @@ public class FSMauto extends LinearOpMode {
 
     IntakeLevel intakeLevel = IntakeLevel.TOP_54;
     Cycles currentCycle = Cycles.PRELOAD;
-    DepositeState depositeState = DepositeState.OPEN_ELEVATOR;
-    IntakeState intakeState = IntakeState.READY;
+    DepositeState depositeState = DepositeState.IDLE;
+    IntakeState intakeState = IntakeState.IDLE;
+    AutoState autoState = AutoState.PLACE_PURPLE;
 
     void moveElevatorByTraj() {
         switch (currentCycle) {
@@ -142,62 +146,112 @@ public class FSMauto extends LinearOpMode {
 
     //This function will get the function, its parameters and the delay and execute
     //this function with the delay.
-    private void activateSystem(Runnable systemFunction, long delay, Object... parameters) {
-        timer.reset();
+    private boolean activateSystem(Runnable systemFunction, long delay, Object... parameters) {
         if (timer.hasTimePassed(delay)) {
             systemFunction.run();
             timer.reset();
+            return true; // Activation successful
+        } else {
+            return false; // Activation failed
         }
     }
 
-    //FSM for every time u need to place a pixel.
     private void depositFSM() {
         timer = new Stopwatch();
 
         switch (depositeState) {
-            case OPEN_ELEVATOR:
-                activateSystem(() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH), 0);
-                activateSystem(() -> moveElevatorByTraj(), 500);
+            case RESET_INTAKE_OUTTAKE:
+                timer.reset();
+                if (!activateSystem(() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH), 0))
+                    return;
+                if (!activateSystem(() -> resetIntakeOuttake(), 200)) return;
+
                 depositeState = DepositeState.RESET_INTAKE_OUTTAKE;
                 break;
-            case RESET_INTAKE_OUTTAKE:
-                activateSystem(() -> resetIntakeOuttake(), 500);
+            case OPEN_ELEVATOR:
+                if (!activateSystem(() -> moveElevatorByTraj(), 100)) return;
                 depositeState = DepositeState.PLACE_PIXEL;
                 break;
             case PLACE_PIXEL:
-                activateSystem(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), 1000);
+                if (!activateSystem(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), 1000))
+                    return;
                 depositeState = DepositeState.RETRACT;
                 break;
             case RETRACT:
-                activateSystem(() -> retractElevator(), 800);
+                if (!activateSystem(() -> retractElevator(), 800)) return;
+                depositeState = DepositeState.IDLE;
+                break;
+            case IDLE:
                 break;
         }
+
     }
 
     //FSM for every time u need to intake.
     private void intakeFSM() {
-        timer = new Stopwatch();
 
         switch (intakeState) {
+            case PLACE_PURPLE:
+                timer.reset();
+                if (!activateSystem(() -> intake.move(Intake.Angle.INTAKE), 0)) return;
+                if (!activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT), 200))
+                    return;
+                if (!activateSystem(() -> intake.move(Intake.Angle.OUTTAKE), 0)) return;
+                break;
             case READY:
-                activateSystem(() -> moveElevatorByTraj(), 0);
-                activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT), 0);
+                if (!activateSystem(() -> moveElevatorByTraj(), 0)) return;
+                if (!activateSystem(() -> intake.move(Intake.Angle.INTAKE), 0)) return;
+                if (!activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT), 0))
+                    return;
+
                 intakeState = IntakeState.INTAKE;
                 break;
             case INTAKE:
-                activateSystem(() -> intakeExtension.setTarget(300), 600);
-                activateSystem(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT), 500);
+                if (!activateSystem(() -> intakeExtension.setTarget(300), 600)) return;
+                if (!activateSystem(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT), 500))
+                    return;
+
                 intakeState = IntakeState.RETRACT;
                 break;
             case RETRACT:
-                activateSystem(() -> intake.moveStack(), 0);
-                activateSystem(() -> intake.move(Intake.Angle.OUTTAKE), 300);
-                activateSystem(() -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH), 1000);
+                if (!activateSystem(() -> intake.moveStack(), 0)) return;
+                if (!activateSystem(() -> intake.move(Intake.Angle.OUTTAKE), 300)) return;
+                if (!activateSystem(() -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH), 1000))
+                    return;
+                intakeState = IntakeState.IDLE;
+                break;
+            case IDLE:
                 break;
         }
     }
 
-    
+    private void autoFSM() {
+        switch (autoState) {
+            case PLACE_PURPLE:
+                if (drivetrain.isNotBusy()) {
+                    autoState = AutoState.PLACE_PRELOAD;
+                    drivetrain.followTrajectorySequenceAsync(placePurplePixel);
+                    intakeState = IntakeState.PLACE_PURPLE;
+                }
+                break;
+            case PLACE_PRELOAD:
+                if (drivetrain.isNotBusy()) {
+                    depositeState = DepositeState.RESET_INTAKE_OUTTAKE;
+                    autoState = AutoState.PARK;
+                    drivetrain.followTrajectorySequenceAsync(placePreloadsOnBoard);
+                    currentCycle = Cycles.PRELOAD;
+
+                }
+                break;
+            case PARK:
+                if (drivetrain.isNotBusy()) {
+                    drivetrain.followTrajectorySequenceAsync(park);
+                }
+                break;
+
+        }
+    }
+
     @Override
     public void runOpMode() {
         time = new ElapsedTime();
@@ -233,147 +287,27 @@ public class FSMauto extends LinearOpMode {
                 // place purple pixel distance
 
                 .lineToLinearHeading(new Pose2d(-45.5, -15, Math.toRadians(80)))
-                .addTemporalMarker(() -> intake.move(Intake.Angle.INTAKE))
-
-                .build();
-
-
-        intakeAnotherPreload = drivetrain.trajectorySequenceBuilder(placePurplePixel.end())
                 .lineToLinearHeading(new Pose2d(-40, -8.2, Math.toRadians(0)))
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
+
                 .build();
+
 
         placePreloadsOnBoard = drivetrain.trajectorySequenceBuilder(intakeAnotherPreload.end())
 
                 // truss pose next to board
                 .lineToSplineHeading(new Pose2d(12, -9, Math.toRadians(0)))
-
-                .addSpatialMarker(new Vector2d(8, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
-                .addSpatialMarker(new Vector2d(9, -6), () -> elevator.setTarget(1050))
-                .addSpatialMarker(new Vector2d(9, -6), () -> elevator.update())
-                .addSpatialMarker(new Vector2d(10, -6), () -> intake.move(Intake.Angle.MID))
-                .addSpatialMarker(new Vector2d(10, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
-
-                // backdrop pose
                 .splineToLinearHeading(new Pose2d(53, -27, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
-        intakeCycle43 = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
-                .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.INTAKE))
-                .addTemporalMarker(() -> elevator.setTarget(0))
-                .addTemporalMarker(() -> elevator.update())
-
-                // truss pose next to wing
-                .lineToSplineHeading(new Pose2d(30, -15, Math.toRadians(0)))
-
-                .UNSTABLE_addDisplacementMarkerOffset(7, () -> moveIntakeByTraj())
-
-                // intake pose
-                .splineToLinearHeading(new Pose2d(-37.75, -10), Math.toRadians(180))
-
-                .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
-                .addTemporalMarker(() -> intakeExtension.setTarget(100))
-                .waitSeconds(0.8)
-                .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
-                //.waitSeconds(AutoConstants.WAIT + 0.5)
-                .waitSeconds(0.5)
-                .build();
-
-        place43 = drivetrain.trajectorySequenceBuilder(intakeCycle43.end())
-                .addTemporalMarker(() -> intake.moveStack())
-                .waitSeconds(0.3)
-                .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
-                .addTemporalMarker(() -> intakeExtension.setTarget(0))
-
-                .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
-
-                .waitSeconds(0.3)
-
-                // truss pose next to board
-                .lineToSplineHeading(new Pose2d(12.5, -9, Math.toRadians(0)))
-
-                .addSpatialMarker(new Vector2d(7, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
-                .addSpatialMarker(new Vector2d(5, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL + 500))
-                .addSpatialMarker(new Vector2d(5, -6), () -> elevator.update())
-                .addSpatialMarker(new Vector2d(7, -10), () -> intake.move(Intake.Angle.MID))
-                .addSpatialMarker(new Vector2d(15, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
-
-                // backdrop pose
-                .splineToLinearHeading(new Pose2d(53, -28.8, Math.toRadians(0)), Math.toRadians(0))
-
-                .waitSeconds(.2)
-                .addTemporalMarker(() -> claw.updateState(Claw.ClawState.INTERMEDIATE, ClawSide.BOTH))
-                .waitSeconds(0.1)
-                //.forward(.5)
-                .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
-                .waitSeconds(.2)
-                .addTemporalMarker(() -> elevator.setTarget(0))
-                .addTemporalMarker(() -> elevator.update())
-                .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.INTAKE))
-                .build();
-
-        intakeCycle21 = drivetrain.trajectorySequenceBuilder(place43.end())
-                .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.INTAKE))
-                .addTemporalMarker(() -> elevator.setTarget(0))
-                .addTemporalMarker(() -> elevator.update())
-
-                // truss pose next to wing
-                .lineToSplineHeading(new Pose2d(30, -15, Math.toRadians(0)))
-                .UNSTABLE_addDisplacementMarkerOffset(7, () -> intake.move(Intake.Angle.OUTTAKE))
-
-                // intake pose
-                .splineToLinearHeading(new Pose2d(-37.7, -9), Math.toRadians(180))
-
-                .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT))
-                .addTemporalMarker(() -> intakeExtension.setTarget(100))
-                .addTemporalMarker(() -> intake.move(Intake.Angle.TOP_32_AUTO))
-                .waitSeconds(.8)
-                .addTemporalMarker(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT))
-                //.waitSeconds(AutoConstants.WAIT + 0.4)
-                .waitSeconds(0.5)
-                .build();
-
-        place21 = drivetrain.trajectorySequenceBuilder(intakeCycle21.end())
-                .addTemporalMarker(() -> intake.moveStack())
-                .waitSeconds(0.3)
-                .addTemporalMarker(() -> intake.move(Intake.Angle.OUTTAKE))
-                .addTemporalMarker(() -> intakeExtension.setTarget(0))
-
-                .addTemporalMarker(1, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH))
-
-                .waitSeconds(0.3)
-
-                // truss pose next to board
-                .lineToSplineHeading(new Pose2d(12, -9, Math.toRadians(0)))
-
-                .addSpatialMarker(new Vector2d(9, -6), () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH))
-                .addSpatialMarker(new Vector2d(5, -6), () -> elevator.setTarget(Elevator.BASE_LEVEL + 550))
-                .addSpatialMarker(new Vector2d(5, -6), () -> elevator.update())
-                .addSpatialMarker(new Vector2d(7, -10), () -> intake.move(Intake.Angle.MID))
-                .addSpatialMarker(new Vector2d(15, -6), () -> outtake.setAngle(Outtake.Angle.OUTTAKE))
-
-                // backdrop pose
-                .splineToLinearHeading(new Pose2d(53.75, -29.3, Math.toRadians(0)), Math.toRadians(0))
-
-                .waitSeconds(.2)
-                .addTemporalMarker(() -> claw.updateState(Claw.ClawState.INTERMEDIATE, ClawSide.BOTH))
-                .waitSeconds(0.1)
-                .addTemporalMarker(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH))
-                .waitSeconds(.2)
-                .addTemporalMarker(() -> elevator.setTarget(0))
-                .addTemporalMarker(() -> elevator.update())
-                .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.INTAKE))
-                .build();
 
         park = drivetrain.trajectorySequenceBuilder(placePreloadsOnBoard.end())
                 .lineTo(new Vector2d(50, -9))
                 .lineToLinearHeading(new Pose2d(60, -10, Math.toRadians(-90)))
-                .addTemporalMarker(() -> elevator.setTarget(0))
-                .addTemporalMarker(() -> elevator.update())
-                .addTemporalMarker(() -> outtake.setAngle(Outtake.Angle.INTAKE))
                 .build();
 
 
+        elevator.setAuto(true);
+        intakeExtension.setAuto(true);
         while (opModeInInit() && !isStopRequested()) {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             intake.setAngle(Intake.Angle.OUTTAKE);
@@ -383,16 +317,21 @@ public class FSMauto extends LinearOpMode {
         }
 
         waitForStart();
-        if (isStopRequested()) return;
+
+        if (isStopRequested()) {
+            return;
+        }
+
 
         time.reset();
 
 
         double autoSeconds = time.seconds();
         while (opModeIsActive()) {
+            autoFSM();
+            intakeFSM();
+            depositFSM();
             drivetrain.update();
-            elevator.update();
-            intakeExtension.update();
 
             telemetry.addData("Auto seconds: ", autoSeconds);
             telemetry.update();

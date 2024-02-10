@@ -8,7 +8,7 @@ public class Stopwatch {
     }
 
     public boolean hasTimePassed(long ms) {
-        return getRuntime() > ms;
+        return getRuntime() >= ms;
     }
 
     public void reset() {
