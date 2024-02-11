@@ -39,8 +39,8 @@ public class OpModeBlueTest extends LinearOpMode {
     BetterGamepad betterGamepad1, betterGamepad2;
 
     // delays
-    public static double delayTransfer = 300, delayRelease = 1200, delayCloseTransfer = 350, delayGoToTransfer = 800;
-    public static double WAIT_DELAY_TILL_OUTTAKE = 200, WAIT_DELAY_TILL_CLOSE = 200, ELEVATOR_ZERO_MAX = 15, INTAKE_ZERO_MAX = 10;
+    public static double delayTransfer = 300, delayRelease = 750, delayCloseTransfer = 350, delayGoToTransfer = 1300;
+    public static double WAIT_DELAY_TILL_OUTTAKE = 0, WAIT_DELAY_TILL_CLOSE = 200, ELEVATOR_ZERO_MAX = 15, INTAKE_ZERO_MAX = 30;
     public static double INTAKE_EXTEND_PRECENTAGE = 60;
     // variables
     double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
@@ -222,7 +222,7 @@ public class OpModeBlueTest extends LinearOpMode {
                     drivetrain.fast();
                 }
 
-                if(startedDelayTransfer)
+                if(startedDelayTransfer /*&& (intakeExtension.getPos() >= -INTAKE_ZERO_MAX && intakeExtension.getPos() <= INTAKE_ZERO_MAX)*/)
                 {
                     intakeMid = false;
                     intake.move(Intake.Angle.OUTTAKE);
@@ -337,6 +337,7 @@ public class OpModeBlueTest extends LinearOpMode {
 
                 break;
             case INTAKE_EXTEND:
+                moveIntake();
                 heldExtension = true;
                 drivetrain.slow();
 
@@ -473,10 +474,11 @@ public class OpModeBlueTest extends LinearOpMode {
                 }
 
                 if (betterGamepad1.AOnce())  {
+                    claw.setBothClaw(Claw.ClawState.OPEN);
+
                     elevatorTargetRight = elevator.getTargetRight() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
                     elevatorTargetLeft = elevator.getTargetLeft() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
                     openedXTimes++;
-                    claw.setBothClaw(Claw.ClawState.OPEN);
 
                     elevatorReset = getTime();
                     retract = true;

@@ -4,6 +4,8 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 
@@ -39,22 +41,32 @@ public class Drivetrain {
     public void update() {
         _cGamepad1.update();
 
-        input = new Vector2d(
-                Range.clip(_cGamepad1.left_stick_y, -power, power),
-                Range.clip(-_cGamepad1.left_stick_x, -power, power)
-        ).rotateBy(robot.getAngle());
-
+        double y = Range.clip(-_cGamepad1.left_stick_y, -power, power); // Remember, Y stick value is reversed
+        double x = Range.clip(_cGamepad1.left_stick_x, -power, power);
         twist = Range.clip(_cGamepad1.right_stick_x, -power * slowerSpin, power * slowerSpin);
 
-        if(_cGamepad1.XOnce())
-        {
-            resetAngle();
+        if (_cGamepad1.XOnce()) {
+            robot.imu.resetYaw();
         }
 
-        robot.dtFrontLeftMotor.setPower(input.getX() + twist + input.getY());
-        robot.dtBackLeftMotor.setPower(input.getX()  + twist - input.getY());
-        robot.dtFrontRightMotor.setPower(input.getX()  - twist - input.getY());
-        robot.dtBackRightMotor.setPower(input.getX()  - twist + input.getY());
+        double botHeading = robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+
+        // Rotate the movement direction counter to the bot's rotation
+        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+
+        rotX = rotX * 1.1;  // Counteract imperfect strafing
+
+//
+//        if(_cGamepad1.XOnce())
+//        {
+//            resetAngle();
+//        }
+
+        robot.dtFrontLeftMotor.setPower(rotY + rotX + twist);
+        robot.dtBackLeftMotor.setPower(rotY - rotX + twist);
+        robot.dtFrontRightMotor.setPower(rotY - rotX - twist);
+        robot.dtBackRightMotor.setPower(rotY + rotX - twist);
     }
 
 

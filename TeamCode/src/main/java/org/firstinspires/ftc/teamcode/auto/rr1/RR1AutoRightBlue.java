@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "Middle 2+0 Auto Blue Right")
+@Autonomous(name = "2+0 Auto Blue Left")
 public class RR1AutoRightBlue extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
@@ -46,7 +46,7 @@ public class RR1AutoRightBlue extends LinearOpMode {
     }
 
 
-    Action placePurplePixel, intakeAnotherPreload, placePreloadsOnBoard, intakeCycle43, intakeCycle21, place43, place21, park;
+    Action placePurplePixel, placePreloadsOnBoard, park;
 
 
     IntakeLevel intakeLevel = IntakeLevel.TOP_54;
@@ -56,7 +56,7 @@ public class RR1AutoRightBlue extends LinearOpMode {
     public void runOpMode() {
         time = new ElapsedTime();
         CommandScheduler.getInstance().reset();
-        drivetrain = new MecanumDrive(hardwareMap, autoConstants.startPoseBlueRight);
+        drivetrain = new MecanumDrive(hardwareMap, autoConstants.startPoseBlueLeft);
 
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
 
@@ -71,7 +71,7 @@ public class RR1AutoRightBlue extends LinearOpMode {
         intakeExtension = new IntakeExtension(true);
 
 
-        placePurplePixel = drivetrain.actionBuilder(AutoConstants.startPoseBlueRight)
+        placePurplePixel = drivetrain.actionBuilder(drivetrain.pose)
                 .lineToY(12)
                 .waitSeconds(1)
                 .build();
@@ -81,9 +81,10 @@ public class RR1AutoRightBlue extends LinearOpMode {
                 .waitSeconds(1)
                 .build();
         park = drivetrain.actionBuilder(drivetrain.pose)
-                .setTangent(270)
+                .setTangent(300)
                 .lineToY(60)
                 .build();
+
         intakeExtension.setAuto(true);
         elevator.setAuto(true);
 
@@ -96,6 +97,7 @@ public class RR1AutoRightBlue extends LinearOpMode {
         }
 
         waitForStart();
+
         if (isStopRequested()) return;
 
         time.reset();
@@ -106,15 +108,6 @@ public class RR1AutoRightBlue extends LinearOpMode {
                         park
                 )
         );
-
-
-        double autoSeconds = time.seconds();
-        while (opModeIsActive()) {
-            drivetrain.updatePoseEstimate();
-
-            telemetry.addData("Auto seconds: ", autoSeconds);
-            telemetry.update();
-        }
     }
 
     void moveIntakeByTraj() {

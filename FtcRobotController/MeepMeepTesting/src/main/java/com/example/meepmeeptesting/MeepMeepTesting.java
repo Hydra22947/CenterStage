@@ -20,7 +20,7 @@ public class MeepMeepTesting {
     }
     public static void leftBlueTraj(RoadRunnerBotEntity myBot)
     {
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-40, 62, Math.toRadians(-90)))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(40, 62, Math.toRadians(-90)))
                 .lineToY(12)
                 .waitSeconds(1)
                 .setTangent(0)
