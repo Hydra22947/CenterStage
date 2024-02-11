@@ -17,7 +17,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.roadrunner.util.Encoder;
 import org.firstinspires.ftc.teamcode.util.Angle;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterServo;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
@@ -53,10 +52,6 @@ public class RobotHardware {
     public BetterServo outtakeHandLeftServo;
 
     // TODO: ADD x3 Distance Sensors, webcam
-
-    // odo pod encoders
-    public Encoder podLeft;
-    public Encoder podFront;
 
     // Telemetry storage
     public Telemetry telemetry;
@@ -149,11 +144,6 @@ public class RobotHardware {
         this.outtakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
         this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
 
-
-        // ODO PODS
-
-        this.podLeft = new Encoder(hardwareMap.get(DcMotorEx.class, "mBR"));
-        this.podFront = new Encoder(hardwareMap.get(DcMotorEx.class, "mBL"));
 
         voltage = hardwareMap.voltageSensor.iterator().next().getVoltage();
     }

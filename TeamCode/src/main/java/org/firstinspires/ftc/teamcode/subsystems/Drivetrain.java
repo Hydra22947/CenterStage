@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -42,7 +42,7 @@ public class Drivetrain {
         input = new Vector2d(
                 Range.clip(_cGamepad1.left_stick_y, -power, power),
                 Range.clip(-_cGamepad1.left_stick_x, -power, power)
-        ).rotated(robot.getAngle());
+        ).rotateBy(robot.getAngle());
 
         twist = Range.clip(_cGamepad1.right_stick_x, -power * slowerSpin, power * slowerSpin);
 
