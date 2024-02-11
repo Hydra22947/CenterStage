@@ -32,7 +32,6 @@ import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationCon
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -59,10 +58,10 @@ import java.util.List;
 @Config
 public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
     private final RobotHardware robot = RobotHardware.getInstance();
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0.1);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0.1);
 
-    public static double LATERAL_MULTIPLIER = 1.8380611781;
+    public static double LATERAL_MULTIPLIER = 1.6725609468;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -128,7 +127,7 @@ public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
         List<Integer> lastTrackingEncVels = new ArrayList<>();
 
-        setLocalizer(new StandardTwoTrackingWheelLocalizer(hardwareMap, this));
+        setLocalizer(new StandardTwoTrackingWheelLocalizer(this));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(
                 follower, HEADING_PID, batteryVoltageSensor,
