@@ -27,6 +27,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
+import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
 @Autonomous(name = "Middle 2+0 Auto Blue Right")
@@ -49,12 +50,11 @@ public class RR1AutoRightBlue extends LinearOpMode {
     }
 
 
-
-    ParallelAction placePurplePixel, intakeAnotherPreload, placePreloadsOnBoard, intakeCycle43, intakeCycle21, place43, place21, park;
-
+    Action placePurplePixel, intakeAnotherPreload, placePreloadsOnBoard, intakeCycle43, intakeCycle21, place43, place21, park;
 
 
     IntakeLevel intakeLevel = IntakeLevel.TOP_54;
+
 
     @Override
     public void runOpMode() {
@@ -75,7 +75,19 @@ public class RR1AutoRightBlue extends LinearOpMode {
         intakeExtension = new IntakeExtension(true);
 
 
-
+        placePurplePixel = drivetrain.actionBuilder(AutoConstants.startPoseBlueRight)
+                .lineToY(12)
+                .waitSeconds(1)
+                .build();
+        placePreloadsOnBoard = drivetrain.actionBuilder(drivetrain.pose)
+                .setTangent(0)
+                .splineToLinearHeading(new Pose2d(51, 40, Math.toRadians(0)), Math.toRadians(0))
+                .waitSeconds(1)
+                .build();
+        park = drivetrain.actionBuilder(drivetrain.pose)
+                .setTangent(270)
+                .lineToY(60)
+                .build();
         intakeExtension.setAuto(true);
         elevator.setAuto(true);
 
@@ -91,15 +103,17 @@ public class RR1AutoRightBlue extends LinearOpMode {
         if (isStopRequested()) return;
 
         time.reset();
+        Actions.runBlocking(
+                new SequentialAction(
+                        placePurplePixel,
+                        placePreloadsOnBoard,
+                        park
+                )
+        );
 
-        drivetrain.followTrajectorySequence(placePurplePixel);
-        drivetrain.followTrajectorySequence(intakeAnotherPreload);
-        drivetrain.followTrajectorySequence(placePreloadsOnBoard);
-        drivetrain.followTrajectorySequence(park);
 
         double autoSeconds = time.seconds();
-        while (opModeIsActive())
-        {
+        while (opModeIsActive()) {
             drivetrain.update();
 
             telemetry.addData("Auto seconds: ", autoSeconds);

@@ -216,7 +216,8 @@ public class MeepMeepTesting {
                 .setTangent(0)
 
                 .splineToLinearHeading(new Pose2d(51, 40, Math.toRadians(0)), Math.toRadians(0))
-
+                .setTangent(300)
+                .lineToY(60)
                 .build());
 
        // leftBlueTraj(myBot);
