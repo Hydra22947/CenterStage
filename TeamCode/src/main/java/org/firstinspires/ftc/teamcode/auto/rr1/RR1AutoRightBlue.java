@@ -5,14 +5,10 @@ import android.drm.DrmStore;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.Actions;
-import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -114,7 +110,7 @@ public class RR1AutoRightBlue extends LinearOpMode {
 
         double autoSeconds = time.seconds();
         while (opModeIsActive()) {
-            drivetrain.update();
+            drivetrain.updatePoseEstimate();
 
             telemetry.addData("Auto seconds: ", autoSeconds);
             telemetry.update();
