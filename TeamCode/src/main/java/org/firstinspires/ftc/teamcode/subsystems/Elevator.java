@@ -123,23 +123,23 @@ public class Elevator implements Subsystem
             }
             else
             {
-                if(gamepad.left_stick_y != 0 && !gamepad.left_stick_button)
+                if(gamepad.right_stick_y != 0 && !gamepad.right_stick_button)
                 {
-                    if((-gamepad.left_stick_y) < 0)
+                    if((-gamepad.right_stick_y) < 0)
                     {
-                        elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
-                        elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
+                        elevatorMotorRight.setPower(Range.clip(-gamepad.right_stick_y, -maxPower/2, maxPower/2));
+                        elevatorMotorLeft.setPower(Range.clip(-gamepad.right_stick_y, -maxPower/2, maxPower/2));
                     }
                     else
                     {
-                        elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
-                        elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
+                        elevatorMotorRight.setPower(Range.clip(-gamepad.right_stick_y, -maxPower, maxPower));
+                        elevatorMotorLeft.setPower(Range.clip(-gamepad.right_stick_y, -maxPower, maxPower));
                     }
                 }
-                else if(gamepad.left_stick_y != 0 && gamepad.left_stick_button)
+                else if(gamepad.right_stick_y != 0 && gamepad.right_stick_button)
                 {
-                    elevatorMotorRight.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
-                    elevatorMotorLeft.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
+                    elevatorMotorRight.setPower(Range.clip(-gamepad.right_stick_y, -maxPower/2, maxPower/2));
+                    elevatorMotorLeft.setPower(Range.clip(-gamepad.right_stick_y, -maxPower/2, maxPower/2));
                 }
                 else
                 {

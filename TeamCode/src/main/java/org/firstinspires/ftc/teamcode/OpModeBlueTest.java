@@ -136,16 +136,20 @@ public class OpModeBlueTest extends LinearOpMode {
             claw.update();
 
 
-            if((getTime() - closeClawAgainTimer) >= closeClawAgainDelay && firstCloseAgain)
-            {
-                claw.setBothClaw(Claw.ClawState.CLOSED);
-                firstCloseAgain = false;
-            }
-            if (gamepad2.left_stick_y != 0 && !overrideIntakeExtension) {
+//            if((getTime() - closeClawAgainTimer) >= closeClawAgainDelay && firstCloseAgain)
+//            {
+//                claw.setBothClaw(Claw.ClawState.CLOSED);
+//
+//                firstCloseAgain = false;
+//            }
+            if (liftState != LiftState.EXTRACT && gamepad2.left_stick_y != 0 && !overrideIntakeExtension) {
                 intakeExtension.setUsePID(false);
-                claw.setBothClaw(Claw.ClawState.OPEN);
-                closeClawAgainTimer = getTime();
-                firstCloseAgain = true;
+            }
+            else if (gamepad2.left_stick_y != 0 && !overrideIntakeExtension) {
+                intakeExtension.setUsePID(false);
+                //claw.setBothClaw(Claw.ClawState.OPEN);
+                //closeClawAgainTimer = getTime();
+                //firstCloseAgain = true;
 
             } else {
                 intakeExtension.setUsePID(true);
