@@ -40,15 +40,16 @@ public class OpModeBlueTest extends LinearOpMode {
 
     // delays
     public static double delayTransfer = 300, delayRelease = 750, delayCloseTransfer = 350, delayGoToTransfer = 1300;
-    public static double WAIT_DELAY_TILL_OUTTAKE = 0, WAIT_DELAY_TILL_CLOSE = 200, ELEVATOR_ZERO_MAX = 15, INTAKE_ZERO_MAX = 30;
+    public static double WAIT_DELAY_TILL_OUTTAKE = 0, WAIT_DELAY_TILL_CLOSE = 200, closeClawAgainDelay = 500;
     public static double INTAKE_EXTEND_PRECENTAGE = 60;
     // variables
-    double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
+    double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0, closeClawAgainTimer = 0;
     double elevatorTargetRight = 1300;
     double elevatorTargetLeft = 1300;
     int openedXTimes = 0;
     boolean retract = false,  goToMid = false, intakeMid = true, canIntake = true, startedDelayTransfer = false, heldExtension = false;
     boolean override = false, had2Pixels = false, hang = false, resetRightTrigger = true, closeClaw = false, wasClosed = false, firstExtend = true;
+    boolean overrideIntakeExtension = false, firstCloseAgain = true;
 
     public enum IntakeState {
         RETRACT,
@@ -134,8 +135,18 @@ public class OpModeBlueTest extends LinearOpMode {
             elevator.update();
             claw.update();
 
-            if (gamepad2.left_stick_y != 0) {
+
+            if((getTime() - closeClawAgainTimer) >= closeClawAgainDelay && firstCloseAgain)
+            {
+                claw.setBothClaw(Claw.ClawState.CLOSED);
+                firstCloseAgain = false;
+            }
+            if (gamepad2.left_stick_y != 0 && !overrideIntakeExtension) {
                 intakeExtension.setUsePID(false);
+                claw.setBothClaw(Claw.ClawState.OPEN);
+                closeClawAgainTimer = getTime();
+                firstCloseAgain = true;
+
             } else {
                 intakeExtension.setUsePID(true);
             }
@@ -149,6 +160,9 @@ public class OpModeBlueTest extends LinearOpMode {
             changeIntakeLevels();
             intakeStateMachine();
             elevatorStateMachine();
+
+            telemetry.addData("INTKE OVERRIDE", overrideIntakeExtension);
+            telemetry.update();
         }
     }
 
@@ -246,6 +260,7 @@ public class OpModeBlueTest extends LinearOpMode {
                 if(getTime() - closeTransferTimer >= delayCloseTransfer && goToMid && gamepad1.left_trigger == 0 && closeClaw)
                 {
                     claw.setBothClaw(Claw.ClawState.CLOSED);
+                    overrideIntakeExtension = false;
 
                     goToMid = false;
 
@@ -256,7 +271,7 @@ public class OpModeBlueTest extends LinearOpMode {
                     intake.move(Intake.Angle.MID);
                     goToTransferTimer = getTime();
                 }
-                else if(getTime() - goToTransferTimer >= delayGoToTransfer/*elevator.getPos() >= 0 && elevator.getPos() <= ELEVATOR_ZERO_MAX*/)
+                else if(getTime() - goToTransferTimer >= delayGoToTransfer)
                 {
                     intake.move(Intake.Angle.OUTTAKE);
                 }
@@ -321,11 +336,13 @@ public class OpModeBlueTest extends LinearOpMode {
 
                 if((intake.closedClaw() && override) && betterGamepad1.rightBumperOnce())
                 {
+                    overrideIntakeExtension = true;
                     intakeState = IntakeState.RETRACT;
                 }
 
                 if((getTime() - transferTimer) >= delayTransfer && startedDelayTransfer)
                 {
+                    overrideIntakeExtension = true;
                     intakeState = IntakeState.RETRACT;
                 }
 
@@ -345,7 +362,7 @@ public class OpModeBlueTest extends LinearOpMode {
                 {
                     intakeExtension.setTarget(gamepad1.right_trigger * intakeExtension.MAX_LEVEL * (INTAKE_EXTEND_PRECENTAGE/100));
                 }
-                else if(gamepad2.left_stick_y != 0)
+                else if(gamepad2.left_stick_y != 0 && !overrideIntakeExtension)
                 {
                     intakeExtension.setUsePID(false);
                     intakeExtension.setTarget(intakeExtension.getPos());
@@ -355,6 +372,8 @@ public class OpModeBlueTest extends LinearOpMode {
 
                 if ((robot.has2Pixels() && !startedDelayTransfer) || gamepad1.right_trigger == 0 || (intake.closedClaw() && override))
                 {
+                    overrideIntakeExtension = true;
+
                     had2Pixels = true;
 
                     transferTimer = getTime();
@@ -389,6 +408,8 @@ public class OpModeBlueTest extends LinearOpMode {
 
                 if((getTime() - transferTimer) >= delayTransfer && startedDelayTransfer)
                 {
+                    overrideIntakeExtension = true;
+
                     intakeState = IntakeState.INTAKE;
                 }
 

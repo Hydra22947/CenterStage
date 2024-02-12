@@ -22,6 +22,7 @@ public class PlacePurpleActions {
     public PlacePurpleActions(Intake intake, IntakeExtension intakeExtension) {
         this.intake = intake;
         this.intakeExtension = intakeExtension;
+        timer = new Stopwatch();
     }
 
     private boolean activateSystem(Runnable systemFunction, long delay, Object... parameters) {
@@ -42,8 +43,9 @@ public class PlacePurpleActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return activateSystem(() -> intake.move(Intake.Angle.INTAKE), 200) ||
-                    activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT), 200);
+            intake.move(Intake.Angle.INTAKE);
+
+            return activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT), 500);
         }
     }
 
@@ -55,7 +57,9 @@ public class PlacePurpleActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return activateSystem(() -> intake.move(Intake.Angle.OUTTAKE), 100);
+            intake.move(Intake.Angle.OUTTAKE);
+
+            return false;
         }
     }
 

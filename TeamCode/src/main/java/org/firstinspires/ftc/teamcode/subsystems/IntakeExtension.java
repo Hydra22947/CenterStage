@@ -63,17 +63,15 @@ public class IntakeExtension implements Subsystem
         // EXTENSION
         this.extensionMotor = robot.hardwareMap.get(DcMotorEx.class, "mE");
         extensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         this.extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         pidCoefficients.kP = kP;
         pidCoefficients.kI = kI;
         pidCoefficients.kD = kD;
 
         controller = new PIDFController(pidCoefficients);
-
-        isAuto = true;
     }
 
     public void setFirstPID(boolean firstPID) {
@@ -130,13 +128,11 @@ public class IntakeExtension implements Subsystem
 
         extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
-    void setPidControl()
+    public void setPidControl()
     {
         controller.updateError(currentTarget - extensionMotor.getCurrentPosition());
 
         extensionMotor.setPower(controller.update());
-
-        robot.telemetry.addData("POS", extensionMotor.getCurrentPosition());
     }
 
     public void setTarget(double target)

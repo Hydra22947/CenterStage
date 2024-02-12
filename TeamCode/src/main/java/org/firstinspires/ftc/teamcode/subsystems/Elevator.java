@@ -169,7 +169,7 @@ public class Elevator implements Subsystem
         elevatorMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
-    void setPidControl()
+    public void setPidControl()
     {
         controllerR.updateError(currentTargetRight - elevatorMotorRight.getCurrentPosition());
         controllerL.updateError(currentTargetLeft - elevatorMotorLeft.getCurrentPosition());
