@@ -43,7 +43,7 @@ public final class PIDFController {
     public double targetAcceleration;
 
     /**
-     * Error computed in the last call to {@link #update(long, double, Double)} 
+     * Error computed in the last call to {@link #update (long, double, Double)}
      */
     public double lastError;
 

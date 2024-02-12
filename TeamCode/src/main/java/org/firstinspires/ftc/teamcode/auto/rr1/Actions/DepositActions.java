@@ -44,13 +44,16 @@ public class DepositActions {
     private void moveElevatorByTraj() {
         switch (currentCycle) {
             case PRELOAD:
-                elevator.move(1050);
+                elevator.setTarget(1050);
+                elevator.update();
                 break;
             case FIRST_CYCLE:
-                elevator.move(1500);
+                elevator.setTarget(1500);
+                elevator.update();
                 break;
             case SECOND_CYCLE:
-                elevator.move(1550);
+                elevator.setTarget(1550);
+                elevator.update();
                 break;
         }
     }
@@ -96,9 +99,9 @@ public class DepositActions {
 
     public class PlacePixel implements Action {
 
-        public PlacePixel(Cycles cycle) {
+        public PlacePixel(Cycles current) {
             timer.reset();
-            currentCycle = cycle;
+            currentCycle = current;
         }
 
         @Override

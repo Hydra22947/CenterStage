@@ -195,7 +195,7 @@ public class Elevator implements Subsystem
     public void move(double target)
     {
         this.setTarget(target);
-        this.update();
+        this.setPidControl();
     }
     public void setTarget(double targetRight, double targetLeft)
     {
