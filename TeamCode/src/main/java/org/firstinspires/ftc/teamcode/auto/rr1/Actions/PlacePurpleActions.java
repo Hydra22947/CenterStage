@@ -43,9 +43,9 @@ public class PlacePurpleActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            intake.move(Intake.Angle.INTAKE);
 
-            return activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT), 500);
+            return activateSystem(() -> intake.move(Intake.Angle.INTAKE), 0)
+                    || activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT), 500);
         }
     }
 
@@ -58,7 +58,6 @@ public class PlacePurpleActions {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             intake.move(Intake.Angle.OUTTAKE);
-
             return false;
         }
     }

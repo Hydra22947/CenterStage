@@ -79,14 +79,21 @@ public class AutoRightBlue extends LinearOpMode {
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD),
                 depositActions.retractDeposit()
         );
+        SequentialAction readyForDeposit = new SequentialAction(
+                depositActions.readyForDeposit()
+        );
         SequentialAction placePurplePixel = new SequentialAction(
                 placePurpleActions.placePurpleMid()
+        );
+
+
+        SequentialAction retractDeposit = new SequentialAction(
+                depositActions.retractDeposit()
         );
 
         SequentialAction retractIntake = new SequentialAction(
                 placePurpleActions.retract()
         );
-
 
 
         while (opModeInInit() && !isStopRequested()) {
@@ -108,9 +115,13 @@ public class AutoRightBlue extends LinearOpMode {
                         .waitSeconds(1)
                         .stopAndAdd(retractIntake)
                         //Place Preload on board
+                        .stopAndAdd(readyForDeposit)
                         .setTangent(0)
                         .splineToLinearHeading(new Pose2d(51, 40, Math.toRadians(0)), Math.toRadians(0))
                         .waitSeconds(1)
+                        .stopAndAdd(placePurplePixel)
+                        .waitSeconds(.1)
+                        .stopAndAdd(retractDeposit)
                         //Park
                         .setTangent(Math.toRadians(90))
                         .lineToY(60)
