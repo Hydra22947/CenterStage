@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -16,6 +17,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.old_with_cycles.AutoConstants;
+import org.firstinspires.ftc.teamcode.auto.rr1.Actions.DepositActions;
+import org.firstinspires.ftc.teamcode.auto.rr1.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
@@ -46,11 +49,13 @@ public class RR1AutoRightBlue extends LinearOpMode {
     }
 
 
-    Action placePurplePixel, placePreloadsOnBoard, park;
+    Action placePurplePixel, placePreloadsOnBoard, park, preloadMidAuto;
 
 
     IntakeLevel intakeLevel = IntakeLevel.TOP_54;
 
+    DepositActions depositActions;
+    PlacePurpleActions placePurpleActions;
 
     @Override
     public void runOpMode() {
@@ -70,20 +75,36 @@ public class RR1AutoRightBlue extends LinearOpMode {
         intake = new Intake();
         intakeExtension = new IntakeExtension(true);
 
+        depositActions = new DepositActions(elevator, intake, claw, outtake);
+        placePurpleActions = new PlacePurpleActions(intake, intakeExtension);
 
-        placePurplePixel = drivetrain.actionBuilder(drivetrain.pose)
+        SequentialAction deposit = new SequentialAction(
+                depositActions.readyForDeposit(),
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD),
+                depositActions.retractDeposit()
+        );
+        SequentialAction placePurplePixel = new SequentialAction(
+                placePurpleActions.placePurpleMid(),
+                placePurpleActions.retract()
+        );
+
+        preloadMidAuto = drivetrain.actionBuilder(drivetrain.pose)
+                //place purple pixel
                 .lineToY(12)
                 .waitSeconds(1)
-                .build();
-        placePreloadsOnBoard = drivetrain.actionBuilder(drivetrain.pose)
+
+                //Place Preload on board
                 .setTangent(0)
                 .splineToLinearHeading(new Pose2d(51, 40, Math.toRadians(0)), Math.toRadians(0))
                 .waitSeconds(1)
-                .build();
-        park = drivetrain.actionBuilder(drivetrain.pose)
-                .setTangent(300)
+
+                //Park
+                .setTangent(Math.toRadians(90))
                 .lineToY(60)
+
+
                 .build();
+
 
         intakeExtension.setAuto(true);
         elevator.setAuto(true);
@@ -102,10 +123,9 @@ public class RR1AutoRightBlue extends LinearOpMode {
 
         time.reset();
         Actions.runBlocking(
-                new SequentialAction(
-                        placePurplePixel,
-                        placePreloadsOnBoard,
-                        park
+                new ParallelAction(
+                        preloadMidAuto,
+
                 )
         );
     }
