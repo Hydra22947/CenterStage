@@ -30,6 +30,8 @@ public class DepositActions {
 
     public Cycles currentCycle;
 
+    long delay;
+
     public DepositActions(Elevator elevator, Intake intake, Claw claw, Outtake outtake) {
         this.elevator = elevator;
         this.intake = intake;
@@ -44,7 +46,7 @@ public class DepositActions {
     private void moveElevatorByTraj() {
         switch (currentCycle) {
             case PRELOAD:
-                elevator.setTarget(1050);
+                elevator.setTarget(1200);
                 elevator.setPidControl();
                 break;
             case FIRST_CYCLE:
@@ -94,6 +96,8 @@ public class DepositActions {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             outtake.setAngle(Outtake.Angle.OUTTAKE);
+            moveElevatorByTraj();
+            intake.move(Intake.Angle.MID);
 
             return activateSystem(() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH), 0);
         }
@@ -101,15 +105,18 @@ public class DepositActions {
 
     public class PlacePixel implements Action {
 
-        public PlacePixel(Cycles current) {
+        public PlacePixel(Cycles current , long d) {
             timer.reset();
             currentCycle = current;
+             delay = d;
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return activateSystem(() -> moveElevatorByTraj(), 100) ||
-                    activateSystem(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), 1000);
+
+            return activateSystem(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), delay);
+
+
         }
     }
 
@@ -121,8 +128,8 @@ public class DepositActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return activateSystem(() -> retractElevator(), 800) ||
-                    activateSystem(() -> outtake.setAngle(Outtake.Angle.INTAKE), 1000);
+            return activateSystem(() -> retractElevator(), 800);
+
 
         }
     }
@@ -131,9 +138,9 @@ public class DepositActions {
         return new ReadyForDeposit();
     }
 
-    public Action placePixel(Cycles currentCycle)
+    public Action placePixel(Cycles currentCycle , long d)
     {
-        return new PlacePixel(currentCycle);
+        return new PlacePixel(currentCycle , d);
     }
 
     public Action retractDeposit()

@@ -78,12 +78,12 @@ public class RR1AutoRightBlue extends LinearOpMode {
 
         SequentialAction deposit = new SequentialAction(
                 depositActions.readyForDeposit(),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD),
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD , 1000),
                 depositActions.retractDeposit()
         );
         SequentialAction placePurplePixel = new SequentialAction(
-                placePurpleActions.placePurpleMid(),
-                placePurpleActions.retract()
+
+
         );
 
         preloadMidAuto = drivetrain.actionBuilder(drivetrain.pose)

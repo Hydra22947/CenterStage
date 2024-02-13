@@ -21,7 +21,8 @@ public class MeepMeepTesting {
     public static void leftBlueTraj(RoadRunnerBotEntity myBot)
     {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(40, 62, Math.toRadians(-90)))
-                .lineToY(12)
+                .lineToXLinearHeading(43 , Math.toRadians(0))
+                .lineToYLinearHeading(43 , Math.toRadians(0))
                 .waitSeconds(1)
                 .setTangent(0)
                 .splineToSplineHeading(new Pose2d(-24, 10, Math.toRadians(0)), Math.toRadians(0))                .setTangent(0)

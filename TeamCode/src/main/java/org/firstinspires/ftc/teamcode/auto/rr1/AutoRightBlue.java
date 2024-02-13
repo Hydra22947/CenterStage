@@ -74,7 +74,7 @@ public class AutoRightBlue extends LinearOpMode {
 
         SequentialAction deposit = new SequentialAction(
                 depositActions.readyForDeposit(),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD),
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600),
                 depositActions.retractDeposit()
         );
         SequentialAction readyForDeposit = new SequentialAction(
@@ -82,8 +82,8 @@ public class AutoRightBlue extends LinearOpMode {
         );
         SequentialAction placePurplePixel = new SequentialAction(
                 placePurpleActions.placePurpleMid()
-        );
 
+        );
 
         SequentialAction retractDeposit = new SequentialAction(
                 depositActions.retractDeposit()
@@ -92,6 +92,11 @@ public class AutoRightBlue extends LinearOpMode {
         SequentialAction retractIntake = new SequentialAction(
                 placePurpleActions.retract()
         );
+
+        SequentialAction releaseIntake = new SequentialAction(
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT)
+        );
+
 
 
         while (opModeInInit() && !isStopRequested()) {
@@ -108,18 +113,22 @@ public class AutoRightBlue extends LinearOpMode {
 
         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .lineToY(12)
                         .stopAndAdd(placePurplePixel)
+                        .waitSeconds(1)
+                        .stopAndAdd(releaseIntake)
                         .waitSeconds(1)
                         .stopAndAdd(retractIntake)
                         .stopAndAdd(readyForDeposit)
                         .setTangent(0)
                         //Place Preload on board
-                        .splineToLinearHeading(new Pose2d(51, 40, Math.toRadians(0)), Math.toRadians(0))
+
+
+
+
+                        .splineToLinearHeading(new Pose2d(52, 42, Math.toRadians(0)), Math.toRadians(0))
                         .waitSeconds(.1)
                         .stopAndAdd(deposit)
-                        .waitSeconds(.1)
-                        .stopAndAdd(retractDeposit)
+                        .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
                         .lineToY(60)

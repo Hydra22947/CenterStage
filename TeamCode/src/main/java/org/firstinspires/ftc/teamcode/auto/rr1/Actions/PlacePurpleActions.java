@@ -8,6 +8,8 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
 
+import org.checkerframework.checker.units.qual.A;
+import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
@@ -19,10 +21,21 @@ public class PlacePurpleActions {
     private IntakeExtension intakeExtension;
     private Stopwatch timer;
 
+    public enum OpenClaw {
+        LEFT,
+        RIGHT,
+        BOTH
+    }
+
+    OpenClaw openClaw;
+
     public PlacePurpleActions(Intake intake, IntakeExtension intakeExtension) {
         this.intake = intake;
         this.intakeExtension = intakeExtension;
         timer = new Stopwatch();
+
+        openClaw = OpenClaw.LEFT;
+
     }
 
     private boolean activateSystem(Runnable systemFunction, long delay, Object... parameters) {
@@ -43,12 +56,39 @@ public class PlacePurpleActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            intake.move(Intake.Angle.INTAKE);
 
-            return activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT), 500);
+
+            return activateSystem(()-> intake.move(Intake.Angle.INTAKE), 0);
+
         }
     }
 
+
+
+    public class Release implements Action {
+
+        public Release(OpenClaw release) {
+            timer.reset();
+            openClaw = release;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+
+            switch (openClaw) {
+                case LEFT:
+                    return activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT), 500);
+
+                case RIGHT:
+                    return activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.RIGHT), 500);
+
+                default:
+                    return activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH), 500);
+            }
+
+        }
+    }
     public class Retract implements Action {
 
         public Retract() {
@@ -57,10 +97,11 @@ public class PlacePurpleActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            intake.move(Intake.Angle.OUTTAKE);
+            intake.move(Intake.Angle.INTAKE);
             return false;
         }
     }
+
 
 
     public Action placePurpleMid() {
@@ -70,6 +111,13 @@ public class PlacePurpleActions {
     public Action retract() {
         return new Retract();
     }
+
+    public Action release(OpenClaw openClaw)
+    {
+
+        return new Release(openClaw);
+    }
 }
+
 
 
