@@ -154,15 +154,11 @@ public class PlacePurpleActions {
                     intakeExtension.setTarget(0);
                     intakeExtension.setPidControl();
                     return false;
-
                 case HALF:
-
                     intakeExtension.setTarget(820);
                     intakeExtension.setPidControl();
                     return false;
-
                 case FULL:
-
                     intakeExtension.setTarget(1640);
                     intakeExtension.setPidControl();
                     return false;

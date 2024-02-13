@@ -36,6 +36,7 @@ public abstract class HydraAutoBase extends CommandOpMode {
         this.allianceColor = allianceColor;
         this.allianceSide = allianceSide;
         this.startPose = startPose;
+
     }
 
 //    public void localizeWithRawAprilTag(boolean isBackCamera, AprilTagDetection detection) {

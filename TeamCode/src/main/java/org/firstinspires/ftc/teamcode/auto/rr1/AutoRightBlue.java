@@ -127,7 +127,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(40 , 24, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixel)
                         .stopAndAdd(deposit)
-                        .waitSeconds(1)
+                        .waitSeconds(5)
                         .stopAndAdd(retarctExtension)
                         .setTangent(0)
                         //Place Preload on board
