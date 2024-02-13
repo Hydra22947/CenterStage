@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -17,6 +18,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.util.Angle;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterServo;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
@@ -51,6 +53,8 @@ public class RobotHardware {
     public BetterServo outtakeHandRightServo;
     public BetterServo outtakeHandLeftServo;
 
+    public MecanumDrive drive;
+
     // TODO: ADD x3 Distance Sensors, webcam
 
     // Telemetry storage
@@ -68,6 +72,7 @@ public class RobotHardware {
     private ArrayList<BetterSubsystem> subsystems;
 
     private double imuAngle, imuOffset = 0;
+
 
     boolean has2Pixels = false, closeRight = false, closeLeft = false;
 
@@ -88,19 +93,17 @@ public class RobotHardware {
      * @param hardwareMap The HardwareMap of the robot, storing all hardware devices
      * @param telemetry Saved for later in the event FTC Dashboard used
      */
-    public void init(final HardwareMap hardwareMap, final Telemetry telemetry, boolean isAuto) {
+    public void init(final HardwareMap hardwareMap, final Telemetry telemetry, Pose2d pose) {
         this.hardwareMap = hardwareMap;
+
+        drive = new MecanumDrive(hardwareMap, pose);
         voltageTimer = new ElapsedTime();
 
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         this.subsystems = new ArrayList<>();
 
-        this.imu = hardwareMap.get(IMU.class, "imu");
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
-        this.imu.initialize(parameters);
+        this.imu = drive.imu.get();
 
         // DRIVETRAIN
         this.dtBackLeftMotor = hardwareMap.get(DcMotorEx.class, "mBL");
@@ -147,6 +150,12 @@ public class RobotHardware {
 
         voltage = hardwareMap.voltageSensor.iterator().next().getVoltage();
     }
+
+    public void init(final HardwareMap hardwareMap, final Telemetry telemetry)
+    {
+        init(hardwareMap, telemetry, new Pose2d(0,0,0));
+    }
+
 
     public void loopVoltage(HardwareMap hardwareMap)
     {

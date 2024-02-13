@@ -27,7 +27,7 @@ public class IntakeTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         gamepadEx = new BetterGamepad(gamepad1);
-        robot.init(hardwareMap, telemetry, false);
+        robot.init(hardwareMap, telemetry);
 
         intake = new Intake();
         drive = new Drivetrain(gamepad1, true);

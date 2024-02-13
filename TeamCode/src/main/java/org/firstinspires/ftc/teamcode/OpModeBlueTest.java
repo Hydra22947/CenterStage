@@ -86,7 +86,7 @@ public class OpModeBlueTest extends LinearOpMode {
         betterGamepad1 = new BetterGamepad(gamepad1);
         betterGamepad2 = new BetterGamepad(gamepad2);
 
-        robot.init(hardwareMap, telemetry, true); // TODO: change to false
+        robot.init(hardwareMap, telemetry); // TODO: change to false
 
         drivetrain = new Drivetrain(gamepad1, true);
         elevator = new Elevator(gamepad2, true);

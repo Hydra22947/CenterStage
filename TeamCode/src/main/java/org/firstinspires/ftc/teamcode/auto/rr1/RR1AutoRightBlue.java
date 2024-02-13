@@ -60,11 +60,10 @@ public class RR1AutoRightBlue extends LinearOpMode {
     @Override
     public void runOpMode() {
         time = new ElapsedTime();
-        drivetrain = new MecanumDrive(hardwareMap, autoConstants.startPoseBlueLeft);
 
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
 
-        robot.init(hardwareMap, telemetry, true);
+        robot.init(hardwareMap, telemetry, autoConstants.startPoseBlueLeft);
 
         autoConstants = new AutoConstants();
 

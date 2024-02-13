@@ -37,7 +37,6 @@ public class AutoRightBlue extends LinearOpMode {
     ElapsedTime time;
 
     // subsystems
-    MecanumDrive drivetrain;
     Elevator elevator;
     Intake intake;
     Outtake outtake;
@@ -53,11 +52,10 @@ public class AutoRightBlue extends LinearOpMode {
     @Override
     public void runOpMode() {
         time = new ElapsedTime();
-        drivetrain = new MecanumDrive(hardwareMap, autoConstants.startPoseBlueLeft);
 
-        telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        robot.init(hardwareMap, telemetry, true);
+        robot.init(hardwareMap, telemetry, autoConstants.startPoseBlueLeft);
 
         autoConstants = new AutoConstants();
 
@@ -109,12 +107,12 @@ public class AutoRightBlue extends LinearOpMode {
         if (isStopRequested()) return;
 
         Action traj =
-                drivetrain.actionBuilder(drivetrain.pose)
+                robot.drive.actionBuilder(robot.drive.pose)
                         .lineToY(12)
                         .stopAndAdd(placePurplePixel)
                         .waitSeconds(1)
                         .stopAndAdd(retractIntake)
-//                        .stopAndAdd(readyForDeposit)
+                        .stopAndAdd(readyForDeposit)
                         .setTangent(0)
                         //Place Preload on board
                         .splineToLinearHeading(new Pose2d(51, 40, Math.toRadians(0)), Math.toRadians(0))

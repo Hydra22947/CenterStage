@@ -26,7 +26,7 @@ public class DrivetrainTest extends LinearOpMode {
 
         gamepadEx = new BetterGamepad(gamepad1);
 
-        robot.init(hardwareMap, telemetry, false);
+        robot.init(hardwareMap, telemetry);
 
         drivetrain = new Drivetrain(gamepad1, true);
         drivetrain.resetAngle();

@@ -22,6 +22,7 @@ public class UpdateActions {
     private Claw claw;
     private IntakeExtension intakeExtension;
 
+    int counter = 0;
     public UpdateActions(Elevator elevator, Intake intake, Claw claw, Outtake outtake, IntakeExtension intakeExtension) {
         this.elevator = elevator;
         this.intake = intake;
@@ -43,6 +44,8 @@ public class UpdateActions {
             intake.move(intake.getAngle());
             claw.update();
             outtake.update();
+
+            telemetryPacket.addLine(String.valueOf(elevator.getTargetLeft()));
 
             return true;
         }

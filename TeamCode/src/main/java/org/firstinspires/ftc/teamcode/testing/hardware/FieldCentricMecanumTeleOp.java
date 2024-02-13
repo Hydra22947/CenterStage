@@ -28,7 +28,7 @@ public class FieldCentricMecanumTeleOp extends LinearOpMode {
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
 
-        robot.init(hardwareMap, telemetry, false);
+        robot.init(hardwareMap, telemetry);
 
         waitForStart();
 

@@ -45,15 +45,15 @@ public class DepositActions {
         switch (currentCycle) {
             case PRELOAD:
                 elevator.setTarget(1050);
-                elevator.update();
+                elevator.setPidControl();
                 break;
             case FIRST_CYCLE:
                 elevator.setTarget(1500);
-                elevator.update();
+                elevator.setPidControl();
                 break;
             case SECOND_CYCLE:
                 elevator.setTarget(1550);
-                elevator.update();
+                elevator.setPidControl();
                 break;
         }
     }
@@ -68,7 +68,8 @@ public class DepositActions {
 
     private void retractElevator() {
         outtake.setAngle(Outtake.Angle.INTAKE);
-        elevator.move(0);
+        elevator.setTarget(0);
+        elevator.setPidControl();
     }
 
     //This function will get the function, its parameters and the delay and execute
@@ -92,8 +93,9 @@ public class DepositActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return activateSystem(() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH), 0) ||
-                    activateSystem(() -> resetIntakeOuttake(), 200);
+            outtake.setAngle(Outtake.Angle.OUTTAKE);
+
+            return activateSystem(() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH), 0);
         }
     }
 
@@ -119,7 +121,9 @@ public class DepositActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return activateSystem(() -> retractElevator(), 800);
+            return activateSystem(() -> retractElevator(), 800) ||
+                    activateSystem(() -> outtake.setAngle(Outtake.Angle.INTAKE), 1000);
+
         }
     }
     public Action readyForDeposit()

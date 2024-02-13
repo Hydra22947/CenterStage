@@ -23,7 +23,7 @@ public class IntakeExtensionTest extends LinearOpMode {
     public void runOpMode() {
         gamepadEx = new BetterGamepad(gamepad1);
 
-        robot.init(hardwareMap, telemetry, true);
+        robot.init(hardwareMap, telemetry);
 
         intakeExtension = new IntakeExtension(gamepad1, true);
         Drivetrain drivetrain = new Drivetrain(gamepad1, true);

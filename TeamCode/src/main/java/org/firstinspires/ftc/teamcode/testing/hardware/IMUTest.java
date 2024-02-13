@@ -21,7 +21,7 @@ public class IMUTest extends LinearOpMode {
     public void runOpMode() {
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
 
-        robot.init(hardwareMap, telemetry, false);
+        robot.init(hardwareMap, telemetry);
 
         waitForStart();
 

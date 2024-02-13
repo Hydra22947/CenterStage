@@ -22,7 +22,7 @@ public class ElevatorTest extends LinearOpMode {
     public void runOpMode() {
         gamepadEx = new BetterGamepad(gamepad1);
 
-        robot.init(hardwareMap, telemetry, true);
+        robot.init(hardwareMap, telemetry);
 
         elevator = new Elevator(gamepad1, true);
         elevator.setAuto(false);
