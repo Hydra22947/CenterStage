@@ -73,7 +73,7 @@ public class RR1AutoRightBlue extends LinearOpMode {
         intake = new Intake();
         intakeExtension = new IntakeExtension(true);
 
-        depositActions = new DepositActions(elevator, intake, claw, outtake);
+        depositActions = new DepositActions(elevator, intake, claw, outtake, intakeExtension);
         placePurpleActions = new PlacePurpleActions(intake, intakeExtension);
 
         SequentialAction deposit = new SequentialAction(

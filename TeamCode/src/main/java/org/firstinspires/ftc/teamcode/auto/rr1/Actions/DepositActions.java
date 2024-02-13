@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.Action;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.firstinspires.ftc.teamcode.util.Stopwatch;
@@ -21,25 +22,32 @@ public class DepositActions {
         SECOND_CYCLE
     }
 
+
     ;
     private Elevator elevator;
     private Intake intake;
     private Outtake outtake;
     private Claw claw;
+
+    private IntakeExtension extension;
     private Stopwatch timer;
 
     public Cycles currentCycle;
 
     long delay;
 
-    public DepositActions(Elevator elevator, Intake intake, Claw claw, Outtake outtake) {
+
+    public DepositActions(Elevator elevator, Intake intake, Claw claw, Outtake outtake, IntakeExtension extension) {
         this.elevator = elevator;
         this.intake = intake;
+        this.extension = extension;
         this.claw = claw;
         this.outtake = outtake;
 
         this.timer = new Stopwatch();
         this.currentCycle = Cycles.PRELOAD;
+
+
     }
 
 
@@ -105,10 +113,10 @@ public class DepositActions {
 
     public class PlacePixel implements Action {
 
-        public PlacePixel(Cycles current , long d) {
+        public PlacePixel(Cycles current, long d) {
             timer.reset();
             currentCycle = current;
-             delay = d;
+            delay = d;
         }
 
         @Override
@@ -119,6 +127,7 @@ public class DepositActions {
 
         }
     }
+
 
     public class RetractDeposit implements Action {
 
@@ -133,18 +142,18 @@ public class DepositActions {
 
         }
     }
-    public Action readyForDeposit()
-    {
+
+    public Action retractDeposit() {
+        return new RetractDeposit();
+    }
+
+    public Action readyForDeposit() {
         return new ReadyForDeposit();
     }
 
-    public Action placePixel(Cycles currentCycle , long d)
-    {
-        return new PlacePixel(currentCycle , d);
+    public Action placePixel(Cycles currentCycle, long d) {
+        return new PlacePixel(currentCycle, d);
     }
 
-    public Action retractDeposit()
-    {
-        return new RetractDeposit();
-    }
+
 }

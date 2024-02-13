@@ -1,15 +1,10 @@
 package org.firstinspires.ftc.teamcode.auto.rr1.Actions;
 
-import android.view.accessibility.AccessibilityNodeInfo;
-
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
 
-import org.checkerframework.checker.units.qual.A;
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
@@ -21,20 +16,38 @@ public class PlacePurpleActions {
     private IntakeExtension intakeExtension;
     private Stopwatch timer;
 
+    public enum Length {
+        EXTENSION_CLOSED,
+        HALF,
+        FULL
+    }
+
     public enum OpenClaw {
-        LEFT,
-        RIGHT,
-        BOTH
+        LEFT_OPEN,
+        RIGHT_OPEN,
+        BOTH_OPEN
+    }
+
+
+    public enum CloseClaw {
+        LEFT_CLOSE,
+        RIGHT_CLOSE,
+        BOTH_CLOSE
     }
 
     OpenClaw openClaw;
+    CloseClaw closeClaw;
+    Length length;
+
 
     public PlacePurpleActions(Intake intake, IntakeExtension intakeExtension) {
         this.intake = intake;
         this.intakeExtension = intakeExtension;
         timer = new Stopwatch();
 
-        openClaw = OpenClaw.LEFT;
+        openClaw = OpenClaw.LEFT_OPEN;
+        closeClaw = CloseClaw.BOTH_CLOSE;
+        this.length = Length.EXTENSION_CLOSED;
 
     }
 
@@ -58,11 +71,10 @@ public class PlacePurpleActions {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
 
-            return activateSystem(()-> intake.move(Intake.Angle.INTAKE), 0);
+            return activateSystem(() -> intake.move(Intake.Angle.INTAKE), 0);
 
         }
     }
-
 
 
     public class Release implements Action {
@@ -75,24 +87,97 @@ public class PlacePurpleActions {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-
             switch (openClaw) {
-                case LEFT:
+                case LEFT_OPEN:
                     return activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT), 500);
 
-                case RIGHT:
+                case RIGHT_OPEN:
                     return activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.RIGHT), 500);
+
+                case BOTH_OPEN:
+
+                    return activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH), 500);
 
                 default:
                     return activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH), 500);
+
+
             }
 
         }
+
     }
+
+
+    public class Lock implements Action {
+
+        public Lock(CloseClaw close) {
+
+            closeClaw = close;
+            timer.reset();
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+            switch (closeClaw) {
+                case LEFT_CLOSE:
+                    return activateSystem(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT), 500);
+
+                case RIGHT_CLOSE:
+                    return activateSystem(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT), 500);
+
+                case BOTH_CLOSE:
+                    return activateSystem(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH), 500);
+
+                default:
+                    return activateSystem(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH), 500);
+
+            }
+        }
+
+
+    }
+
+    public class OpenExtension implements Action {
+
+        public OpenExtension(Length currentLength) {
+            length = currentLength;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+            switch (length) {
+                case EXTENSION_CLOSED:
+
+                    intakeExtension.setTarget(0);
+                    intakeExtension.setPidControl();
+                    return false;
+
+                case HALF:
+
+                    intakeExtension.setTarget(820);
+                    intakeExtension.setPidControl();
+                    return false;
+
+                case FULL:
+
+                    intakeExtension.setTarget(1640);
+                    intakeExtension.setPidControl();
+                    return false;
+
+
+            }
+
+            return false;
+        }
+    }
+
     public class Retract implements Action {
 
         public Retract() {
-            //timer.reset();
+            timer.reset();
         }
 
         @Override
@@ -100,9 +185,8 @@ public class PlacePurpleActions {
             intake.move(Intake.Angle.INTAKE);
             return false;
         }
+
     }
-
-
 
     public Action placePurpleMid() {
         return new PlacePurpleMid();
@@ -112,12 +196,19 @@ public class PlacePurpleActions {
         return new Retract();
     }
 
-    public Action release(OpenClaw openClaw)
-    {
+
+    public Action release(OpenClaw openClaw) {
 
         return new Release(openClaw);
     }
+
+    public Action lock(CloseClaw closeClaw) {
+        return new Lock(closeClaw);
+    }
+
+    public Action openExtension(Length currentLength) {
+        return new OpenExtension(currentLength);
+    }
+
 }
-
-
 

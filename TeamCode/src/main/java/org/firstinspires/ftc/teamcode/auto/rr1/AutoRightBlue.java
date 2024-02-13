@@ -11,6 +11,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.command.ParallelRaceGroup;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -68,7 +69,7 @@ public class AutoRightBlue extends LinearOpMode {
         intakeExtension.setAuto(true);
         elevator.setAuto(true);
 
-        depositActions = new DepositActions(elevator, intake, claw, outtake);
+        depositActions = new DepositActions(elevator, intake, claw, outtake , intakeExtension);
         placePurpleActions = new PlacePurpleActions(intake, intakeExtension);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
@@ -81,7 +82,19 @@ public class AutoRightBlue extends LinearOpMode {
                 depositActions.readyForDeposit()
         );
         SequentialAction placePurplePixel = new SequentialAction(
-                placePurpleActions.placePurpleMid()
+                placePurpleActions.retract(),
+                placePurpleActions.openExtension(PlacePurpleActions.Length.HALF),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN)
+
+
+        );
+
+        SequentialAction retarctExtension = new SequentialAction(
+                placePurpleActions.retract(),
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.LEFT_CLOSE),
+                placePurpleActions.openExtension(PlacePurpleActions.Length.EXTENSION_CLOSED)
+
+
 
         );
 
@@ -89,12 +102,9 @@ public class AutoRightBlue extends LinearOpMode {
                 depositActions.retractDeposit()
         );
 
-        SequentialAction retractIntake = new SequentialAction(
-                placePurpleActions.retract()
-        );
 
         SequentialAction releaseIntake = new SequentialAction(
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT)
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN)
         );
 
 
@@ -113,25 +123,23 @@ public class AutoRightBlue extends LinearOpMode {
 
         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .stopAndAdd(placePurplePixel)
-                        .waitSeconds(1)
-                        .stopAndAdd(releaseIntake)
-                        .waitSeconds(1)
-                        .stopAndAdd(retractIntake)
                         .stopAndAdd(readyForDeposit)
+                        .splineToLinearHeading(new Pose2d(40 , 24, Math.toRadians(0)), Math.toRadians(0))
+                        .stopAndAdd(placePurplePixel)
+                        .stopAndAdd(deposit)
+                        .waitSeconds(1)
+                        .stopAndAdd(retarctExtension)
                         .setTangent(0)
                         //Place Preload on board
-
-
-
-
-                        .splineToLinearHeading(new Pose2d(52, 42, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(52, 37, Math.toRadians(0)), Math.toRadians(0))
                         .waitSeconds(.1)
                         .stopAndAdd(deposit)
                         .waitSeconds(0.5)
                         //Park
+                        .lineToX(40)
                         .setTangent(Math.toRadians(90))
                         .lineToY(60)
+                        .strafeTo(new Vector2d(52, 59))
                         .build();
 
         waitForStart();
