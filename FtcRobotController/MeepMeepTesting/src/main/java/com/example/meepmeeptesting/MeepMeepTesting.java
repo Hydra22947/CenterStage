@@ -18,26 +18,26 @@ public class MeepMeepTesting {
                 //  .addEntity(redRightBot)
                 .start();
     }
-    public static void leftBlueTraj(RoadRunnerBotEntity myBot)
-    {
+
+    public static void leftBlueTraj(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(40, 62, Math.toRadians(-90)))
-                .lineToXLinearHeading(43 , Math.toRadians(0))
-                .lineToYLinearHeading(43 , Math.toRadians(0))
+                .lineToY(12)
                 .waitSeconds(1)
                 .setTangent(0)
-                .splineToSplineHeading(new Pose2d(-24, 10, Math.toRadians(0)), Math.toRadians(0))                .setTangent(0)
-                .splineToSplineHeading(new Pose2d(20, 10, Math.toRadians(0)), Math.toRadians(0))                .setTangent(0)
+                .splineToSplineHeading(new Pose2d(-24, 10, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .splineToSplineHeading(new Pose2d(20, 10, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .setTangent(0)
 
                 .splineToLinearHeading(new Pose2d(51, 40, Math.toRadians(0)), Math.toRadians(0))
 
                 .build());
     }
-/*
 
-    public static RoadRunnerBotEntity redRightTraj(DefaultBotBuilder myBot)
-    {
-   */
+    /*
+
+        public static RoadRunnerBotEntity redRightTraj(DefaultBotBuilder myBot)
+        {
+       */
 /*     Pose2d placePixelPose = new Pose2d(42,-35, Math.toRadians());
         //    Pose2d intakePixelPose = new Pose2d(-55,-35);
         Pose2d intakePixelPose = new Pose2d(-34,-35);
@@ -203,7 +203,86 @@ public class MeepMeepTesting {
 
     }
 */
+    public static void blueLeftLeft(RoadRunnerBotEntity myBot) {
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
+                .lineToY(12)
+                .setTangent(0)
 
+                .splineToLinearHeading(new Pose2d(45, 40, Math.toRadians(30)), Math.toRadians(0))
+                .waitSeconds(.5)
+                .lineToXLinearHeading(51, Math.toRadians(0))
+                .waitSeconds(1)
+                .setTangent(Math.toRadians(90))
+                .lineToY(60)
+                .build());
+    }
+
+    public static void blueLeftMid(RoadRunnerBotEntity myBot) {
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
+                .setTangent(0)
+
+                .splineToLinearHeading(new Pose2d(45, 35, Math.toRadians(30)), Math.toRadians(0))
+                .waitSeconds(.5)
+                .lineToXLinearHeading(51, Math.toRadians(0))
+                .waitSeconds(1)
+                .setTangent(Math.toRadians(90))
+                .lineToY(60)
+                .build());
+    }
+
+    public static void blueRightLeft(RoadRunnerBotEntity myBot) {
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
+                .lineToY(12)
+                .setTangent(0)
+
+                .splineToLinearHeading(new Pose2d(48, 30, Math.toRadians(0)), Math.toRadians(0))
+                .waitSeconds(.5)
+                .setTangent(Math.toRadians(90))
+                .lineToY(60)
+                .build());
+    }
+
+    public static void blueMidRight(RoadRunnerBotEntity myBot) {
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
+                .setTangent(180)
+                .splineToLinearHeading(new Pose2d(-45, 10, Math.toRadians(-100)), Math.toRadians(-90))
+                .waitSeconds(1)
+                .setTangent(0)
+                .splineToSplineHeading(new Pose2d(-24, 10, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .splineToSplineHeading(new Pose2d(20, 10, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .setTangent(0)
+
+                .splineToLinearHeading(new Pose2d(51, 40, Math.toRadians(0)), Math.toRadians(0))
+
+                .build());
+    }
+
+    public static void blueRightRight(RoadRunnerBotEntity myBot) {
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
+                .lineToYLinearHeading(12 ,Math.toRadians(-75))
+                .waitSeconds(1)
+                .setTangent(0)
+                .splineToSplineHeading(new Pose2d(-24, 10, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .splineToSplineHeading(new Pose2d(20, 10, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .setTangent(0)
+
+                .splineToLinearHeading(new Pose2d(51, 40, Math.toRadians(0)), Math.toRadians(0))
+
+                .build());
+    }
+    public static void blueLeftRight(RoadRunnerBotEntity myBot) {
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
+                .lineToYLinearHeading(11 ,Math.toRadians(-105))
+                .waitSeconds(1)
+                .setTangent(0)
+                .splineToSplineHeading(new Pose2d(-24, 10, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .splineToSplineHeading(new Pose2d(20, 10, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .setTangent(0)
+
+                .splineToLinearHeading(new Pose2d(51, 40, Math.toRadians(0)), Math.toRadians(0))
+
+                .build());
+    }
 
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(600);
@@ -211,16 +290,9 @@ public class MeepMeepTesting {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
-                .lineToXLinearHeading(40, 0)
-                .waitSeconds(1)
-                .setTangent(0)
-                .splineToLinearHeading(new Pose2d(51, 40, Math.toRadians(0)), Math.toRadians(0))
-                .setTangent(Math.toRadians(90))
-                .lineToY(60)
-                .build());
+        //blueLeftRight(myBot);
 
-       // leftBlueTraj(myBot);
+        blueLeftRight(myBot);
         setAnimation(meepMeep, myBot);
 
     }
