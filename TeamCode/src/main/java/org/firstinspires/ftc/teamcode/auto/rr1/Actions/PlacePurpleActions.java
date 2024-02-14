@@ -139,36 +139,49 @@ public class PlacePurpleActions {
 
     }
 
+
+    private void moveExtension () {
+
+        switch (length) {
+            case EXTENSION_CLOSED:
+
+                intakeExtension.setTarget(0);
+                intakeExtension.setPidControl();
+                break;
+
+            case HALF:
+                intakeExtension.setTarget(820);
+                intakeExtension.setPidControl();
+
+
+                break;
+
+            case FULL:
+                intakeExtension.setTarget(1640);
+                intakeExtension.setPidControl();
+                break;
+
+        }
+    }
     public class OpenExtension implements Action {
 
         public OpenExtension(Length currentLength) {
             length = currentLength;
+            timer.reset();
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-            switch (length) {
-                case EXTENSION_CLOSED:
-
-                    intakeExtension.setTarget(0);
-                    intakeExtension.setPidControl();
-                    return false;
-                case HALF:
-                    intakeExtension.setTarget(820);
-                    intakeExtension.setPidControl();
-                    return false;
-                case FULL:
-                    intakeExtension.setTarget(1640);
-                    intakeExtension.setPidControl();
-                    return false;
-
+                return activateSystem(()-> moveExtension(), 0 );
 
             }
 
-            return false;
+
+
+
         }
-    }
+
 
     public class Retract implements Action {
 
@@ -205,6 +218,7 @@ public class PlacePurpleActions {
     public Action openExtension(Length currentLength) {
         return new OpenExtension(currentLength);
     }
+
 
 }
 
