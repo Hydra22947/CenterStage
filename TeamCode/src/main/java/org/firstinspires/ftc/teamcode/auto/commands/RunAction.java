@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.rr1.commands;
+package org.firstinspires.ftc.teamcode.auto.commands;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;

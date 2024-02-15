@@ -1,4 +1,6 @@
-package org.firstinspires.ftc.teamcode.auto.rr1.Actions;
+package org.firstinspires.ftc.teamcode.auto.Actions;
+
+import static org.firstinspires.ftc.teamcode.auto.Actions.ActionHelper.activateSystem;
 
 import androidx.annotation.NonNull;
 
@@ -14,7 +16,6 @@ public class PlacePurpleActions {
 
     private Intake intake;
     private IntakeExtension intakeExtension;
-    private Stopwatch timer;
 
     public enum Length {
         EXTENSION_CLOSED,
@@ -43,65 +44,43 @@ public class PlacePurpleActions {
     public PlacePurpleActions(Intake intake, IntakeExtension intakeExtension) {
         this.intake = intake;
         this.intakeExtension = intakeExtension;
-        timer = new Stopwatch();
-
         openClaw = OpenClaw.LEFT_OPEN;
         closeClaw = CloseClaw.BOTH_CLOSE;
         this.length = Length.EXTENSION_CLOSED;
 
     }
 
-    private boolean activateSystem(Runnable systemFunction, long delay, Object... parameters) {
-        if (timer.hasTimePassed(delay)) {
-            systemFunction.run();
-            timer.reset();
-            return false; // Activation successful
-        } else {
-            return true; // Activation failed
-        }
-    }
-
     public class PlacePurpleMid implements Action {
+        Stopwatch placePurpleMidTimer;
 
         public PlacePurpleMid() {
-            timer.reset();
+            placePurpleMidTimer.reset();
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
-
-            return activateSystem(() -> intake.move(Intake.Angle.INTAKE), 0);
-
+            return activateSystem(placePurpleMidTimer, () -> intake.move(Intake.Angle.INTAKE), 0);
         }
     }
 
 
     public class Release implements Action {
+        Stopwatch releaseTimer;
 
         public Release(OpenClaw release) {
-            timer.reset();
+            releaseTimer.reset();
             openClaw = release;
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
             switch (openClaw) {
                 case LEFT_OPEN:
-                    return activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT), 500);
-
+                    return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT), 500);
                 case RIGHT_OPEN:
-                    return activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.RIGHT), 500);
-
-                case BOTH_OPEN:
-
-                    return activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH), 500);
-
+                    return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.RIGHT), 500);
                 default:
-                    return activateSystem(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH), 500);
-
-
+                    return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH), 500);
             }
 
         }
@@ -110,11 +89,12 @@ public class PlacePurpleActions {
 
 
     public class Lock implements Action {
+        Stopwatch lockTimer;
 
         public Lock(CloseClaw close) {
 
             closeClaw = close;
-            timer.reset();
+            lockTimer.reset();
         }
 
         @Override
@@ -122,16 +102,11 @@ public class PlacePurpleActions {
 
             switch (closeClaw) {
                 case LEFT_CLOSE:
-                    return activateSystem(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT), 500);
-
+                    return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT), 500);
                 case RIGHT_CLOSE:
-                    return activateSystem(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT), 500);
-
-                case BOTH_CLOSE:
-                    return activateSystem(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH), 500);
-
+                    return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT), 500);
                 default:
-                    return activateSystem(() -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH), 500);
+                    return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH), 500);
 
             }
         }
@@ -184,9 +159,7 @@ public class PlacePurpleActions {
 
 
     public class Retract implements Action {
-
         public Retract() {
-            timer.reset();
         }
 
         @Override

@@ -1,19 +1,18 @@
-package org.firstinspires.ftc.teamcode.auto.rr1.autos;
+package org.firstinspires.ftc.teamcode.auto.autos;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
-import com.arcrobotics.ftclib.command.ParallelRaceGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.auto.AutoSettings;
-import org.firstinspires.ftc.teamcode.auto.old_with_cycles.AutoConstants;
-import org.firstinspires.ftc.teamcode.auto.rr1.Actions.UpdateActions;
-import org.firstinspires.ftc.teamcode.auto.rr1.HydraAutoBase;
-import org.firstinspires.ftc.teamcode.auto.rr1.commands.RunAction;
+import org.firstinspires.ftc.teamcode.auto.AutoConstants;
+import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
+import org.firstinspires.ftc.teamcode.auto.HydraAutoBase;
+import org.firstinspires.ftc.teamcode.auto.commands.RunAction;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;

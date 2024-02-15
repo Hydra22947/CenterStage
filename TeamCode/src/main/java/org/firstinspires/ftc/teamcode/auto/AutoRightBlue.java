@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.rr1;
+package org.firstinspires.ftc.teamcode.auto;
 
 // RR-specific imports
 
@@ -12,18 +12,14 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.ftc.Actions;
-import com.arcrobotics.ftclib.command.ParallelRaceGroup;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.auto.old_with_cycles.AutoConstants;
-import org.firstinspires.ftc.teamcode.auto.rr1.Actions.DepositActions;
-import org.firstinspires.ftc.teamcode.auto.rr1.Actions.PlacePurpleActions;
-import org.firstinspires.ftc.teamcode.auto.rr1.Actions.UpdateActions;
-import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
+import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
+import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -78,9 +74,7 @@ public class AutoRightBlue extends LinearOpMode {
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600),
                 depositActions.retractDeposit()
         );
-        SequentialAction readyForDeposit = new SequentialAction(
-                depositActions.readyForDeposit()
-        );
+
         SequentialAction placePurplePixel = new SequentialAction(
                 placePurpleActions.retract(),
                 placePurpleActions.openExtension(PlacePurpleActions.Length.HALF),
@@ -123,7 +117,7 @@ public class AutoRightBlue extends LinearOpMode {
 
         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .stopAndAdd(readyForDeposit)
+                        .stopAndAdd(depositActions.readyForDeposit())
                         .splineToLinearHeading(new Pose2d(40 , 24, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixel)
                         .stopAndAdd(deposit)

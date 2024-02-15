@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.rr1.Actions;
+package org.firstinspires.ftc.teamcode.auto.Actions;
 
 import androidx.annotation.NonNull;
 
@@ -30,11 +30,7 @@ public class DepositActions {
     private Claw claw;
 
     private IntakeExtension extension;
-    private Stopwatch timer;
-
     public Cycles currentCycle;
-
-    long delay;
 
 
     public DepositActions(Elevator elevator, Intake intake, Claw claw, Outtake outtake, IntakeExtension extension) {
@@ -43,11 +39,7 @@ public class DepositActions {
         this.extension = extension;
         this.claw = claw;
         this.outtake = outtake;
-
-        this.timer = new Stopwatch();
         this.currentCycle = Cycles.PRELOAD;
-
-
     }
 
 
@@ -84,8 +76,8 @@ public class DepositActions {
 
     //This function will get the function, its parameters and the delay and execute
     //this function with the delay.
-    private boolean activateSystem(Runnable systemFunction, long delay, Object... parameters) {
-        if (timer.hasTimePassed(delay)) {
+    private boolean activateSystem(Stopwatch timer, Runnable systemFunction, double delay, Object... parameters) {
+        if (timer.hasTimePassed((long)delay)) {
             systemFunction.run();
             timer.reset();
             return false; // Activation successful
@@ -96,9 +88,10 @@ public class DepositActions {
 
 
     public class ReadyForDeposit implements Action {
+        Stopwatch readyForDepositTimer;
 
         public ReadyForDeposit() {
-            timer.reset();
+            readyForDepositTimer.reset();
         }
 
         @Override
@@ -107,37 +100,37 @@ public class DepositActions {
             moveElevatorByTraj();
             intake.move(Intake.Angle.MID);
 
-            return activateSystem(() -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH), 0);
+            return activateSystem(readyForDepositTimer, () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH), 0);
         }
     }
 
     public class PlacePixel implements Action {
+        Stopwatch placePixelTimer;
+        double delay = 0;
 
         public PlacePixel(Cycles current, long d) {
-            timer.reset();
+            placePixelTimer.reset();
             currentCycle = current;
             delay = d;
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
-            return activateSystem(() -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), delay);
-
-
+            return activateSystem(placePixelTimer, () -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), delay);
         }
     }
 
 
     public class RetractDeposit implements Action {
+        Stopwatch retractDepositTimer;
 
         public RetractDeposit() {
-            timer.reset();
+            retractDepositTimer.reset();
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return activateSystem(() -> retractElevator(), 800);
+            return activateSystem(retractDepositTimer, () -> retractElevator(), 800);
 
 
         }
