@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.autos;
 
 // RR-specific imports
 
@@ -11,6 +11,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
+import org.firstinspires.ftc.teamcode.auto.AutoConstants;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -28,8 +30,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "Auto Blue Left")
-public class AutoRightBlue extends LinearOpMode {
+@Autonomous(name = "2+0 - Auto Blue Left RIGHT")
+public class AutoLeftBlueRight extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 
@@ -72,24 +74,18 @@ public class AutoRightBlue extends LinearOpMode {
         SequentialAction deposit = new SequentialAction(
                 depositActions.readyForDeposit(),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600),
+                new SleepAction(0.5),
                 depositActions.retractDeposit()
         );
 
         SequentialAction placePurplePixel = new SequentialAction(
-                placePurpleActions.retract(),
-                placePurpleActions.openExtension(PlacePurpleActions.Length.HALF),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN)
-
-
-        );
-
-        SequentialAction retarctExtension = new SequentialAction(
-                placePurpleActions.retract(),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.LEFT_CLOSE),
-                placePurpleActions.openExtension(PlacePurpleActions.Length.EXTENSION_CLOSED)
-
-
-
+                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
+                placePurpleActions.openExtension(PlacePurpleActions.Length.FULL),
+                new SleepAction(1.45),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
+                new SleepAction(0.1),
+                placePurpleActions.moveIntake(Intake.Angle.MID),
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
         );
 
         SequentialAction retractDeposit = new SequentialAction(
@@ -118,22 +114,18 @@ public class AutoRightBlue extends LinearOpMode {
         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
                         .stopAndAdd(depositActions.readyForDeposit())
-                        .splineToLinearHeading(new Pose2d(40 , 24, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(44.75, 30.25, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixel)
-                        .stopAndAdd(deposit)
-                        .waitSeconds(5)
-                        .stopAndAdd(retarctExtension)
                         .setTangent(0)
+                        .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
-                        .splineToLinearHeading(new Pose2d(52, 37, Math.toRadians(0)), Math.toRadians(0))
                         .waitSeconds(.1)
+                        .strafeTo(new Vector2d(50.5, 29.5))
                         .stopAndAdd(deposit)
                         .waitSeconds(0.5)
                         //Park
-                        .lineToX(40)
                         .setTangent(Math.toRadians(90))
-                        .lineToY(60)
-                        .strafeTo(new Vector2d(52, 59))
+                        .strafeTo(new Vector2d(45, 60))
                         .build();
 
         waitForStart();

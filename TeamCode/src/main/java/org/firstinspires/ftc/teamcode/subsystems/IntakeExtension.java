@@ -56,6 +56,8 @@ public class IntakeExtension implements Subsystem
         controller = new PIDFController(pidCoefficients);
     }
 
+
+
     public IntakeExtension(boolean isAuto)
     {
         this.isAuto = isAuto;

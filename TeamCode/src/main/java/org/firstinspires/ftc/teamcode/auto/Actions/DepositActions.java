@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.SleepAction;
 
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
@@ -46,7 +47,7 @@ public class DepositActions {
     private void moveElevatorByTraj() {
         switch (currentCycle) {
             case PRELOAD:
-                elevator.setTarget(1200);
+                elevator.setTarget(900);
                 elevator.setPidControl();
                 break;
             case FIRST_CYCLE:
@@ -91,16 +92,20 @@ public class DepositActions {
         Stopwatch readyForDepositTimer;
 
         public ReadyForDeposit() {
+            readyForDepositTimer = new Stopwatch();
             readyForDepositTimer.reset();
+            intake.move(Intake.Angle.MID);
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            outtake.setAngle(Outtake.Angle.OUTTAKE);
-            moveElevatorByTraj();
             intake.move(Intake.Angle.MID);
 
-            return activateSystem(readyForDepositTimer, () -> claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH), 0);
+            claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
+            moveElevatorByTraj();
+            outtake.setAngle(Outtake.Angle.OUTTAKE);
+
+            return false;
         }
     }
 
@@ -109,6 +114,7 @@ public class DepositActions {
         double delay = 0;
 
         public PlacePixel(Cycles current, long d) {
+            placePixelTimer = new Stopwatch();
             placePixelTimer.reset();
             currentCycle = current;
             delay = d;
@@ -125,6 +131,7 @@ public class DepositActions {
         Stopwatch retractDepositTimer;
 
         public RetractDeposit() {
+            retractDepositTimer = new Stopwatch();
             retractDepositTimer.reset();
         }
 
