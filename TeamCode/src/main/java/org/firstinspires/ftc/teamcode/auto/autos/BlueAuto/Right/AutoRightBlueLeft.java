@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.autos;
+package org.firstinspires.ftc.teamcode.auto.autos.BlueAuto.Right;
 
 // RR-specific imports
 
@@ -13,6 +13,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -30,8 +31,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "2+0 - Auto Blue Left MIDDLE")
-public class AutoLeftBlueMiddle extends LinearOpMode {
+@Autonomous(name = "2+0 - Auto Blue Right LEFT")
+public class AutoRightBlueLeft extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 
@@ -54,7 +55,7 @@ public class AutoLeftBlueMiddle extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        robot.init(hardwareMap, telemetry, autoConstants.startPoseBlueLeft);
+        robot.init(hardwareMap, telemetry, autoConstants.startPoseBlueRight);
 
         autoConstants = new AutoConstants();
 
@@ -73,19 +74,33 @@ public class AutoLeftBlueMiddle extends LinearOpMode {
 
         SequentialAction deposit = new SequentialAction(
                 depositActions.readyForDeposit(),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600),
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600)
+        );
+
+        SequentialAction placePixel = new SequentialAction(
                 new SleepAction(0.5),
                 depositActions.retractDeposit()
         );
 
+        SequentialAction intakePixel = new SequentialAction(
+                placePurpleActions.moveIntake(Intake.Angle.TOP_5),
+                new SleepAction(0.5),
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
+                new SleepAction(0.5),
+                placePurpleActions.openExtension(PlacePurpleActions.Length.EXTENSION_CLOSED)
+
+        );
+
+
         SequentialAction placePurplePixel = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
-                placePurpleActions.openExtension(PlacePurpleActions.Length.HALF),
-                new SleepAction(.4),
+                new SleepAction(1),
+                placePurpleActions.openExtension(PlacePurpleActions.Length.ALMOST_HALF),
+                new SleepAction(.5),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN),
-                new SleepAction(0.1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.LEFT_CLOSE)
+                new SleepAction(1),
+                placePurpleActions.closeExtension()
         );
 
         SequentialAction retractDeposit = new SequentialAction(
@@ -113,19 +128,22 @@ public class AutoLeftBlueMiddle extends LinearOpMode {
 
         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .stopAndAdd(depositActions.readyForDeposit())
-                        .splineToLinearHeading(new Pose2d(40 , 25, Math.toRadians(0)), Math.toRadians(0))
+                        .lineToYLinearHeading(12 ,Math.toRadians(-115))
+                        .waitSeconds(.5)
                         .stopAndAdd(placePurplePixel)
                         .setTangent(0)
-                        .stopAndAdd(placePurpleActions.closeExtension())
-                        //Place Preload on board
-                        .splineToLinearHeading(new Pose2d(52, 33.25, Math.toRadians(0)), Math.toRadians(0))
                         .waitSeconds(.1)
-                        .stopAndAdd(deposit)
+                        .splineToSplineHeading(new Pose2d(-30, 10, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                       // .stopAndAdd(intakePixel)
                         .waitSeconds(0.5)
+                        .splineToLinearHeading(new Pose2d(48, 30, Math.toRadians(0)), Math.toRadians(0))
+                        .afterDisp(45 ,deposit)
+                        .waitSeconds(.5)
+                        .setTangent(Math.toRadians(90))
+                        .lineToY(60)
                         //Park
                         .setTangent(Math.toRadians(90))
-                        .strafeTo(new Vector2d(46, 60))
+                        .strafeTo(new Vector2d(48, 60))
                         .build();
 
         waitForStart();

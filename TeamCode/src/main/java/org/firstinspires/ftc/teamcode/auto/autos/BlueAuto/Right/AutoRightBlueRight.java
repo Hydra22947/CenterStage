@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.autos;
+package org.firstinspires.ftc.teamcode.auto.autos.BlueAuto.Right;
 
 // RR-specific imports
 
@@ -30,8 +30,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "2+0 - Auto Blue Left RIGHT")
-public class AutoLeftBlueRight extends LinearOpMode {
+@Autonomous(name = "2+0 - Auto Blue Right RIGHT")
+public class AutoRightBlueRight extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 

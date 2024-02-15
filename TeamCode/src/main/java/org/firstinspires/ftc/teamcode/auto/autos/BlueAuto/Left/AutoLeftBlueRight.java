@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.autos;
+package org.firstinspires.ftc.teamcode.auto.autos.BlueAuto.Left;
 
 // RR-specific imports
 
@@ -30,8 +30,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "2+0 - Auto Blue Left LEFT")
-public class AutoLeftBlueLeft extends LinearOpMode {
+@Autonomous(name = "2+0 - Auto Blue Left RIGHT")
+public class AutoLeftBlueRight extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 
@@ -80,12 +80,12 @@ public class AutoLeftBlueLeft extends LinearOpMode {
 
         SequentialAction placePurplePixel = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
-                placePurpleActions.openExtension(PlacePurpleActions.Length.ALMOST_HALF),
-                new SleepAction(.2),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN),
+                placePurpleActions.openExtension(PlacePurpleActions.Length.FULL),
+                new SleepAction(1.45),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
                 new SleepAction(0.1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.LEFT_CLOSE)
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
         );
 
         SequentialAction retractDeposit = new SequentialAction(
@@ -114,17 +114,18 @@ public class AutoLeftBlueLeft extends LinearOpMode {
         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
                         .stopAndAdd(depositActions.readyForDeposit())
-                        .splineToLinearHeading(new Pose2d(48, 34.25, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(44.75, 30.25, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixel)
                         .setTangent(0)
                         .stopAndAdd(placePurpleActions.closeExtension())
+                        //Place Preload on board
                         .waitSeconds(.1)
-                        .strafeTo(new Vector2d(50.5, 38))
+                        .strafeTo(new Vector2d(50.5, 29.5))
                         .stopAndAdd(deposit)
                         .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
-                        .strafeTo(new Vector2d(48, 60))
+                        .strafeTo(new Vector2d(45, 60))
                         .build();
 
         waitForStart();

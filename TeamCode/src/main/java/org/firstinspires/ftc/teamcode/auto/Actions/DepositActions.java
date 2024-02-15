@@ -23,7 +23,6 @@ public class DepositActions {
         SECOND_CYCLE
     }
 
-
     ;
     private Elevator elevator;
     private Intake intake;
@@ -60,7 +59,6 @@ public class DepositActions {
                 break;
         }
     }
-
 
     //This function will prepare the intake and outtake  for deposit
     private void resetIntakeOuttake() {
@@ -154,6 +152,5 @@ public class DepositActions {
     public Action placePixel(Cycles currentCycle, long d) {
         return new PlacePixel(currentCycle, d);
     }
-
 
 }
