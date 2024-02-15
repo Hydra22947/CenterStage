@@ -53,6 +53,9 @@ public class RobotHardware {
     public BetterServo outtakeHandRightServo;
     public BetterServo outtakeHandLeftServo;
 
+
+    public BetterServo planeServo;
+
     public MecanumDrive drive;
 
     // TODO: ADD x3 Distance Sensors, webcam
@@ -147,6 +150,7 @@ public class RobotHardware {
         this.outtakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
         this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
 
+        this.planeServo = new BetterServo(hardwareMap.get(Servo.class, "sP"));
 
         voltage = hardwareMap.voltageSensor.iterator().next().getVoltage();
     }

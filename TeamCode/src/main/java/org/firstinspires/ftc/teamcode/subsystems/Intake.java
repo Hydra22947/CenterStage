@@ -16,10 +16,10 @@ public class Intake implements Subsystem{
     public static double outtakeHandPivot = .65, outtakeAmmoPivot = .64;
     public static double midHandPivot = 0.61, midAmmoPivot = 0.375;
     public static double top5HandPivot = .315, top5AmmoPivot = 0.1; // auto
-    public static double top54HandPivot = 0.3, top54AmmoPivot = 0.083;
+    public static double top54HandPivot = 0.29, top54AmmoPivot = 0.1;
     public static double top54HandPivotAuto = 0.235, top54AmmoPivotAuto = 0.035;
     public static double top43HandPivot = 0.262, top43AmmoPivot = 0.098; // auto
-    public static double top32HandPivot = 0.235, top32AmmoPivot = 0.09;
+    public static double top32HandPivot = 0.235, top32AmmoPivot = 0.1;
     public static double top32HandPivotAuto = 0.18, top32AmmoPivotAuto = 0.025;
     public static double top21HandPivot = 0.21, top21AmmoPivot = 0.08; // auto
 
@@ -37,7 +37,7 @@ public class Intake implements Subsystem{
 
     public static double seeFarFrom = 2.7;
     public static final double maxSeeFarFrom = 2.7;
-    public static final double minSeeFarFrom = 1;
+    public static final double minSeeFarFrom = 1.5;
 
     @Override
     public void play() {

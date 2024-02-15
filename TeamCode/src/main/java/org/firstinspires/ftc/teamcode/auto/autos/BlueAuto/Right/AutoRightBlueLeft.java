@@ -83,24 +83,26 @@ public class AutoRightBlueLeft extends LinearOpMode {
         );
 
         SequentialAction intakePixel = new SequentialAction(
+                placePurpleActions.openExtension(PlacePurpleActions.Length.TWO_PLUS_ONE),
                 placePurpleActions.moveIntake(Intake.Angle.TOP_5),
                 new SleepAction(0.5),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.5),
-                placePurpleActions.openExtension(PlacePurpleActions.Length.EXTENSION_CLOSED)
+                placePurpleActions.moveStack(),
+                placePurpleActions.closeExtension()
 
         );
 
 
         SequentialAction placePurplePixel = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
-                new SleepAction(1),
+                new SleepAction(.1),
                 placePurpleActions.openExtension(PlacePurpleActions.Length.ALMOST_HALF),
-                new SleepAction(.5),
+                new SleepAction(.75),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN),
-                placePurpleActions.moveIntake(Intake.Angle.MID),
-                new SleepAction(1),
-                placePurpleActions.closeExtension()
+                new SleepAction(.5),
+                placePurpleActions.closeExtension(),
+                placePurpleActions.moveIntake(Intake.Angle.MID)
         );
 
         SequentialAction retractDeposit = new SequentialAction(
@@ -128,13 +130,13 @@ public class AutoRightBlueLeft extends LinearOpMode {
 
         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .lineToYLinearHeading(12 ,Math.toRadians(-115))
-                        .waitSeconds(.5)
+                        .lineToYLinearHeading(12 ,Math.toRadians(-125))
                         .stopAndAdd(placePurplePixel)
                         .setTangent(0)
                         .waitSeconds(.1)
+                        .stopAndAdd(placePurpleActions.closeExtension())
                         .splineToSplineHeading(new Pose2d(-30, 10, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                       // .stopAndAdd(intakePixel)
+                        .stopAndAdd(intakePixel)
                         .waitSeconds(0.5)
                         .splineToLinearHeading(new Pose2d(48, 30, Math.toRadians(0)), Math.toRadians(0))
                         .afterDisp(45 ,deposit)

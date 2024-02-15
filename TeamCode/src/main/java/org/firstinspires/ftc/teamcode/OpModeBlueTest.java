@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
+import org.firstinspires.ftc.teamcode.subsystems.Plane;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
@@ -32,6 +33,7 @@ public class OpModeBlueTest extends LinearOpMode {
     Outtake outtake;
     Claw claw;
     IntakeExtension intakeExtension;
+    Plane plane;
     ElapsedTime codeTime;
 
     // gamepads
@@ -93,6 +95,7 @@ public class OpModeBlueTest extends LinearOpMode {
         outtake = new Outtake();
         claw = new Claw();
         intake = new Intake();
+        plane = new Plane();
         intakeExtension = new IntakeExtension(gamepad2, true);
         codeTime = new ElapsedTime();
         intake.setAngle(Intake.Angle.OUTTAKE);
@@ -112,6 +115,7 @@ public class OpModeBlueTest extends LinearOpMode {
             telemetry.addLine("Initialized");
             telemetry.update();
             intake.update();
+            plane.update();
             claw.update();
             outtake.update();
             intakeExtension.update();
@@ -134,6 +138,13 @@ public class OpModeBlueTest extends LinearOpMode {
             outtake.update();
             elevator.update();
             claw.update();
+            plane.update();
+
+
+            if(betterGamepad1.dpadUpOnce())
+            {
+                plane.toggle();
+            }
 
 
 //            if((getTime() - closeClawAgainTimer) >= closeClawAgainDelay && firstCloseAgain)
@@ -284,7 +295,17 @@ public class OpModeBlueTest extends LinearOpMode {
             case INTAKE:
                 moveIntake();
 
-                intakeExtension.setTarget(0);
+
+
+                if(gamepad2.left_stick_y != 0 && !overrideIntakeExtension)
+                {
+                    intakeExtension.setUsePID(false);
+                    intakeExtension.setTarget(intakeExtension.getPos());
+                }
+                else
+                {
+                    intakeExtension.setTarget(0);
+                }
 
                 if (gamepad1.right_trigger != 0)
                 {

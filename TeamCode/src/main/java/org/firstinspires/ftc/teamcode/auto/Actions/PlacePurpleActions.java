@@ -20,6 +20,7 @@ public class PlacePurpleActions {
     public enum Length {
         EXTENSION_CLOSED,
         ALMOST_HALF,
+        TWO_PLUS_ONE,
         HALF,
         FULL
     }
@@ -129,6 +130,10 @@ public class PlacePurpleActions {
                 intakeExtension.setTarget(650);
                 intakeExtension.setPidControl();
                 break;
+            case TWO_PLUS_ONE:
+                intakeExtension.setTarget(750);
+                intakeExtension.setPidControl();
+                break;
             case HALF:
                 intakeExtension.setTarget(820);
                 intakeExtension.setPidControl();
@@ -164,6 +169,19 @@ public class PlacePurpleActions {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             intakeExtension.setTarget(0);
+            return false;
+        }
+    }
+
+    public class MoveStack implements Action {
+
+
+        public MoveStack() {
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            intake.moveStack();
             return false;
         }
     }
@@ -207,6 +225,10 @@ public class PlacePurpleActions {
 
     public Action closeExtension() {
         return new CloseExtension();
+    }
+
+    public Action moveStack() {
+        return new MoveStack();
     }
 
 
