@@ -20,6 +20,7 @@ public class PlacePurpleActions {
     public enum Length {
         EXTENSION_CLOSED,
         ALMOST_HALF,
+        QUARTER,
         TWO_PLUS_ONE,
         HALF,
         FULL
@@ -130,6 +131,9 @@ public class PlacePurpleActions {
                 intakeExtension.setTarget(650);
                 intakeExtension.setPidControl();
                 break;
+            case QUARTER:
+                intakeExtension.setTarget(400);
+                intakeExtension.setPidControl();
             case TWO_PLUS_ONE:
                 intakeExtension.setTarget(750);
                 intakeExtension.setPidControl();

@@ -97,8 +97,6 @@ public class DepositActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            intake.move(Intake.Angle.MID);
-
             claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
             moveElevatorByTraj();
             outtake.setAngle(Outtake.Angle.OUTTAKE);
@@ -107,6 +105,19 @@ public class DepositActions {
         }
     }
 
+    public class PutInOuttake implements Action {
+        Stopwatch readyForDepositTimer;
+
+        public PutInOuttake() {
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+            intake.move(Intake.Angle.OUTTAKE);
+            return false;
+        }
+    }
     public class PlacePixel implements Action {
         Stopwatch placePixelTimer;
         double delay = 0;
@@ -152,5 +163,7 @@ public class DepositActions {
     public Action placePixel(Cycles currentCycle, long d) {
         return new PlacePixel(currentCycle, d);
     }
+
+    public Action putInOuttake () { return new PutInOuttake(); }
 
 }

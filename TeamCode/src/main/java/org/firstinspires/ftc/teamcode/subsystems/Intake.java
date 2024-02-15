@@ -15,7 +15,8 @@ public class Intake implements Subsystem{
     public static double intakeHandPivot = 0.195, intakeAmmoPivot = 0.0975;
     public static double outtakeHandPivot = .65, outtakeAmmoPivot = .64;
     public static double midHandPivot = 0.61, midAmmoPivot = 0.375;
-    public static double top5HandPivot = .315, top5AmmoPivot = 0.1; // auto
+    public static double top5HandPivot = .315, top5AmmoPivot = 0.1;
+    public static double top5HandPivotAuto = .305, top5AmmoPivotAuto = 0.17; //auto
     public static double top54HandPivot = 0.29, top54AmmoPivot = 0.1;
     public static double top54HandPivotAuto = 0.235, top54AmmoPivotAuto = 0.035;
     public static double top43HandPivot = 0.262, top43AmmoPivot = 0.098; // auto
@@ -61,6 +62,7 @@ public class Intake implements Subsystem{
         OUTTAKE,
         MID,
         TOP_54, TOP_43, TOP_32, TOP_21, TOP_5,
+        TOP_5_AUTO,
         TOP_54_AUTO, TOP_32_AUTO
     }
 
@@ -266,6 +268,8 @@ public class Intake implements Subsystem{
                         return top43AmmoPivot;
                     case TOP_54_AUTO:
                         return top54AmmoPivotAuto;
+                    case TOP_5_AUTO:
+                        return top5AmmoPivotAuto;
                     case TOP_32_AUTO:
                         return top32AmmoPivotAuto;
                     default:
@@ -295,6 +299,8 @@ public class Intake implements Subsystem{
                         return top54HandPivotAuto;
                     case TOP_32_AUTO:
                         return top32HandPivotAuto;
+                    case TOP_5_AUTO:
+                        return top5HandPivotAuto;
                     default:
                         return 0.0;
                 }
