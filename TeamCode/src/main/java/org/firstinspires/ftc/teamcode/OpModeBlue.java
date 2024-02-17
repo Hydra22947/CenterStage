@@ -206,7 +206,6 @@ public class OpModeBlue extends LinearOpMode {
             elevatorStateMachine();
 
             telemetry.update();
-            sleep(10); // TODO: check if its worst
         }
     }
 
