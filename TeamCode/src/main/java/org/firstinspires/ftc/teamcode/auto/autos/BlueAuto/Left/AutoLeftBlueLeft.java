@@ -70,7 +70,7 @@ public class AutoLeftBlueLeft extends LinearOpMode {
         elevator.setAuto(true);
 
         depositActions = new DepositActions(elevator, intake, claw, outtake , intakeExtension);
-        placePurpleActions = new PlacePurpleActions(intake, intakeExtension);
+        placePurpleActions = new PlacePurpleActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
         SequentialAction deposit = new SequentialAction(
@@ -82,7 +82,7 @@ public class AutoLeftBlueLeft extends LinearOpMode {
 
         SequentialAction placePurplePixel = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
-                placePurpleActions.openExtension(PlacePurpleActions.Length.ALMOST_HALF),
+                placePurpleActions.openExtension(650),
                 new SleepAction(.2),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN),
                 new SleepAction(0.1),
@@ -126,7 +126,8 @@ public class AutoLeftBlueLeft extends LinearOpMode {
                         .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
-                        .strafeTo(new Vector2d(48, 60))
+                        .strafeTo(new Vector2d(55, 60))
+                        .stopAndAdd(retractDeposit)
                         .build();
 
         waitForStart();

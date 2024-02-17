@@ -20,7 +20,7 @@ public class IntakeExtension implements Subsystem
     double currentTarget = 0;
     boolean usePID = true;
     public static double maxPower = 1;
-    public static double kP = 0.0075, kI = 0, kD = 0.01;
+    public static double kP = 0.0085, kI = 0, kD = 0.01;
 
     Gamepad gamepad;
     BetterGamepad cGamepad;

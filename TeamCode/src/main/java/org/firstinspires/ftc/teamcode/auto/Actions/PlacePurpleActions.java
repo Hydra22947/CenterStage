@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 
+import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
@@ -16,6 +17,7 @@ public class PlacePurpleActions {
 
     private Intake intake;
     private IntakeExtension intakeExtension;
+    Claw claw;
 
     public enum Length {
         EXTENSION_CLOSED,
@@ -32,6 +34,10 @@ public class PlacePurpleActions {
         BOTH_OPEN
     }
 
+    public enum FailSafe {
+        ACTIVATED,
+        DEACTIVATED
+    }
 
     public enum CloseClaw {
         LEFT_CLOSE,
@@ -42,14 +48,16 @@ public class PlacePurpleActions {
     OpenClaw openClaw;
     CloseClaw closeClaw;
     Length length;
+    FailSafe failSafe;
 
-
-    public PlacePurpleActions(Intake intake, IntakeExtension intakeExtension) {
+    public PlacePurpleActions(Intake intake, IntakeExtension intakeExtension, Claw claw) {
         this.intake = intake;
+        this.claw = claw;
         this.intakeExtension = intakeExtension;
         openClaw = OpenClaw.LEFT_OPEN;
         closeClaw = CloseClaw.BOTH_CLOSE;
         this.length = Length.EXTENSION_CLOSED;
+        failSafe = FailSafe.ACTIVATED;
 
     }
 
@@ -79,6 +87,7 @@ public class PlacePurpleActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
             switch (openClaw) {
                 case LEFT_OPEN:
                     return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT), 5000);
@@ -86,8 +95,70 @@ public class PlacePurpleActions {
                     return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.RIGHT), 5000);
                 default:
                     return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH), 5000);
+
             }
 
+        }
+
+    }
+
+    public class FailSafeClaw implements Action {
+        Stopwatch releaseTimer;
+
+        public FailSafeClaw(FailSafe clawFailSafe) {
+            releaseTimer = new Stopwatch();
+            releaseTimer.reset();
+            failSafe = clawFailSafe;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+            switch (failSafe) {
+                case ACTIVATED:
+                    return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH), 5000);
+                case DEACTIVATED:
+                    return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH), 5000);
+                default:
+                    return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH), 5000);
+            }
+
+        }
+
+    }
+
+
+
+    public class MoveIntakeClaw implements Action {
+        Intake.ClawState clawState;
+        ClawSide clawSide;
+
+        public MoveIntakeClaw(Intake.ClawState clawState, ClawSide clawSide) {
+            this.clawState = clawState;
+            this.clawSide = clawSide;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            intake.updateClawState(clawState, clawSide);
+            return false;
+        }
+
+    }
+
+    public class MoveOuttakeClaw implements Action {
+        Claw.ClawState clawState;
+        ClawSide clawSide;
+
+        public MoveOuttakeClaw(Claw.ClawState clawState, ClawSide clawSide) {
+            this.clawState = clawState;
+            this.clawSide = clawSide;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            claw.updateState(clawState, clawSide);
+            return false;
         }
 
     }
@@ -120,46 +191,21 @@ public class PlacePurpleActions {
     }
 
 
-    private void moveExtension () {
-
-        switch (length) {
-            case EXTENSION_CLOSED:
-                intakeExtension.setTarget(0);
-                intakeExtension.setPidControl();
-                break;
-            case ALMOST_HALF:
-                intakeExtension.setTarget(650);
-                intakeExtension.setPidControl();
-                break;
-            case QUARTER:
-                intakeExtension.setTarget(400);
-                intakeExtension.setPidControl();
-            case TWO_PLUS_ONE:
-                intakeExtension.setTarget(750);
-                intakeExtension.setPidControl();
-                break;
-            case HALF:
-                intakeExtension.setTarget(820);
-                intakeExtension.setPidControl();
-                break;
-            case FULL:
-                intakeExtension.setTarget(1640);
-                intakeExtension.setPidControl();
-                break;
-
-        }
+    private void moveExtension (int length) {
+        intakeExtension.setTarget(length);
+        intakeExtension.setPidControl();
     }
     public class OpenExtension implements Action {
 
-        Stopwatch openExtensionTimer;
+        int length = 0;
 
-        public OpenExtension(Length currentLength) {
-            length = currentLength;
+        public OpenExtension(int length) {
+            this.length = length;
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                moveExtension();
+                moveExtension(length);
                 return false;
             }
     }
@@ -213,6 +259,15 @@ public class PlacePurpleActions {
         return new MoveIntake(angle);
     }
 
+    public Action moveIntakeClaw(Intake.ClawState clawState, ClawSide clawSide) {
+        return new MoveIntakeClaw(clawState, clawSide);
+    }
+
+    public Action moveClaw(Claw.ClawState clawState, ClawSide clawSide) {
+        return new MoveOuttakeClaw(clawState, clawSide);
+    }
+
+
 
     public Action release(OpenClaw openClaw) {
 
@@ -223,8 +278,8 @@ public class PlacePurpleActions {
         return new Lock(closeClaw);
     }
 
-    public Action openExtension(Length currentLength) {
-        return new OpenExtension(currentLength);
+    public Action openExtension(int length) {
+        return new OpenExtension(length);
     }
 
     public Action closeExtension() {
@@ -234,6 +289,8 @@ public class PlacePurpleActions {
     public Action moveStack() {
         return new MoveStack();
     }
+
+    public Action failSafeClaw(FailSafe failSafeClaw) { return new FailSafeClaw(failSafeClaw) ; }
 
 
 }
