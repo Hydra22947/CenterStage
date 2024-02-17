@@ -141,7 +141,7 @@ public class AutoLeftRedRight extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        Action traj =
+         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
                         .lineToYLinearHeading(-12 ,Math.toRadians(125))
                         .stopAndAdd(placePurplePixel)
