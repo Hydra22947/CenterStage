@@ -18,7 +18,6 @@ public class OuttakeTest extends CommandOpMode {
     BetterGamepad gamepadEx;
     Outtake outtake;
     Claw claw;
-    Drivetrain drivetrain;
 
     public static Outtake.Angle angle = Outtake.Angle.INTAKE;
     public static boolean DEBUG = true;
@@ -27,7 +26,6 @@ public class OuttakeTest extends CommandOpMode {
     @Override
     public void run() {
         outtake.update();
-        drivetrain.update();
 
         if(!DEBUG)
         {
@@ -55,7 +53,6 @@ public class OuttakeTest extends CommandOpMode {
         gamepadEx = new BetterGamepad(gamepad1);
         robot.init(hardwareMap, telemetry);
 
-        drivetrain = new Drivetrain(gamepad1, true);
         outtake = new Outtake();
         claw = new Claw();
     }

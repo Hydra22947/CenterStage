@@ -4,6 +4,8 @@ package org.firstinspires.ftc.teamcode.auto.autos.BlueAuto.Left;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
 
+import static org.firstinspires.ftc.teamcode.auto.AutoSettings.writeToFile;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -136,6 +138,12 @@ public class AutoLeftBlueLeft extends LinearOpMode {
                 updateActions.updateSystems()
         ));
 
+        while (opModeIsActive())
+        {
+            robot.drive.updatePoseEstimate();
+        }
+
+        writeToFile(robot.drive.pose.heading.log());
     }
 
 

@@ -29,7 +29,7 @@ public class Intake implements Subsystem{
 
     public static double openRight = 0.55, openLeft = 0.565;
     public static double closeRight = .74, closeLeft = .73;
-    public static double indeterminateRight = 0.67, indeterminateLeft = 0.67;
+    public static double indeterminateRight = 0.66, indeterminateLeft = 0.665;
 
 
     public static void setSeeFarFrom(double seeFarFrom) {
@@ -134,6 +134,13 @@ public class Intake implements Subsystem{
     public void moveStack()
     {
         this.robot.intakeAngleServo.setPosition((getPosition(angle, Type.AMMO) + STACK));
+        this.robot.intakeHandPivotLeftServo.setPosition(getPosition(angle, Type.HAND));
+        this.robot.intakeHandPivotRightServo.setPosition(getPosition(angle, Type.HAND));
+    }
+
+    public void returnStack()
+    {
+        this.robot.intakeAngleServo.setPosition((getPosition(angle, Type.AMMO) - STACK));
         this.robot.intakeHandPivotLeftServo.setPosition(getPosition(angle, Type.HAND));
         this.robot.intakeHandPivotRightServo.setPosition(getPosition(angle, Type.HAND));
     }

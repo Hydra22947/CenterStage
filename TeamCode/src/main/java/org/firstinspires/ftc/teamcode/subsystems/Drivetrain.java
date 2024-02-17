@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.auto.AutoSettings.readFromFile;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -24,7 +26,7 @@ public class Drivetrain {
     boolean slow = false;
 
     //Constructor
-    public Drivetrain(Gamepad gamepad1, boolean blueAlliance)
+    public Drivetrain(Gamepad gamepad1, boolean blueAlliance, boolean isAuto)
     {
         this.robot = RobotHardware.getInstance();
 
@@ -35,7 +37,7 @@ public class Drivetrain {
 
         this.blueAlliance = blueAlliance;
 
-        resetAngle();
+        resetAngle(isAuto);
     }
 
     public void update() {
@@ -57,12 +59,6 @@ public class Drivetrain {
 
         rotX = rotX * 1.1;  // Counteract imperfect strafing
 
-//
-//        if(_cGamepad1.XOnce())
-//        {
-//            resetAngle();
-//        }
-
         robot.dtFrontLeftMotor.setPower(rotY + rotX + twist);
         robot.dtBackLeftMotor.setPower(rotY - rotX + twist);
         robot.dtFrontRightMotor.setPower(rotY - rotX - twist);
@@ -70,20 +66,30 @@ public class Drivetrain {
     }
 
 
-    public void resetAngle()
+    public void resetAngle(boolean isAuto)
     {
-        robot.imu.resetYaw();
+        if(isAuto)
+        {
+            robot.imu.resetYaw();
 
-        // check if we are blue/red alliance and set zero angle - For centric drive
-        if(!blueAlliance)
-        {
-            robot.setImuOffset(-Math.PI);
+            robot.setImuOffset(readFromFile());
         }
-        else if(blueAlliance)
+        else
         {
-            robot.setImuOffset(Math.PI);
+            robot.imu.resetYaw();
+
+            // check if we are blue/red alliance and set zero angle - For centric drive
+            if(!blueAlliance)
+            {
+                robot.setImuOffset(-Math.PI);
+            }
+            else if(blueAlliance)
+            {
+                robot.setImuOffset(Math.PI);
+            }
         }
     }
+
 
     public void fast()
     {

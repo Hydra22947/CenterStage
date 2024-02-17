@@ -26,14 +26,12 @@ public class IntakeExtensionTest extends LinearOpMode {
         robot.init(hardwareMap, telemetry);
 
         intakeExtension = new IntakeExtension(gamepad1, true);
-        Drivetrain drivetrain = new Drivetrain(gamepad1, true);
 
         waitForStart();
 
         while (opModeIsActive())
         {
             gamepadEx.update();
-            drivetrain.update();
 
             if(gamepad1.right_stick_y != 0)
             {

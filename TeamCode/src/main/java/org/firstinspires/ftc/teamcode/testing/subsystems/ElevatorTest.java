@@ -26,14 +26,12 @@ public class ElevatorTest extends LinearOpMode {
 
         elevator = new Elevator(gamepad1, true);
         elevator.setAuto(false);
-        Drivetrain drivetrain = new Drivetrain(gamepad1, true);
 
         waitForStart();
 
         while (opModeIsActive())
         {
             gamepadEx.update();
-            drivetrain.update();
 
             if(gamepad1.right_stick_y != 0)
             {

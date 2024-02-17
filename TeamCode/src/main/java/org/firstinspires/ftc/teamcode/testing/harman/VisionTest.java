@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.testing.harman;
 
-import android.util.Size;
-
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -13,22 +12,58 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
+@Config
 @Autonomous(name="Vision Test", group="Auto")
 public class VisionTest extends LinearOpMode{
 
 
-    PropPipeline propPipeline;
+    PropPipelineBlueLeft propPipelineBlueLeft;
+    PropPipelineBlueRight propPipelineBlueRight;
+    PropPipelineRedLeft propPipelineRedLeft;
+    PropPipelineRedRight propPipelineRedRight;
     OpenCvWebcam webcam;
 
-    public void HardwareStart() {
+    enum SideColor
+    {
+        BLUE_LEFT,
+        BLUE_RIGHT,
+        RED_LEFT,
+        RED_RIGHT
+    }
+
+    public static SideColor sideColor = SideColor.BLUE_LEFT;
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
 
-        propPipeline = new PropPipeline(AutoSettings.AllianceColor.BLUE, AutoSettings.AllianceSide.CLOSE);
+        propPipelineBlueLeft = new PropPipelineBlueLeft();
+        propPipelineBlueRight = new PropPipelineBlueRight();
+        propPipelineRedLeft = new PropPipelineRedLeft();
+        propPipelineRedRight = new PropPipelineRedRight();
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        webcam.setPipeline(propPipeline);
+
+        switch (sideColor)
+        {
+            case BLUE_LEFT:
+                webcam.setPipeline(propPipelineBlueLeft);
+                break;
+            case BLUE_RIGHT:
+                webcam.setPipeline(propPipelineBlueRight);
+                break;
+            case RED_LEFT:
+                webcam.setPipeline(propPipelineRedLeft);
+                break;
+            case RED_RIGHT:
+                webcam.setPipeline(propPipelineRedRight);
+                break;
+        }
 
         FtcDashboard.getInstance().startCameraStream(webcam, 0);
 
@@ -55,35 +90,36 @@ public class VisionTest extends LinearOpMode{
 
         while (opModeInInit())
         {
-            telemetry.addData("POS", propPipeline.location.toString());
+            switch (sideColor)
+            {
+                case BLUE_LEFT:
+                    telemetry.addData("POS", propPipelineBlueLeft.location.toString());
+                    telemetry.addData("LEFT", propPipelineBlueLeft.getAvgLeft());
+                    telemetry.addData("CENTER", propPipelineBlueLeft.getAvgCenter());
+                    break;
+                case BLUE_RIGHT:
+                    telemetry.addData("POS", propPipelineBlueRight.location.toString());
+                    telemetry.addData("LEFT", propPipelineBlueRight.getAvgRight());
+                    telemetry.addData("CENTER", propPipelineBlueRight.getAvgCenter());
+                    break;
+                case RED_LEFT:
+                    telemetry.addData("POS", propPipelineRedLeft.location.toString());
+                    telemetry.addData("LEFT", propPipelineRedLeft.getAvgLeft());
+                    telemetry.addData("CENTER", propPipelineRedLeft.getAvgCenter());
+                    break;
+                case RED_RIGHT:
+                    telemetry.addData("POS", propPipelineRedRight.location.toString());
+                    telemetry.addData("LEFT", propPipelineRedRight.getAvgRight());
+                    telemetry.addData("CENTER", propPipelineRedRight.getAvgCenter());
+                    break;
+            }
+
             telemetry.update();
         }
 
         waitForStart();
 
-
     }
 
-
-
-    public void runOpMode(){
-
-        HardwareStart();
-
-        while (opModeInInit()) {
-            telemetry.addLine("ready");
-            telemetry.addData("position", propPipeline.getLocation());
-            telemetry.update();
-        }
-
-        waitForStart();
-
-
-    }
-
-    public VisionPortal.CameraState getCameraState(VisionPortal visionPortal) {
-        if (visionPortal != null) return visionPortal.getCameraState();
-        return null;
-    }
 
 }

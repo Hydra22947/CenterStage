@@ -21,8 +21,8 @@ import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@TeleOp(name = "DEBUG OpMode Blue")
-public class OpModeBlueTest extends LinearOpMode {
+@TeleOp(name = "OpMode Blue")
+public class OpModeBlue extends LinearOpMode {
 
     // robot
     private final RobotHardware robot = RobotHardware.getInstance();
@@ -93,13 +93,13 @@ public class OpModeBlueTest extends LinearOpMode {
 
         robot.init(hardwareMap, telemetry);
 
-        drivetrain = new Drivetrain(gamepad1, true, false);
-        elevator = new Elevator(gamepad2, true);
+        drivetrain = new Drivetrain(gamepad1, true, true);
+        elevator = new Elevator(gamepad2, false);
         outtake = new Outtake();
         claw = new Claw();
         intake = new Intake();
         plane = new Plane();
-        intakeExtension = new IntakeExtension(gamepad2, true);
+        intakeExtension = new IntakeExtension(gamepad2, false);
         codeTime = new ElapsedTime();
         intake.setAngle(Intake.Angle.OUTTAKE);
         intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
@@ -159,17 +159,17 @@ public class OpModeBlueTest extends LinearOpMode {
                 plane.toggle();
             }
 
-//            if ((codeTime.seconds() > HALF_TIME) && !secondHalf)  {
-//                gamepad1.runRumbleEffect(customRumbleEffect);
-//                gamepad2.runRumbleEffect(customRumbleEffect);
-//                secondHalf =true;
-//            }
-//
-//            if ((codeTime.seconds() > END_GAME) && !endGame)  {
-//                gamepad1.runRumbleEffect(customRumbleEffect);
-//                gamepad2.runRumbleEffect(customRumbleEffect);
-//                endGame =true;
-//            }
+            if ((codeTime.seconds() > HALF_TIME) && !secondHalf)  {
+                gamepad1.runRumbleEffect(customRumbleEffect);
+                gamepad2.runRumbleEffect(customRumbleEffect);
+                secondHalf =true;
+            }
+
+            if ((codeTime.seconds() > END_GAME) && !endGame)  {
+                gamepad1.runRumbleEffect(customRumbleEffect);
+                gamepad2.runRumbleEffect(customRumbleEffect);
+                endGame =true;
+            }
 
 
             if (liftState != LiftState.EXTRACT && gamepad2.left_stick_y != 0 && !overrideIntakeExtension) {

@@ -28,8 +28,7 @@ public class DrivetrainTest extends LinearOpMode {
 
         robot.init(hardwareMap, telemetry);
 
-        drivetrain = new Drivetrain(gamepad1, true);
-        drivetrain.resetAngle();
+        drivetrain = new Drivetrain(gamepad1, true, false);
 
         while (opModeInInit()) {
             telemetry.addLine("Robot Initialized.");
@@ -42,10 +41,6 @@ public class DrivetrainTest extends LinearOpMode {
         {
             gamepadEx.update();
 
-            if(gamepadEx.XOnce())
-            {
-                drivetrain.resetAngle();
-            }
 
             drivetrain.update();
             telemetry.update();

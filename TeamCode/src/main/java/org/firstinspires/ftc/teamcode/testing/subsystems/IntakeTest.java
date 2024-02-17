@@ -19,8 +19,6 @@ public class IntakeTest extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     Intake intake;
     BetterGamepad gamepadEx;
-    Drivetrain drive;
-    public static boolean DEBUG = true;
 
     public static Intake.Angle angles = Intake.Angle.OUTTAKE;
 
@@ -30,12 +28,10 @@ public class IntakeTest extends LinearOpMode {
         robot.init(hardwareMap, telemetry);
 
         intake = new Intake();
-        drive = new Drivetrain(gamepad1, true);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            drive.update();
             intake.update();
             gamepadEx.update();
 
