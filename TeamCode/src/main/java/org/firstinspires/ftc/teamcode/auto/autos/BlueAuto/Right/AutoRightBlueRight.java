@@ -75,7 +75,7 @@ public class AutoRightBlueRight extends LinearOpMode {
         placePurpleActions = new PlacePurpleActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
-         SequentialAction deposit = new SequentialAction(
+        SequentialAction deposit = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.MID),
                 depositActions.readyForDeposit(),
                 placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
@@ -83,7 +83,7 @@ public class AutoRightBlueRight extends LinearOpMode {
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600)
         );
         SequentialAction transfer = new SequentialAction(
-          placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
+                placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
                 new SleepAction(0.5),
                 placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.RIGHT),
                 placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
@@ -149,28 +149,28 @@ public class AutoRightBlueRight extends LinearOpMode {
 
         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
-                .lineToYLinearHeading(12.5,Math.toRadians(-75))
-                .stopAndAdd(placePurplePixelClose)
-                .waitSeconds(.2)
+                        .lineToYLinearHeading(12.5,Math.toRadians(-75))
+                        .stopAndAdd(placePurplePixelClose)
+                        .waitSeconds(.2)
 
-                .lineToYLinearHeading(14.5 ,Math.toRadians(0))
-                .waitSeconds(.5)
-                .stopAndAdd(intakePixel)
-                .waitSeconds(2)
-                .stopAndAdd(transfer)
+                        .lineToYLinearHeading(14.5 ,Math.toRadians(0))
+                        .waitSeconds(.5)
+                        .stopAndAdd(intakePixel)
+                        .waitSeconds(2)
+                        .stopAndAdd(transfer)
 
-                .stopAndAdd(readyIntake)
-                .strafeToLinearHeading(new Vector2d(30, 9),Math.toRadians(0))
-                .afterDisp(0.9 ,depositActions.readyForDeposit())
-                .afterDisp(1 ,placePurpleActions.moveIntake(Intake.Angle.MID))
-                .splineToLinearHeading(new Pose2d(51.2 ,28.8, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                .stopAndAdd(deposit)
-                .waitSeconds(.5)
-                .setTangent(Math.toRadians(90))
-                .stopAndAdd(retractDeposit)
-                .lineToY(10)
-                //Park
-                .build();
+                        .stopAndAdd(readyIntake)
+                        .strafeToLinearHeading(new Vector2d(30, 9),Math.toRadians(0))
+                        .afterDisp(0.9 ,depositActions.readyForDeposit())
+                        .afterDisp(1 ,placePurpleActions.moveIntake(Intake.Angle.MID))
+                        .splineToLinearHeading(new Pose2d(51.2 ,28.8, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .stopAndAdd(deposit)
+                        .waitSeconds(.5)
+                        .setTangent(Math.toRadians(90))
+                        .stopAndAdd(retractDeposit)
+                        .lineToY(10)
+                        //Park
+                        .build();
 
         waitForStart();
 
