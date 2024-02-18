@@ -35,7 +35,7 @@ public class PropPipelineBlueLeft extends OpenCvPipeline {
     public static int blueMaxS = 0;
     public static int blueMaxV = 0;
     private Mat workingMatrix = new Mat();
-    enum Location
+    public enum Location
     {
         Left,
         Right,
