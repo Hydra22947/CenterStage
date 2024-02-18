@@ -28,12 +28,12 @@ public class PropPipelineBlueLeft extends OpenCvPipeline {
     public static int widthLeft = 175, heightLeft = 250;
     public static int widthCenter = 350, heightCenter = 200;
 
-    public static int blueMinH = 200;
-    public static int blueMinS = 50;
-    public static int blueMinV = 25;
-    public static int blueMaxH = 0;
-    public static int blueMaxS = 0;
-    public static int blueMaxV = 0;
+    public static int blueMinH = 40;
+    public static int blueMinS = 73;
+    public static int blueMinV = 0;
+    public static int blueMaxH = 179;
+    public static int blueMaxS = 255;
+    public static int blueMaxV = 255;
     private Mat workingMatrix = new Mat();
     public enum Location
     {

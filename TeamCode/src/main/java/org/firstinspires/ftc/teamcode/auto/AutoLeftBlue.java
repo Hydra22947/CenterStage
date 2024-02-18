@@ -78,6 +78,8 @@ public class AutoLeftBlue extends LinearOpMode {
         autoConstants = new AutoConstants();
 
         initCamera();
+        webcam.setPipeline(propPipelineBlueLeft);
+
 
         elevator = new Elevator(true);
         outtake = new Outtake();
@@ -103,7 +105,7 @@ public class AutoLeftBlue extends LinearOpMode {
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
                 new SleepAction(.5),
                 placePurpleActions.openExtension(640),
-                new SleepAction(1),
+                new SleepAction(1.5),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN),
                 new SleepAction(0.1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
@@ -115,6 +117,7 @@ public class AutoLeftBlue extends LinearOpMode {
         );
 
         SequentialAction depositBlueMiddle = new SequentialAction(
+
                 depositActions.readyForDeposit(950),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600),
                 new SleepAction(0.5),
@@ -125,7 +128,7 @@ public class AutoLeftBlue extends LinearOpMode {
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
                 new SleepAction(0.5),
                 placePurpleActions.openExtension(820),
-                new SleepAction(1),
+                new SleepAction(1.5),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN),
                 new SleepAction(0.1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
@@ -147,7 +150,7 @@ public class AutoLeftBlue extends LinearOpMode {
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
                 new SleepAction(0.5),
                 placePurpleActions.openExtension(1640),
-                new SleepAction(1.45),
+                new SleepAction(2.45),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
                 new SleepAction(0.1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
@@ -173,6 +176,7 @@ public class AutoLeftBlue extends LinearOpMode {
                         .setTangent(Math.toRadians(90))
                         .strafeTo(new Vector2d(45, 60))
                         .stopAndAdd(retractDepositBlueLeft)
+                        .turnTo(Math.toRadians(-90))
                         .build();
 
         Action trajBlueMiddle =
@@ -191,6 +195,7 @@ public class AutoLeftBlue extends LinearOpMode {
                         .setTangent(Math.toRadians(90))
                         .strafeTo(new Vector2d(45, 60))
                         .stopAndAdd(retractDepositBlueMiddle)
+                        .turnTo(Math.toRadians(-90))
                         .build();
 
         Action trajBlueRight =
@@ -209,14 +214,28 @@ public class AutoLeftBlue extends LinearOpMode {
                         .setTangent(Math.toRadians(90))
                         .strafeTo(new Vector2d(45, 60))
                         .stopAndAdd(retractDepositBlueRight)
+                        .turnTo(Math.toRadians(-90))
                         .build();
 
         while (opModeInInit() && !isStopRequested()) {
+            intake.setAngle(Intake.Angle.MID);
+
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
-            intake.setAngle(Intake.Angle.OUTTAKE);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
-            telemetry.addData("POS", propPipelineBlueLeft.getLocation().toString());
+            telemetry.addData("POS", propPipelineBlueLeft.getLocation());
+            switch (propPipelineBlueLeft.getLocation())
+            {
+                case Left:
+                    propLocation = PropLocation.LEFT;
+                    break;
+                case Right:
+                    propLocation = PropLocation.RIGHT;
+                    break;
+                case Center:
+                    propLocation = PropLocation.MIDDLE;
+                    break;
+            }
             telemetry.addLine("Initialized");
             telemetry.update();
         }

@@ -16,7 +16,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
-@Autonomous(name="Vision Test", group="Auto")
+@Autonomous(name="Vision Test", group = "A")
 public class VisionTest extends LinearOpMode{
 
 
@@ -99,7 +99,7 @@ public class VisionTest extends LinearOpMode{
                     break;
                 case BLUE_RIGHT:
                     telemetry.addData("POS", propPipelineBlueRight.location.toString());
-                    telemetry.addData("LEFT", propPipelineBlueRight.getAvgRight());
+                    telemetry.addData("RIGHT", propPipelineBlueRight.getAvgRight());
                     telemetry.addData("CENTER", propPipelineBlueRight.getAvgCenter());
                     break;
                 case RED_LEFT:
@@ -109,7 +109,7 @@ public class VisionTest extends LinearOpMode{
                     break;
                 case RED_RIGHT:
                     telemetry.addData("POS", propPipelineRedRight.location.toString());
-                    telemetry.addData("LEFT", propPipelineRedRight.getAvgRight());
+                    telemetry.addData("RIGHT", propPipelineRedRight.getAvgRight());
                     telemetry.addData("CENTER", propPipelineRedRight.getAvgCenter());
                     break;
             }

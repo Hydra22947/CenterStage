@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 
 @Config
-@TeleOp(name = "Intake Extension Test")
+@TeleOp(name = "Intake Extension Test", group = "A")
 public class IntakeExtensionTest extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();

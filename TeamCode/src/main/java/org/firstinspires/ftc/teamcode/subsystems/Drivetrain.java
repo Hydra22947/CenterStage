@@ -72,7 +72,24 @@ public class Drivetrain {
         {
             robot.imu.resetYaw();
 
-            robot.setImuOffset(readFromFile());
+            // check if we are blue/red alliance and set zero angle - For centric drive
+            if(!blueAlliance)
+            {
+                robot.setImuOffset(-Math.PI);
+            }
+            else if(blueAlliance)
+            {
+                robot.setImuOffset(Math.PI);
+            }
+//            // check if we are blue/red alliance and set zero angle - For centric drive
+//            if(!blueAlliance)
+//            {
+//                robot.setImuOffset(readFromFile() -3/2 * Math.PI);
+//            }
+//            else if(blueAlliance)
+//            {
+//                robot.setImuOffset(readFromFile() + 3/2 * Math.PI);
+//            }
         }
         else
         {

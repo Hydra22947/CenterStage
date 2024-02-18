@@ -79,6 +79,7 @@ public class AutoRightBlue extends LinearOpMode {
         autoConstants = new AutoConstants();
 
         initCamera();
+        webcam.setPipeline(propPipelineBlueRight);
 
         elevator = new Elevator(true);
         outtake = new Outtake();
@@ -248,7 +249,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(-33, 13.25),Math.toRadians(0))
                         .waitSeconds(.5)
                         .stopAndAdd(intakePixelBlueLeft)
-                        .waitSeconds(2)
+                        .waitSeconds(10)
                         .stopAndAdd(transferBlueLeft)
 
                         .stopAndAdd(readyIntakeBlueLeft)
@@ -262,6 +263,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .stopAndAdd(retractDepositBlueLeft)
                         //Park - Close to other board
                         .lineToY(10)
+                        .turnTo(Math.toRadians(-90))
 
                         //Park - Corner
                         //.lineToY(64)
@@ -283,7 +285,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .lineToYLinearHeading(14, Math.toRadians(0))
                         .waitSeconds(.5)
                         .stopAndAdd(intakePixelBlueMiddle)
-                        .waitSeconds(2)
+                        .waitSeconds(10)
                         .stopAndAdd(transferBlueMiddle)
 
                         .stopAndAdd(readyIntakeBlueMiddle)
@@ -297,6 +299,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .stopAndAdd(retractDepositBlueMiddle)
                         //Park - Close to other board
                         .lineToY(10)
+                        .turnTo(Math.toRadians(-90))
 
                         //Park - Corner
                         //.lineToY(64)
@@ -313,7 +316,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(-40,10.9), Math.toRadians(0))
                         .waitSeconds(.5)
                         .stopAndAdd(intakePixelBlueRight)
-                        .waitSeconds(2)
+                        .waitSeconds(10)
                         .stopAndAdd(transferBlueRight)
                         .stopAndAdd(readyIntakeBlueRight)
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
@@ -326,17 +329,32 @@ public class AutoRightBlue extends LinearOpMode {
                         .setTangent(Math.toRadians(90))
 
                         //Park - Close to other board
-                        //.lineToY(10)
+                        .lineToY(10)
+                        .turnTo(Math.toRadians(-90))
 
                         //Park - Corner
                         //.lineToY(64)
                         .build();
 
         while (opModeInInit() && !isStopRequested()) {
+            intake.setAngle(Intake.Angle.MID);
+
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
-            telemetry.addData("POS", propPipelineBlueRight.getLocation().toString());
+            telemetry.addData("POS", propPipelineBlueRight.getLocation());
+            switch (propPipelineBlueRight.getLocation())
+            {
+                case Left:
+                    propLocation = PropLocation.LEFT;
+                    break;
+                case Right:
+                    propLocation = PropLocation.RIGHT;
+                    break;
+                case Center:
+                    propLocation = PropLocation.MIDDLE;
+                    break;
+            }
             telemetry.addLine("Initialized");
             telemetry.update();
         }
@@ -365,6 +383,11 @@ public class AutoRightBlue extends LinearOpMode {
                         updateActions.updateSystems()
                 ));
                 break;
+        }
+
+        while (opModeIsActive())
+        {
+            robot.drive.updatePoseEstimate();
         }
 
         writeToFile(robot.drive.pose.heading.log());

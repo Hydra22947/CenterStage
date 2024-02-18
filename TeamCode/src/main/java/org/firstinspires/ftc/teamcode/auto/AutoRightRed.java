@@ -77,6 +77,7 @@ public class AutoRightRed extends LinearOpMode {
         autoConstants = new AutoConstants();
 
         initCamera();
+        webcam.setPipeline(propPipelineRedRight);
 
 
         elevator = new Elevator(true);
@@ -176,6 +177,7 @@ public class AutoRightRed extends LinearOpMode {
                         .setTangent(Math.toRadians(90))
                         .strafeTo(new Vector2d(45, -60))
                         .stopAndAdd(retractDepositRedLeft)
+                        .turnTo(Math.toRadians(90))
                         .build();
 
         Action trajRedMiddle =
@@ -186,7 +188,7 @@ public class AutoRightRed extends LinearOpMode {
                         .setTangent(0)
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
-                        .splineToLinearHeading(new Pose2d(52, -35.25, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(52, -36.5, Math.toRadians(0)), Math.toRadians(0))
                         .waitSeconds(.1)
                         .stopAndAdd(depositRedMiddle)
                         .waitSeconds(0.5)
@@ -194,6 +196,8 @@ public class AutoRightRed extends LinearOpMode {
                         .setTangent(Math.toRadians(90))
                         .strafeTo(new Vector2d(45, -60))
                         .stopAndAdd(retractDepositRedMiddle)
+                        .turnTo(Math.toRadians(90))
+
                         .build();
 
         Action trajRedRight =
@@ -211,14 +215,30 @@ public class AutoRightRed extends LinearOpMode {
                         .setTangent(Math.toRadians(90))
                         .strafeTo(new Vector2d(45, -60))
                         .stopAndAdd(retractDepositRedRight)
+                        .turnTo(Math.toRadians(90))
                         .build();
 
         while (opModeInInit() && !isStopRequested()) {
+            intake.setAngle(Intake.Angle.MID);
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
-            intake.setAngle(Intake.Angle.OUTTAKE);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
+            telemetry.addData("POS", propPipelineRedRight.getLocation());
+
+            switch (propPipelineRedRight.getLocation())
+            {
+                case Left:
+                    propLocation = PropLocation.LEFT;
+                    break;
+                case Right:
+                    propLocation = PropLocation.RIGHT;
+                    break;
+                case Center:
+                    propLocation = PropLocation.MIDDLE;
+                    break;
+            }
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");
+            telemetry.update();
         }
 
         waitForStart();
@@ -247,6 +267,10 @@ public class AutoRightRed extends LinearOpMode {
                 break;
         }
 
+        while (opModeIsActive())
+        {
+            robot.drive.updatePoseEstimate();
+        }
         writeToFile(robot.drive.pose.heading.log());
     }
 

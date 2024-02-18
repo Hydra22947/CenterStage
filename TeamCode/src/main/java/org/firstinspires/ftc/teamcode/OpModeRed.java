@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.auto.AutoSettings.readFromFile;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -21,7 +23,7 @@ import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@TeleOp(name = "OpMode Red", group = "A")
+@TeleOp(name = "OpMode Red")
 public class OpModeRed extends LinearOpMode {
 
     // robot
@@ -153,6 +155,8 @@ public class OpModeRed extends LinearOpMode {
             claw.update();
             plane.update();
 
+            telemetry.addData("HEADING", readFromFile());
+
 
             if(betterGamepad1.dpadUpOnce())
             {
@@ -229,7 +233,7 @@ public class OpModeRed extends LinearOpMode {
     {
         switch (intakeState) {
             case RETRACT:
-                intakeExtension.setTarget(-10);
+                intakeExtension.setTarget(-20);
 
                 if(gamepad2.right_trigger != 0 && resetRightTrigger)
                 {
@@ -274,9 +278,13 @@ public class OpModeRed extends LinearOpMode {
                     intakeState = IntakeState.INTAKE_EXTEND;
                     override = false;
                 }
-                else if(liftState == LiftState.RETRACT)
+                else if(liftState == LiftState.RETRACT && gamepad2.left_trigger == 0)
                 {
                     drivetrain.fast();
+                }
+                else if(gamepad2.left_trigger != 0)
+                {
+                    drivetrain.slow();
                 }
 
                 if(startedDelayTransfer /*&& (intakeExtension.getPos() >= -INTAKE_ZERO_MAX && intakeExtension.getPos() <= INTAKE_ZERO_MAX)*/)

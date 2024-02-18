@@ -15,7 +15,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 public class PropPipelineRedRight extends OpenCvPipeline {
 
     // blue , not seeing the right line
-    public static int rightX = 0, rightY = 40;
+    public static int rightX = 450, rightY = 40;
     public static int centerX = 0, centerY = 50;
 
     double avgRight = 0, avgCenter = 0;
@@ -27,14 +27,14 @@ public class PropPipelineRedRight extends OpenCvPipeline {
     public static int widthRight = 175, heightRight = 190;
     public static int widthCenter = 350, heightCenter = 180;
 
-    public static int redMinH = 200;
-    public static int redMinS = 50;
-    public static int redMinV = 25;
-    public static int redMaxH = 0;
-    public static int redMaxS = 0;
-    public static int redMaxV = 0;
+    public static int redMinH = 0;
+    public static int redMinS = 104;
+    public static int redMinV = 0;
+    public static int redMaxH = 179;
+    public static int redMaxS = 255;
+    public static int redMaxV = 255;
     private Mat workingMatrix = new Mat();
-    enum Location
+    public enum Location
     {
         Left,
         Right,
@@ -73,8 +73,8 @@ public class PropPipelineRedRight extends OpenCvPipeline {
         Imgproc.rectangle(workingMatrix, new Rect(centerX, centerY, widthCenter, heightCenter), new Scalar(0, 255, 0));
 
         // Calculate the average intensity of blue color in each region
-        avgRight = Core.mean(matLeft).val[0]; // Blue channel intensity
-        avgCenter = Core.mean(matCenter).val[0];
+        avgRight = Core.mean(matLeft).val[2];
+        avgCenter = Core.mean(matCenter).val[2];
 
 
         // Find the region with the maximum average blue intensity

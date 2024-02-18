@@ -28,15 +28,15 @@ public class PropPipelineRedLeft extends OpenCvPipeline {
     public static int widthCenter = 370, heightCenter = 200;
     public static int widthLeft = 190, heightLeft = 200;
 
-    public static int redMinH = 200;
-    public static int redMinS = 50;
-    public static int redMinV = 25;
-    public static int redMaxH = 0;
-    public static int redMaxS = 0;
-    public static int redMaxV = 0;
+    public static int redMinH = 0;
+    public static int redMinS = 104;
+    public static int redMinV = 0;
+    public static int redMaxH = 179;
+    public static int redMaxS = 255;
+    public static int redMaxV = 255;
     private Mat workingMatrix = new Mat();
 
-    enum Location
+    public enum Location
     {
         Left,
         Right,
@@ -75,8 +75,8 @@ public class PropPipelineRedLeft extends OpenCvPipeline {
          Imgproc.rectangle(workingMatrix, new Rect(leftX, leftY, widthLeft, heightLeft), new Scalar(0, 255, 0));
 
         // Calculate the average intensity of blue color in each region
-        avgCenter = Core.mean(matCenter).val[0];
-        avgLeft = Core.mean(matRight).val[0];
+        avgCenter = Core.mean(matCenter).val[2];
+        avgLeft = Core.mean(matRight).val[2];
 
 
         // Find the region with the maximum average blue intensity

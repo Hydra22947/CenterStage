@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 
 @Config
-@TeleOp(name = "Elevator Test")
+@TeleOp(name = "Elevator Test", group = "A")
 public class ElevatorTest extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-@TeleOp(name="Servo Test", group="tests")
+@TeleOp(name="Servo Test", group = "A")
 @Config
 public class ServoTest extends LinearOpMode {
 

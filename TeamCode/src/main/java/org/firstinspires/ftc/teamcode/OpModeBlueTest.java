@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@TeleOp(name = "DEBUG OpMode Blue")
+@TeleOp(name = "DEBUG OpMode Blue", group = "A")
 public class OpModeBlueTest extends LinearOpMode {
 
     // robot
@@ -229,7 +229,7 @@ public class OpModeBlueTest extends LinearOpMode {
     {
         switch (intakeState) {
             case RETRACT:
-                intakeExtension.setTarget(-10);
+                intakeExtension.setTarget(-20);
 
                 if(gamepad2.right_trigger != 0 && resetRightTrigger)
                 {
@@ -274,9 +274,13 @@ public class OpModeBlueTest extends LinearOpMode {
                     intakeState = IntakeState.INTAKE_EXTEND;
                     override = false;
                 }
-                else if(liftState == LiftState.RETRACT)
+                else if(liftState == LiftState.RETRACT && gamepad2.left_trigger == 0)
                 {
                     drivetrain.fast();
+                }
+                else if(gamepad2.left_trigger != 0)
+                {
+                    drivetrain.slow();
                 }
 
                 if(startedDelayTransfer /*&& (intakeExtension.getPos() >= -INTAKE_ZERO_MAX && intakeExtension.getPos() <= INTAKE_ZERO_MAX)*/)

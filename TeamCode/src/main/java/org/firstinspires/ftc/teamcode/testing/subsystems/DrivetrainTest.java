@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 
 @Config
-@TeleOp(name = "Drivetrain Test", group = "tests")
+@TeleOp(name = "Drivetrain Test", group = "A")
 public class DrivetrainTest extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();

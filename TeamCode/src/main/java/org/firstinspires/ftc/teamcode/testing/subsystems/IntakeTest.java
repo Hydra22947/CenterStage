@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@TeleOp(name = "Intake Test")
+@TeleOp(name = "Intake Test", group = "A")
 public class IntakeTest extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();

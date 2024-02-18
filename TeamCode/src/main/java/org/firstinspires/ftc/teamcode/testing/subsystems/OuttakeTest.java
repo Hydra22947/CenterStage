@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@TeleOp(name = "Outtake Test")
+@TeleOp(name = "Outtake Test", group = "A")
 public class OuttakeTest extends CommandOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
