@@ -69,7 +69,7 @@ public class AutoRightBlueMiddle extends LinearOpMode {
         intakeExtension.setAuto(true);
         elevator.setAuto(true);
 
-        depositActions = new DepositActions(elevator, intake, claw, outtake , intakeExtension);
+        depositActions = new DepositActions(elevator, intake, claw, outtake, intakeExtension);
         placePurpleActions = new PlacePurpleActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
@@ -78,19 +78,34 @@ public class AutoRightBlueMiddle extends LinearOpMode {
                 depositActions.readyForDeposit(),
                 placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
                 new SleepAction(0.5),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600)
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 600)
         );
+        SequentialAction transfer = new SequentialAction(
+                placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
+                new SleepAction(0.5),
+                placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.RIGHT),
+                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                new SleepAction(.5),
+                placePurpleActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
+        );
+        SequentialAction placePurplePixelClose = new SequentialAction(
 
-
+                new SleepAction(1.5),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
+                new SleepAction(0.2),
+                placePurpleActions.moveIntake(Intake.Angle.MID),
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
+        );
         SequentialAction placePurplePixel = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
-                placePurpleActions.openExtension(0),
-                new SleepAction(.4),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN),
+                placePurpleActions.openExtension(1640),
+                new SleepAction(1.45),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
                 new SleepAction(0.1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.LEFT_CLOSE)
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
         );
+
 
         SequentialAction retractDeposit = new SequentialAction(
                 depositActions.retractDeposit()
@@ -102,9 +117,11 @@ public class AutoRightBlueMiddle extends LinearOpMode {
         );
 
         SequentialAction intakePixel = new SequentialAction(
-                placePurpleActions.openExtension(720),
-                placePurpleActions.moveIntake(Intake.Angle.TOP_5),
-                new SleepAction(0.5),
+                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
+                new SleepAction(.2),
+                placePurpleActions.openExtension(525),
+                new SleepAction(1),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.5),
                 placePurpleActions.moveStack(),
@@ -112,7 +129,7 @@ public class AutoRightBlueMiddle extends LinearOpMode {
 
         );
         SequentialAction readyIntake = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.MID)
+                placePurpleActions.moveIntake(Intake.Angle.INTAKE)
         );
 
 
@@ -130,28 +147,34 @@ public class AutoRightBlueMiddle extends LinearOpMode {
 
         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
-                .lineToY(-8)
-                .stopAndAdd(placePurplePixel)
-                .setTangent(0)
-                .waitSeconds(.1)
-                .stopAndAdd(placePurpleActions.closeExtension())
-                .splineToSplineHeading(new Pose2d(-37, 9.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                .stopAndAdd(intakePixel)
-                .waitSeconds(2)
-                .stopAndAdd(readyIntake)
-                .strafeToLinearHeading(new Vector2d(30, 9),Math.toRadians(0))
-                .afterDisp(0.9 ,depositActions.readyForDeposit())
-                .afterDisp(1 ,placePurpleActions.moveIntake(Intake.Angle.MID))
-                .splineToLinearHeading(new Pose2d(51 ,34.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                .stopAndAdd(deposit)
-                .waitSeconds(.5)
-                .setTangent(Math.toRadians(90))
-                .stopAndAdd(retractDeposit)
-                .lineToY(10)
-                        //Park
-                .build();
 
+                    .setTangent(Math.toRadians(70))
+                    .lineToY(12)
+                    .stopAndAdd(readyIntake)
+                    .setTangent(0)
+                    .splineToLinearHeading(new Pose2d(-42, 12.5, Math.toRadians(-100)), Math.toRadians(-180))
+                        .stopAndAdd(placePurplePixelClose)
+                    .splineToLinearHeading(new Pose2d(-41, 12.5, Math.toRadians(-100)), Math.toRadians(-180))
+                    .waitSeconds(.2)
 
+                    .lineToYLinearHeading(14.5, Math.toRadians(0))
+                    .waitSeconds(.5)
+                    .stopAndAdd(intakePixel)
+                    .waitSeconds(2)
+                    .stopAndAdd(transfer)
+
+                    .stopAndAdd(readyIntake)
+                    .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
+                    .afterDisp(0.9, depositActions.readyForDeposit())
+                    .afterDisp(1, placePurpleActions.moveIntake(Intake.Angle.MID))
+                    .splineToLinearHeading(new Pose2d(51.2, 32.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                    .stopAndAdd(deposit)
+                    .waitSeconds(.5)
+                    .setTangent(Math.toRadians(90))
+                    .stopAndAdd(retractDeposit)
+                    .lineToY(10)
+                    //Park
+                    .build();
 
         waitForStart();
 

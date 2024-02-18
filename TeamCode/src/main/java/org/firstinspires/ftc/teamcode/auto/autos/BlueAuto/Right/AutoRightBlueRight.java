@@ -31,6 +31,8 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
+import javax.xml.transform.sax.SAXSource;
+
 @Config
 @Autonomous(name = "2+0 - Auto Blue Right RIGHT")
 public class AutoRightBlueRight extends LinearOpMode {
@@ -80,8 +82,22 @@ public class AutoRightBlueRight extends LinearOpMode {
                 new SleepAction(0.5),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600)
         );
-
-
+        SequentialAction transfer = new SequentialAction(
+          placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
+                new SleepAction(0.5),
+                placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.RIGHT),
+                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                new SleepAction(.5),
+                placePurpleActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
+        );
+        SequentialAction placePurplePixelClose = new SequentialAction(
+                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
+                new SleepAction(1),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
+                new SleepAction(0.2),
+                placePurpleActions.moveIntake(Intake.Angle.MID),
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
+        );
         SequentialAction placePurplePixel = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
                 placePurpleActions.openExtension(1640),
@@ -91,6 +107,7 @@ public class AutoRightBlueRight extends LinearOpMode {
                 placePurpleActions.moveIntake(Intake.Angle.MID),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
         );
+
 
         SequentialAction retractDeposit = new SequentialAction(
                 depositActions.retractDeposit()
@@ -102,9 +119,11 @@ public class AutoRightBlueRight extends LinearOpMode {
         );
 
         SequentialAction intakePixel = new SequentialAction(
-                placePurpleActions.openExtension(720),
-                placePurpleActions.moveIntake(Intake.Angle.TOP_5),
-                new SleepAction(0.5),
+                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
+
+                placePurpleActions.openExtension(520),
+                new SleepAction(1),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.5),
                 placePurpleActions.moveStack(),
@@ -112,7 +131,7 @@ public class AutoRightBlueRight extends LinearOpMode {
 
         );
         SequentialAction readyIntake = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.MID)
+                placePurpleActions.moveIntake(Intake.Angle.INTAKE)
         );
 
 
@@ -130,19 +149,21 @@ public class AutoRightBlueRight extends LinearOpMode {
 
         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
-                .lineToYLinearHeading(-12 ,Math.toRadians(-55))
-                .stopAndAdd(placePurplePixel)
-                .setTangent(0)
-                .waitSeconds(.1)
-                .stopAndAdd(placePurpleActions.closeExtension())
-                .splineToSplineHeading(new Pose2d(-37, 9.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .lineToYLinearHeading(12.5,Math.toRadians(-75))
+                .stopAndAdd(placePurplePixelClose)
+                .waitSeconds(.2)
+
+                .lineToYLinearHeading(14.5 ,Math.toRadians(0))
+                .waitSeconds(.5)
                 .stopAndAdd(intakePixel)
                 .waitSeconds(2)
+                .stopAndAdd(transfer)
+
                 .stopAndAdd(readyIntake)
                 .strafeToLinearHeading(new Vector2d(30, 9),Math.toRadians(0))
                 .afterDisp(0.9 ,depositActions.readyForDeposit())
                 .afterDisp(1 ,placePurpleActions.moveIntake(Intake.Angle.MID))
-                .splineToLinearHeading(new Pose2d(51 ,30.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .splineToLinearHeading(new Pose2d(51.2 ,28.8, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .stopAndAdd(deposit)
                 .waitSeconds(.5)
                 .setTangent(Math.toRadians(90))

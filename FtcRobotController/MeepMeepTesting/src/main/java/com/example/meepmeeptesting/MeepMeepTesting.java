@@ -244,16 +244,18 @@ public class MeepMeepTesting {
 
     public static void blueMidRight(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
-                .setTangent(180)
-                .splineToLinearHeading(new Pose2d(-45, 10, Math.toRadians(-100)), Math.toRadians(-90))
-                .waitSeconds(1)
+                .setTangent(Math.toRadians(70))
+                .lineToY(12)
+                .setTangent(0)
+                .splineToLinearHeading(new Pose2d(-45, 12.5, Math.toRadians(-100)), Math.toRadians(-180))
+              /*  .waitSeconds(1)
                 .setTangent(0)
                 .splineToSplineHeading(new Pose2d(-24, 10, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .splineToSplineHeading(new Pose2d(20, 10, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .setTangent(0)
 
                 .splineToLinearHeading(new Pose2d(51, 40, Math.toRadians(0)), Math.toRadians(0))
-
+*/
                 .build());
     }
 
@@ -261,6 +263,8 @@ public class MeepMeepTesting {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
                 .lineToYLinearHeading(12 ,Math.toRadians(-75))
                 .waitSeconds(1)
+                .lineToYLinearHeading(14 ,Math.toRadians(0))
+
                 .setTangent(0)
                 .splineToSplineHeading(new Pose2d(-24, 10, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .splineToSplineHeading(new Pose2d(20, 10, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
@@ -284,15 +288,23 @@ public class MeepMeepTesting {
                 .build());
     }
 
+    public static void nigger(RoadRunnerBotEntity myBot) {
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
+                .lineToYLinearHeading(12 ,Math.toRadians(-55))
+         //       .waitSeconds(.1)
+            //    .lineToYLinearHeading(14 ,Math.toRadians(0))
+
+                .build());
+    }
+
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(600);
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .build();
-        //blueLeftRight(myBot);
 
-        blueLeftRight(myBot);
+                .build();
+   blueMidRight(myBot);
         setAnimation(meepMeep, myBot);
 
     }

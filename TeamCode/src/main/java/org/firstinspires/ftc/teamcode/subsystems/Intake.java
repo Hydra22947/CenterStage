@@ -16,7 +16,7 @@ public class Intake implements Subsystem{
     public static double outtakeHandPivot = .65, outtakeAmmoPivot = .64;
     public static double midHandPivot = 0.61, midAmmoPivot = 0.375;
     public static double top5HandPivot = .31, top5AmmoPivot = 0.1;
-    public static double top5HandPivotAuto = .305, top5AmmoPivotAuto = 0.095; //auto
+    public static double top5HandPivotAuto = 0.3095, top5AmmoPivotAuto = 0.095; //auto
     public static double top54HandPivot = 0.29, top54AmmoPivot = 0.1;
     public static double top54HandPivotAuto = 0.235, top54AmmoPivotAuto = 0.035;
     public static double top43HandPivot = 0.262, top43AmmoPivot = 0.098; // auto

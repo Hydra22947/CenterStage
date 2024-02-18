@@ -46,7 +46,7 @@ public class DepositActions {
     private void moveElevatorByTraj() {
         switch (currentCycle) {
             case PRELOAD:
-                elevator.setTarget(950);
+                elevator.setTarget(1100);
                 elevator.setPidControl();
                 break;
             case FIRST_CYCLE:
@@ -92,7 +92,7 @@ public class DepositActions {
         public ReadyForDeposit() {
             readyForDepositTimer = new Stopwatch();
             readyForDepositTimer.reset();
-            intake.move(Intake.Angle.MID);
+              intake.move(Intake.Angle.MID);
         }
 
         @Override

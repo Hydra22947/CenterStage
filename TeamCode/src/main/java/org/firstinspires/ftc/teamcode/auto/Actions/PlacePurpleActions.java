@@ -237,7 +237,7 @@ public class PlacePurpleActions {
     }
 
 
-    public class MoveIntake implements Action {
+    public  class MoveIntake implements Action {
         Intake.Angle angle;
         public MoveIntake(Intake.Angle angle) {
             this.angle = angle;
