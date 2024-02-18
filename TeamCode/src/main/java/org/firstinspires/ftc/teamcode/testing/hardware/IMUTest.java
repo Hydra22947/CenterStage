@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.testing.hardware;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 
 @Config
 @TeleOp(name = "IMU Test", group = "tests")
+@Disabled
 public class IMUTest extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();

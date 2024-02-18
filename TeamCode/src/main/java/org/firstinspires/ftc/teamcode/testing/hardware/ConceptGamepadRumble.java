@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.testing.hardware;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="Concept: Gamepad Rumble", group ="Concept")
+@Disabled
 public class ConceptGamepadRumble extends LinearOpMode
 {
     boolean secondHalf = false;                 // Use to prevent multiple half-time warning rumbles.
