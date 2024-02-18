@@ -167,13 +167,17 @@ public class AutoRightBlueLeft extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
                         .afterDisp(0.9, depositActions.readyForDeposit())
                         .afterDisp(1, placePurpleActions.moveIntake(Intake.Angle.MID))
-                        .splineToLinearHeading(new Pose2d(51.2, 36, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(51.2, 37, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(deposit)
                         .waitSeconds(.5)
                         .setTangent(Math.toRadians(90))
                         .stopAndAdd(retractDeposit)
+                        //Park - Close to other board
                         .lineToY(10)
-                        //Park
+
+                        //Park - Corner
+                        //.lineToY(64)
+
                         .build();
 
         waitForStart();

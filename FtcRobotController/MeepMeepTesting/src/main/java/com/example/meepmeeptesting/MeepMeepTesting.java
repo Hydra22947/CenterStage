@@ -2,6 +2,7 @@ package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.Pose2d;
 
+import com.acmerobotics.roadrunner.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -244,11 +245,8 @@ public class MeepMeepTesting {
 
     public static void blueMidRight(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
-                        .setTangent(Math.toRadians(80))
-                .lineToYLinearHeading(30, Math.toRadians(-180))
-                        .setTangent(0)
-                .lineToX(-36)
-                .setTangent(0)
+                .splineToLinearHeading(new Pose2d(51.2, -33, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+
                 .splineToLinearHeading(new Pose2d(-45, 12.5, Math.toRadians(-100)), Math.toRadians(-180))
               /*  .waitSeconds(1)
                 .setTangent(0)
@@ -292,9 +290,12 @@ public class MeepMeepTesting {
 
     public static void nigger(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
-                .lineToYLinearHeading(12 ,Math.toRadians(-55))
-         //       .waitSeconds(.1)
-            //    .lineToYLinearHeading(14 ,Math.toRadians(0))
+                .lineToYLinearHeading(12.5,Math.toRadians(-75))
+                .lineToYLinearHeading(14.5 ,Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(30, 9),Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(51.2 ,28.8, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .setTangent(Math.toRadians(90))
+                .lineToY(64)
 
                 .build());
     }
@@ -306,7 +307,7 @@ public class MeepMeepTesting {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
 
                 .build();
-   blueMidRight(myBot);
+   nigger(myBot);
         setAnimation(meepMeep, myBot);
 
     }

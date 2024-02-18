@@ -173,8 +173,11 @@ public class AutoRightBlueMiddle extends LinearOpMode {
                     .waitSeconds(.5)
                     .setTangent(Math.toRadians(90))
                     .stopAndAdd(retractDeposit)
+                    //Park - Close to other board
                     .lineToY(10)
-                    //Park
+
+                    //Park - Corner
+                    //.lineToY(64)
                     .build();
 
         waitForStart();

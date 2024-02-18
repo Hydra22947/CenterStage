@@ -4,6 +4,8 @@ package org.firstinspires.ftc.teamcode.auto.RedAuto;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
 
+import static org.firstinspires.ftc.teamcode.auto.AutoSettings.writeToFile;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -54,7 +56,7 @@ public class AutoLeftRedRight extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        robot.init(hardwareMap, telemetry, autoConstants.startPoseRedLeft);
+        robot.init(hardwareMap, telemetry, autoConstants.startPoseBlueRight);
 
         autoConstants = new AutoConstants();
 
@@ -71,8 +73,6 @@ public class AutoLeftRedRight extends LinearOpMode {
         placePurpleActions = new PlacePurpleActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
-
-
         SequentialAction deposit = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.MID),
                 depositActions.readyForDeposit(),
@@ -80,44 +80,32 @@ public class AutoLeftRedRight extends LinearOpMode {
                 new SleepAction(0.5),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600)
         );
-
-        SequentialAction placePixel = new SequentialAction(
-                new SleepAction(0.5),
-                depositActions.retractDeposit()
-        );
-
-        SequentialAction intakePixel = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.TOP_5),
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
-                new SleepAction(.75),
-                placePurpleActions.openExtension(710),
-                new SleepAction(1),
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.CLOSE, ClawSide.BOTH),
-                new SleepAction(0.5),
-                placePurpleActions.moveStack(),
-                placePurpleActions.closeExtension()
-        );
-        SequentialAction readyIntake = new SequentialAction(
-                placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
+        SequentialAction transfer = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
-                new SleepAction(0.75),
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
-                new SleepAction(.75),
-                placePurpleActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
-        );
-
-
-        SequentialAction placePurplePixel = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
-                new SleepAction(.1),
-                placePurpleActions.openExtension(550),
-                new SleepAction(.75),
+                new SleepAction(0.5),
+                placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.RIGHT),
                 placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
                 new SleepAction(.5),
-                placePurpleActions.closeExtension(),
-                placePurpleActions.moveIntake(Intake.Angle.MID),
-                new SleepAction(1)
+                placePurpleActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
         );
+        SequentialAction placePurplePixelClose = new SequentialAction(
+                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
+                new SleepAction(1),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
+                new SleepAction(0.2),
+                placePurpleActions.moveIntake(Intake.Angle.MID),
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
+        );
+        SequentialAction placePurplePixel = new SequentialAction(
+                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
+                placePurpleActions.openExtension(1640),
+                new SleepAction(1.45),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
+                new SleepAction(0.1),
+                placePurpleActions.moveIntake(Intake.Angle.MID),
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
+        );
+
 
         SequentialAction retractDeposit = new SequentialAction(
                 depositActions.retractDeposit()
@@ -126,6 +114,22 @@ public class AutoLeftRedRight extends LinearOpMode {
 
         SequentialAction releaseIntake = new SequentialAction(
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN)
+        );
+
+        SequentialAction intakePixel = new SequentialAction(
+                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
+
+                placePurpleActions.openExtension(520),
+                new SleepAction(1),
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
+                new SleepAction(0.5),
+                placePurpleActions.moveStack(),
+                placePurpleActions.closeExtension()
+
+        );
+        SequentialAction readyIntake = new SequentialAction(
+                placePurpleActions.moveIntake(Intake.Angle.INTAKE)
         );
 
 
@@ -141,26 +145,32 @@ public class AutoLeftRedRight extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-         Action traj =
+        Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .lineToYLinearHeading(-12 ,Math.toRadians(125))
-                        .stopAndAdd(placePurplePixel)
-                        .setTangent(0)
-                        .waitSeconds(.1)
-                        .stopAndAdd(placePurpleActions.closeExtension())
-                        .splineToSplineHeading(new Pose2d(-37, -9.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .lineToYLinearHeading(-12.5,Math.toRadians(-75))
+                        .stopAndAdd(placePurplePixelClose)
+                        .waitSeconds(.2)
+
+                        .lineToYLinearHeading(-14.5 ,Math.toRadians(0))
+                        .waitSeconds(.5)
                         .stopAndAdd(intakePixel)
                         .waitSeconds(2)
+                        .stopAndAdd(transfer)
+
                         .stopAndAdd(readyIntake)
                         .strafeToLinearHeading(new Vector2d(30, -9),Math.toRadians(0))
                         .afterDisp(0.9 ,depositActions.readyForDeposit())
                         .afterDisp(1 ,placePurpleActions.moveIntake(Intake.Angle.MID))
-                        .splineToLinearHeading(new Pose2d(52 ,-38.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(51.2 ,-28.8, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(deposit)
                         .waitSeconds(.5)
                         .setTangent(Math.toRadians(90))
                         .stopAndAdd(retractDeposit)
-                        .lineToY(-10)
+                        //Park - Close to other board
+                        .lineToY(10)
+
+                        //Park - Corner
+                        //.lineToY(64)
                         .build();
 
         waitForStart();
@@ -172,6 +182,7 @@ public class AutoLeftRedRight extends LinearOpMode {
                 updateActions.updateSystems()
         ));
 
+        writeToFile(robot.drive.pose.heading.log());
     }
 
 
