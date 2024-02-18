@@ -77,7 +77,7 @@ public class AutoRightBlueRight extends LinearOpMode {
 
         SequentialAction deposit = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                depositActions.readyForDeposit(1200),
+                depositActions.readyForDeposit(1300),
                 placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
                 new SleepAction(0.75),
                 placePurpleActions.moveClaw(Claw.ClawState.INTERMEDIATE, ClawSide.BOTH),
@@ -124,7 +124,7 @@ public class AutoRightBlueRight extends LinearOpMode {
                 placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
                 placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
                 new SleepAction(1),
-                placePurpleActions.openExtension(650),
+                placePurpleActions.openExtension(700),
                 new SleepAction(1),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.5),
@@ -133,7 +133,8 @@ public class AutoRightBlueRight extends LinearOpMode {
 
         );
         SequentialAction readyIntake = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.INTAKE)
+                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
+                new SleepAction(1)
         );
 
 
@@ -152,14 +153,13 @@ public class AutoRightBlueRight extends LinearOpMode {
         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
 
-                        .strafeToLinearHeading(new Vector2d(-32, 35), Math.toRadians(0))
-                        .stopAndAdd(readyIntake)
+                        .strafeToLinearHeading(new Vector2d(-32, 28), Math.toRadians(0))
                         .waitSeconds(.2)
-                        .lineToX(-36)
-                        .strafeToLinearHeading(new Vector2d(-35,12), Math.toRadians(0))
-
+                        .lineToX(-48)
+                        .lineToX(-32)
+                        .stopAndAdd(readyIntake)
                         .stopAndAdd(placePurplePixelClose)
-                        .lineToYLinearHeading(10.9, Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-40,10.9), Math.toRadians(0))
                         .waitSeconds(.5)
                         .stopAndAdd(intakePixel)
                         .waitSeconds(2)
@@ -167,9 +167,9 @@ public class AutoRightBlueRight extends LinearOpMode {
 
                         .stopAndAdd(readyIntake)
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
-                        .afterDisp(0.9, depositActions.readyForDeposit(1200))
-                        .afterDisp(1, placePurpleActions.moveIntake(Intake.Angle.MID))
-                        .splineToLinearHeading(new Pose2d(51.2, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .stopAndAdd(placePurpleActions.moveIntake(Intake.Angle.MID))
+                        .stopAndAdd(depositActions.readyForDeposit(1300))
+                        .splineToLinearHeading(new Pose2d(51.3, 27.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(deposit)
                         .waitSeconds(.5)
                         .stopAndAdd(retractDeposit)
