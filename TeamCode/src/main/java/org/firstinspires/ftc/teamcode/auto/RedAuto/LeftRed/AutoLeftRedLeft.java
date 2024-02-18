@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.auto.RedAuto;
+package org.firstinspires.ftc.teamcode.auto.RedAuto.LeftRed;
 
 // RR-specific imports
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
-
 import static org.firstinspires.ftc.teamcode.auto.AutoSettings.writeToFile;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -32,8 +31,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "2+1 - Auto Left Red Right")
-public class AutoLeftRedRight extends LinearOpMode {
+@Autonomous(name = "2+0 - Auto Red Left LEFT")
+public class AutoLeftRedLeft extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 
@@ -56,7 +55,7 @@ public class AutoLeftRedRight extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        robot.init(hardwareMap, telemetry, autoConstants.startPoseBlueRight);
+        robot.init(hardwareMap, telemetry, autoConstants.startPoseRedLeft);
 
         autoConstants = new AutoConstants();
 
@@ -69,7 +68,7 @@ public class AutoLeftRedRight extends LinearOpMode {
         intakeExtension.setAuto(true);
         elevator.setAuto(true);
 
-        depositActions = new DepositActions(elevator, intake, claw, outtake , intakeExtension);
+        depositActions = new DepositActions(elevator, intake, claw, outtake, intakeExtension);
         placePurpleActions = new PlacePurpleActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
@@ -78,7 +77,7 @@ public class AutoLeftRedRight extends LinearOpMode {
                 depositActions.readyForDeposit(1100),
                 placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
                 new SleepAction(0.5),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600)
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 600)
         );
         SequentialAction transfer = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
@@ -89,10 +88,10 @@ public class AutoLeftRedRight extends LinearOpMode {
                 placePurpleActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
         );
         SequentialAction placePurplePixelClose = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
-                new SleepAction(1),
+
+                new SleepAction(1.5),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
-                new SleepAction(0.2),
+                new SleepAction(1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
         );
@@ -119,8 +118,8 @@ public class AutoLeftRedRight extends LinearOpMode {
         SequentialAction intakePixel = new SequentialAction(
                 placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
                 placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
-
-                placePurpleActions.openExtension(520),
+                new SleepAction(.7),
+                placePurpleActions.openExtension(750),
                 new SleepAction(1),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.5),
@@ -135,7 +134,7 @@ public class AutoLeftRedRight extends LinearOpMode {
 
         while (opModeInInit() && !isStopRequested()) {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
-            intake.setAngle(Intake.Angle.OUTTAKE);
+            //  intake.setAngle(Intake.Angle.OUTTAKE);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");
@@ -145,36 +144,41 @@ public class AutoLeftRedRight extends LinearOpMode {
 
         if (isStopRequested()) return;
 
+
+
         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .lineToYLinearHeading(-12.5,Math.toRadians(-75))
-                        .stopAndAdd(placePurplePixelClose)
-                        .waitSeconds(.2)
 
-                        .lineToYLinearHeading(-14.5 ,Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-32, -28), Math.toRadians(0))
+                        .waitSeconds(.2)
+                        .lineToX(-48)
+                        .lineToX(-32)
+                        .stopAndAdd(readyIntake)
+                        .stopAndAdd(placePurplePixelClose)
+                        .strafeToLinearHeading(new Vector2d(-40,-11.25), Math.toRadians(0))
                         .waitSeconds(.5)
                         .stopAndAdd(intakePixel)
                         .waitSeconds(2)
                         .stopAndAdd(transfer)
 
                         .stopAndAdd(readyIntake)
-                        .strafeToLinearHeading(new Vector2d(30, -9),Math.toRadians(0))
-                        .afterDisp(0.9 ,depositActions.readyForDeposit(1100))
-                        .afterDisp(1 ,placePurpleActions.moveIntake(Intake.Angle.MID))
-                        .splineToLinearHeading(new Pose2d(51.2 ,-28.8, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .strafeToLinearHeading(new Vector2d(30, -9), Math.toRadians(0))
+                        .stopAndAdd(placePurpleActions.moveIntake(Intake.Angle.MID))
+                        .stopAndAdd(depositActions.readyForDeposit(1300))
+                        .splineToLinearHeading(new Pose2d(51.3, -30.25, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(deposit)
                         .waitSeconds(.5)
-                        .setTangent(Math.toRadians(90))
                         .stopAndAdd(retractDeposit)
+                        .setTangent(Math.toRadians(90))
+
                         //Park - Close to other board
-                        .lineToY(10)
+                        //.lineToY(10)
 
                         //Park - Corner
                         //.lineToY(64)
                         .build();
 
         waitForStart();
-
         if (isStopRequested()) return;
 
         runBlocking(new ParallelAction(
