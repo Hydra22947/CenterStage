@@ -71,7 +71,7 @@ public class AutoRightBlueRight extends LinearOpMode {
         intakeExtension.setAuto(true);
         elevator.setAuto(true);
 
-        depositActions = new DepositActions(elevator, intake, claw, outtake , intakeExtension);
+        depositActions = new DepositActions(elevator, intake, claw, outtake, intakeExtension);
         placePurpleActions = new PlacePurpleActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
@@ -151,34 +151,38 @@ public class AutoRightBlueRight extends LinearOpMode {
 
         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .lineToYLinearHeading(12.5,Math.toRadians(-75))
-                        .stopAndAdd(placePurplePixelClose)
-                        .waitSeconds(.2)
 
-                        .lineToYLinearHeading(10.9 ,Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-32, 35), Math.toRadians(0))
+                        .stopAndAdd(readyIntake)
+                        .waitSeconds(.2)
+                        .lineToX(-36)
+                        .strafeToLinearHeading(new Vector2d(-35,12), Math.toRadians(0))
+
+                        .stopAndAdd(placePurplePixelClose)
+                        .lineToYLinearHeading(10.9, Math.toRadians(0))
                         .waitSeconds(.5)
                         .stopAndAdd(intakePixel)
                         .waitSeconds(2)
                         .stopAndAdd(transfer)
 
                         .stopAndAdd(readyIntake)
-                        .strafeToLinearHeading(new Vector2d(30, 9),Math.toRadians(0))
-                        .afterDisp(0.9 ,depositActions.readyForDeposit(1200))
-                        .afterDisp(1 ,placePurpleActions.moveIntake(Intake.Angle.MID))
-                        .splineToLinearHeading(new Pose2d(51.2 ,28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
+                        .afterDisp(0.9, depositActions.readyForDeposit(1200))
+                        .afterDisp(1, placePurpleActions.moveIntake(Intake.Angle.MID))
+                        .splineToLinearHeading(new Pose2d(51.2, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(deposit)
                         .waitSeconds(.5)
-                        .setTangent(Math.toRadians(90))
                         .stopAndAdd(retractDeposit)
+                        .setTangent(Math.toRadians(90))
+
                         //Park - Close to other board
-                        .lineToY(10)
+                        //.lineToY(10)
 
                         //Park - Corner
                         //.lineToY(64)
                         .build();
 
         waitForStart();
-
         if (isStopRequested()) return;
 
         runBlocking(new ParallelAction(
