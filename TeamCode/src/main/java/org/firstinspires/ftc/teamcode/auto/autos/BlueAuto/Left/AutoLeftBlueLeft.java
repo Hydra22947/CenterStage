@@ -74,7 +74,7 @@ public class AutoLeftBlueLeft extends LinearOpMode {
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
         SequentialAction deposit = new SequentialAction(
-                depositActions.readyForDeposit(),
+                depositActions.readyForDeposit(950),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600),
                 new SleepAction(0.5),
                 depositActions.retractDeposit()
@@ -82,8 +82,9 @@ public class AutoLeftBlueLeft extends LinearOpMode {
 
         SequentialAction placePurplePixel = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
-                placePurpleActions.openExtension(650),
-                new SleepAction(.2),
+                new SleepAction(.5),
+                placePurpleActions.openExtension(640),
+                new SleepAction(1),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN),
                 new SleepAction(0.1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
@@ -115,18 +116,18 @@ public class AutoLeftBlueLeft extends LinearOpMode {
 
         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .stopAndAdd(depositActions.readyForDeposit())
+                        .stopAndAdd(depositActions.readyForDeposit(950))
                         .splineToLinearHeading(new Pose2d(48, 34.25, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixel)
                         .setTangent(0)
                         .stopAndAdd(placePurpleActions.closeExtension())
                         .waitSeconds(.1)
-                        .strafeTo(new Vector2d(50.5, 38))
+                        .strafeTo(new Vector2d(50.5, 38.5))
                         .stopAndAdd(deposit)
                         .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
-                        .strafeTo(new Vector2d(55, 60))
+                        .strafeTo(new Vector2d(45, 60))
                         .stopAndAdd(retractDeposit)
                         .build();
 

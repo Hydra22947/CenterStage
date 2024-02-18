@@ -74,7 +74,7 @@ public class AutoLeftBlueRight extends LinearOpMode {
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
         SequentialAction deposit = new SequentialAction(
-                depositActions.readyForDeposit(),
+                depositActions.readyForDeposit(950),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600),
                 new SleepAction(0.5),
                 depositActions.retractDeposit()
@@ -82,6 +82,7 @@ public class AutoLeftBlueRight extends LinearOpMode {
 
         SequentialAction placePurplePixel = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
+                new SleepAction(0.5),
                 placePurpleActions.openExtension(1640),
                 new SleepAction(1.45),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
@@ -115,19 +116,19 @@ public class AutoLeftBlueRight extends LinearOpMode {
 
         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .stopAndAdd(depositActions.readyForDeposit())
+                        .stopAndAdd(depositActions.readyForDeposit(950))
                         .splineToLinearHeading(new Pose2d(44.75, 30.25, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixel)
                         .setTangent(0)
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
                         .waitSeconds(.1)
-                        .strafeTo(new Vector2d(50.5, 29.5))
+                        .strafeTo(new Vector2d(50.5, 28))
                         .stopAndAdd(deposit)
                         .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
-                        .strafeTo(new Vector2d(55, 60))
+                        .strafeTo(new Vector2d(45, 60))
                         .stopAndAdd(retractDeposit)
                         .build();
 

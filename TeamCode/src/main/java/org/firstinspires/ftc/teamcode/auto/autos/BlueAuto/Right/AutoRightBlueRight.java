@@ -77,10 +77,12 @@ public class AutoRightBlueRight extends LinearOpMode {
 
         SequentialAction deposit = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                depositActions.readyForDeposit(),
+                depositActions.readyForDeposit(1200),
                 placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
-                new SleepAction(0.5),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600)
+                new SleepAction(0.75),
+                placePurpleActions.moveClaw(Claw.ClawState.INTERMEDIATE, ClawSide.BOTH),
+                new SleepAction(0.75),
+                placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH)
         );
         SequentialAction transfer = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
@@ -94,7 +96,7 @@ public class AutoRightBlueRight extends LinearOpMode {
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
                 new SleepAction(1),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
-                new SleepAction(0.2),
+                new SleepAction(1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
         );
@@ -121,8 +123,8 @@ public class AutoRightBlueRight extends LinearOpMode {
         SequentialAction intakePixel = new SequentialAction(
                 placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
                 placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
-
-                placePurpleActions.openExtension(520),
+                new SleepAction(1),
+                placePurpleActions.openExtension(650),
                 new SleepAction(1),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.5),
@@ -153,7 +155,7 @@ public class AutoRightBlueRight extends LinearOpMode {
                         .stopAndAdd(placePurplePixelClose)
                         .waitSeconds(.2)
 
-                        .lineToYLinearHeading(14.5 ,Math.toRadians(0))
+                        .lineToYLinearHeading(10.9 ,Math.toRadians(0))
                         .waitSeconds(.5)
                         .stopAndAdd(intakePixel)
                         .waitSeconds(2)
@@ -161,9 +163,9 @@ public class AutoRightBlueRight extends LinearOpMode {
 
                         .stopAndAdd(readyIntake)
                         .strafeToLinearHeading(new Vector2d(30, 9),Math.toRadians(0))
-                        .afterDisp(0.9 ,depositActions.readyForDeposit())
+                        .afterDisp(0.9 ,depositActions.readyForDeposit(1200))
                         .afterDisp(1 ,placePurpleActions.moveIntake(Intake.Angle.MID))
-                        .splineToLinearHeading(new Pose2d(51.2 ,28.8, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(51.2 ,28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(deposit)
                         .waitSeconds(.5)
                         .setTangent(Math.toRadians(90))

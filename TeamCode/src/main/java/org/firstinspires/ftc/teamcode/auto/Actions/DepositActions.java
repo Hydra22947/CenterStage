@@ -30,7 +30,6 @@ public class DepositActions {
     private Claw claw;
 
     private IntakeExtension extension;
-    public Cycles currentCycle;
 
 
     public DepositActions(Elevator elevator, Intake intake, Claw claw, Outtake outtake, IntakeExtension extension) {
@@ -39,25 +38,12 @@ public class DepositActions {
         this.extension = extension;
         this.claw = claw;
         this.outtake = outtake;
-        this.currentCycle = Cycles.PRELOAD;
     }
 
 
-    private void moveElevatorByTraj() {
-        switch (currentCycle) {
-            case PRELOAD:
-                elevator.setTarget(1100);
-                elevator.setPidControl();
-                break;
-            case FIRST_CYCLE:
-                elevator.setTarget(1500);
-                elevator.setPidControl();
-                break;
-            case SECOND_CYCLE:
-                elevator.setTarget(1550);
-                elevator.setPidControl();
-                break;
-        }
+    private void moveElevatorByTraj(int elevatorTarget) {
+        elevator.setTarget(elevatorTarget);
+        elevator.setPidControl();
     }
 
     //This function will prepare the intake and outtake  for deposit
@@ -88,8 +74,10 @@ public class DepositActions {
 
     public class ReadyForDeposit implements Action {
         Stopwatch readyForDepositTimer;
+        int elevator;
 
-        public ReadyForDeposit() {
+        public ReadyForDeposit(int elevator) {
+            this.elevator = elevator;
             readyForDepositTimer = new Stopwatch();
             readyForDepositTimer.reset();
               intake.move(Intake.Angle.MID);
@@ -98,7 +86,7 @@ public class DepositActions {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
-            moveElevatorByTraj();
+            moveElevatorByTraj(elevator);
             outtake.setAngle(Outtake.Angle.OUTTAKE);
 
             return false;
@@ -125,7 +113,6 @@ public class DepositActions {
         public PlacePixel(Cycles current, long d) {
             placePixelTimer = new Stopwatch();
             placePixelTimer.reset();
-            currentCycle = current;
             delay = d;
         }
 
@@ -156,8 +143,8 @@ public class DepositActions {
         return new RetractDeposit();
     }
 
-    public Action readyForDeposit() {
-        return new ReadyForDeposit();
+    public Action readyForDeposit(int elevator) {
+        return new ReadyForDeposit(elevator);
     }
 
     public Action placePixel(Cycles currentCycle, long d) {

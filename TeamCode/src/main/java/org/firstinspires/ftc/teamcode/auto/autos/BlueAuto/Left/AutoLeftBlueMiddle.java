@@ -74,7 +74,7 @@ public class AutoLeftBlueMiddle extends LinearOpMode {
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
         SequentialAction deposit = new SequentialAction(
-                depositActions.readyForDeposit(),
+                depositActions.readyForDeposit(950),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600),
                 new SleepAction(0.5),
                 depositActions.retractDeposit()
@@ -82,8 +82,9 @@ public class AutoLeftBlueMiddle extends LinearOpMode {
 
         SequentialAction placePurplePixel = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
+                new SleepAction(0.5),
                 placePurpleActions.openExtension(820),
-                new SleepAction(.4),
+                new SleepAction(1),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN),
                 new SleepAction(0.1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
@@ -115,7 +116,7 @@ public class AutoLeftBlueMiddle extends LinearOpMode {
 
         Action traj =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .stopAndAdd(depositActions.readyForDeposit())
+                        .stopAndAdd(depositActions.readyForDeposit(950))
                         .splineToLinearHeading(new Pose2d(40 , 25, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixel)
                         .setTangent(0)
@@ -127,7 +128,7 @@ public class AutoLeftBlueMiddle extends LinearOpMode {
                         .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
-                        .strafeTo(new Vector2d(55, 60))
+                        .strafeTo(new Vector2d(45, 60))
                         .stopAndAdd(retractDeposit)
                         .build();
 

@@ -76,7 +76,7 @@ public class AutoLeftRedMiddle extends LinearOpMode {
 
         SequentialAction deposit = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                depositActions.readyForDeposit(),
+                depositActions.readyForDeposit(1100),
                 placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
                 new SleepAction(0.5),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 600)
@@ -166,7 +166,7 @@ public class AutoLeftRedMiddle extends LinearOpMode {
 
                         .stopAndAdd(readyIntake)
                         .strafeToLinearHeading(new Vector2d(30, -9), Math.toRadians(0))
-                        .afterDisp(0.9, depositActions.readyForDeposit())
+                        .afterDisp(0.9, depositActions.readyForDeposit(1100))
                         .afterDisp(1, placePurpleActions.moveIntake(Intake.Angle.MID))
                         .splineToLinearHeading(new Pose2d(51.2, -33, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(deposit)
