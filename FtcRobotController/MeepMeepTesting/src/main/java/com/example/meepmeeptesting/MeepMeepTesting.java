@@ -244,8 +244,10 @@ public class MeepMeepTesting {
 
     public static void blueMidRight(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
-                .setTangent(Math.toRadians(70))
-                .lineToY(12)
+                        .setTangent(Math.toRadians(80))
+                .lineToYLinearHeading(30, Math.toRadians(-180))
+                        .setTangent(0)
+                .lineToX(-36)
                 .setTangent(0)
                 .splineToLinearHeading(new Pose2d(-45, 12.5, Math.toRadians(-100)), Math.toRadians(-180))
               /*  .waitSeconds(1)
