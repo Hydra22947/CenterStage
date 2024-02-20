@@ -111,10 +111,10 @@ public class AutoLeftRed extends LinearOpMode {
         SequentialAction placePurplePixelCloseRedLeft = new SequentialAction(
 
                 new SleepAction(1.5),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
         SequentialAction retractDepositRedLeft = new SequentialAction(
@@ -155,10 +155,10 @@ public class AutoLeftRed extends LinearOpMode {
         SequentialAction placePurplePixelCloseRedMiddle = new SequentialAction(
 
                 new SleepAction(1.5),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
         SequentialAction retractDepositRedMiddle = new SequentialAction(
@@ -201,10 +201,10 @@ public class AutoLeftRed extends LinearOpMode {
         SequentialAction placePurplePixelCloseRedRight = new SequentialAction(
 
                 new SleepAction(1.5),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
         SequentialAction retractDepositRedRight = new SequentialAction(
@@ -239,21 +239,21 @@ public class AutoLeftRed extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(-40,-11.25), Math.toRadians(0))
                         .waitSeconds(.5)
                         .stopAndAdd(intakePixelRedLeft)
-                        .waitSeconds(10)
+                        .waitSeconds(5)
                         .stopAndAdd(transferRedLeft)
 
                         .stopAndAdd(readyIntakeRedLeft)
                         .strafeToLinearHeading(new Vector2d(30, -9), Math.toRadians(0))
                         .stopAndAdd(placePurpleActions.moveIntake(Intake.Angle.MID))
                         .stopAndAdd(depositActions.readyForDeposit(1300))
-                        .splineToLinearHeading(new Pose2d(51.3, -30.25, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(51.55, -30.25, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositRedLeft)
                         .waitSeconds(.5)
                         .stopAndAdd(retractDepositRedLeft)
                         .setTangent(Math.toRadians(90))
 
                         //Park - Close to other board
-                        .lineToY(10)
+                        .lineToY(-10)
                         .turnTo(Math.toRadians(90))
 
                         //Park - Corner
@@ -270,17 +270,17 @@ public class AutoLeftRed extends LinearOpMode {
                         .strafeTo(new Vector2d(-33, -10.5))
                         .stopAndAdd(placePurplePixelCloseRedMiddle)
                         .waitSeconds(.2)
-                        .strafeToLinearHeading(new Vector2d(-38.5, -11), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-38.5, -11.5), Math.toRadians(0))
                         .waitSeconds(.5)
                         .stopAndAdd(intakePixelRedMiddle)
-                        .waitSeconds(10)
+                        .waitSeconds(5)
                         .stopAndAdd(transferRedMiddle)
 
                         .stopAndAdd(readyIntakeRedMiddle)
                         .strafeToLinearHeading(new Vector2d(30, -9), Math.toRadians(0))
                         .afterDisp(0.9, depositActions.readyForDeposit(1100))
                         .afterDisp(1, placePurpleActions.moveIntake(Intake.Angle.MID))
-                        .splineToLinearHeading(new Pose2d(51.3, -32.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(51.55, -32.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositRedMiddle)
                         .waitSeconds(.5)
                         .setTangent(Math.toRadians(90))
@@ -306,14 +306,14 @@ public class AutoLeftRed extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(-33, -11.5),Math.toRadians(0))
                         .waitSeconds(.5)
                         .stopAndAdd(intakePixelRedRight)
-                        .waitSeconds(10)
+                        .waitSeconds(5)
                         .stopAndAdd(transferRedRight)
 
                         .stopAndAdd(readyIntakeRedRight)
                         .strafeToLinearHeading(new Vector2d(30, -9), Math.toRadians(0))
                         .afterDisp(0.9, depositActions.readyForDeposit(1100))
                         .afterDisp(1, placePurpleActions.moveIntake(Intake.Angle.MID))
-                        .splineToLinearHeading(new Pose2d(51.2, -38.25, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(51.45, -38.25, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositRedRight)
                         .waitSeconds(.5)
                         .setTangent(Math.toRadians(90))

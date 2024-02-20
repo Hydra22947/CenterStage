@@ -105,10 +105,10 @@ public class AutoRightRed extends LinearOpMode {
                 new SleepAction(0.5),
                 placePurpleActions.openExtension(1640),
                 new SleepAction(1.45),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
         SequentialAction retractDepositRedLeft = new SequentialAction(
@@ -127,10 +127,10 @@ public class AutoRightRed extends LinearOpMode {
                 new SleepAction(0.5),
                 placePurpleActions.openExtension(820),
                 new SleepAction(1),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.75),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.LEFT_CLOSE)
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
         SequentialAction retractDepositRedMiddle = new SequentialAction(
@@ -151,10 +151,10 @@ public class AutoRightRed extends LinearOpMode {
                 new SleepAction(.5),
                 placePurpleActions.openExtension(640),
                 new SleepAction(1),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.LEFT_CLOSE)
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
         SequentialAction retractDepositRedRight = new SequentialAction(
@@ -170,13 +170,13 @@ public class AutoRightRed extends LinearOpMode {
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
                         .waitSeconds(.1)
-                        .strafeTo(new Vector2d(50.5, -28))
+                        .strafeTo(new Vector2d(50.75, -28))
                         .stopAndAdd(depositRedLeft)
                         .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
-                        .strafeTo(new Vector2d(45, -60))
                         .stopAndAdd(retractDepositRedLeft)
+                        .strafeTo(new Vector2d(45, -60))
                         .turnTo(Math.toRadians(90))
                         .build();
 
@@ -188,14 +188,14 @@ public class AutoRightRed extends LinearOpMode {
                         .setTangent(0)
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
-                        .splineToLinearHeading(new Pose2d(52, -36.5, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(52.25, -36.5, Math.toRadians(0)), Math.toRadians(0))
                         .waitSeconds(.1)
                         .stopAndAdd(depositRedMiddle)
                         .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
-                        .strafeTo(new Vector2d(45, -60))
                         .stopAndAdd(retractDepositRedMiddle)
+                        .strafeTo(new Vector2d(45, -60))
                         .turnTo(Math.toRadians(90))
 
                         .build();
@@ -203,7 +203,7 @@ public class AutoRightRed extends LinearOpMode {
         Action trajRedRight =
                 robot.drive.actionBuilder(robot.drive.pose)
                         .stopAndAdd(depositActions.readyForDeposit(950))
-                        .splineToLinearHeading(new Pose2d(48, -31.25, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(48.25, -31.25, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixelRedRight)
                         .setTangent(0)
                         .stopAndAdd(placePurpleActions.closeExtension())
@@ -213,8 +213,8 @@ public class AutoRightRed extends LinearOpMode {
                         .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
-                        .strafeTo(new Vector2d(45, -60))
                         .stopAndAdd(retractDepositRedRight)
+                        .strafeTo(new Vector2d(45, -60))
                         .turnTo(Math.toRadians(90))
                         .build();
 

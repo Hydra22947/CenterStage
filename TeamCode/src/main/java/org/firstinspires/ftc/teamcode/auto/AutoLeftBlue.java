@@ -106,10 +106,10 @@ public class AutoLeftBlue extends LinearOpMode {
                 new SleepAction(.5),
                 placePurpleActions.openExtension(640),
                 new SleepAction(1.5),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.LEFT_CLOSE)
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
         SequentialAction retractDepositBlueLeft = new SequentialAction(
@@ -118,7 +118,7 @@ public class AutoLeftBlue extends LinearOpMode {
 
         SequentialAction depositBlueMiddle = new SequentialAction(
 
-                depositActions.readyForDeposit(950),
+                depositActions.readyForDeposit(1050),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600),
                 new SleepAction(0.5),
                 depositActions.retractDeposit()
@@ -129,10 +129,10 @@ public class AutoLeftBlue extends LinearOpMode {
                 new SleepAction(0.5),
                 placePurpleActions.openExtension(820),
                 new SleepAction(1.5),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.LEFT_CLOSE)
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
         SequentialAction retractDepositBlueMiddle = new SequentialAction(
@@ -151,10 +151,10 @@ public class AutoLeftBlue extends LinearOpMode {
                 new SleepAction(0.5),
                 placePurpleActions.openExtension(1640),
                 new SleepAction(2.45),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
         SequentialAction retractDepositBlueRight = new SequentialAction(
@@ -169,7 +169,7 @@ public class AutoLeftBlue extends LinearOpMode {
                         .setTangent(0)
                         .stopAndAdd(placePurpleActions.closeExtension())
                         .waitSeconds(.1)
-                        .strafeTo(new Vector2d(50.5, 38.5))
+                        .strafeTo(new Vector2d(50.75, 38.5))
                         .stopAndAdd(depositBlueLeft)
                         .waitSeconds(0.5)
                         //Park
@@ -187,7 +187,7 @@ public class AutoLeftBlue extends LinearOpMode {
                         .setTangent(0)
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
-                        .splineToLinearHeading(new Pose2d(52, 33.25, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(52.25, 33.25, Math.toRadians(0)), Math.toRadians(0))
                         .waitSeconds(.1)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(0.5)
@@ -207,7 +207,7 @@ public class AutoLeftBlue extends LinearOpMode {
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
                         .waitSeconds(.1)
-                        .strafeTo(new Vector2d(50.5, 28))
+                        .strafeTo(new Vector2d(50.75, 28))
                         .stopAndAdd(depositBlueRight)
                         .waitSeconds(0.5)
                         //Park

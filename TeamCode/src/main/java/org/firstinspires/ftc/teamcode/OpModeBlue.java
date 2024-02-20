@@ -229,7 +229,7 @@ public class OpModeBlue extends LinearOpMode {
     {
         switch (intakeState) {
             case RETRACT:
-                intakeExtension.setTarget(-20);
+                intakeExtension.setTarget(-35);
 
                 if(gamepad2.right_trigger != 0 && resetRightTrigger)
                 {
@@ -336,7 +336,7 @@ public class OpModeBlue extends LinearOpMode {
                 }
                 else
                 {
-                    intakeExtension.setTarget(-10);
+                    intakeExtension.setTarget(-35);
                 }
 
                 if (gamepad1.right_trigger != 0)

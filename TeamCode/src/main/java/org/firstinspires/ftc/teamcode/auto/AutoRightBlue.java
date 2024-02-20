@@ -112,10 +112,10 @@ public class AutoRightBlue extends LinearOpMode {
         SequentialAction placePurplePixelCloseBlueLeft = new SequentialAction(
 
                 new SleepAction(1.5),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
 
@@ -160,10 +160,10 @@ public class AutoRightBlue extends LinearOpMode {
         SequentialAction placePurplePixelCloseBlueMiddle = new SequentialAction(
 
                 new SleepAction(1.5),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
         SequentialAction retractDepositBlueMiddle = new SequentialAction(
@@ -207,10 +207,10 @@ public class AutoRightBlue extends LinearOpMode {
         SequentialAction placePurplePixelCloseBlueRight = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
                 new SleepAction(1),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.RIGHT_OPEN),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE)
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
 
@@ -256,7 +256,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
                         .afterDisp(0.9, depositActions.readyForDeposit(1100))
                         .afterDisp(1, placePurpleActions.moveIntake(Intake.Angle.MID))
-                        .splineToLinearHeading(new Pose2d(51.2, 34.25, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(51.45, 34.25, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueLeft)
                         .waitSeconds(.5)
                         .setTangent(Math.toRadians(90))
@@ -292,7 +292,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
                         .afterDisp(0.9, depositActions.readyForDeposit(1100))
                         .afterDisp(1, placePurpleActions.moveIntake(Intake.Angle.MID))
-                        .splineToLinearHeading(new Pose2d(51.1, 33.2, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(51.35, 33.2, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
                         .setTangent(Math.toRadians(90))
@@ -322,7 +322,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
                         .stopAndAdd(placePurpleActions.moveIntake(Intake.Angle.MID))
                         .stopAndAdd(depositActions.readyForDeposit(1300))
-                        .splineToLinearHeading(new Pose2d(51.3, 27.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(51.8, 27.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueRight)
                         .waitSeconds(.5)
                         .stopAndAdd(retractDepositBlueRight)
