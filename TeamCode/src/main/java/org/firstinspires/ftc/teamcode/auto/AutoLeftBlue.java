@@ -149,7 +149,7 @@ public class AutoLeftBlue extends LinearOpMode {
         SequentialAction placePurplePixelBlueRight = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
                 new SleepAction(0.5),
-                placePurpleActions.openExtension(1640),
+                placePurpleActions.openExtension(1030),
                 new SleepAction(2.45),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.1),
@@ -174,7 +174,7 @@ public class AutoLeftBlue extends LinearOpMode {
                         .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
-                        .strafeTo(new Vector2d(45, 55))
+                        .strafeTo(new Vector2d(45, 60))
                         .stopAndAdd(retractDepositBlueLeft)
                         .turnTo(Math.toRadians(-90))
                         .build();
@@ -193,7 +193,7 @@ public class AutoLeftBlue extends LinearOpMode {
                         .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
-                        .strafeTo(new Vector2d(45, 55))
+                        .strafeTo(new Vector2d(45, 60))
                         .stopAndAdd(retractDepositBlueMiddle)
                         .turnTo(Math.toRadians(-90))
                         .build();
@@ -201,18 +201,18 @@ public class AutoLeftBlue extends LinearOpMode {
         Action trajBlueRight =
                 robot.drive.actionBuilder(robot.drive.pose)
                         .stopAndAdd(depositActions.readyForDeposit(950))
-                        .splineToLinearHeading(new Pose2d(44.75, 29.25, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(34.7,  32, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixelBlueRight)
                         .setTangent(0)
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
                         .waitSeconds(.1)
-                        .strafeTo(new Vector2d(50.75, 28))
+                        .strafeTo(new Vector2d(50.75, 29))
                         .stopAndAdd(depositBlueRight)
                         .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
-                        .strafeTo(new Vector2d(45, 55))
+                        .strafeTo(new Vector2d(45, 60))
                         .stopAndAdd(retractDepositBlueRight)
                         .turnTo(Math.toRadians(-90))
                         .build();
