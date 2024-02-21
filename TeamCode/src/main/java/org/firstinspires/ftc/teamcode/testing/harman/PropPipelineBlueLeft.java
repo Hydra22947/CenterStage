@@ -22,7 +22,7 @@ public class PropPipelineBlueLeft extends OpenCvPipeline {
     double avgLeft = 0, avgCenter = 0;
     // red, not seeing the left line
 
-    public static double NO_PROP = 90;
+    public static double NO_PROP = 95;
 
 
     public static int widthLeft = 175, heightLeft = 250;

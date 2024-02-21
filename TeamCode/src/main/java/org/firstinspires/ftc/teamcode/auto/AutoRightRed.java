@@ -164,7 +164,7 @@ public class AutoRightRed extends LinearOpMode {
         Action trajRedLeft =
                 robot.drive.actionBuilder(robot.drive.pose)
                         .stopAndAdd(depositActions.readyForDeposit(950))
-                        .splineToLinearHeading(new Pose2d(44.75, -30.25, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(42.25, -30.25, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixelRedLeft)
                         .setTangent(0)
                         .stopAndAdd(placePurpleActions.closeExtension())
@@ -176,26 +176,26 @@ public class AutoRightRed extends LinearOpMode {
                         //Park
                         .setTangent(Math.toRadians(90))
                         .stopAndAdd(retractDepositRedLeft)
-                        .strafeTo(new Vector2d(45, -60))
+                        .strafeTo(new Vector2d(45, -55))
                         .turnTo(Math.toRadians(90))
                         .build();
 
         Action trajRedMiddle =
                 robot.drive.actionBuilder(robot.drive.pose)
                         .stopAndAdd(depositActions.readyForDeposit(950))
-                        .splineToLinearHeading(new Pose2d(40 , -23, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(41 , -20, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixelRedMiddle)
                         .setTangent(0)
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
-                        .splineToLinearHeading(new Pose2d(52.25, -36.5, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(52.25, -39.5, Math.toRadians(0)), Math.toRadians(0))
                         .waitSeconds(.1)
                         .stopAndAdd(depositRedMiddle)
                         .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
                         .stopAndAdd(retractDepositRedMiddle)
-                        .strafeTo(new Vector2d(45, -60))
+                        .strafeTo(new Vector2d(45, -55))
                         .turnTo(Math.toRadians(90))
 
                         .build();
@@ -214,7 +214,7 @@ public class AutoRightRed extends LinearOpMode {
                         //Park
                         .setTangent(Math.toRadians(90))
                         .stopAndAdd(retractDepositRedRight)
-                        .strafeTo(new Vector2d(45, -60))
+                        .strafeTo(new Vector2d(45, -55))
                         .turnTo(Math.toRadians(90))
                         .build();
 
