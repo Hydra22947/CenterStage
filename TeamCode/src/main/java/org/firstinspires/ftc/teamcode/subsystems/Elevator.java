@@ -16,7 +16,6 @@ public class Elevator implements Subsystem
 
     private final RobotHardware robot = RobotHardware.getInstance();
     public static double ELEVATOR_INCREMENT = 70;
-    public static double BASE_LEVEL = 1000;
     public static double MAX_LEVEL = 3450;
     public static double HANG_OPEN = 3150;
     public static double HANG = 500;
@@ -34,13 +33,20 @@ public class Elevator implements Subsystem
     PIDFController.PIDCoefficients pidCoefficientsL = new PIDFController.PIDCoefficients();
 
     boolean isAuto, firstPID = false;
-    public Elevator(Gamepad gamepad, boolean isAuto)
+    public Elevator(Gamepad gamepad, boolean isAuto, boolean firstPID)
     {
         this.isAuto = isAuto;
         this.elevatorMotorRight = robot.hardwareMap.get(DcMotorEx.class, "mER");
         this.elevatorMotorLeft = robot.hardwareMap.get(DcMotorEx.class, "mEL");
         elevatorMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        if(firstPID)
+        {
+            elevatorMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            elevatorMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            elevatorMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
         if (isAuto)
         {
             elevatorMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -112,54 +118,44 @@ public class Elevator implements Subsystem
     }
 
     public void update() {
+        cGamepad.update();
 
-        if(!firstPID)
+        if (usePID)
         {
-            cGamepad.update();
-
-            if (usePID)
+            firstPID();
+            //setPidControl();
+        }
+        else
+        {
+            if(gamepad.right_stick_y != 0 && !gamepad.right_stick_button)
             {
-                setPidControl();
-            }
-            else
-            {
-                if(gamepad.right_stick_y != 0 && !gamepad.right_stick_button)
-                {
-                    if((-gamepad.right_stick_y) < 0)
-                    {
-                        elevatorMotorRight.setPower(Range.clip(-gamepad.right_stick_y, -maxPower/2, maxPower/2));
-                        elevatorMotorLeft.setPower(Range.clip(-gamepad.right_stick_y, -maxPower/2, maxPower/2));
-                    }
-                    else
-                    {
-                        elevatorMotorRight.setPower(Range.clip(-gamepad.right_stick_y, -maxPower, maxPower));
-                        elevatorMotorLeft.setPower(Range.clip(-gamepad.right_stick_y, -maxPower, maxPower));
-                    }
-                }
-                else if(gamepad.right_stick_y != 0 && gamepad.right_stick_button)
+                if((-gamepad.right_stick_y) < 0)
                 {
                     elevatorMotorRight.setPower(Range.clip(-gamepad.right_stick_y, -maxPower/2, maxPower/2));
                     elevatorMotorLeft.setPower(Range.clip(-gamepad.right_stick_y, -maxPower/2, maxPower/2));
                 }
                 else
                 {
-                    elevatorMotorRight.setPower(0);
-                    elevatorMotorLeft.setPower(0);
+                    elevatorMotorRight.setPower(Range.clip(-gamepad.right_stick_y, -maxPower, maxPower));
+                    elevatorMotorLeft.setPower(Range.clip(-gamepad.right_stick_y, -maxPower, maxPower));
                 }
-
             }
-        }
-        else
-        {
-            firstPID();
+            else if(gamepad.right_stick_y != 0 && gamepad.right_stick_button)
+            {
+                elevatorMotorRight.setPower(Range.clip(-gamepad.right_stick_y, -maxPower/2, maxPower/2));
+                elevatorMotorLeft.setPower(Range.clip(-gamepad.right_stick_y, -maxPower/2, maxPower/2));
+            }
+            else
+            {
+                elevatorMotorRight.setPower(0);
+                elevatorMotorLeft.setPower(0);
+            }
+
         }
     }
 
     void firstPID()
     {
-        elevatorMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         elevatorMotorRight.setTargetPosition((int)currentTargetRight);
         elevatorMotorLeft.setTargetPosition((int)currentTargetLeft);
 
@@ -246,6 +242,11 @@ public class Elevator implements Subsystem
     public void setUsePID(boolean usePID) {
         this.usePID = usePID;
     }
+
+    public boolean getUsePID() {
+        return this.usePID;
+    }
+
 
     public void setAuto(boolean isAuto)
     {

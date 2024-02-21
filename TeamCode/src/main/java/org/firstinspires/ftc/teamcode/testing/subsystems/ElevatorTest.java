@@ -24,7 +24,7 @@ public class ElevatorTest extends LinearOpMode {
 
         robot.init(hardwareMap, telemetry);
 
-        elevator = new Elevator(gamepad1, true);
+        elevator = new Elevator(gamepad1, true, true);
         elevator.setAuto(false);
 
         waitForStart();

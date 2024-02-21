@@ -94,7 +94,7 @@ public class OpModeBlueTest extends LinearOpMode {
         robot.init(hardwareMap, telemetry);
 
         drivetrain = new Drivetrain(gamepad1, true, false);
-        elevator = new Elevator(gamepad2, true);
+        elevator = new Elevator(gamepad2, true, true);
         outtake = new Outtake();
         claw = new Claw();
         intake = new Intake();
@@ -181,7 +181,7 @@ public class OpModeBlueTest extends LinearOpMode {
                 intakeExtension.setUsePID(true);
             }
 
-            if (gamepad2.right_stick_y != 0) {
+            if (gamepad2.right_stick_y != 0 && liftState == LiftState.RETRACT) {
                 elevator.setUsePID(false);
             } else {
                 elevator.setUsePID(true);
@@ -415,11 +415,11 @@ public class OpModeBlueTest extends LinearOpMode {
                 heldExtension = true;
                 drivetrain.slow();
 
-                if(firstExtend)
+                if(firstExtend && !startedDelayTransfer)
                 {
                     intakeExtension.setTarget(gamepad1.right_trigger * intakeExtension.MAX_LEVEL * (INTAKE_EXTEND_PRECENTAGE/100));
                 }
-                else if(gamepad2.left_stick_y != 0 && !overrideIntakeExtension)
+                else if(gamepad2.left_stick_y != 0 && !overrideIntakeExtension && !startedDelayTransfer)
                 {
                     intakeExtension.setUsePID(false);
                     intakeExtension.setTarget(intakeExtension.getPos());
@@ -465,6 +465,8 @@ public class OpModeBlueTest extends LinearOpMode {
 
                 if((getTime() - transferTimer) >= delayTransfer && startedDelayTransfer)
                 {
+                    intakeExtension.setTarget(0);
+
                     overrideIntakeExtension = true;
 
                     intakeState = IntakeState.INTAKE;
@@ -520,6 +522,8 @@ public class OpModeBlueTest extends LinearOpMode {
                 {
                     elevator.setTarget(elevatorTargetRight + (openedXTimes * (Elevator.ELEVATOR_INCREMENT)), elevatorTargetLeft + (openedXTimes * (Elevator.ELEVATOR_INCREMENT)));
                 }
+
+                // TODO: add save pos
 
                 if ((getTime() - previousElevator) >= WAIT_DELAY_TILL_OUTTAKE) {
                     outtake.setAngle(Outtake.Angle.OUTTAKE);
