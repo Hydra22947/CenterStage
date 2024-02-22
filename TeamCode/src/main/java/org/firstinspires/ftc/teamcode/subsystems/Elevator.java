@@ -32,7 +32,7 @@ public class Elevator implements Subsystem
     PIDFController.PIDCoefficients pidCoefficientsR = new PIDFController.PIDCoefficients();
     PIDFController.PIDCoefficients pidCoefficientsL = new PIDFController.PIDCoefficients();
 
-    boolean isAuto, firstPID = false;
+    boolean isAuto;
     public Elevator(Gamepad gamepad, boolean isAuto, boolean firstPID)
     {
         this.isAuto = isAuto;
@@ -119,17 +119,12 @@ public class Elevator implements Subsystem
         controllerL = new PIDFController(pidCoefficientsL);
     }
 
-    public void setFirstPID(boolean firstPID) {
-        this.firstPID = firstPID;
-    }
-
     public void update() {
         cGamepad.update();
 
         if (usePID)
         {
             firstPID();
-            //setPidControl();
         }
         else
         {

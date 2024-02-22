@@ -153,7 +153,6 @@ public class OpModeBlueTest extends LinearOpMode {
             claw.update();
             plane.update();
 
-
             if(betterGamepad1.dpadUpOnce())
             {
                 plane.toggle();
@@ -283,7 +282,7 @@ public class OpModeBlueTest extends LinearOpMode {
                     drivetrain.slow();
                 }
 
-                if(startedDelayTransfer /*&& (intakeExtension.getPos() >= -INTAKE_ZERO_MAX && intakeExtension.getPos() <= INTAKE_ZERO_MAX)*/)
+                if(startedDelayTransfer)
                 {
                     intakeMid = false;
                     intake.move(Intake.Angle.OUTTAKE);
@@ -292,7 +291,7 @@ public class OpModeBlueTest extends LinearOpMode {
                     releaseTimer = getTime();
                 }
 
-                if((getTime() - releaseTimer) >= delayRelease/*(intakeExtension.getPos() >= 0 && intakeExtension.getPos() <= INTAKE_ZERO_MAX)*/ && had2Pixels)
+                if((getTime() - releaseTimer) >= delayRelease && had2Pixels)
                 {
                     intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH);
 
