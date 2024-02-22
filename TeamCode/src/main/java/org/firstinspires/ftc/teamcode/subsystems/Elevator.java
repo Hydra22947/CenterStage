@@ -40,13 +40,19 @@ public class Elevator implements Subsystem
         this.elevatorMotorLeft = robot.hardwareMap.get(DcMotorEx.class, "mEL");
         elevatorMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        if(firstPID)
+        if(firstPID && isAuto)
         {
             elevatorMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             elevatorMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             elevatorMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
+        else if(firstPID)
+        {
+            elevatorMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+
         if (isAuto)
         {
             elevatorMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

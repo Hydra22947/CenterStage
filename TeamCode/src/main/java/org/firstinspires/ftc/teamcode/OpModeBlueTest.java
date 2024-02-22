@@ -102,7 +102,7 @@ public class OpModeBlueTest extends LinearOpMode {
         intakeExtension = new IntakeExtension(gamepad2, true);
         codeTime = new ElapsedTime();
         intake.setAngle(Intake.Angle.OUTTAKE);
-        intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
+        intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH);
         claw.setBothClaw(Claw.ClawState.INTAKE);
         outtake.setAngle(Outtake.Angle.INTAKE);
         elevator.setAuto(false);
@@ -181,7 +181,7 @@ public class OpModeBlueTest extends LinearOpMode {
                 intakeExtension.setUsePID(true);
             }
 
-            if (gamepad2.right_stick_y != 0 && liftState == LiftState.RETRACT) {
+            if (gamepad2.right_stick_y != 0) {
                 elevator.setUsePID(false);
             } else {
                 elevator.setUsePID(true);
@@ -523,7 +523,11 @@ public class OpModeBlueTest extends LinearOpMode {
                     elevator.setTarget(elevatorTargetRight + (openedXTimes * (Elevator.ELEVATOR_INCREMENT)), elevatorTargetLeft + (openedXTimes * (Elevator.ELEVATOR_INCREMENT)));
                 }
 
-                // TODO: add save pos
+                if(gamepad2.right_stick_y != 0)
+                {
+                    elevatorTargetRight = elevator.getPosRight() - (openedXTimes * (Elevator.ELEVATOR_INCREMENT * 3.5));
+                    elevatorTargetLeft = elevator.getPosLeft() - (openedXTimes * (Elevator.ELEVATOR_INCREMENT * 3.5));
+                }
 
                 if ((getTime() - previousElevator) >= WAIT_DELAY_TILL_OUTTAKE) {
                     outtake.setAngle(Outtake.Angle.OUTTAKE);

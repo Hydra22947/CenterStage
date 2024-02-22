@@ -13,9 +13,9 @@ public class Intake implements Subsystem{
 
     private final RobotHardware robot;
     public static double intakeHandPivot = 0.195, intakeAmmoPivot = 0.09;
-    public static double outtakeHandPivot = .65, outtakeAmmoPivot = .64;
+    public static double outtakeHandPivot = .66, outtakeAmmoPivot = .62;
     public static double midHandPivot = 0.61, midAmmoPivot = 0.375;
-    public static double top5HandPivot = .31, top5AmmoPivot = 0.1;
+    public static double top5HandPivot = .29, top5AmmoPivot = 0.09;
     public static double top5HandPivotAuto = 0.3195, top5AmmoPivotAuto = 0.095; //auto
     public static double top54HandPivot = 0.29, top54AmmoPivot = 0.1;
     public static double top54HandPivotAuto = 0.235, top54AmmoPivotAuto = 0.035;
