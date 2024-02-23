@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto.Actions;
 
 import androidx.annotation.NonNull;
+import static org.firstinspires.ftc.teamcode.auto.Actions.ActionHelper.activateSystem;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
@@ -31,6 +32,8 @@ public class DepositActions {
 
     private IntakeExtension extension;
 
+    private boolean activated;
+
 
     public DepositActions(Elevator elevator, Intake intake, Claw claw, Outtake outtake, IntakeExtension extension) {
         this.elevator = elevator;
@@ -59,17 +62,6 @@ public class DepositActions {
         elevator.setPidControl();
     }
 
-    //This function will get the function, its parameters and the delay and execute
-    //this function with the delay.
-    private boolean activateSystem(Stopwatch timer, Runnable systemFunction, double delay, Object... parameters) {
-        if (timer.hasTimePassed((long)delay)) {
-            systemFunction.run();
-            timer.reset();
-            return false; // Activation successful
-        } else {
-            return true; // Activation failed
-        }
-    }
 
 
     public class ReadyForDeposit implements Action {
@@ -80,7 +72,7 @@ public class DepositActions {
             this.elevator = elevator;
             readyForDepositTimer = new Stopwatch();
             readyForDepositTimer.reset();
-              intake.move(Intake.Angle.MID);
+            intake.move(Intake.Angle.MID);
         }
 
         @Override
@@ -108,7 +100,7 @@ public class DepositActions {
     }
     public class PlacePixel implements Action {
         Stopwatch placePixelTimer;
-        double delay = 0;
+        long delay = 0;
 
         public PlacePixel(Cycles current, long d) {
             placePixelTimer = new Stopwatch();
@@ -118,7 +110,7 @@ public class DepositActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return activateSystem(placePixelTimer, () -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), delay);
+            return !activateSystem(placePixelTimer, () -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), delay);
         }
     }
 
@@ -133,7 +125,7 @@ public class DepositActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return activateSystem(retractDepositTimer, () -> retractElevator(), 800);
+            return !activateSystem(retractDepositTimer, () -> retractElevator(), 800);
 
 
         }

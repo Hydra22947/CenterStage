@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.testing.harman;
+package org.firstinspires.ftc.teamcode.testing.vision;
 
 import android.graphics.Canvas;
 
@@ -12,10 +12,10 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @Config
-public class PropPipelineRedRight extends OpenCvPipeline {
+public class PropPipelineBlueRight extends OpenCvPipeline {
 
     // blue , not seeing the right line
-    public static int rightX = 450, rightY = 40;
+    public static int rightX = 450, rightY = 30;
     public static int centerX = 0, centerY = 50;
 
     double avgRight = 0, avgCenter = 0;
@@ -24,16 +24,18 @@ public class PropPipelineRedRight extends OpenCvPipeline {
     public static double NO_PROP = 100;
 
 
-    public static int widthRight = 175, heightRight = 190;
-    public static int widthCenter = 350, heightCenter = 180;
 
-    public static int redMinH = 0;
-    public static int redMinS = 104;
-    public static int redMinV = 0;
-    public static int redMaxH = 179;
-    public static int redMaxS = 255;
-    public static int redMaxV = 255;
+    public static int widthCenter = 400, heightCenter = 180;
+    public static int widthRight = 190, heightRight = 200;
+
+    public static int blueMinH = 40;
+    public static int blueMinS = 73;
+    public static int blueMinV = 0;
+    public static int blueMaxH = 179;
+    public static int blueMaxS = 255;
+    public static int blueMaxV = 255;
     private Mat workingMatrix = new Mat();
+
     public enum Location
     {
         Left,
@@ -44,7 +46,7 @@ public class PropPipelineRedRight extends OpenCvPipeline {
     Location location = Location.Center;
 
 
-    public PropPipelineRedRight()
+    public PropPipelineBlueRight()
     {
     }
 
@@ -55,26 +57,26 @@ public class PropPipelineRedRight extends OpenCvPipeline {
         Imgproc.cvtColor(workingMatrix, workingMatrix, Imgproc.COLOR_BGR2HSV); // Convert to HSV color space
 
         // Define the range of blue color in HSV
-        Scalar redMin = new Scalar(redMinH, redMinS, redMinV);
-        Scalar redMax = new Scalar(redMaxH, redMaxS, redMaxV);
+        Scalar blueMin = new Scalar(blueMinH, blueMinS, blueMinV);
+        Scalar blueMax = new Scalar(blueMaxH, blueMaxS, blueMaxV);
 
         // Threshold the HSV image to get only blue colors
-        Core.inRange(workingMatrix, redMin, redMax, workingMatrix);
+        Core.inRange(workingMatrix, blueMin, blueMax, workingMatrix);
 
         // Perform bitwise AND operation to isolate blue regions in the input image
         Core.bitwise_and(input, input, workingMatrix);
 
-        // Define regions of interest
-        Mat matLeft = workingMatrix.submat(rightY, heightRight + rightY, rightX, rightX + widthRight);
+        // Define regions of interest§
         Mat matCenter = workingMatrix.submat(centerY, heightCenter + centerY, centerX, centerX + widthCenter);
+        Mat matRight = workingMatrix.submat(rightY, heightRight + rightY, rightX, rightX + widthRight);
 
         // Draw rectangles around regions of interest
-        Imgproc.rectangle(workingMatrix, new Rect(rightX, rightY, widthRight, heightRight), new Scalar(0, 255, 0));
         Imgproc.rectangle(workingMatrix, new Rect(centerX, centerY, widthCenter, heightCenter), new Scalar(0, 255, 0));
+         Imgproc.rectangle(workingMatrix, new Rect(rightX, rightY, widthRight, heightRight), new Scalar(0, 255, 0));
 
         // Calculate the average intensity of blue color in each region
-        avgRight = Core.mean(matLeft).val[2];
-        avgCenter = Core.mean(matCenter).val[2];
+        avgCenter = Core.mean(matCenter).val[0];
+        avgRight = Core.mean(matRight).val[0];
 
 
         // Find the region with the maximum average blue intensity

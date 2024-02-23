@@ -245,27 +245,30 @@ public class MeepMeepTesting {
 
     public static void blueMidRight(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
-                .splineToLinearHeading(new Pose2d(51.2, -33, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .strafeToLinearHeading(new Vector2d(-32, 35), Math.toRadians(0))
+                .waitSeconds(.2)
+                .setTangent(0)
+                .lineToX(-36)
+                .strafeToLinearHeading(new Vector2d(-35, 12), Math.toRadians(0))
 
-                .splineToLinearHeading(new Pose2d(-45, 12.5, Math.toRadians(-100)), Math.toRadians(-180))
-                /*  .waitSeconds(1)
-                  .setTangent(0)
-                  .splineToSplineHeading(new Pose2d(-24, 10, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                  .splineToSplineHeading(new Pose2d(20, 10, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                  .setTangent(0)
+                .lineToYLinearHeading(10.9, Math.toRadians(0))
+                .waitSeconds(.5)
+                .waitSeconds(2)
 
-                  .splineToLinearHeading(new Pose2d(51, 40, Math.toRadians(0)), Math.toRadians(0))
-  */
+                .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(51.2, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .waitSeconds(.5)
+                .setTangent(Math.toRadians(90))
+
                 .build());
     }
 
     public static void blueRightRight(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
-                .strafeToLinearHeading(new Vector2d(-32, 35), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-35, 34), Math.toRadians(0))
                 .waitSeconds(.2)
                 .setTangent(0)
-                .lineToX(-36)
-                .strafeToLinearHeading(new Vector2d(-35,12), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-35, 12), Math.toRadians(0))
 
                 .lineToYLinearHeading(10.9, Math.toRadians(0))
                 .waitSeconds(.5)
@@ -293,7 +296,7 @@ public class MeepMeepTesting {
                 .build());
     }
 
-    public static void nigger(RoadRunnerBotEntity myBot) {
+    public static void nig(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
                 .lineToYLinearHeading(12.5, Math.toRadians(-75))
                 .lineToYLinearHeading(14.5, Math.toRadians(0))

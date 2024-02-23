@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 
 @Config
-public class Drivetrain {
+public class Drivetrain{
 
     boolean blueAlliance;
 
