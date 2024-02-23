@@ -306,11 +306,9 @@ public class AutoRightBlue extends LinearOpMode {
 
         Action trajBlueRight =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .strafeToLinearHeading(new Vector2d(-32, 28), Math.toRadians(0))
-                        .waitSeconds(.2)
-                        .lineToX(-48)
-                        .lineToX(-32)
-                        .stopAndAdd(readyIntakeBlueRight)
+                        .strafeToLinearHeading(new Vector2d(-35, 34), Math.toRadians(0))
+                        .afterDisp(6, readyIntakeBlueRight)
+                        .waitSeconds(.5)
                         .stopAndAdd(placePurplePixelCloseBlueRight)
                         .strafeToLinearHeading(new Vector2d(-40,10.9), Math.toRadians(0))
                         .waitSeconds(.5)
