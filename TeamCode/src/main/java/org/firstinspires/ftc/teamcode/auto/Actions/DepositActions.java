@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.SleepAction;
 
+import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -85,19 +86,23 @@ public class DepositActions {
         }
     }
 
-    public class PutInOuttake implements Action {
-        Stopwatch readyForDepositTimer;
 
-        public PutInOuttake() {
+    public class MoveOuttake implements Action {
+        Stopwatch readyForDepositTimer;
+        Outtake.Angle angle;
+
+        public MoveOuttake (Outtake.Angle angle) {
+            this.angle = angle;
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
-            intake.move(Intake.Angle.OUTTAKE);
+            outtake.setAngle(angle);
             return false;
         }
     }
+
+
     public class PlacePixel implements Action {
         Stopwatch placePixelTimer;
         long delay = 0;
@@ -131,6 +136,23 @@ public class DepositActions {
         }
     }
 
+
+    public class MoveElevator implements Action {
+        Stopwatch retractDepositTimer;
+        int target;
+        public MoveElevator (int target)
+        {
+            this.target = target;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+            moveElevatorByTraj(target);
+            return false;
+
+        }
+    }
     public Action retractDeposit() {
         return new RetractDeposit();
     }
@@ -143,6 +165,8 @@ public class DepositActions {
         return new PlacePixel(currentCycle, d);
     }
 
-    public Action putInOuttake () { return new PutInOuttake(); }
+    public Action moveOuttake (Outtake.Angle thisAngle) { return new MoveOuttake(thisAngle); }
+
+    public Action moveElevator (int thisTarget) { return new MoveElevator(thisTarget); }
 
 }
