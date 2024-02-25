@@ -6,12 +6,18 @@ import static org.firstinspires.ftc.teamcode.auto.AutoSettings.writeToFile;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -31,6 +37,8 @@ import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineRedLeft;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.openftc.easyopencv.OpenCvWebcam;
 
+import java.util.Arrays;
+
 @Config
 @Autonomous(name = "intakeFailSafeTest")
 public class IntakeFailSafeTest extends LinearOpMode {
@@ -45,7 +53,6 @@ public class IntakeFailSafeTest extends LinearOpMode {
     Claw claw;
     IntakeExtension intakeExtension;
     AutoConstants autoConstants;
-
 
     DepositActions depositActions;
     PlacePurpleActions placePurpleActions;
@@ -63,6 +70,15 @@ public class IntakeFailSafeTest extends LinearOpMode {
     PropPipelineRedLeft propPipelineRedLeft;
     OpenCvWebcam webcam;
 
+    enum IntakeFailSafe {
+
+        ACTIVATED,
+        DEACTIVATED
+
+    }
+
+
+    IntakeFailSafe intakeFailSafe;
     @Override
     public void runOpMode() {
         time = new ElapsedTime();
@@ -87,6 +103,7 @@ public class IntakeFailSafeTest extends LinearOpMode {
         placePurpleActions = new PlacePurpleActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
+        intakeFailSafe = IntakeFailSafe.ACTIVATED;
 
         SequentialAction depositRedMiddle = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.MID),
@@ -146,19 +163,33 @@ public class IntakeFailSafeTest extends LinearOpMode {
                         .strafeTo(new Vector2d(-33, -10.5))
                         .stopAndAdd(placePurplePixelCloseRedMiddle)
                         .waitSeconds(.2)
-                        .strafeToLinearHeading(new Vector2d(-38.5, -11.5), Math.toRadians(0))
+
 
                         //Park - Corner
                         //.lineToY(64)
                         .build();
 
-        Action goForPlacement = robot.drive.actionBuilder(robot.drive.pose)
+
+        AccelConstraint baseAccelConstraint = new ProfileAccelConstraint(-10.0, 25.0);
+
+        Action goForIntake = robot.drive.actionBuilder(robot.drive.pose)
+                .strafeToLinearHeading(new Vector2d(-38.5, -11.5), Math.toRadians(0))
                 .waitSeconds(.5)
                 .stopAndAdd(intakePixelRedMiddle)
                 .waitSeconds(5)
                 .stopAndAdd(transferRedMiddle)
-
                 .stopAndAdd(readyIntakeRedMiddle)
+                .build();
+
+        VelConstraint baseVelConstraint = (robotPose, _path, _disp) -> {
+            if (robotPose.position.y.value() >= -11.5) {
+                return 20.0;
+            } else {
+                return 50.0;
+            }
+        };
+
+        Action goForPlacement = robot.drive.actionBuilder(robot.drive.pose)
                 .strafeToLinearHeading(new Vector2d(30, -9), Math.toRadians(0))
                 .afterDisp(0.9, depositActions.readyForDeposit(1100))
                 .afterDisp(1, placePurpleActions.moveIntake(Intake.Angle.MID))
@@ -183,18 +214,34 @@ public class IntakeFailSafeTest extends LinearOpMode {
             if (isStopRequested()) return;
 
             runBlocking(trajRedMiddle);
+            runBlocking(goForIntake);
 
-            if(robot.colorLeft.getDistance(DistanceUnit.INCH) >= 10 && robot.colorRight.getDistance(DistanceUnit.INCH) >= 10 )
+            switch (intakeFailSafe)
             {
-                fixPoseIntakeY++;
-            }
-            else
-            {
-                runBlocking(goForPlacement);
 
+                case ACTIVATED:
+
+                    fixPoseIntakeY++;
+
+                    if (robot.colorLeft.getDistance(DistanceUnit.INCH) <= 10 && robot.colorRight.getDistance(DistanceUnit.INCH) <= 10)
+                    {
+                        intakeFailSafe = IntakeFailSafe.DEACTIVATED;
+                    }
+
+                    break;
+                case DEACTIVATED:
+
+                    runBlocking(goForPlacement);
+
+                    break;
+
+                default:
+
+                    intakeFailSafe = IntakeFailSafe.ACTIVATED;
             }
+
+
         }
-
 
     }
 }
