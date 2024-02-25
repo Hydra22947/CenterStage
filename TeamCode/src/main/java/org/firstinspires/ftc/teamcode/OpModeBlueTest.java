@@ -46,7 +46,7 @@ public class OpModeBlueTest extends LinearOpMode {
     // delays
     public static double delayTransfer = 300, delayRelease = 750, delayCloseTransfer = 350, delayGoToTransfer = 1300;
     public static double WAIT_DELAY_TILL_OUTTAKE = 0, WAIT_DELAY_TILL_CLOSE = 200, END_GAME = 80, HALF_TIME = 45;
-    public static double INTAKE_EXTEND_PRECENTAGE = 60;
+    public static double INTAKE_EXTEND_PRECENTAGE = 45;
     // variables
     double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
     double elevatorTargetRight = 1300;
