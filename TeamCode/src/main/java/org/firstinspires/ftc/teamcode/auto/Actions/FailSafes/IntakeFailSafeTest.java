@@ -22,12 +22,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoConstants;
+import org.firstinspires.ftc.teamcode.auto.AutoLeftRed;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -35,6 +37,9 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineRedLeft;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.Arrays;
@@ -58,7 +63,7 @@ public class IntakeFailSafeTest extends LinearOpMode {
     PlacePurpleActions placePurpleActions;
     UpdateActions updateActions;
 
-   public static double fixPoseIntakeY = 0;
+    public static double fixPoseIntakeY = 0;
 
     enum PropLocation {
         LEFT,
@@ -79,13 +84,21 @@ public class IntakeFailSafeTest extends LinearOpMode {
 
 
     IntakeFailSafe intakeFailSafe;
+
     @Override
     public void runOpMode() {
-        time = new ElapsedTime();
-
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         propPipelineRedLeft = new PropPipelineRedLeft();
+        robot.init(hardwareMap, telemetry, autoConstants.startPoseRedLeft);
+
+        autoConstants = new AutoConstants();
+
+        initCamera();
+        webcam.setPipeline(propPipelineRedLeft);
+
+        time = new ElapsedTime();
+
         robot.init(hardwareMap, telemetry, autoConstants.startPoseRedLeft);
 
         autoConstants = new AutoConstants();
@@ -151,8 +164,6 @@ public class IntakeFailSafeTest extends LinearOpMode {
         );
 
 
-
-
         Action trajRedMiddle =
                 robot.drive.actionBuilder(robot.drive.pose)
 
@@ -208,40 +219,107 @@ public class IntakeFailSafeTest extends LinearOpMode {
             intake.setAngle(Intake.Angle.MID);
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
-
-            waitForStart();
-
-            if (isStopRequested()) return;
-
-            runBlocking(trajRedMiddle);
-            runBlocking(goForIntake);
-
-            switch (intakeFailSafe)
-            {
-
-                case ACTIVATED:
-
-                    fixPoseIntakeY++;
-
-                    if (robot.colorLeft.getDistance(DistanceUnit.INCH) <= 10 && robot.colorRight.getDistance(DistanceUnit.INCH) <= 10)
-                    {
-                        intakeFailSafe = IntakeFailSafe.DEACTIVATED;
-                    }
-
+            robot.drive.updatePoseEstimate();
+            switch (propPipelineRedLeft.getLocation()) {
+                case Left:
+                    propLocation = PropLocation.LEFT;
                     break;
-                case DEACTIVATED:
-
-                    runBlocking(goForPlacement);
-
+                case Right:
+                    propLocation = PropLocation.RIGHT;
                     break;
-
-                default:
-
-                    intakeFailSafe = IntakeFailSafe.ACTIVATED;
+                case Center:
+                    propLocation = PropLocation.MIDDLE;
+                    break;
             }
+            telemetry.addLine("Initialized");
+            telemetry.update();
+        }
+
+        writeToFile(robot.drive.pose.heading.log());
 
 
+        waitForStart();
+
+        if (isStopRequested()) return;
+
+        switch (propLocation) {
+            case RIGHT:
+                runBlocking(new ParallelAction(
+                        //  trajRedRight,
+                        updateActions.updateSystems()
+                ));
+                break;
+            case MIDDLE:
+                runBlocking(new ParallelAction(
+                        trajRedMiddle,
+                        updateActions.updateSystems()
+                ));
+                break;
+            case LEFT:
+                runBlocking(new ParallelAction(
+                        //trajRedLeft,
+                        updateActions.updateSystems()
+                ));
+                break;
+        }
+
+        while (opModeIsActive()) {
+            robot.drive.updatePoseEstimate();
+        }
+
+
+        runBlocking(trajRedMiddle);
+        runBlocking(goForIntake);
+
+        switch (intakeFailSafe) {
+
+            case ACTIVATED:
+
+                if (robot.drive.pose.position.y == 11) {
+                    fixPoseIntakeY++;
+                }
+
+                if (robot.colorLeft.getDistance(DistanceUnit.INCH) <= 10 && robot.colorRight.getDistance(DistanceUnit.INCH) <= 10) {
+                    intakeFailSafe = IntakeFailSafe.DEACTIVATED;
+                }
+
+                break;
+            case DEACTIVATED:
+
+                runBlocking(goForPlacement);
+
+                break;
+
+            default:
+
+                intakeFailSafe = IntakeFailSafe.ACTIVATED;
         }
 
     }
+
+    void initCamera() {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+
+        FtcDashboard.getInstance().startCameraStream(webcam, 0);
+
+        webcam.setMillisecondsPermissionTimeout(5000); // Timeout for obtaining permission is configurable. Set before opening.
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                webcam.startStreaming(640, 480, OpenCvCameraRotation.UPSIDE_DOWN);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                /*
+                 * This will be called if the camera could not be opened
+                 */
+            }
+        });
+
+    }
+
+
 }
+
