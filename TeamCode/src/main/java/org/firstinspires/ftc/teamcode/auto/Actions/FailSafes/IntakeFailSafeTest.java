@@ -190,6 +190,7 @@ public class IntakeFailSafeTest extends LinearOpMode {
                 .waitSeconds(5)
                 .stopAndAdd(transferRedMiddle)
                 .stopAndAdd(readyIntakeRedMiddle)
+
                 .build();
 
         VelConstraint baseVelConstraint = (robotPose, _path, _disp) -> {
