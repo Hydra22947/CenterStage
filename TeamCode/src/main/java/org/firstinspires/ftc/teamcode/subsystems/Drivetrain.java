@@ -117,6 +117,6 @@ public class Drivetrain{
     public void slow()
     {
         power = maxPower / 2.5;
-        slowerSpin = 0.65;
+        slowerSpin = 0.7;
     }
 }
