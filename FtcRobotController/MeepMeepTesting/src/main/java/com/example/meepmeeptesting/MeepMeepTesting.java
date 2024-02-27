@@ -289,14 +289,16 @@ public class MeepMeepTesting {
 
     public static void blueLeftRight(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
-                /* .setTangent(90)
-                 .strafeToSplineHeading(new Vector2d(-38, 40), Math.toRadians(-150))
-                 .splineToLinearHeading(new Pose2d(-35, 29, Math.toRadians(-180)), Math.toRadians(0))
-                 .waitSeconds(.2)
-                 .setTangent(0)*/
-                .strafeToLinearHeading(new Vector2d(-38, 12), Math.toRadians(-115))
+                                //place purple
+                .strafeToSplineHeading(new Vector2d(-38, 38), Math.toRadians(-40))
+                .splineToLinearHeading(new Pose2d(-34, 32, Math.toRadians(0)), Math.toRadians(0))
 
-                .lineToYLinearHeading(10.9, Math.toRadians(0))
+
+                //intake from mid stack
+                                .strafeToLinearHeading(new Vector2d(-53.45, 26), Math.toRadians(0))
+
+
+          //      .lineToYLinearHeading(10.9, Math.toRadians(0))
                 .waitSeconds(.5)
                 .waitSeconds(2)
 
