@@ -252,15 +252,11 @@ public class MeepMeepTesting {
 
     public static void blueMidRight(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
-                .strafeToLinearHeading(new Vector2d(-32, 35), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-50, 24), Math.toRadians(0))
                 .waitSeconds(.2)
                 .setTangent(0)
-                .lineToX(-36)
-                .strafeToLinearHeading(new Vector2d(-35, 12), Math.toRadians(0))
-
-                .lineToYLinearHeading(10.9, Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-35, 12), Math.toRadians(-90))
                 .waitSeconds(.5)
-                .waitSeconds(2)
 
                 .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(51.2, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
@@ -274,6 +270,8 @@ public class MeepMeepTesting {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
                 .strafeToLinearHeading(new Vector2d(-35, 34), Math.toRadians(0))
                 .waitSeconds(.2)
+
+
                 .setTangent(0)
                 .strafeToLinearHeading(new Vector2d(-35, 12), Math.toRadians(0))
 
@@ -291,10 +289,12 @@ public class MeepMeepTesting {
 
     public static void blueLeftRight(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
-                .strafeToLinearHeading(new Vector2d(-35, 34), Math.toRadians(180))
-                .waitSeconds(.2)
-                .setTangent(0)
-                .strafeToLinearHeading(new Vector2d(-35, 12), Math.toRadians(0))
+                /* .setTangent(90)
+                 .strafeToSplineHeading(new Vector2d(-38, 40), Math.toRadians(-150))
+                 .splineToLinearHeading(new Pose2d(-35, 29, Math.toRadians(-180)), Math.toRadians(0))
+                 .waitSeconds(.2)
+                 .setTangent(0)*/
+                .strafeToLinearHeading(new Vector2d(-38, 12), Math.toRadians(-115))
 
                 .lineToYLinearHeading(10.9, Math.toRadians(0))
                 .waitSeconds(.5)
