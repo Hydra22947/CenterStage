@@ -22,7 +22,7 @@ public class Drivetrain{
     Vector2d input;
     public static double maxPower = 1;
     public static double slowerSpin = 0.5;
-    double power = 0, twist = 0;
+    public double power = 0, twist = 0;
     boolean slow = false;
 
     //Constructor

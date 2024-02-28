@@ -13,7 +13,7 @@ public class Intake implements Subsystem{
 
     private final RobotHardware robot;
     public static double intakeHandPivot = 0.195, intakeAmmoPivot = 0.09;
-    public static double outtakeHandPivot = .66, outtakeAmmoPivot = .62;
+    public static double outtakeHandPivot = 0.655, outtakeAmmoPivot = .62;
     public static double midHandPivot = 0.61, midAmmoPivot = 0.375;
     public static double top5HandPivot = .29, top5AmmoPivot = 0.09;
     public static double top5HandPivotAuto = 0.3195, top5AmmoPivotAuto = 0.095; //auto
@@ -28,7 +28,7 @@ public class Intake implements Subsystem{
     public static double RIGHT_SENSOR_ERROR = 0.3;
 
     public static double openRight = 0.55, openLeft = 0.565;
-    public static double closeRight = .74, closeLeft = .73;
+    public static double closeRight = .75, closeLeft = .76;
     public static double indeterminateRight = 0.67, indeterminateLeft = 0.67;
 
 
