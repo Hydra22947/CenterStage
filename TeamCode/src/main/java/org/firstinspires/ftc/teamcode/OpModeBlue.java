@@ -21,8 +21,8 @@ import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@TeleOp(name = "DEBUG OpMode Blue", group = "A")
-public class OpModeBlueTest extends LinearOpMode {
+@TeleOp(name = "OpMode Blue", group = "A")
+public class OpModeBlue extends LinearOpMode {
 
     // robot
     private final RobotHardware robot = RobotHardware.getInstance();
@@ -339,7 +339,7 @@ public class OpModeBlueTest extends LinearOpMode {
             case INTAKE:
                 moveIntake();
 
-                if(firstReleaseThreeTimer  && !outtakeToOuttake)
+                if(firstReleaseThreeTimer && !outtakeToOuttake)
                 {
                     override = true;
                     releaseFromIntake = getTime();
@@ -351,6 +351,7 @@ public class OpModeBlueTest extends LinearOpMode {
                     intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
                     firstReleaseThree = false;
                 }
+
 
                 if(gamepad2.left_stick_y != 0 && !overrideIntakeExtension)
                 {
