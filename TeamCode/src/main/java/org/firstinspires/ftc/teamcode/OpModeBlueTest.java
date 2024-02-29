@@ -159,7 +159,7 @@ public class OpModeBlueTest extends LinearOpMode {
                 plane.toggle();
             }
 
-            if(betterGamepad2.optionsOnce())
+            if(betterGamepad2.shareOnce())
             {
                 outtakeToOuttake = !outtakeToOuttake;
             }
@@ -223,7 +223,7 @@ public class OpModeBlueTest extends LinearOpMode {
             intakePrecentage = SHORT_INTAKE_EXTEND_PRECENTAGE;
             intakeLevel = IntakeLevel.TOP_54;
         }
-        else if(betterGamepad2.BOnce())
+        else if(betterGamepad2.XOnce())
         {
             intakePrecentage = SHORT_INTAKE_EXTEND_PRECENTAGE;
             intakeLevel = IntakeLevel.TOP_32;
