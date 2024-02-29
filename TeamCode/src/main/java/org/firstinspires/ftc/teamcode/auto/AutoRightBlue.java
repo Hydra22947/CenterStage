@@ -260,10 +260,11 @@ public class AutoRightBlue extends LinearOpMode {
         Action trajBlueMiddle =
                 robot.drive.actionBuilder(robot.drive.pose)
                         //place purple
-                        .strafeToLinearHeading(new Vector2d(-35, 34), Math.toRadians(-90))
+                        .strafeToLinearHeading(new Vector2d(-38, 34), Math.toRadians(-90))
 
                         //intake from mid stack
-                        .strafeToLinearHeading(new Vector2d(-53.45, 26), Math.toRadians(0))
+                        .setTangent(Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-53.45, 26, Math.toRadians(0)), Math.toRadians(180))
                         .stopAndAdd(intakePixelBlueMiddle)
 
 
@@ -294,14 +295,15 @@ public class AutoRightBlue extends LinearOpMode {
 
         Action trajBlueRight =
                 robot.drive.actionBuilder(robot.drive.pose)
-
                         //place purple
                         .strafeToSplineHeading(new Vector2d(-35, 48), Math.toRadians(-90))
-                        .splineToLinearHeading(new Pose2d(-48, 42, Math.toRadians(-90)), Math.toRadians(-90))
+                        .splineToLinearHeading(new Pose2d(-48, 38, Math.toRadians(-90)), Math.toRadians(-90))
 
-                        //intake from mid stack
-                        .strafeToSplineHeading(new Vector2d(-45, 50), Math.toRadians(-90))
-                        .splineToLinearHeading(new Pose2d(-50, 40, Math.toRadians(0)), Math.toRadians(-90))
+
+                        //intake from left stack
+                        .strafeToSplineHeading(new Vector2d(-40, 38), Math.toRadians(-90))
+                        .splineToLinearHeading(new Pose2d(-34, 15, Math.toRadians(-90)), Math.toRadians(-90))
+                        .strafeToLinearHeading(new Vector2d(-34, 11), Math.toRadians(0))
                         .stopAndAdd(intakePixelBlueRight)
 
 
