@@ -150,8 +150,8 @@ public class AutoRightBlue extends LinearOpMode {
                 placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
                 new SleepAction(0.5),
                 placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.LEFT),
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
-                new SleepAction(.5),
+                placePurpleActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
+                new SleepAction(.75),
                 placePurpleActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
         );
         SequentialAction placePurplePixelCloseBlueMiddle = new SequentialAction(
@@ -263,7 +263,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(-35, 34), Math.toRadians(-90))
 
                         //intake from mid stack
-                        .strafeToLinearHeading(new Vector2d(-53.75, 26), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-53.45, 26.25), Math.toRadians(0))
                         .stopAndAdd(intakePixelBlueMiddle)
 
 
@@ -277,7 +277,7 @@ public class AutoRightBlue extends LinearOpMode {
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 6), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
-                        .afterDisp(0.9, depositActions.readyForDeposit(1400))
+                        .afterDisp(0.9, depositActions.readyForDeposit(1300))
                         .splineToLinearHeading(new Pose2d(51.35, 32.2, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
@@ -367,7 +367,7 @@ public class AutoRightBlue extends LinearOpMode {
 
         while (opModeInInit() && !isStopRequested()) {
             intake.setAngle(Intake.Angle.MID);
-
+            intakeExtension.setTarget(0);
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
