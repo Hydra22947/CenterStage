@@ -260,11 +260,10 @@ public class AutoRightBlue extends LinearOpMode {
         Action trajBlueMiddle =
                 robot.drive.actionBuilder(robot.drive.pose)
                         //place purple
-                        .strafeToLinearHeading(new Vector2d(-38, 34), Math.toRadians(-90))
+                        .strafeToLinearHeading(new Vector2d(-35, 34), Math.toRadians(-90))
 
                         //intake from mid stack
-                        .setTangent(Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-53.45, 26, Math.toRadians(0)), Math.toRadians(180))
+                        .strafeToLinearHeading(new Vector2d(-53.75, 26), Math.toRadians(0))
                         .stopAndAdd(intakePixelBlueMiddle)
 
 
@@ -291,6 +290,39 @@ public class AutoRightBlue extends LinearOpMode {
 
                         //Park - Corner
                         //.lineToY(64)
+/*
+                        //place purple
+                        .strafeToLinearHeading(new Vector2d(-38, 34), Math.toRadians(-90))
+
+                        //intake from mid stack
+                        .setTangent(Math.toRadians(180))
+                        .strafeToLinearHeading(new Vector2d(-53.5, 24.5), Math.toRadians(0))
+                        .stopAndAdd(intakePixelBlueMiddle)
+
+
+                        .waitSeconds(.5)
+                        .stopAndAdd(transferBlueMiddle)
+                        .waitSeconds(1)
+                        .strafeToLinearHeading(new Vector2d(-38, 10), Math.toRadians(0))
+
+                        .waitSeconds(5)
+
+                        //deposit
+                        .strafeToLinearHeading(new Vector2d(30, 6), Math.toRadians(0))
+                        .afterDisp(.7,readyIntakeBlue)
+                        .afterDisp(0.9, depositActions.readyForDeposit(1400))
+                        .splineToLinearHeading(new Pose2d(51.35, 30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .stopAndAdd(depositBlueMiddle)
+                        .waitSeconds(.5)
+
+                        .setTangent(Math.toRadians(90))
+                        .stopAndAdd(retractDepositBlueMiddle)
+                        //Park - Close to other board
+                        .strafeToLinearHeading(new Vector2d(55, 10), Math.toRadians(0))
+                        .turnTo(Math.toRadians(-90))
+
+                        //Park - Corner
+                        //.lineToY(64)*/
                         .build();
 
         Action trajBlueRight =
