@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -22,6 +23,7 @@ public class VisionTest extends LinearOpMode{
     PropPipelineRedLeft propPipelineRedLeft;
     PropPipelineRedRight propPipelineRedRight;
     OpenCvWebcam webcam;
+    BetterGamepad gamepad;
 
     enum SideColor
     {
@@ -35,7 +37,7 @@ public class VisionTest extends LinearOpMode{
 
     @Override
     public void runOpMode() throws InterruptedException {
-
+        gamepad = new BetterGamepad(gamepad1);
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
 
         propPipelineBlueLeft = new PropPipelineBlueLeft();
@@ -87,6 +89,8 @@ public class VisionTest extends LinearOpMode{
 
         while (opModeInInit())
         {
+            gamepad.update();
+
             switch (sideColor)
             {
                 case BLUE_LEFT:
@@ -109,6 +113,44 @@ public class VisionTest extends LinearOpMode{
                     telemetry.addData("RIGHT", propPipelineRedRight.getAvgRight());
                     telemetry.addData("CENTER", propPipelineRedRight.getAvgCenter());
                     break;
+            }
+
+            if(gamepad.dpadUpOnce())
+            {
+                switch (sideColor)
+                {
+                    case BLUE_LEFT:
+                        propPipelineBlueLeft.setNoProp(PropPipelineBlueLeft.getNoProp() + 1);
+                        break;
+                    case BLUE_RIGHT:
+                        propPipelineBlueRight.setNoProp(propPipelineBlueRight.getNoProp() + 1);
+                        break;
+                    case RED_LEFT:
+                        propPipelineRedLeft.setNoProp(propPipelineRedLeft.getNoProp() + 1);
+                        break;
+                    case RED_RIGHT:
+                        propPipelineRedRight.setNoProp(propPipelineRedRight.getNoProp() + 1);
+                        break;
+                }
+            }
+
+            if(gamepad.dpadDownOnce())
+            {
+                switch (sideColor)
+                {
+                    case BLUE_LEFT:
+                        propPipelineBlueLeft.setNoProp(PropPipelineBlueLeft.getNoProp() - 1);
+                        break;
+                    case BLUE_RIGHT:
+                        propPipelineBlueRight.setNoProp(propPipelineBlueRight.getNoProp() - 1);
+                        break;
+                    case RED_LEFT:
+                        propPipelineRedLeft.setNoProp(propPipelineRedLeft.getNoProp() - 1);
+                        break;
+                    case RED_RIGHT:
+                        propPipelineRedRight.setNoProp(propPipelineRedRight.getNoProp() - 1);
+                        break;
+                }
             }
 
             telemetry.update();

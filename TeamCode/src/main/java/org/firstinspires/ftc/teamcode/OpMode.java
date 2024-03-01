@@ -21,9 +21,10 @@ import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@TeleOp(name = "DEBUG OpMode Blue", group = "A")
-public class OpModeBlueTest extends LinearOpMode {
+@TeleOp(name = "OpMode Teleop", group = "A")
+public class OpMode extends LinearOpMode {
 
+    public static boolean DEBUG = true;
     // robot
     private final RobotHardware robot = RobotHardware.getInstance();
 
@@ -94,13 +95,13 @@ public class OpModeBlueTest extends LinearOpMode {
 
         robot.init(hardwareMap, telemetry);
 
-        drivetrain = new Drivetrain(gamepad1, true, false);
-        elevator = new Elevator(gamepad2, true, true);
+        drivetrain = new Drivetrain(gamepad1, true);
+        elevator = new Elevator(gamepad2, !DEBUG, true);
         outtake = new Outtake();
         claw = new Claw();
         intake = new Intake();
         plane = new Plane();
-        intakeExtension = new IntakeExtension(gamepad2, true);
+        intakeExtension = new IntakeExtension(gamepad2, !DEBUG);
         codeTime = new ElapsedTime();
         intake.setAngle(Intake.Angle.OUTTAKE);
         intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH);

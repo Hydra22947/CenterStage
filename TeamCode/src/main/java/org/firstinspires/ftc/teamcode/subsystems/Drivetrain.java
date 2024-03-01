@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.auto.AutoSettings.readFromFile;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -26,7 +24,7 @@ public class Drivetrain{
     boolean slow = false;
 
     //Constructor
-    public Drivetrain(Gamepad gamepad1, boolean blueAlliance, boolean isAuto)
+    public Drivetrain(Gamepad gamepad1, boolean blueAlliance)
     {
         this.robot = RobotHardware.getInstance();
 
@@ -37,7 +35,7 @@ public class Drivetrain{
 
         this.blueAlliance = blueAlliance;
 
-        resetAngle(isAuto);
+        resetAngle();
     }
 
     public void update() {
@@ -66,44 +64,18 @@ public class Drivetrain{
     }
 
 
-    public void resetAngle(boolean isAuto)
+    public void resetAngle()
     {
-        if(isAuto)
-        {
-            robot.imu.resetYaw();
+        robot.imu.resetYaw();
 
-            // check if we are blue/red alliance and set zero angle - For centric drive
-            if(!blueAlliance)
-            {
-                robot.setImuOffset(-Math.PI);
-            }
-            else if(blueAlliance)
-            {
-                robot.setImuOffset(Math.PI);
-            }
-//            // check if we are blue/red alliance and set zero angle - For centric drive
-//            if(!blueAlliance)
-//            {
-//                robot.setImuOffset(readFromFile() -3/2 * Math.PI);
-//            }
-//            else if(blueAlliance)
-//            {
-//                robot.setImuOffset(readFromFile() + 3/2 * Math.PI);
-//            }
+        // check if we are blue/red alliance and set zero angle - For centric drive
+        if(!blueAlliance)
+        {
+            robot.setImuOffset(-Math.PI);
         }
-        else
+        else if(blueAlliance)
         {
-            robot.imu.resetYaw();
-
-            // check if we are blue/red alliance and set zero angle - For centric drive
-            if(!blueAlliance)
-            {
-                robot.setImuOffset(-Math.PI);
-            }
-            else if(blueAlliance)
-            {
-                robot.setImuOffset(Math.PI);
-            }
+            robot.setImuOffset(Math.PI);
         }
     }
 

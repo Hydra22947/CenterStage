@@ -108,4 +108,12 @@ public class PropPipelineBlueLeft extends OpenCvPipeline {
     public Location getLocation() {
         return location;
     }
+
+    public static void setNoProp(double noProp) {
+        NO_PROP = noProp;
+    }
+
+    public static double getNoProp() {
+        return NO_PROP;
+    }
 }

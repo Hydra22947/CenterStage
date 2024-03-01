@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.testing.subsystems;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -28,7 +27,7 @@ public class DrivetrainTest extends LinearOpMode {
 
         robot.init(hardwareMap, telemetry);
 
-        drivetrain = new Drivetrain(gamepad1, true, false);
+        drivetrain = new Drivetrain(gamepad1, true);
 
         while (opModeInInit()) {
             telemetry.addLine("Robot Initialized.");
