@@ -135,7 +135,7 @@ public class AutoRightBlue extends LinearOpMode {
                 placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
                 placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
                 new SleepAction(1),
-                placePurpleActions.openExtension(700),
+                placePurpleActions.openExtension(800),
                 new SleepAction(1),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.5),
@@ -152,7 +152,7 @@ public class AutoRightBlue extends LinearOpMode {
 
 
                         //intake from mid stack
-                        .strafeToLinearHeading(new Vector2d(-53.45, 26), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-53.75, 28), Math.toRadians(0))
                         .stopAndAdd(intakePixelBlueMiddle)
 
 
@@ -167,7 +167,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
                         .afterDisp(0.9, depositActions.readyForDeposit(1400))
-                        .splineToLinearHeading(new Pose2d(51.45, 39, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(52, 39, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
 
@@ -185,17 +185,17 @@ public class AutoRightBlue extends LinearOpMode {
         Action trajBlueMiddle =
                 robot.drive.actionBuilder(robot.drive.pose)
                         //place purple
-                        .strafeToLinearHeading(new Vector2d(-35, 34), Math.toRadians(-90))
+                        .strafeToLinearHeading(new Vector2d(-34.5, 33.5), Math.toRadians(-90))
 
                         //intake from mid stack
-                        .strafeToLinearHeading(new Vector2d(-53.45, 26.25), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-53.5, 27), Math.toRadians(0))
                         .stopAndAdd(intakePixelBlueMiddle)
 
 
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
                         .waitSeconds(1)
-                        .strafeToLinearHeading(new Vector2d(-38, 8), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-45, 8), Math.toRadians(0))
 
                         .waitSeconds(5)
 
@@ -203,7 +203,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(30, 6), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
                         .afterDisp(0.9, depositActions.readyForDeposit(1300))
-                        .splineToLinearHeading(new Pose2d(51.35, 32.2, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(52, 32.2, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
 
@@ -253,14 +253,13 @@ public class AutoRightBlue extends LinearOpMode {
         Action trajBlueRight =
                 robot.drive.actionBuilder(robot.drive.pose)
                         //place purple
-                        .strafeToSplineHeading(new Vector2d(-35, 48), Math.toRadians(-90))
-                        .splineToLinearHeading(new Pose2d(-48, 38, Math.toRadians(-90)), Math.toRadians(-90))
+                        .strafeToLinearHeading(new Vector2d(-49.5, 44), Math.toRadians(-90))
 
 
                         //intake from left stack
-                        .strafeToSplineHeading(new Vector2d(-40, 38), Math.toRadians(-90))
+                        .strafeToSplineHeading(new Vector2d(-42, 45), Math.toRadians(-90))
                         .splineToLinearHeading(new Pose2d(-34, 15, Math.toRadians(-90)), Math.toRadians(-90))
-                        .strafeToLinearHeading(new Vector2d(-34, 11), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-34, 15), Math.toRadians(0))
                         .stopAndAdd(intakePixelBlueRight)
 
 
@@ -273,7 +272,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
                         .afterDisp(0.9, depositActions.readyForDeposit(1400))
-                        .splineToLinearHeading(new Pose2d(51.45, 39, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
 

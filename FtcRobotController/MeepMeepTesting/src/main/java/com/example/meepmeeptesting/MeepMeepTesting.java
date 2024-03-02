@@ -271,15 +271,13 @@ public class MeepMeepTesting {
     public static void blueRightRight(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
                 //place purple
-                .strafeToSplineHeading(new Vector2d(-35, 48), Math.toRadians(-90))
-                .splineToLinearHeading(new Pose2d(-48, 38, Math.toRadians(-90)), Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(-50, 44), Math.toRadians(-90))
 
 
                 //intake from left stack
-                .strafeToSplineHeading(new Vector2d(-40, 38), Math.toRadians(-90))
+                .strafeToSplineHeading(new Vector2d(-40, 45), Math.toRadians(-90))
                 .splineToLinearHeading(new Pose2d(-34, 15, Math.toRadians(-90)), Math.toRadians(-90))
-                .strafeToLinearHeading(new Vector2d(-34, 11), Math.toRadians(0))
-                .waitSeconds(.5)
+                .strafeToLinearHeading(new Vector2d(-34, 8), Math.toRadians(0))
 
 /*
                 //intake from mid stack
@@ -385,7 +383,7 @@ public class MeepMeepTesting {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
 
                 .build();
-        redLeftLeft(myBot);
+        blueRightRight(myBot);
         setAnimation(meepMeep, myBot);
 
     }
