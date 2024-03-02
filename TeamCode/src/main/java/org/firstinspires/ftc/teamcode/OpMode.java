@@ -632,7 +632,7 @@ public class OpMode extends LinearOpMode {
 
                 break;
             case RELEASE:
-                
+
                 break;
             default:
                 if(outtakeToOuttake)
@@ -710,13 +710,13 @@ public class OpMode extends LinearOpMode {
 
                 if(betterGamepad2.rightBumperOnce())
                 {
-                    elevatorTargetRight += 85;
-                    elevatorTargetLeft += 85;
+                    elevatorTargetRight += 115;
+                    elevatorTargetLeft += 115;
                 }
                 else if(betterGamepad2.leftBumperOnce())
                 {
-                    elevatorTargetRight -= 85;
-                    elevatorTargetLeft -= 85;
+                    elevatorTargetRight -= 115;
+                    elevatorTargetLeft -= 115;
                 }
 
                 if (betterGamepad1.AOnce())  {
