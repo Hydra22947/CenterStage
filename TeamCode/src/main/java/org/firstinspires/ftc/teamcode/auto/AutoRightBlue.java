@@ -93,47 +93,9 @@ public class AutoRightBlue extends LinearOpMode {
         placePurpleActions = new PlacePurpleActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
-        SequentialAction depositBlueLeft = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.MID),
-                depositActions.readyForDeposit(1100),
-                placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
-                new SleepAction(0.5),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 600)
-        );
-        SequentialAction transferBlueLeft = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
-                new SleepAction(0.5),
-                placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.RIGHT),
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
-                new SleepAction(.5),
-                placePurpleActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
-        );
-        SequentialAction placePurplePixelCloseBlueLeft = new SequentialAction(
-
-                new SleepAction(1.5),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
-                new SleepAction(1),
-                placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
-        );
 
 
-        SequentialAction retractDepositBlueLeft = new SequentialAction(
-                depositActions.retractDeposit()
-        );
 
-        SequentialAction intakePixelBlueLeft = new SequentialAction(
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
-                placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
-                new SleepAction(.7),
-                placePurpleActions.openExtension(1600),
-                new SleepAction(1),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
-                new SleepAction(0.5),
-                placePurpleActions.moveStack(),
-                placePurpleActions.closeExtension()
-
-        );
         SequentialAction readyIntakeBlue = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.MID)
         );
@@ -154,14 +116,7 @@ public class AutoRightBlue extends LinearOpMode {
                 new SleepAction(.75),
                 placePurpleActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
         );
-        SequentialAction placePurplePixelCloseBlueMiddle = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
-                new SleepAction(.5),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
-                new SleepAction(.5),
-                placePurpleActions.moveIntake(Intake.Angle.OUTTAKE)
 
-        );
 
         SequentialAction retractDepositBlueMiddle = new SequentialAction(
                 depositActions.retractDeposit()
@@ -174,36 +129,6 @@ public class AutoRightBlue extends LinearOpMode {
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
-        SequentialAction depositBlueRight = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.MID),
-                depositActions.readyForDeposit(1300),
-                placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
-                new SleepAction(0.75),
-                placePurpleActions.moveClaw(Claw.ClawState.INTERMEDIATE, ClawSide.BOTH),
-                new SleepAction(0.75),
-                placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH)
-        );
-        SequentialAction transferBlueRight = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
-                new SleepAction(0.5),
-                placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.RIGHT),
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.RIGHT),
-                new SleepAction(.5),
-                placePurpleActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.RIGHT)
-        );
-        SequentialAction placePurplePixelCloseBlueRight = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
-                new SleepAction(1),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
-                new SleepAction(1),
-                placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
-        );
-
-
-        SequentialAction retractDepositBlueRight = new SequentialAction(
-                depositActions.retractDeposit()
-        );
 
 
         SequentialAction intakePixelBlueRight = new SequentialAction(
@@ -341,8 +266,6 @@ public class AutoRightBlue extends LinearOpMode {
 
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
-                        .waitSeconds(1)
-                        .strafeToLinearHeading(new Vector2d(-35, 11), Math.toRadians(0))
 
                         .waitSeconds(5)
 
