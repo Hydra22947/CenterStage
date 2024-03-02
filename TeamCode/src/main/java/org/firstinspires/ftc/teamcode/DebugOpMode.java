@@ -45,7 +45,7 @@ public class DebugOpMode extends LinearOpMode {
 
     // delays
     public static double delayTransfer = 300, delayRelease = 750, delayCloseTransfer = 350, delayGoToTransfer = 1300;
-    public static double WAIT_DELAY_TILL_OUTTAKE = 0, WAIT_DELAY_TILL_CLOSE = 200, END_GAME = 80, HALF_TIME = 45;
+    public static double WAIT_DELAY_TILL_OUTTAKE = 50, WAIT_DELAY_TILL_CLOSE = 200, END_GAME = 80, HALF_TIME = 45;
     public static double DEFAULT_INTAKE_EXTEND_PRECENTAGE = 45, SHORT_INTAKE_EXTEND_PRECENTAGE = 20, delayReleaseFromIntake = 500;
     // variables
     double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
@@ -211,7 +211,6 @@ public class DebugOpMode extends LinearOpMode {
             intakeStateMachine();
             elevatorStateMachine();
 
-            telemetry.addData("POWER", drivetrain.power);
             telemetry.update();
         }
     }
@@ -223,7 +222,7 @@ public class DebugOpMode extends LinearOpMode {
             intakePrecentage = SHORT_INTAKE_EXTEND_PRECENTAGE;
             intakeLevel = IntakeLevel.TOP_54;
         }
-        else if(betterGamepad2.XOnce())
+        else if(betterGamepad2.BOnce())
         {
             intakePrecentage = SHORT_INTAKE_EXTEND_PRECENTAGE;
             intakeLevel = IntakeLevel.TOP_32;
@@ -581,6 +580,8 @@ public class DebugOpMode extends LinearOpMode {
                 }
 
                 if ((getTime() - previousElevator) >= WAIT_DELAY_TILL_OUTTAKE) {
+                    intake.move(Intake.Angle.MID);
+
                     outtake.setAngle(Outtake.Angle.OUTTAKE);
                 }
 
@@ -608,6 +609,11 @@ public class DebugOpMode extends LinearOpMode {
                 {
                     elevatorTargetRight -= 115;
                     elevatorTargetLeft -= 115;
+                }
+                else if(betterGamepad2.dpadDownOnce())
+                {
+                    elevatorTargetRight -= 315;
+                    elevatorTargetLeft -= 315;
                 }
 
                 if (betterGamepad1.AOnce())  {

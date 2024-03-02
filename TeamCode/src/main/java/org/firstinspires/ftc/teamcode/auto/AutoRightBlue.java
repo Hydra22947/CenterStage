@@ -135,7 +135,7 @@ public class AutoRightBlue extends LinearOpMode {
                 placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
                 placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
                 new SleepAction(1),
-                placePurpleActions.openExtension(800),
+                placePurpleActions.openExtension(795),
                 new SleepAction(1),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.5),
@@ -259,7 +259,7 @@ public class AutoRightBlue extends LinearOpMode {
                         //intake from left stack
                         .strafeToSplineHeading(new Vector2d(-42, 45), Math.toRadians(-90))
                         .splineToLinearHeading(new Pose2d(-34, 15, Math.toRadians(-90)), Math.toRadians(-90))
-                        .strafeToLinearHeading(new Vector2d(-34, 15), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-34, 14.5), Math.toRadians(0))
                         .stopAndAdd(intakePixelBlueRight)
 
 
@@ -271,8 +271,8 @@ public class AutoRightBlue extends LinearOpMode {
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
-                        .afterDisp(0.9, depositActions.readyForDeposit(1400))
-                        .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .afterDisp(0.9, depositActions.readyForDeposit(1350))
+                        .splineToLinearHeading(new Pose2d(54.5, 29, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
 
@@ -280,7 +280,7 @@ public class AutoRightBlue extends LinearOpMode {
 
                         .stopAndAdd(retractDepositBlueMiddle)
                         //Park - Close to other board
-                        .strafeToLinearHeading(new Vector2d(55, 10), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(51, 10), Math.toRadians(0))
                         .turnTo(Math.toRadians(-90))
 
                         //Park - Corner

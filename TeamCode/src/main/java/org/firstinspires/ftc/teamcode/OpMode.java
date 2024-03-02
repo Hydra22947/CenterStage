@@ -225,7 +225,7 @@ public class OpMode extends LinearOpMode {
             intakePrecentage = SHORT_INTAKE_EXTEND_PRECENTAGE;
             intakeLevel = IntakeLevel.TOP_54;
         }
-        else if(betterGamepad2.XOnce())
+        else if(betterGamepad2.BOnce())
         {
             intakePrecentage = SHORT_INTAKE_EXTEND_PRECENTAGE;
             intakeLevel = IntakeLevel.TOP_32;
@@ -717,6 +717,11 @@ public class OpMode extends LinearOpMode {
                 {
                     elevatorTargetRight -= 115;
                     elevatorTargetLeft -= 115;
+                }
+                else if(betterGamepad2.dpadDownOnce())
+                {
+                    elevatorTargetRight -= 315;
+                    elevatorTargetLeft -= 315;
                 }
 
                 if (betterGamepad1.AOnce())  {
