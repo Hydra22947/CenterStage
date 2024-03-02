@@ -58,6 +58,8 @@ public class OpMode extends LinearOpMode {
 
     public enum IntakeState {
         RETRACT,
+        RETRACT_NO_RELEASE,
+        RELEASE,
         INTAKE,
         INTAKE_EXTEND
     }
@@ -211,7 +213,7 @@ public class OpMode extends LinearOpMode {
             intakeStateMachine();
             elevatorStateMachine();
 
-            telemetry.addData("POWER", drivetrain.power);
+
             telemetry.update();
         }
     }
@@ -272,13 +274,13 @@ public class OpMode extends LinearOpMode {
                     heldExtension = false;
                 }
 
-                if (betterGamepad1.rightBumperOnce() && ((!robot.has2Pixels() && canIntake) || !outtakeToOuttake))
+                if (betterGamepad1.rightBumperOnce() && (!robot.has2Pixels() && canIntake))
                 {
                     firstReleaseThree = true;
                     intakeState = IntakeState.INTAKE;
                     override = false;
                 }
-                else if (gamepad1.right_trigger != 0 && ((!robot.has2Pixels() && canIntake && !heldExtension) || !outtakeToOuttake))
+                else if (gamepad1.right_trigger != 0 && (!robot.has2Pixels() && canIntake && !heldExtension))
                 {
                     firstReleaseThree = true;
                     moveIntake();
@@ -304,7 +306,7 @@ public class OpMode extends LinearOpMode {
                     releaseTimer = getTime();
                 }
 
-                if((getTime() - releaseTimer) >= delayRelease && had2Pixels && outtakeToOuttake)
+                if((getTime() - releaseTimer) >= delayRelease && had2Pixels)
                 {
                     intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH);
 
@@ -339,14 +341,14 @@ public class OpMode extends LinearOpMode {
             case INTAKE:
                 moveIntake();
 
-                if(firstReleaseThreeTimer  && !outtakeToOuttake)
+                if(firstReleaseThreeTimer)
                 {
                     override = true;
                     releaseFromIntake = getTime();
                     firstReleaseThreeTimer = false;
                 }
 
-                if(!outtakeToOuttake && firstReleaseThree && ((getTime() - releaseFromIntake) >= delayReleaseFromIntake))
+                if(firstReleaseThree && ((getTime() - releaseFromIntake) >= delayReleaseFromIntake))
                 {
                     intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
                     firstReleaseThree = false;
@@ -371,8 +373,7 @@ public class OpMode extends LinearOpMode {
 
                 claw.setBothClaw(Claw.ClawState.INTAKE);
 
-                if ((((robot.has2Pixels() && !startedDelayTransfer) || betterGamepad1.rightBumperOnce() || (intake.closedClaw() && override)) && outtakeToOuttake)
-                        || (!outtakeToOuttake && betterGamepad1.rightBumperOnce()))
+                if ((((robot.has2Pixels() && !startedDelayTransfer) || betterGamepad1.rightBumperOnce() || (intake.closedClaw() && override))))
                 {
                     had2Pixels = true;
                     transferTimer = getTime();
@@ -389,7 +390,7 @@ public class OpMode extends LinearOpMode {
                 {
                     intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);
                 }
-                else if(!startedDelayTransfer && !override && outtakeToOuttake)
+                else if(!startedDelayTransfer && !override)
                 {
                     intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
                 }
@@ -418,13 +419,19 @@ public class OpMode extends LinearOpMode {
                 if((intake.closedClaw() && override) && betterGamepad1.rightBumperOnce())
                 {
                     overrideIntakeExtension = true;
-                    intakeState = IntakeState.RETRACT;
+                    if(outtakeToOuttake)
+                    {
+                        intakeState = IntakeState.RETRACT;
+                    }
                 }
 
                 if((getTime() - transferTimer) >= delayTransfer && startedDelayTransfer)
                 {
                     overrideIntakeExtension = true;
-                    intakeState = IntakeState.RETRACT;
+                    if(outtakeToOuttake)
+                    {
+                        intakeState = IntakeState.RETRACT;
+                    }
                 }
 
 
@@ -439,14 +446,14 @@ public class OpMode extends LinearOpMode {
                 heldExtension = true;
                 drivetrain.slow();
 
-                if(firstReleaseThreeTimer  && !outtakeToOuttake)
+                if(firstReleaseThreeTimer)
                 {
                     override = true;
                     releaseFromIntake = getTime();
                     firstReleaseThreeTimer = false;
                 }
 
-                if(!outtakeToOuttake && firstReleaseThree && ((getTime() - releaseFromIntake) >= delayReleaseFromIntake))
+                if(firstReleaseThree && ((getTime() - releaseFromIntake) >= delayReleaseFromIntake))
                 {
                     intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
                     firstReleaseThree = false;
@@ -462,8 +469,7 @@ public class OpMode extends LinearOpMode {
                     intakeExtension.setTarget(intakeExtension.getPos());
                 }
 
-                if ((((robot.has2Pixels() && !startedDelayTransfer) || gamepad1.right_trigger == 0 || (intake.closedClaw() && override)) && outtakeToOuttake)
-                        || (!outtakeToOuttake && gamepad1.right_trigger == 0))
+                if ((((robot.has2Pixels() && !startedDelayTransfer) || gamepad1.right_trigger == 0 || (intake.closedClaw() && override))))
                 {
                     overrideIntakeExtension = true;
 
@@ -483,7 +489,7 @@ public class OpMode extends LinearOpMode {
                 {
                     intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);
                 }
-                else if(!startedDelayTransfer && !override && outtakeToOuttake)
+                else if(!startedDelayTransfer && !override)
                 {
                     intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
                 }
@@ -520,7 +526,10 @@ public class OpMode extends LinearOpMode {
 
                 if (gamepad1.right_trigger == 0) {
                     firstExtend = true;
-                    intakeState = IntakeState.RETRACT;
+                    if(outtakeToOuttake)
+                    {
+                        intakeState = IntakeState.RETRACT;
+                    }
                 }
 
                 if(betterGamepad2.dpadDownOnce())
@@ -528,8 +537,108 @@ public class OpMode extends LinearOpMode {
                     override = !override;
                 }
                 break;
+            case RETRACT_NO_RELEASE:
+                intakeExtension.setTarget(-35);
+
+                if(gamepad2.right_trigger != 0 && resetRightTrigger)
+                {
+                    if(claw.leftClaw == Claw.ClawState.CLOSED && claw.rightClaw == Claw.ClawState.CLOSED)
+                    {
+                        wasClosed = true;
+                    }
+
+                    claw.setBothClaw(Claw.ClawState.OPEN);
+
+                    resetRightTrigger = false;
+                    closeClaw = false;
+                }
+
+                if(gamepad2.right_trigger == 0 && wasClosed)
+                {
+                    wasClosed = false;
+                    resetRightTrigger = true;
+                    closeClaw = true;
+                }
+                else if(gamepad2.right_trigger == 0)
+                {
+                    resetRightTrigger = true;
+                    closeClaw = true;
+                }
+
+                if(gamepad1.right_trigger == 0)
+                {
+                    heldExtension = false;
+                }
+
+                if (betterGamepad1.rightBumperOnce() && (!robot.has2Pixels() && canIntake))
+                {
+                    firstReleaseThree = true;
+                    intakeState = IntakeState.INTAKE;
+                    override = false;
+                }
+                else if (gamepad1.right_trigger != 0 && (!robot.has2Pixels() && canIntake && !heldExtension))
+                {
+                    firstReleaseThree = true;
+                    moveIntake();
+                    claw.setBothClaw(Claw.ClawState.INTAKE);
+                    intakeState = IntakeState.INTAKE_EXTEND;
+                    override = false;
+                }
+                else if(liftState == LiftState.RETRACT && gamepad2.left_trigger == 0)
+                {
+                    drivetrain.fast();
+                }
+                else if(gamepad2.left_trigger != 0)
+                {
+                    drivetrain.slow();
+                }
+
+                if(startedDelayTransfer)
+                {
+                    intakeMid = false;
+                    intake.move(Intake.Angle.OUTTAKE);
+                    startedDelayTransfer = false;
+
+                    releaseTimer = getTime();
+                }
+
+                if((getTime() - releaseTimer) >= delayRelease && had2Pixels)
+                {
+                    closeTransferTimer = getTime();
+
+                    goToMid = true;
+
+                    had2Pixels = false;
+                }
+
+
+                if(getTime() - closeTransferTimer >= delayCloseTransfer && goToMid && gamepad1.left_trigger == 0 && closeClaw)
+                {
+                    overrideIntakeExtension = false;
+
+                    goToMid = false;
+
+                    intakeMid = true;
+                }
+                else if((liftState == LiftState.EXTRACT || liftState == LiftState.HANG || liftState == LiftState.STUCK_3) && intakeMid)
+                {
+                    intake.move(Intake.Angle.MID);
+                    goToTransferTimer = getTime();
+                }
+                else if(getTime() - goToTransferTimer >= delayGoToTransfer)
+                {
+                    intake.move(Intake.Angle.OUTTAKE);
+                }
+
+                break;
+            case RELEASE:
+                
+                break;
             default:
-                intakeState = IntakeState.RETRACT;
+                if(outtakeToOuttake)
+                {
+                    intakeState = IntakeState.RETRACT;
+                }
                 break;
         }
     }
