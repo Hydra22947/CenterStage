@@ -46,7 +46,7 @@ public class DebugOpMode extends LinearOpMode {
     // delays
     public static double delayTransfer = 300, delayRelease = 750, delayCloseTransfer = 350, delayGoToTransfer = 1300;
     public static double WAIT_DELAY_TILL_OUTTAKE = 50, WAIT_DELAY_TILL_CLOSE = 200, END_GAME = 80, HALF_TIME = 45;
-    public static double DEFAULT_INTAKE_EXTEND_PRECENTAGE = 45, SHORT_INTAKE_EXTEND_PRECENTAGE = 20, delayReleaseFromIntake = 500;
+    public static double DEFAULT_INTAKE_EXTEND_PRECENTAGE = 37.5, SHORT_INTAKE_EXTEND_PRECENTAGE = 20, delayReleaseFromIntake = 500;
     // variables
     double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
     double elevatorTargetRight = 1300, intakePrecentage = DEFAULT_INTAKE_EXTEND_PRECENTAGE, releaseFromIntake = 0;
@@ -602,19 +602,25 @@ public class DebugOpMode extends LinearOpMode {
 
                 if(betterGamepad2.rightBumperOnce())
                 {
-                    elevatorTargetRight += 115;
-                    elevatorTargetLeft += 115;
+                    elevatorTargetRight += 150;
+                    elevatorTargetLeft += 150;
                 }
                 else if(betterGamepad2.leftBumperOnce())
                 {
-                    elevatorTargetRight -= 115;
-                    elevatorTargetLeft -= 115;
+                    elevatorTargetRight -= 150;
+                    elevatorTargetLeft -= 150;
                 }
-                else if(betterGamepad2.dpadDownOnce())
+                else if(betterGamepad2.dpadLeftOnce())
                 {
-                    elevatorTargetRight -= 315;
-                    elevatorTargetLeft -= 315;
+                    elevatorTargetRight -= 415;
+                    elevatorTargetLeft -= 415;
                 }
+                else if(betterGamepad2.dpadRightOnce())
+                {
+                    elevatorTargetRight += 415;
+                    elevatorTargetLeft += 415;
+                }
+
 
                 if (betterGamepad1.AOnce())  {
                     claw.setBothClaw(Claw.ClawState.OPEN);

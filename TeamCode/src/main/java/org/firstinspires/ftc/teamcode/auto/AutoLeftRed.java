@@ -102,7 +102,9 @@ public class AutoLeftRed extends LinearOpMode {
 
                 placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 600)
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 600),
+                new SleepAction(0.5),
+                depositActions.readyForDeposit((int)elevator.getPos() + 200)
         );
 
         SequentialAction transferBlueMiddle = new SequentialAction(
@@ -163,7 +165,7 @@ public class AutoLeftRed extends LinearOpMode {
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, -9), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
-                        .afterDisp(0.9, depositActions.readyForDeposit(1400))
+                        .afterDisp(0.9, depositActions.readyForDeposit(1000))
                         .splineToLinearHeading(new Pose2d(51.45, -39, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
@@ -199,7 +201,7 @@ public class AutoLeftRed extends LinearOpMode {
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, -6), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
-                        .afterDisp(0.9, depositActions.readyForDeposit(1300))
+                        .afterDisp(0.9, depositActions.readyForDeposit(1000))
                         .splineToLinearHeading(new Pose2d(51.35, -32.2, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
@@ -232,7 +234,7 @@ public class AutoLeftRed extends LinearOpMode {
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 6), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
-                        .afterDisp(0.9, depositActions.readyForDeposit(1400))
+                        .afterDisp(0.9, depositActions.readyForDeposit(1000))
                         .splineToLinearHeading(new Pose2d(51.35, 30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
@@ -269,7 +271,7 @@ public class AutoLeftRed extends LinearOpMode {
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, -9), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
-                        .afterDisp(0.9, depositActions.readyForDeposit(1400))
+                        .afterDisp(0.9, depositActions.readyForDeposit(1000))
                         .splineToLinearHeading(new Pose2d(51.45, -39, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)

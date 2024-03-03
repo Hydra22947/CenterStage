@@ -136,6 +136,9 @@ public class Elevator implements Subsystem
             }
             else
             {
+                elevatorMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
                 if(gamepad.right_stick_y != 0 && !gamepad.right_stick_button)
                 {
                     if((-gamepad.right_stick_y) < 0)
