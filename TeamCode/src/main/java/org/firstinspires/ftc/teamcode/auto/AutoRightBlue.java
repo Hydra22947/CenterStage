@@ -107,7 +107,7 @@ public class AutoRightBlue extends LinearOpMode {
                 new SleepAction(1),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 600),
                 new SleepAction(0.5),
-                depositActions.readyForDeposit((int)elevator.getPos() + 200)
+                depositActions.moveElevator((int)elevator.getPos() + 200)
         );
 
         SequentialAction transferBlueMiddle = new SequentialAction(
@@ -145,6 +145,7 @@ public class AutoRightBlue extends LinearOpMode {
                 placePurpleActions.closeExtension()
 
         );
+
 
         Action trajBlueLeft =
                 robot.drive.actionBuilder(robot.drive.pose)

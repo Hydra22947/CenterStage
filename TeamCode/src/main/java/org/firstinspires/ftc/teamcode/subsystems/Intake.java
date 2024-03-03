@@ -27,9 +27,9 @@ public class Intake implements Subsystem{
     public static double STACK = 0.02;
     public static double RIGHT_SENSOR_ERROR = 0.3;
 
-    public static double openRight = 0.5, openLeft = 0.4; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double openRight = 0.5, openLeft = 0.42; // סרבואים של תפיסה של שאיבה שהם פתוחים
     public static double closeRight = .85, closeLeft = 0.775; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double indeterminateRight = 0.73, indeterminateLeft = 0.675; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double indeterminateRight = 0.73, indeterminateLeft = 0.69; // סרבואים של תפיסה של שאיבה שהם פתוחים
 
 
     public static void setSeeFarFrom(double seeFarFrom) {
