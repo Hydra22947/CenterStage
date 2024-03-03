@@ -94,14 +94,7 @@ public class IntakeExtension implements Subsystem
             {
                 if(gamepad.left_stick_y != 0 && !gamepad.left_stick_button)
                 {
-                    if((-gamepad.left_stick_y) < 0)
-                    {
-                        extensionMotor.setPower(Range.clip(-gamepad.left_stick_y, -maxPower/2, maxPower/2));
-                    }
-                    else
-                    {
-                        extensionMotor.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
-                    }
+                    extensionMotor.setPower(Range.clip(-gamepad.left_stick_y, -maxPower, maxPower));
                 }
                 else if(gamepad.left_stick_y != 0 && gamepad.left_stick_button)
                 {
