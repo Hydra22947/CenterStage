@@ -62,7 +62,7 @@ public class AutoRightBlue extends LinearOpMode {
     }
 
 
-    public static PropLocation propLocation = PropLocation.MIDDLE;
+    public static PropLocation propLocation = PropLocation.RIGHT;
     PropPipelineBlueRight propPipelineBlueRight;
     OpenCvWebcam webcam;
 
@@ -107,7 +107,7 @@ public class AutoRightBlue extends LinearOpMode {
                 new SleepAction(1),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 600),
                 new SleepAction(0.5),
-                depositActions.moveElevator((int)elevator.getPos() + 200)
+                depositActions.moveElevator(1400)
         );
 
         SequentialAction transferBlueMiddle = new SequentialAction(
@@ -176,9 +176,10 @@ public class AutoRightBlue extends LinearOpMode {
 
                         .setTangent(Math.toRadians(90))
 
-                        .stopAndAdd(retractDepositBlueMiddle)
                         //Park - Close to other board
                         .strafeToLinearHeading(new Vector2d(55, 10), Math.toRadians(0))
+                        .stopAndAdd(retractDepositBlueMiddle)
+
                         .turnTo(Math.toRadians(-90))
 
                         //Park - Corner
@@ -211,9 +212,10 @@ public class AutoRightBlue extends LinearOpMode {
                         .waitSeconds(.5)
 
                         .setTangent(Math.toRadians(90))
-                        .stopAndAdd(retractDepositBlueMiddle)
                         //Park - Close to other board
                         .strafeToLinearHeading(new Vector2d(55, 10), Math.toRadians(0))
+                        .stopAndAdd(retractDepositBlueMiddle)
+
                         .turnTo(Math.toRadians(-90))
 
                         //Park - Corner
@@ -262,7 +264,7 @@ public class AutoRightBlue extends LinearOpMode {
                         //intake from left stack
                         .strafeToSplineHeading(new Vector2d(-42, 45), Math.toRadians(-90))
                         .splineToLinearHeading(new Pose2d(-34, 15, Math.toRadians(-90)), Math.toRadians(-90))
-                        .strafeToLinearHeading(new Vector2d(-34, 14.5), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-34, 15), Math.toRadians(0))
                         .stopAndAdd(intakePixelBlueRight)
 
 
@@ -275,15 +277,16 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
                         .afterDisp(0.9, depositActions.readyForDeposit(1000))
-                        .splineToLinearHeading(new Pose2d(54.5, 29, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(54.5, 30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
 
                         .setTangent(Math.toRadians(90))
 
-                        .stopAndAdd(retractDepositBlueMiddle)
                         //Park - Close to other board
-                        .strafeToLinearHeading(new Vector2d(51, 10), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(51, 12), Math.toRadians(0))
+                        .stopAndAdd(retractDepositBlueMiddle)
+
                         .turnTo(Math.toRadians(-90))
 
                         //Park - Corner

@@ -45,7 +45,7 @@ public class OpMode extends LinearOpMode {
 
     // delays
     public static double delayTransfer = 300, delayRelease = 750, delayCloseTransfer = 350, delayGoToTransfer = 1300;
-    public static double WAIT_DELAY_TILL_OUTTAKE = 0, WAIT_DELAY_TILL_CLOSE = 250, END_GAME = 80, HALF_TIME = 45;
+    public static double WAIT_DELAY_TILL_OUTTAKE = 150, WAIT_DELAY_TILL_CLOSE = 250, END_GAME = 80, HALF_TIME = 45;
     public static double DEFAULT_INTAKE_EXTEND_PRECENTAGE = 37.5, SHORT_INTAKE_EXTEND_PRECENTAGE = 20, delayReleaseFromIntake = 500;
     // variables
     double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
