@@ -164,7 +164,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-35, 11), Math.toRadians(0))
 
-                        .waitSeconds(5)
+                        .waitSeconds(7)
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
@@ -199,7 +199,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
                         .waitSeconds(1)
-                        .strafeToLinearHeading(new Vector2d(-45, 8), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-45, 7.75), Math.toRadians(0))
 
                         .waitSeconds(5)
 
@@ -213,7 +213,7 @@ public class AutoRightBlue extends LinearOpMode {
 
                         .setTangent(Math.toRadians(90))
                         //Park - Close to other board
-                        .strafeToLinearHeading(new Vector2d(55, 10), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(52, 10), Math.toRadians(0))
                         .stopAndAdd(retractDepositBlueMiddle)
 
                         .turnTo(Math.toRadians(-90))
