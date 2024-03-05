@@ -9,12 +9,18 @@ import static org.firstinspires.ftc.teamcode.auto.AutoSettings.writeToFile;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -35,6 +41,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
+
+import java.util.Arrays;
 
 @Config
 @Autonomous(name = "2+0 - Auto Blue Right")
@@ -105,7 +113,7 @@ public class AutoRightBlue extends LinearOpMode {
 
                 placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 600),
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
                 new SleepAction(0.5),
                 depositActions.moveElevator(1400)
         );
@@ -137,7 +145,11 @@ public class AutoRightBlue extends LinearOpMode {
                 placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
                 placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
                 new SleepAction(1),
-                placePurpleActions.openExtension(795),
+                placePurpleActions.openExtension(600)
+
+        );
+
+        SequentialAction intakePixelBlueClose = new SequentialAction(
                 new SleepAction(1),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.5),
@@ -155,7 +167,7 @@ public class AutoRightBlue extends LinearOpMode {
 
 
                         //intake from mid stack
-                        .strafeToLinearHeading(new Vector2d(-53.75, 28), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-53.75, 26), Math.toRadians(0))
                         .stopAndAdd(intakePixelBlueMiddle)
 
 
@@ -170,14 +182,14 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
                         .afterDisp(0.9, depositActions.readyForDeposit(1000))
-                        .splineToLinearHeading(new Pose2d(52, 39, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(52, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
-
+                        .lineToX(48)
                         .setTangent(Math.toRadians(90))
 
                         //Park - Close to other board
-                        .strafeToLinearHeading(new Vector2d(55, 10), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(52, 15), Math.toRadians(0))
                         .stopAndAdd(retractDepositBlueMiddle)
 
                         .turnTo(Math.toRadians(-90))
@@ -189,7 +201,7 @@ public class AutoRightBlue extends LinearOpMode {
         Action trajBlueMiddle =
                 robot.drive.actionBuilder(robot.drive.pose)
                         //place purple
-                        .strafeToLinearHeading(new Vector2d(-34.5, 33.5), Math.toRadians(-90))
+                        .strafeToLinearHeading(new Vector2d(-34.5, 34), Math.toRadians(-90))
 
                         //intake from mid stack
                         .strafeToLinearHeading(new Vector2d(-53.5, 27), Math.toRadians(0))
@@ -199,17 +211,18 @@ public class AutoRightBlue extends LinearOpMode {
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
                         .waitSeconds(1)
-                        .strafeToLinearHeading(new Vector2d(-45, 7.75), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-44.25, 7), Math.toRadians(0))
 
                         .waitSeconds(5)
 
                         //deposit
-                        .strafeToLinearHeading(new Vector2d(30, 6), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(30, 5), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
-                        .afterDisp(0.9, depositActions.readyForDeposit(1000))
-                        .splineToLinearHeading(new Pose2d(52, 32.2, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .afterDisp(0.9, depositActions.readyForDeposit(1500))
+                        .splineToLinearHeading(new Pose2d(52, 31.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
+                        .lineToX(48)
 
                         .setTangent(Math.toRadians(90))
                         //Park - Close to other board
@@ -254,6 +267,11 @@ public class AutoRightBlue extends LinearOpMode {
                         //Park - Corner
                         //.lineToY(64)*/
                         .build();
+        VelConstraint baseVelConstraint = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(50),
+                new AngularVelConstraint(Math.toRadians(150))));
+
+        AccelConstraint baseAccelConstraint = new ProfileAccelConstraint(-10, 25);
 
         Action trajBlueRight =
                 robot.drive.actionBuilder(robot.drive.pose)
@@ -264,10 +282,13 @@ public class AutoRightBlue extends LinearOpMode {
                         //intake from left stack
                         .strafeToSplineHeading(new Vector2d(-42, 45), Math.toRadians(-90))
                         .splineToLinearHeading(new Pose2d(-34, 15, Math.toRadians(-90)), Math.toRadians(-90))
-                        .strafeToLinearHeading(new Vector2d(-34, 15), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-26, 14.5), Math.toRadians(0)
+                        , baseVelConstraint,baseAccelConstraint)
                         .stopAndAdd(intakePixelBlueRight)
-
-
+                        .waitSeconds(1)
+                        .strafeToLinearHeading(new Vector2d(-39.25, 14.5), Math.toRadians(0))
+                        .waitSeconds(.5)
+                        .stopAndAdd(intakePixelBlueClose)
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
 
@@ -276,15 +297,16 @@ public class AutoRightBlue extends LinearOpMode {
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
-                        .afterDisp(0.9, depositActions.readyForDeposit(1000))
-                        .splineToLinearHeading(new Pose2d(54.5, 30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .afterDisp(0.9, depositActions.readyForDeposit(1200))
+                        .splineToLinearHeading(new Pose2d(54.5, 28.75, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
+                        .lineToX(48)
 
                         .setTangent(Math.toRadians(90))
 
                         //Park - Close to other board
-                        .strafeToLinearHeading(new Vector2d(51, 12), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(48, 15), Math.toRadians(0))
                         .stopAndAdd(retractDepositBlueMiddle)
 
                         .turnTo(Math.toRadians(-90))

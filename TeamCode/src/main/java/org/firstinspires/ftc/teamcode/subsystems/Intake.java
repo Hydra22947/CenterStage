@@ -16,7 +16,7 @@ public class Intake implements Subsystem{
     public static double outtakeHandPivot = 0.65, outtakeAmmoPivot = .62; // פורק מהשאיבה הזוויות-מתוקן
     public static double midHandPivot = 0.67, midAmmoPivot = 0.37;
     public static double top5HandPivot = .29, top5AmmoPivot = 0.1;
-    public static double top5HandPivotAuto = 0.31, top5AmmoPivotAuto = 0.09; //auto ערימה של אוטונומי רק ה5
+    public static double top5HandPivotAuto = 0.32, top5AmmoPivotAuto = 0.09; //auto ערימה של אוטונומי רק ה5
     public static double top54HandPivot = 0.28, top54AmmoPivot = 0.09; // ערימה של 54
     public static double top54HandPivotAuto = 0.235, top54AmmoPivotAuto = 0.035;
     public static double top43HandPivot = 0.262, top43AmmoPivot = 0.098; // auto
@@ -27,9 +27,9 @@ public class Intake implements Subsystem{
     public static double STACK = 0.02;
     public static double RIGHT_SENSOR_ERROR = 0.3;
 
-    public static double openRight = 0.5, openLeft = 0.42; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double closeRight = .8, closeLeft = 0.82; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double indeterminateRight = 0.725, indeterminateLeft = 0.68; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double openRight = 0.5, openLeft = 0.38; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double closeRight = .8, closeLeft = 0.78; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double indeterminateRight = 0.725, indeterminateLeft = 0.67; // סרבואים של תפיסה של שאיבה שהם פתוחים
 
 
     public static void setSeeFarFrom(double seeFarFrom) {
