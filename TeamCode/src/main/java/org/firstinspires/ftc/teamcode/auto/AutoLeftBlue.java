@@ -55,17 +55,18 @@ public class AutoLeftBlue extends LinearOpMode {
     PlacePurpleActions placePurpleActions;
     UpdateActions updateActions;
 
-    enum PropLocation
+    public enum PropLocation
     {
         LEFT,
         MIDDLE,
         RIGHT
     }
 
-    PropLocation propLocation = PropLocation.MIDDLE;
+    public static PropLocation propLocation = PropLocation.MIDDLE;
     PropPipelineBlueLeft propPipelineBlueLeft;
     OpenCvWebcam webcam;
 
+    public static int tempHeight = 1100;
     @Override
     public void runOpMode() {
         time = new ElapsedTime();
@@ -95,20 +96,22 @@ public class AutoLeftBlue extends LinearOpMode {
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
         SequentialAction depositBlueLeft = new SequentialAction(
-                depositActions.readyForDeposit(900),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600),
-                new SleepAction(0.5),
-                depositActions.retractDeposit()
+                depositActions.readyForDeposit(tempHeight + 75),
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600)
+                //depositActions.retractDeposit()
         );
 
         SequentialAction placePurplePixelBlueLeft = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
                 new SleepAction(.5),
-                placePurpleActions.openExtension(640),
+                placePurpleActions.openExtension(615),
                 new SleepAction(1.5),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.1),
+               placePurpleActions.openExtension(550),
+                new SleepAction(0.2),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
+                placePurpleActions.closeExtension(),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
@@ -118,18 +121,20 @@ public class AutoLeftBlue extends LinearOpMode {
 
         SequentialAction depositBlueMiddle = new SequentialAction(
 
-                depositActions.readyForDeposit(1050),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600),
                 new SleepAction(0.5),
+                depositActions.readyForDeposit(tempHeight + 150),
                 depositActions.retractDeposit()
         );
 
         SequentialAction placePurplePixelBlueMiddle = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
                 new SleepAction(0.5),
-                placePurpleActions.openExtension(820),
+                placePurpleActions.openExtension(790),
                 new SleepAction(1.5),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
+                new SleepAction(0.1),
+                placePurpleActions.closeExtension(),
                 new SleepAction(0.1),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
@@ -140,82 +145,115 @@ public class AutoLeftBlue extends LinearOpMode {
         );
 
         SequentialAction depositBlueRight = new SequentialAction(
-                depositActions.readyForDeposit(950),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600),
-                new SleepAction(0.5),
-                depositActions.retractDeposit()
+                depositActions.readyForDeposit(tempHeight + 250),
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600)
         );
 
         SequentialAction placePurplePixelBlueRight = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
                 new SleepAction(0.5),
                 placePurpleActions.openExtension(1030),
-                new SleepAction(2.45),
+                new SleepAction(0.6),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.1),
+                placePurpleActions.openExtension(800),
+                new SleepAction(0.2),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
+                placePurpleActions.closeExtension(),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
-
         SequentialAction retractDepositBlueRight = new SequentialAction(
                 depositActions.retractDeposit()
         );
 
         Action trajBlueLeft =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .stopAndAdd(depositActions.readyForDeposit(950))
+                        .stopAndAdd(depositActions.readyForDeposit(1050))
                         .splineToLinearHeading(new Pose2d(48, 34.25, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixelBlueLeft)
                         .setTangent(0)
-                        .stopAndAdd(placePurpleActions.closeExtension())
                         .waitSeconds(.1)
                         .strafeTo(new Vector2d(50.75, 40.5))
                         .stopAndAdd(depositBlueLeft)
                         .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
+                        .strafeTo(new Vector2d(47, 40.5))
                         .strafeTo(new Vector2d(45, 60))
                         .stopAndAdd(retractDepositBlueLeft)
                         .turnTo(Math.toRadians(-90))
                         .build();
 
+                        //Park Close To Backdrop
+                        /*
+                        .strafeTo(new Vector2d(52,15))
+                        .stopAndAdd(retractDepositBlueMiddle)
+                        .turnTo(Math.toRadians(-90))
+                        .build();
+                         */
+
         Action trajBlueMiddle =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .stopAndAdd(depositActions.readyForDeposit(950))
+                        .stopAndAdd(depositActions.readyForDeposit(tempHeight))
                         .splineToLinearHeading(new Pose2d(40 , 26, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixelBlueMiddle)
                         .setTangent(0)
+                        .waitSeconds(.2)
+                        .stopAndAdd(placePurpleActions.moveIntake(Intake.Angle.MID))
+                        .waitSeconds(.2)
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
-                        .splineToLinearHeading(new Pose2d(52.25, 33.25, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(52.25, 34, Math.toRadians(0)), Math.toRadians(0))
                         .waitSeconds(.1)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
+                        .strafeTo(new Vector2d(50, 33))
+                        //Park Close To Wall
                         .strafeTo(new Vector2d(45, 60))
                         .stopAndAdd(retractDepositBlueMiddle)
                         .turnTo(Math.toRadians(-90))
                         .build();
 
+                        //Park Close To Backdrop
+                        /*
+                        .strafeTo(new Vector2d(52,15))
+                        .stopAndAdd(retractDepositBlueMiddle)
+                        .turnTo(Math.toRadians(-90))
+                        .build();
+                         */
+
+
         Action trajBlueRight =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .stopAndAdd(depositActions.readyForDeposit(950))
+                        .stopAndAdd(depositActions.readyForDeposit(tempHeight))
                         .splineToLinearHeading(new Pose2d(34.7,  32, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixelBlueRight)
                         .setTangent(0)
+                        .waitSeconds(.2)
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
                         .waitSeconds(.1)
-                        .strafeTo(new Vector2d(50.75, 29))
+                        .strafeTo(new Vector2d(52.25, 29))
                         .stopAndAdd(depositBlueRight)
-                        .waitSeconds(0.5)
+                        .waitSeconds(0.3)
                         //Park
                         .setTangent(Math.toRadians(90))
-                        .strafeTo(new Vector2d(45, 60))
+                        .strafeTo(new Vector2d(48, 28.5))
                         .stopAndAdd(retractDepositBlueRight)
+                        .strafeToLinearHeading(new Vector2d(45, 55), Math.toRadians(-90))
+                        .strafeTo(new Vector2d(45.25, 60))
+                        .build();
+
+
+                        //Park Close To Backdrop
+                        /*
+                        .strafeTo(new Vector2d(52,15))
+                        .stopAndAdd(retractDepositBlueMiddle)
                         .turnTo(Math.toRadians(-90))
                         .build();
+                         */
 
         while (opModeInInit() && !isStopRequested()) {
             intake.setAngle(Intake.Angle.MID);
@@ -224,18 +262,18 @@ public class AutoLeftBlue extends LinearOpMode {
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addData("POS", propPipelineBlueLeft.getLocation());
-            switch (propPipelineBlueLeft.getLocation())
-            {
-                case Left:
-                    propLocation = PropLocation.LEFT;
-                    break;
-                case Right:
-                    propLocation = PropLocation.RIGHT;
-                    break;
-                case Center:
-                    propLocation = PropLocation.MIDDLE;
-                    break;
-            }
+//            switch (propPipelineBlueLeft.getLocation())
+//            {
+//                case Left:
+//                    propLocation = PropLocation.LEFT;
+//                    break;
+//                case Right:
+//                    propLocation = PropLocation.RIGHT;
+//                    break;
+//                case Center:
+//                    propLocation = PropLocation.MIDDLE;
+//                    break;
+//            }
             telemetry.addLine("Initialized");
             telemetry.update();
         }

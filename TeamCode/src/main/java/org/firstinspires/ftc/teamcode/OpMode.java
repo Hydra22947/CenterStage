@@ -214,6 +214,11 @@ public class OpMode extends LinearOpMode {
                 }
             }
 
+            if(betterGamepad1.shareOnce())
+            {
+                drivetrain.maxPower = 0.9;
+            }
+
             changeIntakeLevels();
             intakeStateMachine();
             elevatorStateMachine();
@@ -717,7 +722,7 @@ public class OpMode extends LinearOpMode {
                 {
                     claw.setLeftClaw(Claw.ClawState.OPEN);
                 }
-                else if(betterGamepad1.dpadDownOnce())
+                else if(betterGamepad1.dpadDownOnce() || betterGamepad1.leftBumperOnce())
                 {
                     claw.setBothClaw(Claw.ClawState.INTERMEDIATE);
                 }

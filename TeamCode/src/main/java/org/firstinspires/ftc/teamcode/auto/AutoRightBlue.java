@@ -45,7 +45,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.Arrays;
 
 @Config
-@Autonomous(name = "2+0 - Auto Blue Right")
+@Autonomous(name = "2+1 - Auto Blue Right")
 public class AutoRightBlue extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
@@ -167,7 +167,7 @@ public class AutoRightBlue extends LinearOpMode {
 
 
                         //intake from mid stack
-                        .strafeToLinearHeading(new Vector2d(-53.75, 26), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-53.75, 26.2), Math.toRadians(0))
                         .stopAndAdd(intakePixelBlueMiddle)
 
 
@@ -181,16 +181,15 @@ public class AutoRightBlue extends LinearOpMode {
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
-                        .afterDisp(0.9, depositActions.readyForDeposit(1000))
+                        .afterDisp(0.9, depositActions.readyForDeposit(1150))
                         .splineToLinearHeading(new Pose2d(52, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
                         .lineToX(48)
                         .setTangent(Math.toRadians(90))
-
+                        .stopAndAdd(retractDepositBlueMiddle)
                         //Park - Close to other board
                         .strafeToLinearHeading(new Vector2d(52, 15), Math.toRadians(0))
-                        .stopAndAdd(retractDepositBlueMiddle)
 
                         .turnTo(Math.toRadians(-90))
 
@@ -204,7 +203,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(-34.5, 34), Math.toRadians(-90))
 
                         //intake from mid stack
-                        .strafeToLinearHeading(new Vector2d(-53.5, 27), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-53.3, 27), Math.toRadians(0))
                         .stopAndAdd(intakePixelBlueMiddle)
 
 
@@ -218,8 +217,8 @@ public class AutoRightBlue extends LinearOpMode {
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 5), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
-                        .afterDisp(0.9, depositActions.readyForDeposit(1500))
-                        .splineToLinearHeading(new Pose2d(52, 31.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .afterDisp(0.9, depositActions.readyForDeposit(1100))
+                        .splineToLinearHeading(new Pose2d(52, 32.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
                         .lineToX(48)

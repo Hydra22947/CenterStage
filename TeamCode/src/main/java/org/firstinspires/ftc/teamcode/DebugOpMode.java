@@ -214,6 +214,11 @@ public class DebugOpMode extends LinearOpMode {
                 }
             }
 
+            if(betterGamepad1.shareOnce())
+            {
+                drivetrain.maxPower = 0.9;
+            }
+
             changeIntakeLevels();
             intakeStateMachine();
             elevatorStateMachine();
@@ -788,7 +793,7 @@ public class DebugOpMode extends LinearOpMode {
             case STUCK_3:
                 outtake.setAngle(Outtake.Angle.OUTTAKE);
 
-                if(betterGamepad1.dpadDownOnce())
+                if(betterGamepad1.dpadDownOnce() || betterGamepad1.leftBumperOnce())
                 {
                     claw.setBothClaw(Claw.ClawState.INTERMEDIATE);
                 }
