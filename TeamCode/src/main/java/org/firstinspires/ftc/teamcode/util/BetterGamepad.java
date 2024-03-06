@@ -8,7 +8,7 @@ public class BetterGamepad {
     private int dpad_up, dpad_down, dpad_left, dpad_right;
     private int x, y, a, b;
     private int left_bumper, right_bumper;
-    private int share;
+    private int share, touchpad;
 
     public double left_stick_x, right_stick_x, left_stick_y, right_stick_y;
     public double left_trigger, right_trigger;
@@ -29,6 +29,7 @@ public class BetterGamepad {
         if (gamepad.left_bumper) { ++left_bumper; } else { left_bumper = 0; }
         if (gamepad.right_bumper) { ++right_bumper; } else { right_bumper = 0; }
         if (gamepad.share) { ++share; } else { share = 0; }
+        if (gamepad.touchpad) { ++touchpad; } else { touchpad = 0; }
 
         left_stick_x = gamepad.left_stick_x;
         left_stick_y = gamepad.left_stick_y;
@@ -50,6 +51,7 @@ public class BetterGamepad {
     public boolean rightBumper() { return 0 < right_bumper; }
 
     public boolean shareOnce() { return 1 == share; }
+    public boolean touchpadOnce() { return 1 == touchpad; }
     public boolean dpadUpOnce() { return 1 == dpad_up; }
     public boolean dpadDownOnce() { return 1 == dpad_down; }
     public boolean dpadLeftOnce() { return 1 == dpad_left; }

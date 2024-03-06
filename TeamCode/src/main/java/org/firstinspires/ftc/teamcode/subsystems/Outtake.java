@@ -13,6 +13,7 @@ public class Outtake implements Subsystem{
 
     public static double intakeHandPivot = 0.815, intakeClawPivot = 0.095;
     public static double outtakeHandPivot = .35, outtakeClawPivot = .955;
+    public static double outtakeHandPivotLong = .41, outtakeClawPivotLong = .95;
 
     public static double power = 1;
 
@@ -38,7 +39,8 @@ public class Outtake implements Subsystem{
     public enum Angle
     {
         INTAKE,
-        OUTTAKE
+        OUTTAKE,
+        OUTTAKE_LONG
     }
 
     public enum Type
@@ -78,6 +80,9 @@ public class Outtake implements Subsystem{
                     case OUTTAKE:
                         this.robot.outtakeClawPivotServo.setPosition(outtakeClawPivot);
                         break;
+                    case OUTTAKE_LONG:
+                        this.robot.outtakeClawPivotServo.setPosition(outtakeClawPivotLong);
+                        break;
                 }
                 break;
             case HAND:
@@ -89,6 +94,10 @@ public class Outtake implements Subsystem{
                     case OUTTAKE:
                         this.robot.outtakeHandRightServo.setPosition(outtakeHandPivot);
                         this.robot.outtakeHandLeftServo.setPosition(outtakeHandPivot);
+                        break;
+                    case OUTTAKE_LONG:
+                        this.robot.outtakeHandRightServo.setPosition(outtakeHandPivotLong);
+                        this.robot.outtakeHandLeftServo.setPosition(outtakeHandPivotLong);
                         break;
                 }
                 break;

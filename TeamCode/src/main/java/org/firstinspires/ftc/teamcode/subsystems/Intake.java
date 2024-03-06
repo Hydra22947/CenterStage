@@ -17,15 +17,17 @@ public class Intake implements Subsystem{
     public static double midHandPivot = 0.67, midAmmoPivot = 0.37;
     public static double top5HandPivot = .29, top5AmmoPivot = 0.1;
     public static double top5HandPivotAuto = 0.32, top5AmmoPivotAuto = 0.09; //auto ערימה של אוטונומי רק ה5
-    public static double top54HandPivot = 0.28, top54AmmoPivot = 0.1; // ערימה של 54
+    public static double top54HandPivot = 0.29, top54AmmoPivot = 0.09; // ערימה של 54
     public static double top54HandPivotAuto = 0.235, top54AmmoPivotAuto = 0.035;
     public static double top43HandPivot = 0.262, top43AmmoPivot = 0.098; // auto
-    public static double top32HandPivot = 0.23, top32AmmoPivot = 0.098; // ערימה של 32
+    public static double top32HandPivot = 0.23, top32AmmoPivot = 0.09; // ערימה של 32
     public static double top32HandPivotAuto = 0.18, top32AmmoPivotAuto = 0.025;
     public static double top21HandPivot = 0.21, top21AmmoPivot = 0.09; // auto
 
     public static double STACK = 0.02;
     public static double RIGHT_SENSOR_ERROR = 0.3;
+    public static double clickOffset = 0.1;
+    double OFFSET_AMMO = 0;
 
     public static double openRight = 0.5, openLeft = 0.38; // סרבואים של תפיסה של שאיבה שהם פתוחים
     public static double closeRight = .8, closeLeft = 0.78; // סרבואים של תפיסה של שאיבה שהם פתוחים
@@ -258,27 +260,27 @@ public class Intake implements Subsystem{
             case AMMO:
                 switch (angle) {
                     case INTAKE:
-                        return intakeAmmoPivot;
+                        return intakeAmmoPivot + OFFSET_AMMO;
                     case OUTTAKE:
-                        return outtakeAmmoPivot;
+                        return outtakeAmmoPivot + OFFSET_AMMO;
                     case MID:
-                        return midAmmoPivot;
+                        return midAmmoPivot + OFFSET_AMMO;
                     case TOP_21:
-                        return top21AmmoPivot;
+                        return top21AmmoPivot + OFFSET_AMMO;
                     case TOP_54:
-                        return top54AmmoPivot;
+                        return top54AmmoPivot + OFFSET_AMMO;
                     case TOP_32:
-                        return top32AmmoPivot;
+                        return top32AmmoPivot + OFFSET_AMMO;
                     case TOP_5:
-                        return top5AmmoPivot;
+                        return top5AmmoPivot + OFFSET_AMMO;
                     case TOP_43:
-                        return top43AmmoPivot;
+                        return top43AmmoPivot + OFFSET_AMMO;
                     case TOP_54_AUTO:
-                        return top54AmmoPivotAuto;
+                        return top54AmmoPivotAuto + OFFSET_AMMO;
                     case TOP_5_AUTO:
-                        return top5AmmoPivotAuto;
+                        return top5AmmoPivotAuto + OFFSET_AMMO;
                     case TOP_32_AUTO:
-                        return top32AmmoPivotAuto;
+                        return top32AmmoPivotAuto + OFFSET_AMMO;
                     default:
                         return 0.0;
 
@@ -317,4 +319,7 @@ public class Intake implements Subsystem{
     }
 
 
+    public void setOFFSET_AMMO(double OFFSET_AMMO) {
+        this.OFFSET_AMMO = OFFSET_AMMO;
+    }
 }

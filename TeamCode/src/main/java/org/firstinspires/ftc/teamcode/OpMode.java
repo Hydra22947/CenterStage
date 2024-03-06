@@ -44,16 +44,16 @@ public class OpMode extends LinearOpMode {
     BetterGamepad betterGamepad1, betterGamepad2;
 
     // delays
-    public static double delayTransfer = 300, delayRelease = 750, delayCloseTransfer = 350;
+    public static double delayTransfer = 300, delayRelease = 750, delayCloseTransfer = 350, XDelay = 500;
     public static double WAIT_DELAY_TILL_OUTTAKE = 150, WAIT_DELAY_TILL_CLOSE = 250, END_GAME = 80, HALF_TIME = 45, ELEVATOR_ZERO = 10;
     public static double DEFAULT_INTAKE_EXTEND_PRECENTAGE = 37.5, SHORT_INTAKE_EXTEND_PRECENTAGE = 20, delayReleaseFromIntake = 500;
     // variables
     double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
-    double elevatorTargetRight = 1300, intakePrecentage = DEFAULT_INTAKE_EXTEND_PRECENTAGE, releaseFromIntake = 0;
+    double elevatorTargetRight = 1300, intakePrecentage = DEFAULT_INTAKE_EXTEND_PRECENTAGE, releaseFromIntake = 0, startXDelay = 0;
     double elevatorTargetLeft = 1300;
-    int openedXTimes = 0;
+    int openedXTimes = 0, clicks = 0;
     boolean retract = false,  goToMid = false, intakeMid = true, canIntake = true, startedDelayTransfer = false, heldExtension = false, firstReleaseThreeTimer = true;
-    boolean override = false, had2Pixels = false, hang = false, resetRightTrigger = true, closeClaw = false, wasClosed = false, firstExtend = true;
+    boolean override = false, had2Pixels = false, hang = false, resetRightTrigger = true, closeClaw = false, wasClosed = false, firstExtend = true, XPressed = false;
     boolean overrideIntakeExtension = false, secondHalf = false, endGame = false, movedStack = false, outtakeToOuttake = true, firstReleaseThree = true;
 
     public enum IntakeState {
@@ -62,6 +62,11 @@ public class OpMode extends LinearOpMode {
         RELEASE,
         INTAKE,
         INTAKE_EXTEND
+    }
+
+    public enum OuttakeState {
+        OUTTAKE,
+        OUTTAKE_LONG
     }
 
     public enum LiftState {
@@ -81,6 +86,7 @@ public class OpMode extends LinearOpMode {
     IntakeLevel intakeLevel = IntakeLevel.INTAKE;
     IntakeState intakeState = IntakeState.RETRACT;
     LiftState liftState = LiftState.RETRACT;
+    OuttakeState outtakeState = OuttakeState.OUTTAKE;
 
     @Override
     public void runOpMode() {
@@ -177,7 +183,6 @@ public class OpMode extends LinearOpMode {
 //                gamepad2.runRumbleEffect(customRumbleEffect);
 //                endGame =true;
 //            }
-
 
 
             if (liftState != LiftState.EXTRACT && gamepad2.left_stick_y != 0 && !overrideIntakeExtension) {
@@ -332,13 +337,20 @@ public class OpMode extends LinearOpMode {
                     intake.move(Intake.Angle.MID);
                     goToTransferTimer = getTime();
                 }
-                else if(elevator.getPos() <= ELEVATOR_ZERO)
+                else if((elevator.getPos() <= ELEVATOR_ZERO) && !XPressed)
                 {
+                    intake.move(Intake.Angle.OUTTAKE);
+                }
+                else if(XPressed && (getTime() - startXDelay) >= XDelay)
+                {
+                    XPressed = false;
                     intake.move(Intake.Angle.OUTTAKE);
                 }
 
                 break;
             case INTAKE:
+                clickIntakeFix();
+
                 moveIntake();
 
                 if(firstReleaseThreeTimer)
@@ -442,6 +454,8 @@ public class OpMode extends LinearOpMode {
 
                 break;
             case INTAKE_EXTEND:
+                clickIntakeFix();
+
                 moveIntake();
                 heldExtension = true;
                 drivetrain.slow();
@@ -690,7 +704,7 @@ public class OpMode extends LinearOpMode {
                 }
 
                 if ((getTime() - previousElevator) >= WAIT_DELAY_TILL_OUTTAKE) {
-                    outtake.setAngle(Outtake.Angle.OUTTAKE);
+                    moveOuttake();
                 }
 
                 drivetrain.slow();
@@ -727,6 +741,11 @@ public class OpMode extends LinearOpMode {
                 {
                     elevatorTargetRight += 415;
                     elevatorTargetLeft += 415;
+                }
+
+                if(betterGamepad2.touchpadOnce())
+                {
+                    switchOuttake();
                 }
 
                 if (betterGamepad1.AOnce())  {
@@ -777,6 +796,8 @@ public class OpMode extends LinearOpMode {
                 if(betterGamepad2.XOnce())
                 {
                     claw.setBothClaw(Claw.ClawState.CLOSED);
+                    startXDelay = getTime();
+                    XPressed = true;
                     liftState = LiftState.RETRACT;
                 }
                 break;
@@ -810,6 +831,48 @@ public class OpMode extends LinearOpMode {
                 intake.setSeeFarFrom(Intake.maxSeeFarFrom);
                 break;
         }
+    }
+
+    void moveOuttake()
+    {
+        switch (outtakeState)
+        {
+            case OUTTAKE:
+                outtake.setAngle(Outtake.Angle.OUTTAKE);
+                break;
+            case OUTTAKE_LONG:
+                outtake.setAngle(Outtake.Angle.OUTTAKE_LONG);
+                break;
+        }
+    }
+
+    void switchOuttake()
+    {
+        switch (outtakeState)
+        {
+            case OUTTAKE:
+                outtakeState = OuttakeState.OUTTAKE_LONG;
+                break;
+            case OUTTAKE_LONG:
+                outtakeState = OuttakeState.OUTTAKE;
+                break;
+        }
+    }
+
+    void clickIntakeFix()
+    {
+        if(betterGamepad2.dpadRightOnce())
+        {
+            clicks++;
+        }
+        else if(betterGamepad2.dpadLeftOnce())
+        {
+            clicks--;
+        }
+
+
+        intake.setOFFSET_AMMO(clicks * intake.clickOffset);
+
     }
 
 
