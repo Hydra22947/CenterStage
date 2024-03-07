@@ -182,12 +182,14 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
                         .afterDisp(0.9, depositActions.readyForDeposit(1150))
+                        //for no pixels change to 950
+
                         .splineToLinearHeading(new Pose2d(52, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
                         .lineToX(48)
-                        .setTangent(Math.toRadians(90))
                         .stopAndAdd(retractDepositBlueMiddle)
+                        .setTangent(Math.toRadians(90))
                         //Park - Close to other board
                         .strafeToLinearHeading(new Vector2d(52, 15), Math.toRadians(0))
 
@@ -218,6 +220,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(30, 5), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
                         .afterDisp(0.9, depositActions.readyForDeposit(1100))
+                        //for no pixels change to 950
                         .splineToLinearHeading(new Pose2d(52, 32.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
@@ -296,7 +299,8 @@ public class AutoRightBlue extends LinearOpMode {
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
-                        .afterDisp(0.9, depositActions.readyForDeposit(1200))
+                        .afterDisp(0.9, depositActions.readyForDeposit(1150))
+                        //for no pixels change to 950
                         .splineToLinearHeading(new Pose2d(54.5, 28.75, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
