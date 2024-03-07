@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.roadrunner.messages.DriveCommandMessage;
@@ -118,6 +119,9 @@ public final class MecanumDrive {
     private final DownsampledWriter driveCommandWriter = new DownsampledWriter("DRIVE_COMMAND", 50_000_000);
     private final DownsampledWriter mecanumCommandWriter = new DownsampledWriter("MECANUM_COMMAND", 50_000_000);
 
+    public static double overrideCollusion = 8;
+    ElapsedTime autoTime;
+
     public class DriveLocalizer implements Localizer {
         public final Encoder leftFront, leftBack, rightBack, rightFront;
 
@@ -190,6 +194,7 @@ public final class MecanumDrive {
     public MecanumDrive(HardwareMap hardwareMap, Pose2d pose) {
         this.pose = pose;
 
+        autoTime = new ElapsedTime();
         LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
@@ -282,6 +287,16 @@ public final class MecanumDrive {
 
                 return false;
             }
+//            else if ((t >= timeTrajectory.duration && error.position.norm() < 1
+//                    && robotVelRobot.linearVel.norm() < 0.5 && error.heading.log() < .5)
+//                    || (30-autoTime.seconds()) <= overrideCollusion) {
+//                leftFront.setPower(0);
+//                leftBack.setPower(0);
+//                rightBack.setPower(0);
+//                rightFront.setPower(0);
+//
+//                return false;
+//            }
 
 
             PoseVelocity2dDual<Time> command = new HolonomicController(
@@ -461,5 +476,12 @@ public final class MecanumDrive {
                 defaultVelConstraint, defaultAccelConstraint,
                 0.25, 0.1
         );
+    }
+
+    public double startAutoTimer()
+    {
+        autoTime.reset();
+
+        return autoTime.seconds();
     }
 }

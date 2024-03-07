@@ -339,6 +339,7 @@ public class AutoRightBlue extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
+        robot.drive.startAutoTimer();
 
         switch (propLocation) {
             case LEFT:
