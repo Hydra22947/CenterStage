@@ -365,7 +365,6 @@ public class OpMode extends LinearOpMode {
 
                 if(firstReleaseThreeTimer)
                 {
-                    override = true;
                     releaseFromIntake = getTime();
                     firstReleaseThreeTimer = false;
                 }
@@ -472,7 +471,6 @@ public class OpMode extends LinearOpMode {
 
                 if(firstReleaseThreeTimer)
                 {
-                    override = true;
                     releaseFromIntake = getTime();
                     firstReleaseThreeTimer = false;
                 }

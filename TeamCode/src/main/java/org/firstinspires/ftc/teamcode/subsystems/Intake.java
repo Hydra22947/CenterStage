@@ -17,7 +17,7 @@ public class Intake implements Subsystem{
     public static double midHandPivot = 0.67, midAmmoPivot = 0.37;
     public static double top5HandPivot = .29, top5AmmoPivot = 0.1;
     public static double top5HandPivotAuto = 0.32, top5AmmoPivotAuto = 0.1; //auto ערימה של אוטונומי רק ה5
-    public static double top54HandPivot = 0.3, top54AmmoPivot = 0.095; // ערימה של 54
+    public static double top54HandPivot = 0.29, top54AmmoPivot = 0.095; // ערימה של 54
     public static double top54HandPivotAuto = 0.235, top54AmmoPivotAuto = 0.035;
     public static double top43HandPivot = 0.262, top43AmmoPivot = 0.098; // auto
     public static double top32HandPivot = 0.255, top32AmmoPivot = 0.09; // ערימה של 32
@@ -31,7 +31,7 @@ public class Intake implements Subsystem{
 
     public static double openRight = 0.5, openLeft = 0.38; // סרבואים של תפיסה של שאיבה שהם פתוחים
     public static double closeRight = .8, closeLeft = 0.78; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double indeterminateRight = 0.72, indeterminateLeft = 0.67; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double indeterminateRight = 0.69, indeterminateLeft = 0.64; // סרבואים של תפיסה של שאיבה שהם פתוחים
 
 
     public static void setSeeFarFrom(double seeFarFrom) {

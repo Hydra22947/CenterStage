@@ -185,14 +185,14 @@ public class AutoLeftRed extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(52, -40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositRedMiddle)
                         .waitSeconds(.5)
-                        .lineToX(48)
-                        .stopAndAdd(retractDepositRedMiddle)
+
                         .setTangent(Math.toRadians(-90))
-
                         //Park - Close to other board
-                        .strafeToLinearHeading(new Vector2d(52, -15), Math.toRadians(0))
+                        .strafeTo(new Vector2d(47, -39.5))
+                        .stopAndAdd(retractDepositRedMiddle)
+                        .strafeToLinearHeading(new Vector2d(52, -15), Math.toRadians(90))
 
-                        .turnTo(Math.toRadians(90))
+
 
                         //Park - Corner
                         //.lineToY(-64)
@@ -222,16 +222,13 @@ public class AutoLeftRed extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(52, -31, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositRedMiddle)
                         .waitSeconds(.5)
-                        .lineToX(48)
 
                         .setTangent(Math.toRadians(-90))
                         //Park - Close to other board
-                        .strafeTo(new Vector2d(49, -30.5))
+                        .strafeTo(new Vector2d(47, -30.5))
                         .stopAndAdd(retractDepositRedMiddle)
                         .strafeToLinearHeading(new Vector2d(52, -10), Math.toRadians(90))
-
-
-
+                        .build();
 
                         //Park - Corner
                         //.lineToY(-64)
@@ -268,7 +265,7 @@ public class AutoLeftRed extends LinearOpMode {
 
                         //Park - Corner
                         //.lineToY(-64)*/
-                        .build();
+                        //.build();
         VelConstraint baseVelConstraint = new MinVelConstraint(Arrays.asList(
                 new TranslationalVelConstraint(50),
                 new AngularVelConstraint(Math.toRadians(150))));
@@ -300,18 +297,17 @@ public class AutoLeftRed extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(30, -9), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeRed)
                         .afterDisp(0.9, depositActions.readyForDeposit(1200))
-                        .splineToLinearHeading(new Pose2d(54.5, -28.75, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(52, -28.75, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositRedMiddle)
                         .waitSeconds(.5)
-                        .lineToX(48)
 
                         .setTangent(Math.toRadians(-90))
 
                         //Park - Close to other board
-                        .strafeToLinearHeading(new Vector2d(48, -15), Math.toRadians(0))
+                        .strafeTo(new Vector2d(47, -28))
                         .stopAndAdd(retractDepositRedMiddle)
+                        .strafeToLinearHeading(new Vector2d(52, -15), Math.toRadians(90))
 
-                        .turnTo(Math.toRadians(90))
 
                         //Park - Corner
                         //.lineToY(-64)
@@ -324,7 +320,7 @@ public class AutoLeftRed extends LinearOpMode {
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addData("POS", propPipelineRedLeft.getLocation());
-          /*  switch (propPipelineBlueRight.getLocation()) {
+           switch (propPipelineRedLeft.getLocation()) {
                 case Left:
                     propLocation = PropLocation.LEFT;
                     break;
@@ -334,7 +330,7 @@ public class AutoLeftRed extends LinearOpMode {
                 case Center:
                     propLocation = PropLocation.MIDDLE;
                     break;
-            }*/
+            }
             telemetry.addLine("Initialized");
             telemetry.update();
         }

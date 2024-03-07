@@ -21,17 +21,17 @@ public class PropPipelineBlueRight extends OpenCvPipeline {
     double avgRight = 0, avgCenter = 0;
     // red, not seeing the left line
 
-    public static double NO_PROP = 100;
+    public static double NO_PROP = 110;
 
 
 
-    public static int widthCenter = 400, heightCenter = 180;
+    public static int widthCenter = 200, heightCenter = 180;
     public static int widthRight = 190, heightRight = 200;
 
-    public static int blueMinH = 40;
-    public static int blueMinS = 73;
+    public static int blueMinH = 30;
+    public static int blueMinS = 63;
     public static int blueMinV = 0;
-    public static int blueMaxH = 179;
+    public static int blueMaxH = 200;
     public static int blueMaxS = 255;
     public static int blueMaxV = 255;
     private Mat workingMatrix = new Mat();

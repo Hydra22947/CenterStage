@@ -239,7 +239,7 @@ public class AutoRightRed extends LinearOpMode {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             telemetry.addData("POS", propPipelineRedRight.getLocation());
- /*
+
             switch (propPipelineRedRight.getLocation())
             {
                 case Left:
@@ -253,7 +253,7 @@ public class AutoRightRed extends LinearOpMode {
                     break;
             }
 
-  */
+
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addLine("Initialized");
             telemetry.update();

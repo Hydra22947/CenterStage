@@ -167,7 +167,7 @@ public class AutoRightBlue extends LinearOpMode {
 
 
                         //intake from mid stack
-                        .strafeToLinearHeading(new Vector2d(-53.75, 26.2), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-53.75, 27.1), Math.toRadians(0))
                         .stopAndAdd(intakePixelBlueMiddle)
 
 
@@ -176,24 +176,23 @@ public class AutoRightBlue extends LinearOpMode {
                         .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-35, 11), Math.toRadians(0))
 
-                        .waitSeconds(7)
+                        .waitSeconds(8)
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
-                        .afterDisp(0.9, depositActions.readyForDeposit(1150))
+                        .afterDisp(0.5, depositActions.readyForDeposit(1150))
                         //for no pixels change to 950
 
                         .splineToLinearHeading(new Pose2d(52, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
-                        .lineToX(48)
+
+                        .strafeTo(new Vector2d(46, 39.5))
                         .stopAndAdd(retractDepositBlueMiddle)
                         .setTangent(Math.toRadians(90))
-                        //Park - Close to other board
-                        .strafeToLinearHeading(new Vector2d(52, 15), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(52, 10), Math.toRadians(-90))
 
-                        .turnTo(Math.toRadians(-90))
 
                         //Park - Corner
                         //.lineToY(64)
@@ -214,24 +213,25 @@ public class AutoRightBlue extends LinearOpMode {
                         .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-44.25, 7), Math.toRadians(0))
 
-                        .waitSeconds(5)
+                        .waitSeconds(8)
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 5), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
-                        .afterDisp(0.9, depositActions.readyForDeposit(1100))
+                        .afterDisp(0.5, depositActions.readyForDeposit(1100))
                         //for no pixels change to 950
                         .splineToLinearHeading(new Pose2d(52, 32.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
-                        .lineToX(48)
 
-                        .setTangent(Math.toRadians(90))
                         //Park - Close to other board
-                        .strafeToLinearHeading(new Vector2d(52, 10), Math.toRadians(0))
+                        .strafeTo(new Vector2d(46, 32))
                         .stopAndAdd(retractDepositBlueMiddle)
+                        .setTangent(Math.toRadians(90))
+                        .strafeToLinearHeading(new Vector2d(50, 10), Math.toRadians(-90))
 
-                        .turnTo(Math.toRadians(-90))
+
+
 
                         //Park - Corner
                         //.lineToY(64)
@@ -284,7 +284,7 @@ public class AutoRightBlue extends LinearOpMode {
                         //intake from left stack
                         .strafeToSplineHeading(new Vector2d(-42, 45), Math.toRadians(-90))
                         .splineToLinearHeading(new Pose2d(-34, 15, Math.toRadians(-90)), Math.toRadians(-90))
-                        .strafeToLinearHeading(new Vector2d(-26, 14.5), Math.toRadians(0)
+                        .strafeToLinearHeading(new Vector2d(-26, 14.15), Math.toRadians(0)
                         , baseVelConstraint,baseAccelConstraint)
                         .stopAndAdd(intakePixelBlueRight)
                         .waitSeconds(1)
@@ -294,25 +294,22 @@ public class AutoRightBlue extends LinearOpMode {
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
 
-                        .waitSeconds(5)
+                        .waitSeconds(8)
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
                         .afterDisp(.7,readyIntakeBlue)
-                        .afterDisp(0.9, depositActions.readyForDeposit(1150))
+                        .afterDisp(0.5, depositActions.readyForDeposit(1100))
                         //for no pixels change to 950
-                        .splineToLinearHeading(new Pose2d(54.5, 28.75, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(52, 28.25, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
                         .lineToX(48)
 
-                        .setTangent(Math.toRadians(90))
-
-                        //Park - Close to other board
-                        .strafeToLinearHeading(new Vector2d(48, 15), Math.toRadians(0))
+                        .strafeTo(new Vector2d(46, 28))
                         .stopAndAdd(retractDepositBlueMiddle)
-
-                        .turnTo(Math.toRadians(-90))
+                        .setTangent(Math.toRadians(90))
+                        .strafeToLinearHeading(new Vector2d(50, 10), Math.toRadians(-90))
 
                         //Park - Corner
                         //.lineToY(64)
@@ -325,7 +322,7 @@ public class AutoRightBlue extends LinearOpMode {
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addData("POS", propPipelineBlueRight.getLocation());
-          /*  switch (propPipelineBlueRight.getLocation()) {
+             switch (propPipelineBlueRight.getLocation()) {
                 case Left:
                     propLocation = PropLocation.LEFT;
                     break;
@@ -335,7 +332,7 @@ public class AutoRightBlue extends LinearOpMode {
                 case Center:
                     propLocation = PropLocation.MIDDLE;
                     break;
-            }*/
+            }
             telemetry.addLine("Initialized");
             telemetry.update();
         }
