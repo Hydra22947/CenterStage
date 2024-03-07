@@ -307,6 +307,11 @@ public class OpMode extends LinearOpMode {
                     drivetrain.slow();
                 }
 
+                if(liftState == LiftState.RETRACT)
+                {
+                    clickIntakeFix();
+                }
+
                 if(startedDelayTransfer)
                 {
                     intakeMid = false;
