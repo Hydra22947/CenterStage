@@ -203,7 +203,7 @@ public class AutoLeftBlue extends LinearOpMode {
                         .waitSeconds(.2)
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
-                        .splineToLinearHeading(new Pose2d(52.25, 34, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(51, 34, Math.toRadians(0)), Math.toRadians(0))
                         .waitSeconds(.1)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(0.5)
@@ -235,7 +235,7 @@ public class AutoLeftBlue extends LinearOpMode {
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
                         .waitSeconds(.1)
-                        .strafeTo(new Vector2d(52.25, 29))
+                        .strafeTo(new Vector2d(51, 29))
                         .stopAndAdd(depositBlueRight)
                         .waitSeconds(0.3)
                         //Park
