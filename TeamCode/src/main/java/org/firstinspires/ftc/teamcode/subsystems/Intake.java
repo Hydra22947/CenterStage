@@ -12,13 +12,13 @@ import org.jetbrains.annotations.NotNull;
 public class Intake implements Subsystem{
 
     private final RobotHardware robot;
-    public static double intakeHandPivot = 0.2, intakeAmmoPivot = 0.09;
+    public static double intakeHandPivot = 0.205, intakeAmmoPivot = 0.095;
     public static double outtakeHandPivot = 0.65, outtakeAmmoPivot = .62; // פורק מהשאיבה הזוויות-מתוקן
     public static double midHandPivot = 0.67, midAmmoPivot = 0.37;
     public static double top5HandPivot = .29, top5AmmoPivot = 0.1;
     public static double top5HandPivotAuto = 0.32, top5AmmoPivotAuto = 0.1; //auto ערימה של אוטונומי רק ה5
     public static double top54HandPivot = 0.29, top54AmmoPivot = 0.095; // ערימה של 54
-    public static double top54HandPivotAuto = 0.235, top54AmmoPivotAuto = 0.035;
+    public static double top54HandPivotAuto = 0.27, top54AmmoPivotAuto = 0.1;
     public static double top43HandPivot = 0.262, top43AmmoPivot = 0.098; // auto
     public static double top32HandPivot = 0.255, top32AmmoPivot = 0.09; // ערימה של 32
     public static double top32HandPivotAuto = 0.18, top32AmmoPivotAuto = 0.025;
@@ -135,9 +135,9 @@ public class Intake implements Subsystem{
 
     public void moveStack()
     {
-        this.robot.intakeAngleServo.setPosition((getPosition(angle, Type.AMMO) + STACK));
-        this.robot.intakeHandPivotLeftServo.setPosition(getPosition(angle, Type.HAND));
-        this.robot.intakeHandPivotRightServo.setPosition(getPosition(angle, Type.HAND));
+        this.robot.intakeAngleServo.setPosition((getPosition(angle, Type.AMMO)));
+        this.robot.intakeHandPivotLeftServo.setPosition(getPosition(angle, Type.HAND)+ STACK);
+        this.robot.intakeHandPivotRightServo.setPosition(getPosition(angle, Type.HAND)+ STACK);
     }
 
     public void returnStack()

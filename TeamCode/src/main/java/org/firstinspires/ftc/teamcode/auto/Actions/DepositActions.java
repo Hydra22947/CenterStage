@@ -118,6 +118,22 @@ public class DepositActions {
             return !activateSystem(placePixelTimer, () -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), delay);
         }
     }
+    public class PlaceIntermediatePixel implements Action {
+        Stopwatch placePixelTimer;
+        long delay = 0;
+
+        public PlaceIntermediatePixel(Cycles current, long d) {
+            placePixelTimer = new Stopwatch();
+            placePixelTimer.reset();
+            delay = d;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            return !activateSystem(placePixelTimer, () -> claw.updateState(Claw.ClawState.INTERMEDIATE, ClawSide.BOTH), delay);
+        }
+    }
+
 
 
     public class RetractDeposit implements Action {
@@ -161,10 +177,13 @@ public class DepositActions {
         return new ReadyForDeposit(elevator);
     }
 
+
     public Action placePixel(Cycles currentCycle, long d) {
         return new PlacePixel(currentCycle, d);
     }
-
+    public Action placeIntermediatePixel(Cycles currentCycle, long d) {
+        return new PlaceIntermediatePixel(currentCycle, d);
+    }
     public Action moveOuttake (Outtake.Angle thisAngle) { return new MoveOuttake(thisAngle); }
 
     public Action moveElevator (int thisTarget) { return new MoveElevator(thisTarget); }

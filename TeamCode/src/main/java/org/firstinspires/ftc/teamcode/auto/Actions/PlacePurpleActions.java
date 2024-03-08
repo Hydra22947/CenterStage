@@ -278,16 +278,17 @@ public class PlacePurpleActions {
         return new Lock(closeClaw);
     }
 
+    public Action moveStack() {
+        return new MoveStack();
+    }
+
+
     public Action openExtension(int length) {
         return new OpenExtension(length);
     }
 
     public Action closeExtension() {
         return new CloseExtension();
-    }
-
-    public Action moveStack() {
-        return new MoveStack();
     }
 
     public Action failSafeClaw(FailSafe failSafeClaw) { return new FailSafeClaw(failSafeClaw) ; }
