@@ -171,7 +171,7 @@ public class AutoLeftBlueMax extends LinearOpMode {
                         .stopAndAdd(placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN))
                         .stopAndAdd(openIntakeWhitePixel)
                         .waitSeconds(1.5)
-                        .strafeToLinearHeading(new Vector2d(-40,10),Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-40,14),Math.toRadians(0))
                         .stopAndAdd(closeIntakeWhitePixel)
                         .waitSeconds(0.5)
                         .stopAndAdd(transfer)
