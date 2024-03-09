@@ -51,11 +51,12 @@ public class AutoLeftBlueMax extends LinearOpMode {
 
 
     DepositActions depositActions;
-    PlacePurpleActions placePurpleActions;
+    PlacePurpleActions intakeActions;
     UpdateActions updateActions;
 
 
     public static int tempHeight = 1100;
+
     @Override
     public void runOpMode() {
         time = new ElapsedTime();
@@ -75,25 +76,25 @@ public class AutoLeftBlueMax extends LinearOpMode {
         intakeExtension.setAuto(true);
         elevator.setAuto(true);
 
-        depositActions = new DepositActions(elevator, intake, claw, outtake , intakeExtension);
-        placePurpleActions = new PlacePurpleActions(intake, intakeExtension, claw);
+        depositActions = new DepositActions(elevator, intake, claw, outtake, intakeExtension);
+        intakeActions = new PlacePurpleActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
-        SequentialAction depositBlueMiddle = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.MID),
+        SequentialAction depositBlue = new SequentialAction(
+                intakeActions.moveIntake(Intake.Angle.MID),
                 new SleepAction(0.5),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD,0),
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 0),
                 new SleepAction(.2),
-                placePurpleActions.moveIntake(Intake.Angle.TOP_54_AUTO),
+                intakeActions.moveIntake(Intake.Angle.TOP_54_AUTO),
                 depositActions.retractDeposit()
 
         );
 
 
         SequentialAction depositSecondCycle = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.MID),
+                intakeActions.moveIntake(Intake.Angle.MID),
 
-                placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
+                intakeActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
 
@@ -105,40 +106,40 @@ public class AutoLeftBlueMax extends LinearOpMode {
                 depositActions.retractDeposit()
         );
 
-        SequentialAction placePurplePixelBlueMiddle = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
+        SequentialAction placePurplePixel = new SequentialAction(
+                intakeActions.moveIntake(Intake.Angle.INTAKE),
                 new SleepAction(0.5),
-                placePurpleActions.openExtension(790),
+                intakeActions.openExtension(790),
                 new SleepAction(1.5),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
+                intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.1),
-                placePurpleActions.closeExtension(),
+                intakeActions.closeExtension(),
                 new SleepAction(0.1),
-                placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
+                intakeActions.moveIntake(Intake.Angle.MID),
+                intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
         SequentialAction openIntakeWhitePixel = new SequentialAction(
-                placePurpleActions.openExtension(600),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN)
+                intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
+                intakeActions.openExtension(1000)
         );
 
         SequentialAction closeIntakeWhitePixel = new SequentialAction(
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
-                placePurpleActions.moveStack(),
+                intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
+                intakeActions.moveStack(),
                 new SleepAction(.5),
-                placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
-                placePurpleActions.closeExtension()
+                intakeActions.moveIntake(Intake.Angle.OUTTAKE),
+                intakeActions.closeExtension()
         );
 
 
-        SequentialAction transfer= new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
+        SequentialAction transfer = new SequentialAction(
+                intakeActions.moveIntake(Intake.Angle.OUTTAKE),
                 new SleepAction(0.5),
-                placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
+                intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
+                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
                 new SleepAction(.75),
-                placePurpleActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
+                intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
         );
 
 
@@ -146,45 +147,151 @@ public class AutoLeftBlueMax extends LinearOpMode {
                 depositActions.retractDeposit()
         );
 
+        SequentialAction readyForDeposit = new SequentialAction(
+                intakeActions.moveIntake(Intake.Angle.MID),
+                depositActions.readyForDeposit(tempHeight)
+
+        );
+
+        Action trajBlueRight =
+                robot.drive.actionBuilder(robot.drive.pose)
+                        //Place purple pixel
+                        .stopAndAdd(depositActions.readyForDeposit(tempHeight))
+                        .splineToLinearHeading(new Pose2d(34.7, 32, Math.toRadians(0)), Math.toRadians(0))
+                        .stopAndAdd(placePurplePixel)
+                        .setTangent(0)
+                        .waitSeconds(.2)
+                        .stopAndAdd(intakeActions.closeExtension())
+
+
+                        //Place Preload on board
+                        .waitSeconds(.1)
+                        .strafeTo(new Vector2d(51, 29))
+                        .stopAndAdd(depositBlue)
+                        .waitSeconds(0.3)
+
+
+                        //Intake 54
+                        .waitSeconds(0.2)
+                        .setTangent(Math.toRadians(-120))
+                        .stopAndAdd(intakeActions.moveIntake(Intake.Angle.TOP_54))
+                        .splineToConstantHeading(new Vector2d(30, 8), Math.toRadians(180))
+                        .splineToSplineHeading(new Pose2d(-32, 12, Math.toRadians(0)), Math.toRadians(180))
+
+                        .stopAndAdd(openIntakeWhitePixel)
+                        .waitSeconds(.2)
+                        .strafeToLinearHeading(new Vector2d(-34, 14), Math.toRadians(0))
+
+                        .stopAndAdd(closeIntakeWhitePixel)
+                        .waitSeconds(0.5)
+                        .stopAndAdd(transfer)
+
+                        //Deposit
+                        .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
+                        .stopAndAdd(readyForDeposit)
+                        .splineToLinearHeading(new Pose2d(51, 34, Math.toRadians(0)), Math.toRadians(0))
+                        .stopAndAdd(depositSecondCycle)
+                        .waitSeconds(0.5)
+
+
+                        //Park
+                        .setTangent(Math.toRadians(90))
+                        .strafeTo(new Vector2d(48, 28.5))
+                        .stopAndAdd(retractDepositBlueMax)
+                        .strafeToLinearHeading(new Vector2d(45, 55), Math.toRadians(-90))
+                        .strafeTo(new Vector2d(45.25, 60))
+                        .build();
 
 
         Action trajBlueMiddle =
                 robot.drive.actionBuilder(robot.drive.pose)
+                        //Place purple pixel
                         .stopAndAdd(depositActions.readyForDeposit(tempHeight))
-                        .splineToLinearHeading(new Pose2d(40 , 26, Math.toRadians(0)), Math.toRadians(0))
-                        .stopAndAdd(placePurplePixelBlueMiddle)
+                        .splineToLinearHeading(new Pose2d(40, 26, Math.toRadians(0)), Math.toRadians(0))
+                        .stopAndAdd(placePurplePixel)
+
                         .setTangent(0)
                         .waitSeconds(.2)
-                        .stopAndAdd(placePurpleActions.moveIntake(Intake.Angle.MID))
+                        .stopAndAdd(intakeActions.moveIntake(Intake.Angle.MID))
                         .waitSeconds(.2)
-                        .stopAndAdd(placePurpleActions.closeExtension())
+                        .stopAndAdd(intakeActions.closeExtension())
+
                         //Place Preload on board
                         .waitSeconds(.2)
                         .splineToLinearHeading(new Pose2d(51, 34, Math.toRadians(0)), Math.toRadians(0))
                         .waitSeconds(.1)
-                        .stopAndAdd(depositBlueMiddle)
+                        .stopAndAdd(depositBlue)
+
+                        //Intake 54
                         .waitSeconds(0.2)
                         .setTangent(Math.toRadians(-120))
-                        .stopAndAdd(placePurpleActions.moveIntake(Intake.Angle.TOP_54))
+                        .stopAndAdd(intakeActions.moveIntake(Intake.Angle.TOP_54))
                         .splineToConstantHeading(new Vector2d(30, 8), Math.toRadians(180))
-                        .splineToSplineHeading(new Pose2d(-38.8, 12, Math.toRadians(0)), Math.toRadians(180))
-                        .stopAndAdd(placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN))
+                        .splineToSplineHeading(new Pose2d(-32, 12, Math.toRadians(0)), Math.toRadians(180))
+
                         .stopAndAdd(openIntakeWhitePixel)
-                        .waitSeconds(1.5)
-                        .strafeToLinearHeading(new Vector2d(-40,14),Math.toRadians(0))
+                        .waitSeconds(.2)
+                        .strafeToLinearHeading(new Vector2d(-34, 14), Math.toRadians(0))
+
                         .stopAndAdd(closeIntakeWhitePixel)
                         .waitSeconds(0.5)
                         .stopAndAdd(transfer)
+
+                        //Deposit
                         .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
-                        .stopAndAdd(placePurpleActions.moveIntake(Intake.Angle.MID))
-                        .stopAndAdd(depositActions.readyForDeposit(tempHeight))
+                        .stopAndAdd(readyForDeposit)
                         .splineToLinearHeading(new Pose2d(51, 34, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(depositSecondCycle)
                         .waitSeconds(0.5)
+
                         //Park
                         .strafeTo(new Vector2d(48, 33.5))
                         .stopAndAdd(retractDepositBlueMax)
                         .strafeToLinearHeading(new Vector2d(46, 10), Math.toRadians(-90))
+                        .build();
+
+        Action trajBlueLeft =
+                robot.drive.actionBuilder(robot.drive.pose)
+                        //Place purple pixel
+                        .stopAndAdd(depositActions.readyForDeposit(1050))
+                        .splineToLinearHeading(new Pose2d(48, 34.25, Math.toRadians(0)), Math.toRadians(0))
+                        .stopAndAdd(placePurplePixel)
+
+                        //Deposit yellow
+                        .setTangent(0)
+                        .waitSeconds(.1)
+                        .strafeTo(new Vector2d(50.75, 40.5))
+                        .stopAndAdd(depositBlue)
+
+                        //Intake 54
+                        .waitSeconds(0.2)
+                        .setTangent(Math.toRadians(-120))
+                        .stopAndAdd(intakeActions.moveIntake(Intake.Angle.TOP_54))
+
+                        .splineToConstantHeading(new Vector2d(30, 8), Math.toRadians(180))
+                        .splineToSplineHeading(new Pose2d(-32, 12, Math.toRadians(0)), Math.toRadians(180))
+
+                        .stopAndAdd(openIntakeWhitePixel)
+                        .waitSeconds(.2)
+                        .strafeToLinearHeading(new Vector2d(-34, 14), Math.toRadians(0))
+                        .stopAndAdd(closeIntakeWhitePixel)
+
+                        .waitSeconds(0.5)
+                        .stopAndAdd(transfer)
+
+                        //Deposit
+                        .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
+                        .stopAndAdd(readyForDeposit)
+                        .splineToLinearHeading(new Pose2d(51, 34, Math.toRadians(0)), Math.toRadians(0))
+                        .stopAndAdd(depositSecondCycle)
+                        .waitSeconds(0.5)
+
+                        //Park
+                        .setTangent(Math.toRadians(90))
+                        .strafeTo(new Vector2d(47, 40.5))
+                        .strafeTo(new Vector2d(45, 60))
+                        .stopAndAdd(retractDepositBlueMax)
+                        .turnTo(Math.toRadians(-90))
                         .build();
 
 
@@ -207,8 +314,7 @@ public class AutoLeftBlueMax extends LinearOpMode {
                 updateActions.updateSystems()
         ));
 
-        while (opModeIsActive())
-        {
+        while (opModeIsActive()) {
             robot.drive.updatePoseEstimate();
         }
 

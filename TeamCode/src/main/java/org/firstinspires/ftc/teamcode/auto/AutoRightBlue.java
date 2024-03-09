@@ -146,7 +146,6 @@ public class AutoRightBlue extends LinearOpMode {
                 placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
                 new SleepAction(1),
                 placePurpleActions.openExtension(600)
-
         );
 
         SequentialAction intakePixelBlueClose = new SequentialAction(

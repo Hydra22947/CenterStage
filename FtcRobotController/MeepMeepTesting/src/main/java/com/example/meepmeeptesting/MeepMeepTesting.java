@@ -268,6 +268,63 @@ public class MeepMeepTesting {
                 .build());
     }
 
+    public static void MTI(RoadRunnerBotEntity myBot)
+    {
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
+                .splineToLinearHeading(new Pose2d(40 , 26, Math.toRadians(0)), Math.toRadians(0))
+                .setTangent(0)
+
+                //Place Preload on board
+                .splineToLinearHeading(new Pose2d(52.25, 33.25, Math.toRadians(0)), Math.toRadians(0))
+                .waitSeconds(.1)
+                .strafeToLinearHeading(new Vector2d(-20,36),Math.toRadians(0))
+                .waitSeconds(0.5)
+
+                .strafeToLinearHeading(new Vector2d(52.25,33.25),Math.toRadians(0))
+
+                //Park
+                .setTangent(Math.toRadians(90))
+                .strafeTo(new Vector2d(45, 60))
+                .turnTo(Math.toRadians(-90))
+
+                .build());
+
+
+    }
+
+    public static void redRightMid(RoadRunnerBotEntity myBot) {
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, -62, Math.toRadians(90)))
+                .splineToLinearHeading(new Pose2d(34.7, -30.25, Math.toRadians(0)), Math.toRadians(0))
+                .setTangent(0)
+                //Place Preload on board
+                .waitSeconds(.1)
+                .strafeTo(new Vector2d(50.75, -26.8))
+                .waitSeconds(0.5)
+
+                //Intake 54
+                .waitSeconds(0.2)
+                .setTangent(Math.toRadians(120))
+                .splineToConstantHeading(new Vector2d(30, -8), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-32, -12, Math.toRadians(0)), Math.toRadians(180))
+
+                .waitSeconds(.2)
+                .strafeToLinearHeading(new Vector2d(-34, -14), Math.toRadians(0))
+
+                .waitSeconds(0.5)
+
+                //Deposit
+                .strafeToLinearHeading(new Vector2d(30, -9), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(50.5, -40, Math.toRadians(0)), Math.toRadians(0))
+                .waitSeconds(0.5)
+
+
+                //Park
+                .setTangent(Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(45, -55),Math.toRadians(90))
+                .build());
+
+    }
+
     public static void blueRightRight(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
                 //place purple
@@ -383,7 +440,7 @@ public class MeepMeepTesting {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
 
                 .build();
-        blueRightRight(myBot);
+        redRightMid(myBot);
         setAnimation(meepMeep, myBot);
 
     }
