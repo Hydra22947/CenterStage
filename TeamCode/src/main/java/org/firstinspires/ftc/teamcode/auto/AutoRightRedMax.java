@@ -196,7 +196,7 @@ public class AutoRightRedMax extends LinearOpMode {
 
         );
 
-
+ 
         SequentialAction openIntakeWhitePixel = new SequentialAction(
                 intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 intakeActions.openExtension(1000)
