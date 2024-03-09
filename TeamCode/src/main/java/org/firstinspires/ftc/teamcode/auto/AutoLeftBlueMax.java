@@ -101,7 +101,7 @@ public class AutoLeftBlueMax extends LinearOpMode {
                 new SleepAction(0.1),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
 
-                new SleepAction(0.5),
+                new SleepAction(0.8),
                 depositActions.moveElevator(1100),
                 depositActions.retractDeposit()
         );
