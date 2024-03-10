@@ -36,6 +36,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineBlueRight;
+import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -76,6 +77,7 @@ public class AutoRightBlue extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        BetterGamepad betterGamepad2 = new BetterGamepad(gamepad2);
         time = new ElapsedTime();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -347,12 +349,15 @@ public class AutoRightBlue extends LinearOpMode {
                         .build();
 
         while (opModeInInit() && !isStopRequested()) {
+            betterGamepad2.update();
             intake.setAngle(Intake.Angle.MID);
             intakeExtension.setTarget(0);
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addData("POS", propPipelineBlueRight.getLocation());
+            telemetry.addData("NO PROP", propPipelineBlueRight.NO_PROP);
+
             switch (propPipelineBlueRight.getLocation()) {
                 case Left:
                     propLocation = PropLocation.LEFT;
@@ -364,6 +369,16 @@ public class AutoRightBlue extends LinearOpMode {
                     propLocation = PropLocation.MIDDLE;
                     break;
             }
+
+            if(betterGamepad2.dpadUpOnce())
+            {
+                propPipelineBlueRight.NO_PROP++;
+            }
+            else if(betterGamepad2.dpadDownOnce())
+            {
+                propPipelineBlueRight.NO_PROP--;
+            }
+
             telemetry.addLine("Initialized");
             telemetry.update();
         }

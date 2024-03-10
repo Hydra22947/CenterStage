@@ -30,6 +30,7 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineBlueLeft;
 import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineRedRight;
+import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -69,6 +70,7 @@ public class AutoRightRed extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        BetterGamepad betterGamepad2 = new BetterGamepad(gamepad2);
         time = new ElapsedTime();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -246,10 +248,13 @@ public class AutoRightRed extends LinearOpMode {
 
 
         while (opModeInInit() && !isStopRequested()) {
+            betterGamepad2.update();
+
             intake.setAngle(Intake.Angle.MID);
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             telemetry.addData("POS", propPipelineRedRight.getLocation());
+            telemetry.addData("NO PROP", propPipelineRedRight.NO_PROP);
 
             switch (propPipelineRedRight.getLocation()) {
                 case Left:
@@ -261,6 +266,15 @@ public class AutoRightRed extends LinearOpMode {
                 case Center:
                     propLocation = PropLocation.MIDDLE;
                     break;
+            }
+
+            if(betterGamepad2.dpadUpOnce())
+            {
+                propPipelineRedRight.NO_PROP++;
+            }
+            else if(betterGamepad2.dpadDownOnce())
+            {
+                propPipelineRedRight.NO_PROP--;
             }
 
 
