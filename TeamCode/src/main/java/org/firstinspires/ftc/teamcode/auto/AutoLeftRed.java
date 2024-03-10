@@ -177,7 +177,7 @@ public class AutoLeftRed extends LinearOpMode {
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.5),
                 placePurpleActions.moveStack(),
-                placePurpleActions.closeExtension()
+                placePurpleActions.openExtension(-20)
 
         );
         SequentialAction readyForDeposit = new SequentialAction(
