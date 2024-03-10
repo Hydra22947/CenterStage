@@ -28,6 +28,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
+import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineBlueLeft;
 import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineRedRight;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -54,9 +55,7 @@ public class AutoRightRed extends LinearOpMode {
     PlacePurpleActions placePurpleActions;
     UpdateActions updateActions;
 
-    public static int tempHeight = 1100;
-    public enum PropLocation
-    {
+    public enum PropLocation {
         LEFT,
         MIDDLE,
         RIGHT
@@ -66,15 +65,17 @@ public class AutoRightRed extends LinearOpMode {
     PropPipelineRedRight propPipelineRedRight;
     OpenCvWebcam webcam;
 
+    public int tempHeight = 1100;
+
     @Override
     public void runOpMode() {
         time = new ElapsedTime();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
+        propPipelineRedRight = new PropPipelineRedRight();
         robot.init(hardwareMap, telemetry, autoConstants.startPoseRedRight);
 
-        propPipelineRedRight = new PropPipelineRedRight();
         autoConstants = new AutoConstants();
 
         initCamera();
@@ -90,70 +91,16 @@ public class AutoRightRed extends LinearOpMode {
         intakeExtension.setAuto(true);
         elevator.setAuto(true);
 
-        depositActions = new DepositActions(elevator, intake, claw, outtake , intakeExtension);
+        depositActions = new DepositActions(elevator, intake, claw, outtake, intakeExtension);
         placePurpleActions = new PlacePurpleActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
-        SequentialAction depositRedLeft = new SequentialAction(
-                depositActions.readyForDeposit(tempHeight + 200),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600)
-        );
 
-        SequentialAction placePurplePixelRedLeft = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
-                new SleepAction(0.5),
-                placePurpleActions.openExtension(1080),
-                new SleepAction(0.6),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
-                new SleepAction(0.1),
-                placePurpleActions.openExtension(800),
-                new SleepAction(0.2),
-                placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.closeExtension(),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
-        );
-
-        SequentialAction retractDepositRedLeft = new SequentialAction(
-                depositActions.retractDeposit()
-        );
-
-        SequentialAction depositRedMiddle = new SequentialAction(
-                depositActions.readyForDeposit(tempHeight + 150),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600),
-                new SleepAction(0.5),
-                depositActions.retractDeposit()
-        );
-
-        SequentialAction placePurplePixelRedMiddle = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
-                new SleepAction(0.5),
-                placePurpleActions.openExtension(790),
-                new SleepAction(1),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
-                new SleepAction(0.75),
-                placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
-                placePurpleActions.closeExtension()
-        );
-
-        SequentialAction retractDepositRedMiddle = new SequentialAction(
-                depositActions.retractDeposit()
-        );
-
-
-        SequentialAction depositRedRight = new SequentialAction(
-                depositActions.readyForDeposit(tempHeight + 75),
-                new SleepAction(1),
-                placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
-                new SleepAction(1),
-                depositActions.retractDeposit()
-        );
-
-        SequentialAction placePurplePixelRedRight = new SequentialAction(
+        SequentialAction placePurplePixelBlueLeft = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
                 new SleepAction(.5),
-                placePurpleActions.openExtension(640),
-                new SleepAction(1),
+                placePurpleActions.openExtension(600),
+                new SleepAction(1.5),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.1),
                 placePurpleActions.openExtension(550),
@@ -163,75 +110,138 @@ public class AutoRightRed extends LinearOpMode {
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
-        SequentialAction retractDepositRedRight = new SequentialAction(
+        SequentialAction retractDepositBlueLeft = new SequentialAction(
                 depositActions.retractDeposit()
         );
 
-        Action trajRedLeft =
-                robot.drive.actionBuilder(robot.drive.pose)
-                        .stopAndAdd(depositActions.readyForDeposit(1050))
-                        .splineToLinearHeading(new Pose2d(34.7, -30.25, Math.toRadians(0)), Math.toRadians(0))
-                        .stopAndAdd(placePurplePixelRedLeft)
-                        .setTangent(0)
-                        //Place Preload on board
-                        .waitSeconds(.1)
-                        .strafeTo(new Vector2d(50.75, -26.8))
-                        .stopAndAdd(depositRedLeft)
-                        .waitSeconds(0.5)
-                        //Park
-                        .setTangent(Math.toRadians(90))
-                        .strafeTo(new Vector2d(48, -27.4))
-                        .stopAndAdd(retractDepositRedLeft)
-                        .strafeToLinearHeading(new Vector2d(45, -55),Math.toRadians(90))
-                        .build();
+        SequentialAction placePurplePixelBlueMiddle = new SequentialAction(
+                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
+                new SleepAction(0.5),
+                placePurpleActions.openExtension(790),
+                new SleepAction(1.5),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
+                new SleepAction(0.1),
+                placePurpleActions.closeExtension(),
+                new SleepAction(0.1),
+                placePurpleActions.moveIntake(Intake.Angle.MID),
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
+        );
 
-        // near the other back drop
-        //.strafeToLinearHeading(new Vector2d(52, -15),Math.toRadians(90))
-        // .build();
+        SequentialAction retractDepositBlueMiddle = new SequentialAction(
+                depositActions.retractDeposit()
+        );
 
-        Action trajRedMiddle =
-                robot.drive.actionBuilder(robot.drive.pose)
-                        .stopAndAdd(depositActions.readyForDeposit(1000))
-                        .splineToLinearHeading(new Pose2d(41 , -25, Math.toRadians(0)), Math.toRadians(0))
-                        .stopAndAdd(placePurplePixelRedMiddle)
-                        .setTangent(0)
-                        //Place Preload on board
-                        .splineToLinearHeading(new Pose2d(51.5, -34, Math.toRadians(0)), Math.toRadians(0))
-                        .waitSeconds(.1)
-                        .stopAndAdd(depositRedMiddle)
-                        .waitSeconds(0.5)
-                        //Park
-                        .setTangent(Math.toRadians(90))
-                        .strafeTo(new Vector2d(48, -35.6))
-                        .stopAndAdd(retractDepositRedMiddle)
-                        .strafeToLinearHeading(new Vector2d(45, -55),Math.toRadians(90))
+        SequentialAction depositBlueRight = new SequentialAction(
+                depositActions.readyForDeposit(tempHeight),
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 600),
+                depositActions.moveElevator(1500)
+        );
 
-                        .build();
-
-        // near the other back drop
-        //.strafeToLinearHeading(new Vector2d(52, -15),Math.toRadians(90))
-        // .build();
+        SequentialAction placePurplePixelBlueRight = new SequentialAction(
+                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
+                new SleepAction(0.5),
+                placePurpleActions.openExtension(1030),
+                new SleepAction(0.6),
+                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
+                new SleepAction(0.1),
+                placePurpleActions.openExtension(800),
+                new SleepAction(0.2),
+                placePurpleActions.moveIntake(Intake.Angle.MID),
+                placePurpleActions.closeExtension(),
+                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
+        );
+        SequentialAction retractDepositBlueRight = new SequentialAction(
+                depositActions.retractDeposit()
+        );
 
         Action trajRedRight =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .stopAndAdd(depositActions.readyForDeposit(1000))
-                        .splineToLinearHeading(new Pose2d(48.25, -29.5, Math.toRadians(0)), Math.toRadians(0))
-                        .stopAndAdd(placePurplePixelRedRight)
+                        .stopAndAdd(depositActions.readyForDeposit(1050))
+                        .splineToLinearHeading(new Pose2d(48, -34.25, Math.toRadians(0)), Math.toRadians(0))
+                        .stopAndAdd(placePurplePixelBlueLeft)
                         .setTangent(0)
                         .waitSeconds(.1)
-                        .strafeTo(new Vector2d(50.5, -40))
-                        .stopAndAdd(depositRedRight)
+                        .strafeTo(new Vector2d(50.75, -40.5))
+                        .stopAndAdd(depositBlueRight)
                         .waitSeconds(0.5)
                         //Park
-                        .setTangent(Math.toRadians(90))
-                        .strafeTo(new Vector2d(48, -42))
-                        .stopAndAdd(retractDepositRedRight)
-                        .strafeToLinearHeading(new Vector2d(45, -55),Math.toRadians(90))
+                        .setTangent(Math.toRadians(-90))
+                        .strafeTo(new Vector2d(47, -40.5))
+                        .strafeTo(new Vector2d(45, -60))
+                        .stopAndAdd(retractDepositBlueLeft)
+                        .turnTo(Math.toRadians(90))
                         .build();
 
-        // near the other back drop
-        //.strafeToLinearHeading(new Vector2d(52, -15),Math.toRadians(90))
-        // .build();
+        //Park Close To Backdrop
+                        /*
+                        .strafeTo(new Vector2d(52,15))
+                        .stopAndAdd(retractDepositBlueMiddle)
+                        .turnTo(Math.toRadians(-90))
+                        .build();
+                         */
+
+        Action trajRedMiddle =
+                robot.drive.actionBuilder(robot.drive.pose)
+                        .stopAndAdd(depositActions.readyForDeposit(tempHeight))
+                        .splineToLinearHeading(new Pose2d(40, -26, Math.toRadians(0)), Math.toRadians(0))
+                        .stopAndAdd(placePurplePixelBlueMiddle)
+                        .setTangent(0)
+                        .waitSeconds(.2)
+                        .stopAndAdd(placePurpleActions.moveIntake(Intake.Angle.MID))
+                        .waitSeconds(.2)
+                        .stopAndAdd(placePurpleActions.closeExtension())
+                        //Place Preload on board
+                        .splineToLinearHeading(new Pose2d(51, -34, Math.toRadians(0)), Math.toRadians(0))
+                        .waitSeconds(.1)
+                        .stopAndAdd(depositBlueRight)
+                        .waitSeconds(0.5)
+                        //Park
+                        .setTangent(Math.toRadians(-90))
+                        .strafeTo(new Vector2d(50, -33))
+                        //Park Close To Wall
+                        .strafeTo(new Vector2d(45, -60))
+                        .stopAndAdd(retractDepositBlueMiddle)
+                        .turnTo(Math.toRadians(90))
+                        .build();
+
+        //Park Close To Backdrop
+                        /*
+                        .strafeTo(new Vector2d(52,15))
+                        .stopAndAdd(retractDepositBlueMiddle)
+                        .turnTo(Math.toRadians(-90))
+                        .build();
+                         */
+
+
+        Action trajRedLeft =
+                robot.drive.actionBuilder(robot.drive.pose)
+                        .stopAndAdd(depositActions.readyForDeposit(tempHeight))
+                        .splineToLinearHeading(new Pose2d(34.7, -32, Math.toRadians(0)), Math.toRadians(0))
+                        .stopAndAdd(placePurplePixelBlueRight)
+                        .setTangent(0)
+                        .waitSeconds(.2)
+                        .stopAndAdd(placePurpleActions.closeExtension())
+                        //Place Preload on board
+                        .waitSeconds(.1)
+                        .strafeTo(new Vector2d(51, -29))
+                        .stopAndAdd(depositBlueRight)
+                        .waitSeconds(0.3)
+                        //Park
+                        .setTangent(Math.toRadians(-90))
+                        .strafeTo(new Vector2d(48, -28))
+                        .stopAndAdd(retractDepositBlueRight)
+                        .strafeToLinearHeading(new Vector2d(45, -55), Math.toRadians(90))
+                        .strafeTo(new Vector2d(45.25, -60))
+                        .build();
+
+
+        //Park Close To Backdrop
+                        /*
+                        .strafeTo(new Vector2d(52,15))
+                        .stopAndAdd(retractDepositBlueMiddle)
+                        .turnTo(Math.toRadians(-90))
+                        .build();
+                         */
 
 
         while (opModeInInit() && !isStopRequested()) {
@@ -240,8 +250,7 @@ public class AutoRightRed extends LinearOpMode {
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             telemetry.addData("POS", propPipelineRedRight.getLocation());
 
-            switch (propPipelineRedRight.getLocation())
-            {
+            switch (propPipelineRedRight.getLocation()) {
                 case Left:
                     propLocation = PropLocation.LEFT;
                     break;
@@ -263,8 +272,7 @@ public class AutoRightRed extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        switch (propLocation)
-        {
+        switch (propLocation) {
             case RIGHT:
                 runBlocking(new ParallelAction(
                         trajRedRight,
@@ -285,33 +293,28 @@ public class AutoRightRed extends LinearOpMode {
                 break;
         }
 
-        while (opModeIsActive())
-        {
+        while (opModeIsActive()) {
             robot.drive.updatePoseEstimate();
         }
         writeToFile(robot.drive.pose.heading.log());
     }
 
 
-    void initCamera()
-    {
+    void initCamera() {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
         FtcDashboard.getInstance().startCameraStream(webcam, 0);
 
         webcam.setMillisecondsPermissionTimeout(5000); // Timeout for obtaining permission is configurable. Set before opening.
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
-            public void onOpened()
-            {
+            public void onOpened() {
                 webcam.startStreaming(640, 480, OpenCvCameraRotation.UPSIDE_DOWN);
             }
 
             @Override
-            public void onError(int errorCode)
-            {
+            public void onError(int errorCode) {
                 /*
                  * This will be called if the camera could not be opened
                  */

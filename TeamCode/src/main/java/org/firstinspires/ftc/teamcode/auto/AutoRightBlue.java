@@ -102,8 +102,6 @@ public class AutoRightBlue extends LinearOpMode {
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
 
-
-
         SequentialAction readyIntakeBlue = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.MID)
         );
@@ -115,20 +113,20 @@ public class AutoRightBlue extends LinearOpMode {
                 new SleepAction(1),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
                 new SleepAction(0.5),
-                depositActions.moveElevator(1400)
+                depositActions.moveElevator(1500)
         );
 
         SequentialAction depositTwoPixels = new SequentialAction(
 
                 placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
-                depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD,0),
+                depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 0),
 
                 new SleepAction(0.2),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
 
                 new SleepAction(.25),
-                depositActions.moveElevator(1400)
+                depositActions.moveElevator(1850)
         );
         SequentialAction transferBlueMiddle = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
@@ -146,12 +144,17 @@ public class AutoRightBlue extends LinearOpMode {
 
         SequentialAction intakePixelBlueMiddle = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.LEFT),
-                new SleepAction(1),
+                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                new SleepAction(.1),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
+
         );
 
+        SequentialAction intakePixelBlueLeft = new SequentialAction(
+                placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
+                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
 
+        );
 
         SequentialAction intakePixelBlueRight = new SequentialAction(
                 placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
@@ -161,7 +164,6 @@ public class AutoRightBlue extends LinearOpMode {
         );
 
         SequentialAction intakePixelBlueClose = new SequentialAction(
-                new SleepAction(1),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.5),
                 placePurpleActions.moveStack(),
@@ -171,13 +173,13 @@ public class AutoRightBlue extends LinearOpMode {
         SequentialAction readyForDeposit = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.MID),
                 new SleepAction(.25),
-                depositActions.readyForDeposit(1100)
+                depositActions.readyForDeposit(1300)
         );
 
         SequentialAction readyForDepositHigh = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.MID),
                 new SleepAction(.25),
-                depositActions.readyForDeposit(1500)
+                depositActions.readyForDeposit(1600)
         );
 
         Action trajBlueLeft =
@@ -188,9 +190,10 @@ public class AutoRightBlue extends LinearOpMode {
 
 
                         //intake from mid stack
-                        .strafeToLinearHeading(new Vector2d(-53.75, 27.1), Math.toRadians(0))
-                        .stopAndAdd(intakePixelBlueMiddle)
-
+                        .stopAndAdd(intakePixelBlueLeft)
+                        .strafeToLinearHeading(new Vector2d(-53.5, 25), Math.toRadians(0))
+                        .waitSeconds(.1)
+                        .stopAndAdd(placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE))
 
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
@@ -201,11 +204,11 @@ public class AutoRightBlue extends LinearOpMode {
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
-                        .afterDisp(.7,readyIntakeBlue)
+                        .afterDisp(.7, readyIntakeBlue)
                         .afterDisp(0.5, readyForDeposit)
                         //for no pixels change to 950
 
-                        .splineToLinearHeading(new Pose2d(52, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(52.25, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
                         .setTangent(Math.toRadians(90))
@@ -221,7 +224,7 @@ public class AutoRightBlue extends LinearOpMode {
         Action trajBlueMiddle =
                 robot.drive.actionBuilder(robot.drive.pose)
                         //place purple
-                        .strafeToLinearHeading(new Vector2d(-34.5, 34), Math.toRadians(-90))
+                        .strafeToLinearHeading(new Vector2d(-34.5, 35), Math.toRadians(-90))
 
                         //intake from mid stack
                         .strafeToLinearHeading(new Vector2d(-53.1, 27), Math.toRadians(0))
@@ -231,24 +234,22 @@ public class AutoRightBlue extends LinearOpMode {
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
                         .waitSeconds(1)
-                        .strafeToLinearHeading(new Vector2d(-44.25, 7), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-44.25, 10), Math.toRadians(0))
 
                         .waitSeconds(8)
 
                         //deposit
-                        .strafeToLinearHeading(new Vector2d(30, 5), Math.toRadians(0))
-                        .afterDisp(.7,readyIntakeBlue)
+                        .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(0))
+                        .afterDisp(.7, readyIntakeBlue)
                         .afterDisp(0.5, readyForDeposit)
                         //for no pixels change to 950
-                        .splineToLinearHeading(new Pose2d(52, 32.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(52, 31.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
                         .setTangent(Math.toRadians(90))
                         //Park - Close to other board
                         .strafeToLinearHeading(new Vector2d(46, 32), Math.toRadians(-90))
                         .stopAndAdd(retractDepositBlueMiddle)
-
-
 
 
                         //Park - Corner
@@ -301,13 +302,13 @@ public class AutoRightBlue extends LinearOpMode {
 
                         //intake from left stack
                         .strafeToSplineHeading(new Vector2d(-42, 45), Math.toRadians(-90))
-                        .splineToLinearHeading(new Pose2d(-34, 12, Math.toRadians(-90)), Math.toRadians(-90))
-                        .strafeToLinearHeading(new Vector2d(-28, 10), Math.toRadians(0)
-                        , baseVelConstraint,baseAccelConstraint)
+                        .splineToLinearHeading(new Pose2d(-38, 12, Math.toRadians(-90)), Math.toRadians(-90))
+                        .strafeToLinearHeading(new Vector2d(-30, 10), Math.toRadians(0)
+                                , baseVelConstraint, baseAccelConstraint)
                         .stopAndAdd(intakePixelBlueRight)
                         .waitSeconds(1)
-                        .strafeToLinearHeading(new Vector2d(-38.5, 10), Math.toRadians(0))
-                        .waitSeconds(.5)
+                        .strafeToLinearHeading(new Vector2d(-37.25, 11), Math.toRadians(0))
+                        .waitSeconds(.25)
                         .stopAndAdd(intakePixelBlueClose)
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
@@ -315,12 +316,12 @@ public class AutoRightBlue extends LinearOpMode {
                         .waitSeconds(6)
 
                         //deposit
-                        .strafeToLinearHeading(new Vector2d(30.25, 8.75), Math.toRadians(0))
-                        .afterDisp(.7,readyIntakeBlue)
-                        .afterDisp(0.5, readyForDepositHigh)
+                        .strafeToLinearHeading(new Vector2d(30.25, 9.5), Math.toRadians(0))
+                        .afterDisp(.7, readyIntakeBlue)
+                        .afterDisp(0.1, readyForDepositHigh)
                         //for no pixels change to 950
-                        .splineToLinearHeading(new Pose2d(52.5, 27, Math.toRadians(-10)), Math.toRadians(0)).setTangent(0)
-                        .stopAndAdd(depositBlueMiddle)
+                        .splineToLinearHeading(new Pose2d(52.75, 25.5, Math.toRadians(-5)), Math.toRadians(0)).setTangent(0)
+                        .stopAndAdd(depositTwoPixels)
                         .waitSeconds(.5)
                         .lineToX(48)
                         .setTangent(Math.toRadians(90))
@@ -338,7 +339,7 @@ public class AutoRightBlue extends LinearOpMode {
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addData("POS", propPipelineBlueRight.getLocation());
-             switch (propPipelineBlueRight.getLocation()) {
+            switch (propPipelineBlueRight.getLocation()) {
                 case Left:
                     propLocation = PropLocation.LEFT;
                     break;

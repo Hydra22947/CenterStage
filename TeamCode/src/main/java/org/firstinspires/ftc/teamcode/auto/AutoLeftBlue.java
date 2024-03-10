@@ -67,6 +67,7 @@ public class AutoLeftBlue extends LinearOpMode {
     OpenCvWebcam webcam;
 
     public static int tempHeight = 1100;
+
     @Override
     public void runOpMode() {
         time = new ElapsedTime();
