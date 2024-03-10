@@ -114,7 +114,7 @@ public class AutoLeftRed extends LinearOpMode {
                 new SleepAction(1),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
                 new SleepAction(0.5),
-                depositActions.moveElevator(1500)
+                depositActions.moveElevator(1700)
         );
 
         SequentialAction depositIntermediate = new SequentialAction(
@@ -189,7 +189,7 @@ public class AutoLeftRed extends LinearOpMode {
         SequentialAction readyForDepositHigh = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.MID),
                 new SleepAction(.25),
-                depositActions.readyForDeposit(1600)
+                depositActions.readyForDeposit(1225)
         );
 
         Action trajRedRight =
@@ -197,7 +197,7 @@ public class AutoLeftRed extends LinearOpMode {
                         //place purple
                         .strafeToSplineHeading(new Vector2d(-37.5, -37.5), Math.toRadians(40))
                         .splineToLinearHeading(new Pose2d(-34, -32, Math.toRadians(0)), Math.toRadians(0))
-
+                        //32
 
                         //intake from mid stack
                         .stopAndAdd(intakePixelBlueLeft)
@@ -236,11 +236,16 @@ public class AutoLeftRed extends LinearOpMode {
         Action trajRedMiddle =
                 robot.drive.actionBuilder(robot.drive.pose)
                         //place purple
-                        .strafeToLinearHeading(new Vector2d(-34.5, -40), Math.toRadians(90))
+                        .strafeToLinearHeading(new Vector2d(-28, -34), Math.toRadians(90))
+                        .strafeToLinearHeading(new Vector2d(-34.5, -42), Math.toRadians(90))
 
                         //intake from mid stack
-                        .strafeToLinearHeading(new Vector2d(-53.1, -21.5), Math.toRadians(0))
-                        .stopAndAdd(intakePixelBlueMiddle)
+                        .strafeToLinearHeading(new Vector2d(-48, -22), Math.toRadians(0))
+                        .stopAndAdd(intakePixelBlueLeft)
+                        .waitSeconds(.1)
+                        .strafeToLinearHeading(new Vector2d(-53.5, -21.1), Math.toRadians(0))
+                        .waitSeconds(.1)
+                        .stopAndAdd(placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE))
 
 
                         .waitSeconds(.5)
@@ -251,11 +256,11 @@ public class AutoLeftRed extends LinearOpMode {
                         .waitSeconds(8)
 
                         //deposit
-                        .strafeToLinearHeading(new Vector2d(30, -8), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(30, -8.5), Math.toRadians(0))
                         .afterDisp(.7, readyIntakeBlue)
                         .afterDisp(0.5, readyForDepositHigh)
                         //for no pixels change to 950
-                        .splineToLinearHeading(new Pose2d(52, -35.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(52, -35.75, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
                         .setTangent(Math.toRadians(-90))
@@ -313,9 +318,9 @@ public class AutoLeftRed extends LinearOpMode {
 
 
                         //intake from left stack
-                        .strafeToSplineHeading(new Vector2d(-42, -45), Math.toRadians(90))
+                        .strafeToSplineHeading(new Vector2d(-42, -48), Math.toRadians(90))
                         .splineToLinearHeading(new Pose2d(-38, -12, Math.toRadians(90)), Math.toRadians(90))
-                        .strafeToLinearHeading(new Vector2d(-30, -10), Math.toRadians(0)
+                        .strafeToLinearHeading(new Vector2d(-29.9, -10), Math.toRadians(0)
                                 , baseVelConstraint, baseAccelConstraint)
                         .stopAndAdd(intakePixelBlueRight)
                         .waitSeconds(1)
@@ -332,7 +337,7 @@ public class AutoLeftRed extends LinearOpMode {
                         .afterDisp(.7, readyIntakeBlue)
                         .afterDisp(0.1, readyForDepositHigh)
                         //for no pixels change to 950
-                        .splineToLinearHeading(new Pose2d(52.75, -28, Math.toRadians(5)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(52.75, -29, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
                         .lineToX(48)

@@ -66,7 +66,7 @@ public class AutoLeftBlue extends LinearOpMode {
     PropPipelineBlueLeft propPipelineBlueLeft;
     OpenCvWebcam webcam;
 
-    public static int tempHeight = 1100;
+    public static int tempHeight = 900;
 
     @Override
     public void runOpMode() {
@@ -97,9 +97,10 @@ public class AutoLeftBlue extends LinearOpMode {
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
         SequentialAction depositBlueLeft = new SequentialAction(
-                depositActions.readyForDeposit(tempHeight + 75),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600)
-                //depositActions.retractDeposit()
+                depositActions.readyForDeposit(tempHeight),
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600),
+                new SleepAction(0.5),
+                depositActions.moveElevator(tempHeight + 400)
         );
 
         SequentialAction placePurplePixelBlueLeft = new SequentialAction(
@@ -146,18 +147,20 @@ public class AutoLeftBlue extends LinearOpMode {
         );
 
         SequentialAction depositBlueRight = new SequentialAction(
-                depositActions.readyForDeposit(tempHeight + 250),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600)
+                depositActions.readyForDeposit(tempHeight),
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD ,600),
+                new SleepAction(0.5),
+                depositActions.moveElevator(tempHeight + 300)
         );
 
         SequentialAction placePurplePixelBlueRight = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
                 new SleepAction(0.5),
-                placePurpleActions.openExtension(1030),
+                placePurpleActions.openExtension(820),
                 new SleepAction(0.6),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.1),
-                placePurpleActions.openExtension(800),
+                placePurpleActions.openExtension(780),
                 new SleepAction(0.2),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
                 placePurpleActions.closeExtension(),
@@ -174,13 +177,13 @@ public class AutoLeftBlue extends LinearOpMode {
                         .stopAndAdd(placePurplePixelBlueLeft)
                         .setTangent(0)
                         .waitSeconds(.1)
-                        .strafeTo(new Vector2d(50.75, 40.5))
+                        .strafeTo(new Vector2d(50, 40.7))
                         .stopAndAdd(depositBlueLeft)
                         .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
                         .strafeTo(new Vector2d(47, 40.5))
-                        .strafeTo(new Vector2d(45, 60))
+                        .strafeTo(new Vector2d(45, 58))
                         .stopAndAdd(retractDepositBlueLeft)
                         .turnTo(Math.toRadians(-90))
                         .build();
@@ -236,9 +239,9 @@ public class AutoLeftBlue extends LinearOpMode {
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
                         .waitSeconds(.1)
-                        .strafeTo(new Vector2d(51, 29))
+                        .strafeTo(new Vector2d(51, 28))
                         .stopAndAdd(depositBlueRight)
-                        .waitSeconds(0.3)
+                        .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(90))
                         .strafeTo(new Vector2d(48, 28.5))

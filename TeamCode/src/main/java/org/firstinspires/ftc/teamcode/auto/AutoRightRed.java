@@ -65,7 +65,7 @@ public class AutoRightRed extends LinearOpMode {
     PropPipelineRedRight propPipelineRedRight;
     OpenCvWebcam webcam;
 
-    public int tempHeight = 1100;
+    public int tempHeight = 900;
 
     @Override
     public void runOpMode() {
@@ -134,14 +134,15 @@ public class AutoRightRed extends LinearOpMode {
         SequentialAction depositBlueRight = new SequentialAction(
                 depositActions.readyForDeposit(tempHeight),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 600),
+                new SleepAction(0.5),
                 depositActions.moveElevator(1500)
         );
 
         SequentialAction placePurplePixelBlueRight = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
                 new SleepAction(0.5),
-                placePurpleActions.openExtension(1030),
-                new SleepAction(0.6),
+                placePurpleActions.openExtension(920),
+                new SleepAction(0.8),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.1),
                 placePurpleActions.openExtension(800),
@@ -223,7 +224,7 @@ public class AutoRightRed extends LinearOpMode {
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
                         .waitSeconds(.1)
-                        .strafeTo(new Vector2d(51, -29))
+                        .strafeTo(new Vector2d(51, -28))
                         .stopAndAdd(depositBlueRight)
                         .waitSeconds(0.3)
                         //Park

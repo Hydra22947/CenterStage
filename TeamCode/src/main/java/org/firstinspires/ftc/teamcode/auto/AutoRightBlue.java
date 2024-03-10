@@ -116,6 +116,15 @@ public class AutoRightBlue extends LinearOpMode {
                 depositActions.moveElevator(1500)
         );
 
+        SequentialAction depositIntermediate = new SequentialAction(
+
+                placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
+                new SleepAction(1),
+                depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 0),
+
+                new SleepAction(0.2)
+        );
+
         SequentialAction depositTwoPixels = new SequentialAction(
 
                 placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
@@ -131,7 +140,7 @@ public class AutoRightBlue extends LinearOpMode {
         SequentialAction transferBlueMiddle = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
                 new SleepAction(0.5),
-                placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.LEFT),
+                placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
                 placePurpleActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
                 new SleepAction(1),
                 placePurpleActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
@@ -145,7 +154,7 @@ public class AutoRightBlue extends LinearOpMode {
         SequentialAction intakePixelBlueMiddle = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
                 placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
-                new SleepAction(.1),
+                new SleepAction(1),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
 
         );
@@ -179,7 +188,7 @@ public class AutoRightBlue extends LinearOpMode {
         SequentialAction readyForDepositHigh = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.MID),
                 new SleepAction(.25),
-                depositActions.readyForDeposit(1600)
+                depositActions.readyForDeposit(1500)
         );
 
         Action trajBlueLeft =
@@ -224,12 +233,15 @@ public class AutoRightBlue extends LinearOpMode {
         Action trajBlueMiddle =
                 robot.drive.actionBuilder(robot.drive.pose)
                         //place purple
-                        .strafeToLinearHeading(new Vector2d(-34.5, 35), Math.toRadians(-90))
+                        .strafeToLinearHeading(new Vector2d(-34.5, 34), Math.toRadians(-90))
 
                         //intake from mid stack
-                        .strafeToLinearHeading(new Vector2d(-53.1, 27), Math.toRadians(0))
-                        .stopAndAdd(intakePixelBlueMiddle)
-
+                        .strafeToLinearHeading(new Vector2d(-48, 26), Math.toRadians(0))
+                        .stopAndAdd(intakePixelBlueLeft)
+                        .waitSeconds(.1)
+                        .strafeToLinearHeading(new Vector2d(-53.5, 26), Math.toRadians(0))
+                        .waitSeconds(.1)
+                        .stopAndAdd(placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE))
 
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
@@ -241,9 +253,9 @@ public class AutoRightBlue extends LinearOpMode {
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(0))
                         .afterDisp(.7, readyIntakeBlue)
-                        .afterDisp(0.5, readyForDeposit)
+                        .afterDisp(0.5, readyForDepositHigh)
                         //for no pixels change to 950
-                        .splineToLinearHeading(new Pose2d(52, 31.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
                         .setTangent(Math.toRadians(90))
@@ -303,11 +315,11 @@ public class AutoRightBlue extends LinearOpMode {
                         //intake from left stack
                         .strafeToSplineHeading(new Vector2d(-42, 45), Math.toRadians(-90))
                         .splineToLinearHeading(new Pose2d(-38, 12, Math.toRadians(-90)), Math.toRadians(-90))
-                        .strafeToLinearHeading(new Vector2d(-30, 10), Math.toRadians(0)
+                        .strafeToLinearHeading(new Vector2d(-30, 9.75), Math.toRadians(0)
                                 , baseVelConstraint, baseAccelConstraint)
                         .stopAndAdd(intakePixelBlueRight)
                         .waitSeconds(1)
-                        .strafeToLinearHeading(new Vector2d(-37.25, 11), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-36.75, 11), Math.toRadians(0))
                         .waitSeconds(.25)
                         .stopAndAdd(intakePixelBlueClose)
                         .waitSeconds(.5)
@@ -320,8 +332,10 @@ public class AutoRightBlue extends LinearOpMode {
                         .afterDisp(.7, readyIntakeBlue)
                         .afterDisp(0.1, readyForDepositHigh)
                         //for no pixels change to 950
+                        .splineToLinearHeading(new Pose2d(52.75, 29, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .stopAndAdd(depositIntermediate)
                         .splineToLinearHeading(new Pose2d(52.75, 25.5, Math.toRadians(-5)), Math.toRadians(0)).setTangent(0)
-                        .stopAndAdd(depositTwoPixels)
+                        .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
                         .lineToX(48)
                         .setTangent(Math.toRadians(90))
