@@ -238,7 +238,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(-34.5, 34), Math.toRadians(-90))
 
                         //intake from mid stack
-                        .strafeToLinearHeading(new Vector2d(-48, 26), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-49.5, 24), Math.toRadians(0))
                         .stopAndAdd(intakePixelBlueLeft)
                         .waitSeconds(.1)
                         .strafeToLinearHeading(new Vector2d(-53.5, 26), Math.toRadians(0))
