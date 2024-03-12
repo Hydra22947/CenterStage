@@ -16,7 +16,7 @@ public class IntakeExtension implements Subsystem
 
     DcMotorEx extensionMotor;
     private final RobotHardware robot = RobotHardware.getInstance();
-    public static double MAX_LEVEL = 1640;
+    public static double MAX_LEVEL = 1250;
     double currentTarget = 0;
     boolean usePID = true;
     public static double maxPower = 1;

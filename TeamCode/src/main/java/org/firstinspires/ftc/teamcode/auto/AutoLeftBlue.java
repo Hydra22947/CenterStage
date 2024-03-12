@@ -115,7 +115,6 @@ public class AutoLeftBlue extends LinearOpMode {
                placePurpleActions.openExtension(550),
                 new SleepAction(0.2),
                 placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.closeExtension(),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
