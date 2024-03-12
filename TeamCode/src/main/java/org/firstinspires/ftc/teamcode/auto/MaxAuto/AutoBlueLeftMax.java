@@ -144,7 +144,7 @@ public class AutoBlueLeftMax extends LinearOpMode {
                 intakeActions.moveIntake(Intake.Angle.INTAKE),
                 intakeActions.openExtension(600),
 
-                new SleepAction(0.4),
+                new SleepAction(0.25),
                 intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN)
 
         );
@@ -201,17 +201,17 @@ public class AutoBlueLeftMax extends LinearOpMode {
 
         SequentialAction intake54Action = new SequentialAction(
                 openIntakeWhitePixelAction,
-                new SleepAction(2),
+                new SleepAction(1.5),
                 closeIntakeWhitePixelAction
         );
         //Trajectories
         Action placePurpleTraj = robot.drive.actionBuilder(robot.drive.pose)
-                .strafeToLinearHeading(new Vector2d(48, 34.25), Math.toRadians(0))
-                .waitSeconds(1)
+                .strafeToLinearHeading(new Vector2d(48, 38), Math.toRadians(0))
+                .waitSeconds(1.5)
                 .build();
 
         Action placeYellowPixelTraj = robot.drive.actionBuilder(new Pose2d(48, 34., Math.toRadians(0)))
-                .splineToLinearHeading(new Pose2d(50.25, 34, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(50.75, 34, Math.toRadians(0)), Math.toRadians(0))
                 .waitSeconds(1)
                 .build();
 
@@ -224,6 +224,7 @@ public class AutoBlueLeftMax extends LinearOpMode {
 
                 //Getting Closer and fixing angle
                 .strafeToLinearHeading(new Vector2d(-33.25, 10.5), Math.toRadians(0))
+                .waitSeconds(.25)
                 .build();
 
         Action place54Traj = robot.drive.actionBuilder(new Pose2d(-33, 10.84, Math.toRadians(0)))
