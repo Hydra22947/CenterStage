@@ -1,11 +1,6 @@
-package org.firstinspires.ftc.teamcode.auto.MaxAuto;
+package org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoRedRight;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.closeIntakeWhitePixelAction;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.depositBlue;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.depositSecondCycle;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.openIntakeWhitePixelAction;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.placePurplePixelSequence;
 import static org.firstinspires.ftc.teamcode.auto.AutoSettings.writeToFile;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -28,10 +23,6 @@ import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoConstants;
 import org.firstinspires.ftc.teamcode.auto.AutoLeftBlue;
-import org.firstinspires.ftc.teamcode.auto.AutoLeftRed;
-import org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueLeft.AutoBlueLeftLeft;
-import org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueLeft.AutoBlueLeftMiddle;
-import org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueLeft.AutoBlueLeftRight;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -46,8 +37,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
-@Autonomous(name = "2+2 - Auto Blue Left MAX")
-public class AutoBlueLeftMax extends LinearOpMode {
+@Autonomous(name = "2+2 - Auto Right Red MAX")
+public class AutoRightRedMax extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 
