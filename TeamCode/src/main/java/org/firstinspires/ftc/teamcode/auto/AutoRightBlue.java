@@ -211,7 +211,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-35, 11), Math.toRadians(0))
 
-                        .waitSeconds(8)
+                        .waitSeconds(9.5)
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
@@ -250,7 +250,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-44.25, 10), Math.toRadians(0))
 
-                        .waitSeconds(8)
+                        .waitSeconds(9.5)
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(0))
@@ -327,7 +327,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
 
-                        .waitSeconds(6)
+                        .waitSeconds(8.5)
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30.25, 9.5), Math.toRadians(0))

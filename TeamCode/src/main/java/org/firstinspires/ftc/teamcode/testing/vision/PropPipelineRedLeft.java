@@ -28,8 +28,8 @@ public class PropPipelineRedLeft extends OpenCvPipeline {
     public static int widthCenter = 370, heightCenter = 200;
     public static int widthLeft = 190, heightLeft = 200;
 
-    public static int redMinH = 0;
-    public static int redMinS = 104;
+    public static int redMinH = 166;
+    public static int redMinS = 0;
     public static int redMinV = 0;
     public static int redMaxH = 179;
     public static int redMaxS = 255;

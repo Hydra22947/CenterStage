@@ -108,7 +108,7 @@ public class AutoLeftRed extends LinearOpMode {
                 placePurpleActions.moveIntake(Intake.Angle.MID)
         );
 
-
+/*
         SequentialAction depositBlueMiddle = new SequentialAction(
 
                 placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
@@ -116,8 +116,15 @@ public class AutoLeftRed extends LinearOpMode {
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
                 new SleepAction(0.5),
                 depositActions.moveElevator(1700)
-        );
+        );*/
+        SequentialAction depositBlueMiddle = new SequentialAction(
 
+                placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
+                new SleepAction(1),
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
+                new SleepAction(0.5),
+                depositActions.moveElevator(1500)
+        );
         SequentialAction depositIntermediate = new SequentialAction(
 
                 placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
@@ -178,21 +185,30 @@ public class AutoLeftRed extends LinearOpMode {
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.5),
                 placePurpleActions.moveStack(),
-                placePurpleActions.openExtension(-20)
+                placePurpleActions.openExtension(-35)
 
         );
-        SequentialAction readyForDeposit = new SequentialAction(
+      /*  SequentialAction readyForDeposit = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.MID),
                 new SleepAction(.25),
                 depositActions.readyForDeposit(1300)
+        );*/
+        SequentialAction readyForDeposit = new SequentialAction(
+                placePurpleActions.moveIntake(Intake.Angle.MID),
+                new SleepAction(.25),
+                depositActions.readyForDeposit(1100)
         );
-
+/*
         SequentialAction readyForDepositHigh = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.MID),
                 new SleepAction(.25),
                 depositActions.readyForDeposit(1225)
+        );*/
+        SequentialAction readyForDepositHigh = new SequentialAction(
+                placePurpleActions.moveIntake(Intake.Angle.MID),
+                new SleepAction(.25),
+                depositActions.readyForDeposit(1100)
         );
-
         Action trajRedRight =
                 robot.drive.actionBuilder(robot.drive.pose)
                         //place purple
@@ -211,7 +227,7 @@ public class AutoLeftRed extends LinearOpMode {
                         .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-35, -11), Math.toRadians(0))
 
-                        .waitSeconds(8)
+                        .waitSeconds(9.5)
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, -12), Math.toRadians(0))
@@ -254,7 +270,7 @@ public class AutoLeftRed extends LinearOpMode {
                         .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-44.25, -10), Math.toRadians(0))
 
-                        .waitSeconds(8)
+                        .waitSeconds(9.5)
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, -8.5), Math.toRadians(0))
@@ -331,7 +347,7 @@ public class AutoLeftRed extends LinearOpMode {
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
 
-                        .waitSeconds(6)
+                        .waitSeconds(8.5)
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30.25, -9.5), Math.toRadians(0))
