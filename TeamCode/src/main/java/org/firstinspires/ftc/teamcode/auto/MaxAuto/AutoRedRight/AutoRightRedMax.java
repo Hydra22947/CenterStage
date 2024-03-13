@@ -22,13 +22,13 @@ import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoConstants;
-import org.firstinspires.ftc.teamcode.auto.AutoLeftBlue;
+import org.firstinspires.ftc.teamcode.auto.AutoRightRed;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
-import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineBlueLeft;
+import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineRedRight;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -61,8 +61,8 @@ public class AutoRightRedMax extends LinearOpMode {
         RIGHT
     }
 
-    public static AutoLeftBlue.PropLocation propLocation = AutoLeftBlue.PropLocation.MIDDLE;
-    PropPipelineBlueLeft propPipelineBlueLeft;
+    public static PropLocation propLocation = PropLocation.MIDDLE;
+    PropPipelineRedRight propPipelineRedRight;
     OpenCvWebcam webcam;
 
     public static int tempHeight = 900;
@@ -74,13 +74,13 @@ public class AutoRightRedMax extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        propPipelineBlueLeft = new PropPipelineBlueLeft();
+        propPipelineRedRight = new PropPipelineRedRight();
         robot.init(hardwareMap, telemetry, autoConstants.startPoseBlueLeft);
 
         autoConstants = new AutoConstants();
 
         initCamera();
-        webcam.setPipeline(propPipelineBlueLeft);
+        webcam.setPipeline(propPipelineRedRight);
 
 
         elevator = new Elevator(true);
@@ -197,31 +197,31 @@ public class AutoRightRedMax extends LinearOpMode {
         );
         //Trajectories
         Action placePurpleTraj = robot.drive.actionBuilder(robot.drive.pose)
-                .strafeToLinearHeading(new Vector2d(48, 38), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(48, -38), Math.toRadians(0))
                 .waitSeconds(1.5)
                 .build();
 
-        Action placeYellowPixelTraj = robot.drive.actionBuilder(new Pose2d(48, 34., Math.toRadians(0)))
-                .splineToLinearHeading(new Pose2d(50.75, 34, Math.toRadians(0)), Math.toRadians(0))
+        Action placeYellowPixelTraj = robot.drive.actionBuilder(new Pose2d(48, -34., Math.toRadians(0)))
+                .splineToLinearHeading(new Pose2d(50.75, -34, Math.toRadians(0)), Math.toRadians(0))
                 .waitSeconds(1)
                 .build();
 
-        Action intake54Traj = robot.drive.actionBuilder(new Pose2d(50.25, 34, Math.toRadians(0)))
+        Action intake54Traj = robot.drive.actionBuilder(new Pose2d(50.25, -34, Math.toRadians(0)))
 
                 //Going to intake position
                 .setTangent(Math.toRadians(-120))
-                .splineToConstantHeading(new Vector2d(30, 9.5), Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(-28, 10.84, Math.toRadians(0)), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(30, -9.5), Math.toRadians(-180))
+                .splineToSplineHeading(new Pose2d(-28, -10.84, Math.toRadians(0)), Math.toRadians(180))
 
                 //Getting Closer and fixing angle
-                .strafeToLinearHeading(new Vector2d(-33.25, 10.5), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-33.25, -10.5), Math.toRadians(0))
                 .waitSeconds(.25)
                 .build();
 
-        Action place54Traj = robot.drive.actionBuilder(new Pose2d(-33, 10.84, Math.toRadians(0)))
+        Action place54Traj = robot.drive.actionBuilder(new Pose2d(-33, -10.84, Math.toRadians(0)))
 
-                .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(51, 28, Math.toRadians(5)), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(30, -9), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(51, -28, Math.toRadians(-5)), Math.toRadians(0))
                 .build();
 
         ParallelAction placePurplePixel = new ParallelAction(
@@ -245,7 +245,7 @@ public class AutoRightRedMax extends LinearOpMode {
         );
 
 
-        SequentialAction blueLeftRight = new SequentialAction(
+        SequentialAction rightRedRight= new SequentialAction(
                 placePurplePixel,
                 placePreloadOnBoard,
                 intake54,
@@ -261,24 +261,24 @@ public class AutoRightRedMax extends LinearOpMode {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
-            telemetry.addData("POS", propPipelineBlueLeft.getLocation());
-            telemetry.addData("NO PROP", propPipelineBlueLeft.NO_PROP);
-            switch (propPipelineBlueLeft.getLocation()) {
+            telemetry.addData("POS", propPipelineRedRight.getLocation());
+            telemetry.addData("NO PROP", propPipelineRedRight.NO_PROP);
+            switch (propPipelineRedRight.getLocation()) {
                 case Left:
-                    propLocation = AutoLeftBlue.PropLocation.LEFT;
+                    propLocation = PropLocation.LEFT;
                     break;
                 case Right:
-                    propLocation = AutoLeftBlue.PropLocation.RIGHT;
+                    propLocation = PropLocation.RIGHT;
                     break;
                 case Center:
-                    propLocation = AutoLeftBlue.PropLocation.MIDDLE;
+                    propLocation = PropLocation.MIDDLE;
                     break;
             }
 
             if (betterGamepad2.dpadUpOnce()) {
-                propPipelineBlueLeft.NO_PROP++;
+                propPipelineRedRight.NO_PROP++;
             } else if (betterGamepad2.dpadDownOnce()) {
-                propPipelineBlueLeft.NO_PROP--;
+                propPipelineRedRight.NO_PROP--;
             }
             telemetry.addLine("Initialized");
             telemetry.update();
@@ -291,19 +291,19 @@ public class AutoRightRedMax extends LinearOpMode {
         switch (propLocation) {
             case LEFT:
                 runBlocking(new ParallelAction(
-                        blueLeftRight,
+                        rightRedRight,
                         updateActions.updateSystems()
                 ));
                 break;
             case RIGHT:
                 runBlocking(new ParallelAction(
-                        blueLeftRight,
+                        rightRedRight,
                         updateActions.updateSystems()
                 ));
                 break;
             case MIDDLE:
                 runBlocking(new ParallelAction(
-                        blueLeftRight,
+                        rightRedRight,
                         updateActions.updateSystems()
                 ));
                 break;
