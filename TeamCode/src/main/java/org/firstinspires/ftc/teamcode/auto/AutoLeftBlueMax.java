@@ -38,7 +38,6 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous(name = "2+2 - Auto Blue Left")
-@Disabled
 public class AutoLeftBlueMax extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
@@ -220,6 +219,25 @@ public class AutoLeftBlueMax extends LinearOpMode {
         Action trajBlueMiddle =
                 robot.drive.actionBuilder(robot.drive.pose)
                         //Place purple pixel
+                        .strafeToLinearHeading(new Vector2d(48 ,34.25 ), Math.toRadians(0))
+                        .waitSeconds(0.5)
+                        .setTangent(190)
+                        .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
+                        .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-42, 42, Math.toRadians(10)), Math.toRadians(-180))
+                        //Place Preload on board
+                        //  .splineToLinearHeading(new Pose2d(50.25, 34, Math.toRadians(0)), Math.toRadians(0))
+                        .waitSeconds(.5)
+
+                        //Intake 54
+
+                        .strafeToLinearHeading(new Vector2d(-32, 58) , Math.toRadians(0))
+                        .setTangent(Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(-180))
+                        .setTangent(Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(48, 34.25, Math.toRadians(0)) , Math.toRadians(-90))
+                        .strafeTo(new Vector2d(48.5, 34.25))
+                        /*
                         .stopAndAdd(depositActions.readyForDeposit(950))
                         .splineToLinearHeading(new Pose2d(40, 26, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixel)
@@ -256,6 +274,8 @@ public class AutoLeftBlueMax extends LinearOpMode {
                         //Park
                         .strafeToLinearHeading(new Vector2d(46, 33.5), Math.toRadians(-90))
                         .stopAndAdd(retractDepositBlueMax)
+
+                         */
                         .build();
 
         Action trajBlueLeft =
