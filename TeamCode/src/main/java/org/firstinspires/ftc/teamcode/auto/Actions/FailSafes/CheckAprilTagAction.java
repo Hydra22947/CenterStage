@@ -6,12 +6,16 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.testing.vision.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -27,6 +31,7 @@ public class CheckAprilTagAction implements Action {
     AprilTagProcessor aprilTag;
     VisionPortal visionPortal;
     private Action mainAction, continueAction;
+    boolean found = false;
 
     public CheckAprilTagAction(Action mainAction, Action continueAction) {
         initCamera();
@@ -73,10 +78,26 @@ public class CheckAprilTagAction implements Action {
         }
     }
 
+    public static class StopAction implements Action {
+
+        RobotHardware robotHardware = RobotHardware.getInstance();
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            robotHardware.drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0,0), 0));
+            return true;
+        }
+
+    }
+
+    public static Action waitAction() {
+        return new StopAction();
+    }
+
     @Override
     public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-        if (aprilTag.getDetections().size() > 2)
+        if (aprilTag.getDetections().size() > 1 || found)
         {
+            found = true;
             return this.continueAction.run(telemetryPacket);
         }
 

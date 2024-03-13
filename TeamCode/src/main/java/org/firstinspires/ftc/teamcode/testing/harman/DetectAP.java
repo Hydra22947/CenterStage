@@ -59,6 +59,7 @@ public class DetectAP extends LinearOpMode {
                 .setCameraResolution(new Size(640, 480))
                 .build();
 
+
         robot.init(hardwareMap, telemetry);
 
         waitForStart();
@@ -66,6 +67,12 @@ public class DetectAP extends LinearOpMode {
         while (opModeIsActive()) {
             detections = findDetections();
             reportDetections(detections);
+
+
+            telemetry.addData("x", robot.drive.pose.position.x);
+            telemetry.addData("y", robot.drive.pose.position.y);
+            telemetry.addData("heading (deg)", Math.toDegrees(robot.drive.pose.heading.toDouble()));
+            telemetry.update();
 
             robot.drive.updatePoseEstimate();
             telemetry.update();
