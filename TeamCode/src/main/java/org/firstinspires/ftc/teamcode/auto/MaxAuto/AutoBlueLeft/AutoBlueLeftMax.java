@@ -1,12 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueLeft;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.closeIntakeWhitePixelAction;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.depositBlue;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.depositSecondCycle;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.openIntakeWhitePixelAction;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.placePurplePixelSequence;
-import static org.firstinspires.ftc.teamcode.auto.AutoSettings.writeToFile;
+import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.writeToFile;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -26,12 +21,8 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
-import org.firstinspires.ftc.teamcode.auto.AutoConstants;
+import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
 import org.firstinspires.ftc.teamcode.auto.AutoLeftBlue;
-import org.firstinspires.ftc.teamcode.auto.AutoLeftRed;
-import org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueLeft.AutoBlueLeftLeft;
-import org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueLeft.AutoBlueLeftMiddle;
-import org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueLeft.AutoBlueLeftRight;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;

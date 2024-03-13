@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.auto;
 // RR-specific imports
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
-import static org.firstinspires.ftc.teamcode.auto.AutoSettings.writeToFile;
-
-import android.app.ActivityOptions;
+import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.writeToFile;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -17,26 +15,20 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
+import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
-import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineBlueLeft;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous(name = "2+2 - Auto Blue Left")
@@ -57,16 +49,19 @@ public class AutoLeftBlueMax extends LinearOpMode {
     PlacePurpleActions intakeActions;
     UpdateActions updateActions;
 
+
     enum PropLocation
     {
         LEFT,
         CENTER,
-        RIHGT
+        RIGHT
     }
 
     public static PropLocation propLocation = PropLocation.CENTER;
 
     public static int tempHeight = 1450;
+
+    Pose2d test;
 
     SequentialAction blueLeftMiddle;
 
@@ -211,7 +206,7 @@ public class AutoLeftBlueMax extends LinearOpMode {
        SequentialAction placePurplePixelAction = new SequentialAction(
                new ParallelAction(
                intakeActions.moveIntake(Intake.Angle.INTAKE),
-               intakeActions.openExtension(400)),
+               intakeActions.openExtension( 400)),
                new SleepAction(0.25),
                intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN)
        );
@@ -229,7 +224,7 @@ public class AutoLeftBlueMax extends LinearOpMode {
                 new SleepAction(.5),
                 intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(2),
-                intakeActions.openExtension(550 )
+                intakeActions.openExtension(450 )
 
         );
 
@@ -280,7 +275,7 @@ public class AutoLeftBlueMax extends LinearOpMode {
                 .build();
 
         Action placeYellowTraj = robot.drive.actionBuilder(new Pose2d(30, 24, Math.toRadians(0)))
-                .strafeTo(new Vector2d(50,28))
+                .strafeTo(new Vector2d(50,34.25))
                 .waitSeconds(.5)
                 .build();
 
@@ -297,12 +292,12 @@ public class AutoLeftBlueMax extends LinearOpMode {
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(0))
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(48, 34.25, Math.toRadians(0)) , Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(48, 38, Math.toRadians(0)) , Math.toRadians(-90))
                 .waitSeconds(.4)
                 .build();
 
         Action goPark = robot.drive.actionBuilder(new Pose2d( 48 , 34.25  , Math.toRadians(0)))
-                .strafeToLinearHeading(new Vector2d(45 , 34) ,  Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(46 , 34) ,  Math.toRadians(-90))
                 .build();
 
         ParallelAction placePurplePixel = new ParallelAction(
@@ -519,12 +514,13 @@ public class AutoLeftBlueMax extends LinearOpMode {
                 ));
                 break;
             case CENTER:
+
                 runBlocking(new ParallelAction(
                         blueLeftMiddle,
                         updateActions.updateSystems()
                 ));
                 break;
-            case RIHGT:
+            case RIGHT:
                 runBlocking(new ParallelAction(
                         //trajBlueRight,
                         updateActions.updateSystems()
