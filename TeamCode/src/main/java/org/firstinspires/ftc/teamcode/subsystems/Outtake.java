@@ -11,8 +11,8 @@ public class Outtake implements Subsystem{
 
     private final RobotHardware robot;
 
-    public static double intakeHandPivot = 0.815, intakeClawPivot = 0.095;
-    public static double outtakeHandPivot = .35, outtakeClawPivot = .9475;
+    public static double intakeHandPivot = 0.77, intakeClawPivot = 0.12;
+    public static double outtakeHandPivot = .3, outtakeClawPivot = .9475;
     public static double outtakeHandPivotLong = .41, outtakeClawPivotLong = .95;
 
     public static double power = 1;

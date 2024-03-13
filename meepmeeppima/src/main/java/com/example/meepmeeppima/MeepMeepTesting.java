@@ -18,9 +18,9 @@ public class MeepMeepTesting {
 
 
         setAnimation(meepMeep , myBot);
-       // BlueLeftMiddle(myBot);
+        BlueLeftMiddle(myBot);
        // BlueLeftLeft(myBot);
-        BlueLeftRight(myBot);
+       // BlueLeftRight(myBot);
 
 
 
@@ -54,7 +54,7 @@ public class MeepMeepTesting {
 
                 .strafeToLinearHeading(new Vector2d(-32, 58) , Math.toRadians(0))
                 .setTangent(Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(-180))
+                .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(0))
                 .setTangent(Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(48, 34.25, Math.toRadians(0)) , Math.toRadians(-90))
                 .strafeTo(new Vector2d(48.5, 34.25))
