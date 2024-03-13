@@ -191,7 +191,7 @@ public class AutoLeftBlueMax extends LinearOpMode {
         );
 
         SequentialAction depositSecondCycle = new SequentialAction(
-                new SleepAction(3.5),
+                new SleepAction(3.2),
                 readyForDepositAction,
 
                 intakeActions.moveIntake(Intake.Angle.MID),
@@ -211,7 +211,7 @@ public class AutoLeftBlueMax extends LinearOpMode {
        SequentialAction placePurplePixelAction = new SequentialAction(
                new ParallelAction(
                intakeActions.moveIntake(Intake.Angle.INTAKE),
-               intakeActions.openExtension(500)),
+               intakeActions.openExtension(400)),
                new SleepAction(0.25),
                intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN)
        );
@@ -288,7 +288,7 @@ public class AutoLeftBlueMax extends LinearOpMode {
                 .setTangent(190)
                 .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-41.5, 42.5, Math.toRadians(10)), Math.toRadians(-180))
+                .splineToLinearHeading(new Pose2d(-41.8, 42.5, Math.toRadians(10)), Math.toRadians(-180))
                 .waitSeconds(0.7)
                 .build();
 
