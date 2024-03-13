@@ -132,6 +132,10 @@ public class AutoBlueLeftMax extends LinearOpMode {
             telemetry.update();
         }
 
+        waitForStart();
+
+        if (isStopRequested()) return;
+
         switch (propLocation) {
             case RIGHT:
                 currentAuto = new AutoBlueLeftRight(telemetry, hardwareMap, intake, intakeExtension, outtake, claw, elevator);
@@ -143,19 +147,12 @@ public class AutoBlueLeftMax extends LinearOpMode {
                 break;
 
             case LEFT:
-                currentAuto = new AutoBlueLeftLeft(intake, intakeExtension, outtake, claw, elevator);
+                currentAuto = new AutoBlueLeftLeft(telemetry, hardwareMap, intake, intakeExtension, outtake, claw, elevator);
 
                 break;
         }
 
-        waitForStart();
-
-        if (isStopRequested()) return;
-
-
-
         currentAuto.run();
-
         while (opModeIsActive()) {
             robot.drive.updatePoseEstimate();
         }

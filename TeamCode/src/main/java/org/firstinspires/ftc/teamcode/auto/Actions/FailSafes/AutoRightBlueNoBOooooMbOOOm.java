@@ -138,25 +138,31 @@ public class AutoRightBlueNoBOooooMbOOOm extends LinearOpMode {
         Action trajBlueMiddle =
                 robot.drive.actionBuilder(robot.drive.pose)
                         //place purple
+                        .strafeToLinearHeading(new Vector2d(-34.5, 34), Math.toRadians(-90))
+
+                        .strafeToLinearHeading(new Vector2d(-49.5, 24), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-53.5, 26), Math.toRadians(0))
                         .strafeToLinearHeading(new Vector2d(-44.25, 10), Math.toRadians(0))
-                        .strafeToLinearHeading(new Vector2d(15, 8), Math.toRadians(0))
-                        .strafeToLinearHeading(new Vector2d(31, 20), Math.toRadians(24.5))
+                        .splineToLinearHeading(new Pose2d(20, 8, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(32, 32), Math.toRadians(90))
                         .waitSeconds(1)
                         .stopAndAdd(new CheckAprilTagAction(
-                                CheckAprilTagAction.waitAction(),
-                                robot.drive.actionBuilder(new Pose2d(31,21,Math.toRadians(28.5)))
-                                        .splineToConstantHeading(new Vector2d(52, 32), Math.toRadians(0)).build()
+                                new InstantAction(() -> robot.drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, 0), 0))),
+                                robot.drive.actionBuilder(new Pose2d(32,32,Math.toRadians(0)))
+                                        .splineToConstantHeading(new Vector2d(52, 32), Math.toRadians(-10)).build()
                                 ))
 
                         // detect
 
                         .waitSeconds(.5)
+                        .setTangent(Math.toRadians(90))
                         //Park - Close to other board
+                        .strafeToLinearHeading(new Vector2d(46, 32), Math.toRadians(-90))
                         .build();
 
         while (opModeInInit() && !isStopRequested()) {
             betterGamepad2.update();
-            intake.setAngle(Intake.Angle.OUTTAKE);
+            intake.setAngle(Intake.Angle.MID);
             intakeExtension.setTarget(0);
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);

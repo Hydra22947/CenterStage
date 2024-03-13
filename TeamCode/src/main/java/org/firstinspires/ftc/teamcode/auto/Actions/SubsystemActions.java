@@ -15,13 +15,12 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 public class SubsystemActions {
 
-
     DepositActions depositActions;
     PlacePurpleActions intakeActions;
     UpdateActions updateActions;
 
-
     public SubsystemActions(Intake intake, IntakeExtension intakeExtension, Outtake outtake, Claw claw, Elevator elevator) {
+
         depositActions = new DepositActions(elevator, intake, claw, outtake, intakeExtension);
         intakeActions = new PlacePurpleActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
@@ -120,6 +119,7 @@ public class SubsystemActions {
             new SleepAction(1.5),
             placePurplePixelAction,
             retractPurpleAction
+
     );
 
     public SequentialAction intake54Action = new SequentialAction(

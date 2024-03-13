@@ -36,15 +36,32 @@ public class AutoBlueLeftLeft extends Auto {
     ElapsedTime time;
 
     // subsystems
+    private Elevator elevator;
+    private Intake intake;
+    private Outtake outtake;
+    private Claw claw;
+    private IntakeExtension intakeExtension;
+    private AutoConstants autoConstants;
 
     UpdateActions updateActions;
 
     SubsystemActions subsystemActions;
     public SequentialAction blueLeftLeft;
 
-    public AutoBlueLeftLeft(Intake intake, IntakeExtension intakeExtension, Outtake outtake, Claw claw, Elevator elevator) {
+    public AutoBlueLeftLeft(Telemetry telemetry, HardwareMap hardwareMap, Intake intake, IntakeExtension intakeExtensiom, Outtake outtake, Claw claw, Elevator elevator) {
         time = new ElapsedTime();
 
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        robot.init(hardwareMap, telemetry, autoConstants.startPoseBlueLeft);
+
+        autoConstants = new AutoConstants();
+
+        this.elevator = elevator;
+        this.outtake = outtake;
+        this.claw = claw;
+        this.intake = intake;
+        this.intakeExtension = intakeExtensiom;
 
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
         subsystemActions = new SubsystemActions(intake, intakeExtension, outtake, claw, elevator);
