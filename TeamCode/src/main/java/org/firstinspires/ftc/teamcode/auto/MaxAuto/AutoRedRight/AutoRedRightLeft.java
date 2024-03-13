@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoRedRight;
 
-import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
+import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.closeIntakeWhitePixelAction;
+import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.depositBlue;
+import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.depositSecondCycle;
+import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.openIntakeWhitePixelAction;
+import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.placePurplePixelSequence;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -16,17 +20,17 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
-import org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoConstants;
-import org.firstinspires.ftc.teamcode.auto.MaxAuto.Auto;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 
-public class AutoRedRightLeft extends Auto {
+
+public class AutoRedRightLeft {
+
 
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
@@ -39,11 +43,11 @@ public class AutoRedRightLeft extends Auto {
     IntakeExtension intakeExtension;
     AutoConstants autoConstants;
 
+
     DepositActions depositActions;
     PlacePurpleActions intakeActions;
     UpdateActions updateActions;
 
-    SubsystemActions subsystemActions;
     public SequentialAction redRightLeft;
 
     public AutoRedRightLeft(Telemetry telemetry, HardwareMap hardwareMap) {
@@ -67,7 +71,7 @@ public class AutoRedRightLeft extends Auto {
         depositActions = new DepositActions(elevator, intake, claw, outtake, intakeExtension);
         intakeActions = new PlacePurpleActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
-        subsystemActions = new SubsystemActions(intake, intakeExtension, outtake, claw, elevator);
+
 
         //Trajectories
         Action placePurpleTraj = robot.drive.actionBuilder(robot.drive.pose)
@@ -97,40 +101,40 @@ public class AutoRedRightLeft extends Auto {
 
         ParallelAction placePurplePixel = new ParallelAction(
                 placePurpleTraj,
-                subsystemActions.placePurplePixelSequence
+                placePurplePixelSequence
         );
 
         ParallelAction placePreloadOnBoard = new ParallelAction(
                 placeYellowPixelTraj,
-                subsystemActions.depositBlue
+                depositBlue
         );
 
         ParallelAction intake54 = new ParallelAction(
                 intake54Traj,
-                subsystemActions.openIntakeWhitePixelAction,
-                subsystemActions.closeIntakeWhitePixelAction
+                openIntakeWhitePixelAction,
+                closeIntakeWhitePixelAction
         );
 
         ParallelAction deposit54 = new ParallelAction(
                 place54Traj,
-                subsystemActions.depositSecondCycle
+                depositSecondCycle
         );
+
 
         redRightLeft = new SequentialAction(
                 placePurplePixel
-                //    placePreloadOnBoard,
-                //    intake54,
-                //   deposit54
+            //    placePreloadOnBoard,
+            //    intake54,
+             //   deposit54
         );
     }
 
-    @Override
-    public void run() {
-        runBlocking(
-                new ParallelAction(
-                        redRightLeft,
-                        updateActions.updateSystems())
-
+    public Action run() {
+        return new ParallelAction(
+                redRightLeft,
+                updateActions.updateSystems()
         );
     }
+
+
 }
