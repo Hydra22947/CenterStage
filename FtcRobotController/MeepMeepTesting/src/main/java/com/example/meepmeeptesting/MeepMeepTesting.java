@@ -265,8 +265,11 @@ public class MeepMeepTesting {
     }
     public static void blueLeftMidMax(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
-                .splineToLinearHeading(new Pose2d(40, 26, Math.toRadians(0)), Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(50.25, 34, Math.toRadians(0)), Math.toRadians(0))
+
+                .strafeToLinearHeading(new Vector2d(48, 34.25), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(48, 38), Math.toRadians(0))
+
+
 
                 .setTangent(Math.toRadians(-120))
                 .splineToConstantHeading(new Vector2d(30, 9.5), Math.toRadians(180))
@@ -435,9 +438,10 @@ public class MeepMeepTesting {
 
     public static void blueLeftRight(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
-                //place purple
-                .strafeToSplineHeading(new Vector2d(-38, 38), Math.toRadians(-40))
-                .splineToLinearHeading(new Pose2d(-34, 32, Math.toRadians(0)), Math.toRadians(0))
+                //Place Preload on Board
+                .strafeToLinearHeading(new Vector2d(50.25, 34), Math.toRadians(0))
+                //Place purple
+                .strafeToLinearHeading(new Vector2d(34.7, 32), Math.toRadians(0))
 
 
                 //intake from mid stack

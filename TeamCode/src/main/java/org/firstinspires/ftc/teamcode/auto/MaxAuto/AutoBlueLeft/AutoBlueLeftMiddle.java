@@ -1,10 +1,6 @@
 package org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueLeft;
 
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.closeIntakeWhitePixelAction;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.depositBlue;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.depositSecondCycle;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.openIntakeWhitePixelAction;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.placePurplePixelSequence;
+import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -20,8 +16,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
+import org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoConstants;
+import org.firstinspires.ftc.teamcode.auto.MaxAuto.Auto;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -29,28 +27,25 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 
 
-public class AutoBlueLeftMiddle {
-
+public class AutoBlueLeftMiddle extends Auto {
 
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 
     // subsystems
-    Elevator elevator;
-    Intake intake;
-    Outtake outtake;
-    Claw claw;
-    IntakeExtension intakeExtension;
-    AutoConstants autoConstants;
+    private Elevator elevator;
+    private Intake intake;
+    private Outtake outtake;
+    private Claw claw;
+    private IntakeExtension intakeExtension;
+    private AutoConstants autoConstants;
 
-
-    DepositActions depositActions;
-    PlacePurpleActions intakeActions;
     UpdateActions updateActions;
 
+    SubsystemActions subsystemActions;
     public SequentialAction blueLeftMiddle;
 
-    public AutoBlueLeftMiddle(Telemetry telemetry, HardwareMap hardwareMap) {
+    public AutoBlueLeftMiddle(Telemetry telemetry, HardwareMap hardwareMap, Intake intake, IntakeExtension intakeExtensiom, Outtake outtake, Claw claw, Elevator elevator) {
         time = new ElapsedTime();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -59,27 +54,24 @@ public class AutoBlueLeftMiddle {
 
         autoConstants = new AutoConstants();
 
-        elevator = new Elevator(true);
-        outtake = new Outtake();
-        claw = new Claw();
-        intake = new Intake();
-        intakeExtension = new IntakeExtension(true);
+        this.elevator = elevator;
+        this.outtake = outtake;
+        this.claw = claw;
+        this.intake = intake;
+        this.intakeExtension = intakeExtensiom;
 
-        intakeExtension.setAuto(true);
-        elevator.setAuto(true);
-
-        depositActions = new DepositActions(elevator, intake, claw, outtake, intakeExtension);
-        intakeActions = new PlacePurpleActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
-
+        subsystemActions = new SubsystemActions(intake, intakeExtension, outtake, claw, elevator);
 
         //Trajectories
-        Action placePurpleTraj = robot.drive.actionBuilder(robot.drive.pose)
-                .strafeToLinearHeading(new Vector2d(40 , 26), Math.toRadians(0))
-                .build();
 
         Action placeYellowPixelTraj = robot.drive.actionBuilder(new Pose2d(40, 26, Math.toRadians(0)))
-                .splineToLinearHeading(new Pose2d(50.25, 34, Math.toRadians(0)), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(50.25, 34), Math.toRadians(0))
+                .build();
+
+
+        Action placePurpleTraj = robot.drive.actionBuilder(robot.drive.pose)
+                .strafeToLinearHeading(new Vector2d(40, 26), Math.toRadians(0))
                 .build();
 
         Action intake54Traj = robot.drive.actionBuilder(new Pose2d(50.25, 34, Math.toRadians(0)))
@@ -101,39 +93,40 @@ public class AutoBlueLeftMiddle {
 
         ParallelAction placePurplePixel = new ParallelAction(
                 placePurpleTraj,
-                placePurplePixelSequence
+                subsystemActions.placePurplePixelSequence
         );
 
         ParallelAction placePreloadOnBoard = new ParallelAction(
                 placeYellowPixelTraj,
-                depositBlue
+                subsystemActions.depositBlue
         );
 
         ParallelAction intake54 = new ParallelAction(
                 intake54Traj,
-                openIntakeWhitePixelAction,
-                closeIntakeWhitePixelAction
+                subsystemActions.openIntakeWhitePixelAction,
+                subsystemActions.closeIntakeWhitePixelAction
         );
 
         ParallelAction deposit54 = new ParallelAction(
                 place54Traj,
-                depositSecondCycle
+                subsystemActions.depositSecondCycle
         );
 
 
         blueLeftMiddle = new SequentialAction(
-                placePurplePixel,
                 placePreloadOnBoard,
+                placePurplePixel,
                 intake54,
                 deposit54
         );
     }
 
-    public Action run() {
-        return new ParallelAction(
+    @Override
+    public void run() {
+        runBlocking(new ParallelAction(
                 blueLeftMiddle,
                 updateActions.updateSystems()
-        );
+        ));
     }
 
 
