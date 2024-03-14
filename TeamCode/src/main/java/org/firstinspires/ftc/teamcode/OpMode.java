@@ -304,7 +304,7 @@ public class OpMode extends LinearOpMode {
                 }
                 else if(gamepad2.left_trigger != 0 || gamepad1.left_trigger != 0)
                 {
-                    drivetrain.slow();
+                    drivetrain.superSlow();
                 }
 
                 if(liftState == LiftState.RETRACT)
@@ -467,7 +467,7 @@ public class OpMode extends LinearOpMode {
 
                 moveIntake();
                 heldExtension = true;
-                //drivetrain.slow();
+                drivetrain.slow();
 
                 if(firstReleaseThreeTimer)
                 {
@@ -612,7 +612,7 @@ public class OpMode extends LinearOpMode {
                 }
                 else if(gamepad2.left_trigger != 0 || gamepad1.left_trigger != 0)
                 {
-                    drivetrain.slow();
+                    drivetrain.superSlow();
                 }
 
                 if(startedDelayTransfer)
@@ -715,7 +715,7 @@ public class OpMode extends LinearOpMode {
                     moveOuttake();
                 }
 
-                //drivetrain.slow();
+                drivetrain.slow();
 
                 if(betterGamepad1.dpadRightOnce())
                 {
