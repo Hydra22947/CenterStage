@@ -424,21 +424,20 @@ public class MeepMeepTesting {
     public static void blueRightRight(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
                 //place purple
-                .strafeToSplineHeading(new Vector2d(-37.5, 37.5), Math.toRadians(-40))
-                .splineToLinearHeading(new Pose2d(-34, 32, Math.toRadians(0)), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-34.5, 35.5), Math.toRadians(-90))
 
                 //intake from left stack
-                .strafeToLinearHeading(new Vector2d(-53.5, 25), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-53.5, 26), Math.toRadians(0))
 
+                .strafeToLinearHeading(new Vector2d(-44.25, 10), Math.toRadians(0))
 
-                .strafeToLinearHeading(new Vector2d(-35, 11), Math.toRadians(0))
-                .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(52.25, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                //deposit
+                .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(54, 30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
 
-                .setTangent(Math.toRadians(-120))
+                .setTangent(Math.toRadians(-180))
                 .splineToConstantHeading(new Vector2d(30, 9.5), Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(-28, 10.84, Math.toRadians(0)), Math.toRadians(180))
-
+                .splineToSplineHeading(new Pose2d(-28, 10.85, Math.toRadians(0)), Math.toRadians(180))
                 //.strafeToLinearHeading(new Vector2d(46, 32), Math.toRadians(-90))
 
 /*
