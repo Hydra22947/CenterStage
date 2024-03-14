@@ -19,7 +19,6 @@ public class MeepMeepTesting {
             .build();
 
 
-
     public static void setAnimation(MeepMeep meepMeep, RoadRunnerBotEntity redLeftBot) {
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
@@ -30,8 +29,7 @@ public class MeepMeepTesting {
     }
 
 
-    public static void Auto4Cycles (RoadRunnerBotEntity myBot)
-    {
+    public static void Auto4Cycles(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, -90))
                 .splineToLinearHeading(new Pose2d(40, 26, Math.toRadians(0)), Math.toRadians(0))
                 .waitSeconds(1.5)
@@ -61,7 +59,6 @@ public class MeepMeepTesting {
                 .build());
 
 
-
     }
 
     public static void leftBlueTraj(RoadRunnerBotEntity myBot) {
@@ -77,7 +74,6 @@ public class MeepMeepTesting {
 
                 .build());
     }
-
 
 
     /*
@@ -263,20 +259,39 @@ public class MeepMeepTesting {
                 .lineToY(60)
                 .build());
     }
+
     public static void blueLeftMidMax(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
+<<<<<<< Updated upstream
                 .splineToLinearHeading(new Pose2d(40, 26, Math.toRadians(0)), Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(50.25, 34, Math.toRadians(0)), Math.toRadians(0))
+=======
 
+                .strafeToLinearHeading(new Vector2d(48, 34.25), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(48, 38), Math.toRadians(0))
+
+                .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-42, 36, Math.toRadians(0)), Math.toRadians(-180))
+
+                //      .splineToSplineHeading()
+>>>>>>> Stashed changes
+
+                // .strafeToLinearHeading(new Vector2d(48, 34.25), Math.toRadians(0))
+
+                //    .splineToLinearHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
+
+/*
                 .setTangent(Math.toRadians(-120))
                 .splineToConstantHeading(new Vector2d(30, 9.5), Math.toRadians(180))
                 .splineToSplineHeading(new Pose2d(-28, 10.84, Math.toRadians(0)), Math.toRadians(180))
                 .waitSeconds(.25)
-
+*/
                 //Getting Closer and fixing angle
 
                 .build());
     }
+
     public static void blueLeftMid(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
                 .setTangent(0)
@@ -292,19 +307,16 @@ public class MeepMeepTesting {
 
     public static void blueRightLeft(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
-                .strafeToLinearHeading(new Vector2d(-35, 34), Math.toRadians(180))
-                .waitSeconds(.2)
-                .setTangent(0)
-                .strafeToLinearHeading(new Vector2d(-35, 12), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-44.25, 10), Math.toRadians(0))
 
-                .lineToYLinearHeading(10.9, Math.toRadians(0))
-                .waitSeconds(.5)
-                .waitSeconds(2)
+                .waitSeconds(9.5)
 
-                .strafeToLinearHeading(new Vector2d(30, 9), Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(51.2, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                //deposit
+                .strafeToLinearHeading(new Vector2d(15, 8), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(45))
                 .waitSeconds(.5)
-                .setTangent(Math.toRadians(90))
+                //for no pixels change to 950
+                .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
 
                 .build());
     }
@@ -408,20 +420,29 @@ public class MeepMeepTesting {
                 .setTangent(Math.toRadians(-90))
                 //Park - Close to other board
                 .strafeToLinearHeading(new Vector2d(46, -32), Math.toRadians(90))
-                        .build());
+                .build());
 
     }
 
     public static void blueRightRight(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
                 //place purple
-                .strafeToLinearHeading(new Vector2d(-50, 44), Math.toRadians(-90))
-
+                .strafeToSplineHeading(new Vector2d(-37.5, 37.5), Math.toRadians(-40))
+                .splineToLinearHeading(new Pose2d(-34, 32, Math.toRadians(0)), Math.toRadians(0))
 
                 //intake from left stack
-                .strafeToSplineHeading(new Vector2d(-40, 45), Math.toRadians(-90))
-                .splineToLinearHeading(new Pose2d(-34, 15, Math.toRadians(-90)), Math.toRadians(-90))
-                .strafeToLinearHeading(new Vector2d(-34, 8), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-53.5, 25), Math.toRadians(0))
+
+
+                .strafeToLinearHeading(new Vector2d(-35, 11), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(52.25, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+
+                .setTangent(Math.toRadians(-120))
+                .splineToConstantHeading(new Vector2d(30, 9.5), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-28, 10.84, Math.toRadians(0)), Math.toRadians(180))
+
+                //.strafeToLinearHeading(new Vector2d(46, 32), Math.toRadians(-90))
 
 /*
                 //intake from mid stack
@@ -528,7 +549,7 @@ public class MeepMeepTesting {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
 
                 .build();
-        blueLeftMidMax(myBot);
+        blueRightRight(myBot);
         setAnimation(meepMeep, myBot);
 
     }

@@ -36,8 +36,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
-@Autonomous(name = "2+2 - Auto Right Red MAX")
-public class AutoRightRedMax extends LinearOpMode {
+@Autonomous(name = "2+1 - Auto Right Blue MAX")
+public class AutoBlueRightMax extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 
@@ -64,7 +64,7 @@ public class AutoRightRedMax extends LinearOpMode {
     PropPipelineRedRight propPipelineRedRight;
     OpenCvWebcam webcam;
 
-    public static int tempHeight = 900;
+    SequentialAction blueRightMiddle;
 
     @Override
     public void runOpMode() {
@@ -74,7 +74,7 @@ public class AutoRightRedMax extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         propPipelineRedRight = new PropPipelineRedRight();
-        robot.init(hardwareMap, telemetry, autoConstants.startPoseBlueLeft);
+        robot.init(hardwareMap, telemetry, autoConstants.startPoseBlueRight);
 
         autoConstants = new AutoConstants();
 
@@ -95,6 +95,8 @@ public class AutoRightRedMax extends LinearOpMode {
         intakeActions = new PlacePurpleActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
+        int tempHeight = 1450;
+
         SequentialAction depositBlue = new SequentialAction(
                 intakeActions.moveIntake(Intake.Angle.MID),
                 new SleepAction(0.5),
@@ -113,7 +115,7 @@ public class AutoRightRedMax extends LinearOpMode {
         );
 
         SequentialAction depositSecondCycle = new SequentialAction(
-                new SleepAction(3),
+                new SleepAction(4),
                 readyForDepositAction,
 
                 intakeActions.moveIntake(Intake.Angle.MID),
@@ -130,14 +132,6 @@ public class AutoRightRedMax extends LinearOpMode {
                 depositActions.retractDeposit()
         );
 
-        SequentialAction placePurplePixelAction = new SequentialAction(
-                intakeActions.moveIntake(Intake.Angle.INTAKE),
-                intakeActions.openExtension(600),
-
-                new SleepAction(0.25),
-                intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN)
-
-        );
 
         SequentialAction retractPurpleAction = new SequentialAction(
                 new SleepAction(0.3),
@@ -147,12 +141,9 @@ public class AutoRightRedMax extends LinearOpMode {
         );
 
         SequentialAction openIntakeWhitePixelAction = new SequentialAction(
-                new SleepAction(1.5),
-                intakeActions.moveIntake(Intake.Angle.TOP_54),
-                new SleepAction(.5),
-                intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
-                new SleepAction(0.5),
-                intakeActions.openExtension(1000)
+                new SleepAction(1),
+                intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
+                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
 
         );
 
@@ -161,8 +152,7 @@ public class AutoRightRedMax extends LinearOpMode {
                 new SleepAction(.5),
                 intakeActions.moveStack(),
                 new SleepAction(.5),
-                intakeActions.moveIntake(Intake.Angle.OUTTAKE),
-                intakeActions.closeExtension()
+                intakeActions.moveIntake(Intake.Angle.OUTTAKE)
         );
 
 
@@ -176,79 +166,67 @@ public class AutoRightRedMax extends LinearOpMode {
         );
 
 
-        SequentialAction retractDepositBlueMaxAction = new SequentialAction(
+        SequentialAction retractDeposit = new SequentialAction(
                 depositActions.retractDeposit()
         );
 
 
-        SequentialAction placePurplePixelSequence = new SequentialAction(
-                depositActions.readyForDeposit(950),
-                new SleepAction(1.5),
-                   placePurplePixelAction,
-                   retractPurpleAction
-
-        );
-
-        SequentialAction intake54Action = new SequentialAction(
+        SequentialAction intake5Action = new SequentialAction(
                 openIntakeWhitePixelAction,
-                new SleepAction(1.5),
+                new SleepAction(.5),
                 closeIntakeWhitePixelAction
         );
+
         //Trajectories
+
         Action placePurpleTraj = robot.drive.actionBuilder(robot.drive.pose)
-                .strafeToLinearHeading(new Vector2d(48, -38), Math.toRadians(0))
-                .waitSeconds(1.5)
+                .strafeToLinearHeading(new Vector2d(-34.5, 35), Math.toRadians(-90))
                 .build();
 
-        Action placeYellowPixelTraj = robot.drive.actionBuilder(new Pose2d(48, -34., Math.toRadians(0)))
-                .splineToLinearHeading(new Pose2d(50.75, -34, Math.toRadians(0)), Math.toRadians(0))
-                .waitSeconds(1)
-                .build();
-
-        Action intake54Traj = robot.drive.actionBuilder(new Pose2d(50.25, -34, Math.toRadians(0)))
-
-                //Going to intake position
-                .setTangent(Math.toRadians(-120))
-                .splineToConstantHeading(new Vector2d(30, -9.5), Math.toRadians(-180))
-                .splineToSplineHeading(new Pose2d(-28, -10.84, Math.toRadians(0)), Math.toRadians(180))
-
-                //Getting Closer and fixing angle
-                .strafeToLinearHeading(new Vector2d(-33.25, -10.5), Math.toRadians(0))
+        Action intake5Traj = robot.drive.actionBuilder(new Pose2d(-34, 40, Math.toRadians(0)))
+                .strafeToLinearHeading(new Vector2d(-50, 26), Math.toRadians(0))
                 .waitSeconds(.25)
+
                 .build();
 
-        Action place54Traj = robot.drive.actionBuilder(new Pose2d(-33, -10.84, Math.toRadians(0)))
+        Action depositPreloadTraj = robot.drive.actionBuilder(new Pose2d(-53.5, 26, Math.toRadians(0)))
+                .strafeToLinearHeading(new Vector2d(-44.25, 10), Math.toRadians(0))
 
-                .strafeToLinearHeading(new Vector2d(30, -9), Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(51, -28, Math.toRadians(-5)), Math.toRadians(0))
+
+                //deposit
+                .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+
+                .build();
+        Action parkTraj = robot.drive.actionBuilder(new Pose2d(52, 32, Math.toRadians(0)))
+                .strafeToLinearHeading(new Vector2d(46, 32), Math.toRadians(-90))
                 .build();
 
         ParallelAction placePurplePixel = new ParallelAction(
-                placePurpleTraj,
-                placePurplePixelSequence
+                placePurpleTraj
         );
 
-        ParallelAction placePreloadOnBoard = new ParallelAction(
-                placeYellowPixelTraj,
-                depositBlue
-        );
 
         ParallelAction intake54 = new ParallelAction(
-                intake54Traj,
-                intake54Action
+                intake5Traj,
+                intake5Action
         );
 
-        ParallelAction deposit54 = new ParallelAction(
-                place54Traj,
-                depositSecondCycle
+        ParallelAction depositPreload = new ParallelAction(
+                depositPreloadTraj
+           //     depositSecondCycle
         );
 
+        ParallelAction park = new ParallelAction(
+                parkTraj,
+                retractDeposit
+        );
 
-        SequentialAction rightRedRight= new SequentialAction(
+        blueRightMiddle = new SequentialAction(
                 placePurplePixel,
-                placePreloadOnBoard,
                 intake54,
-                deposit54
+                depositPreload,
+                park
         );
 
         while (opModeInInit() && !isStopRequested()) {
@@ -290,19 +268,19 @@ public class AutoRightRedMax extends LinearOpMode {
         switch (propLocation) {
             case LEFT:
                 runBlocking(new ParallelAction(
-                        rightRedRight,
+                        blueRightMiddle,
                         updateActions.updateSystems()
                 ));
                 break;
             case RIGHT:
                 runBlocking(new ParallelAction(
-                        rightRedRight,
+                        blueRightMiddle,
                         updateActions.updateSystems()
                 ));
                 break;
             case MIDDLE:
                 runBlocking(new ParallelAction(
-                        rightRedRight,
+                        blueRightMiddle,
                         updateActions.updateSystems()
                 ));
                 break;

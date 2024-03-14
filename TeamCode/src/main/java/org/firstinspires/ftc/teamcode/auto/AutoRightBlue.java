@@ -165,7 +165,6 @@ public class AutoRightBlue extends LinearOpMode {
         SequentialAction intakePixelBlueLeft = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
                 placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
-
         );
 
         SequentialAction intakePixelBlueRight = new SequentialAction(
