@@ -45,8 +45,8 @@ public class DebugOpMode extends LinearOpMode {
 
     // delays
     public static double delayTransfer = 300, delayRelease = 750, delayCloseTransfer = 350, XDelay = 500;
-    public static double WAIT_DELAY_TILL_OUTTAKE = 150, WAIT_DELAY_TILL_CLOSE = 250, END_GAME = 80, HALF_TIME = 45, ELEVATOR_ZERO = 10;
-    public static double DEFAULT_INTAKE_EXTEND_PRECENTAGE = 62.5, SHORT_INTAKE_EXTEND_PRECENTAGE = 50, delayReleaseFromIntake = 500;
+    public static double WAIT_DELAY_TILL_OUTTAKE = 150, WAIT_DELAY_TILL_CLOSE = 250, ELEVATOR_ZERO = 10;
+    public static double DEFAULT_INTAKE_EXTEND_PRECENTAGE = 42.5, SHORT_INTAKE_EXTEND_PRECENTAGE = 25, delayReleaseFromIntake = 500;
     // variables
     double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
     double elevatorTargetRight = 1300, intakePrecentage = DEFAULT_INTAKE_EXTEND_PRECENTAGE, releaseFromIntake = 0, startXDelay = 0;
@@ -172,18 +172,6 @@ public class DebugOpMode extends LinearOpMode {
                 outtakeToOuttake = !outtakeToOuttake;
             }
 
-//            if ((codeTime.seconds() > HALF_TIME) && !secondHalf)  {
-//                gamepad1.runRumbleEffect(customRumbleEffect);
-//                gamepad2.runRumbleEffect(customRumbleEffect);
-//                secondHalf =true;
-//            }
-//
-//            if ((codeTime.seconds() > END_GAME) && !endGame)  {
-//                gamepad1.runRumbleEffect(customRumbleEffect);
-//                gamepad2.runRumbleEffect(customRumbleEffect);
-//                endGame =true;
-//            }
-
 
             if (liftState != LiftState.EXTRACT && gamepad2.left_stick_y != 0 && !overrideIntakeExtension) {
                 intakeExtension.setUsePID(false);
@@ -304,7 +292,7 @@ public class DebugOpMode extends LinearOpMode {
                 }
                 else if(gamepad2.left_trigger != 0 || gamepad1.left_trigger != 0)
                 {
-                    drivetrain.slow();
+                    drivetrain.superSlow();
                 }
 
                 if(liftState == LiftState.RETRACT)
@@ -467,7 +455,7 @@ public class DebugOpMode extends LinearOpMode {
 
                 moveIntake();
                 heldExtension = true;
-                //drivetrain.slow();
+                drivetrain.slow();
 
                 if(firstReleaseThreeTimer)
                 {
@@ -612,7 +600,7 @@ public class DebugOpMode extends LinearOpMode {
                 }
                 else if(gamepad2.left_trigger != 0 || gamepad1.left_trigger != 0)
                 {
-                    drivetrain.slow();
+                    drivetrain.superSlow();
                 }
 
                 if(startedDelayTransfer)
@@ -715,7 +703,7 @@ public class DebugOpMode extends LinearOpMode {
                     moveOuttake();
                 }
 
-                //drivetrain.slow();
+                drivetrain.slow();
 
                 if(betterGamepad1.dpadRightOnce())
                 {
