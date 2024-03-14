@@ -18,7 +18,6 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
-import org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueLeft.BlueLeftSubsystemActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.MaxAuto.Auto;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;

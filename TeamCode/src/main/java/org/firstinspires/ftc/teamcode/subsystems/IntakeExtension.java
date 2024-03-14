@@ -21,13 +21,17 @@ public class IntakeExtension implements Subsystem
     boolean usePID = true;
     public static double maxPower = 1;
     public static double kP = 0.008, kI = 0, kD = 0.01;
+    public static double kPAggresive = 0.002, kIAggresive = 0, kDAggresive = 0;
 
     Gamepad gamepad;
     BetterGamepad cGamepad;
     PIDFController controller;
+    PIDFController controllerAggresive;
     PIDFController.PIDCoefficients pidCoefficients = new PIDFController.PIDCoefficients();
+    PIDFController.PIDCoefficients pidCoefficientsAggresive = new PIDFController.PIDCoefficients();
 
-    boolean isAuto, firstPID = false;
+
+    boolean isAuto, firstPID = false, aggresive = false;
     public IntakeExtension(Gamepad gamepad, boolean isAuto)
     {
         this.isAuto = isAuto;
@@ -44,6 +48,12 @@ public class IntakeExtension implements Subsystem
         else
         {
             extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            pidCoefficients.kP = kP;
+            pidCoefficients.kI = kI;
+            pidCoefficients.kD = kD;
+
+            controller = new PIDFController(pidCoefficients);
         }
 
         this.gamepad = gamepad;
@@ -58,6 +68,8 @@ public class IntakeExtension implements Subsystem
 
 
 
+
+
     public IntakeExtension(boolean isAuto)
     {
         this.isAuto = isAuto;
@@ -69,11 +81,17 @@ public class IntakeExtension implements Subsystem
         this.extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        pidCoefficients.kP = kP;
-        pidCoefficients.kI = kI;
-        pidCoefficients.kD = kD;
+        pidCoefficients.kP = kPAggresive;
+        pidCoefficients.kI = kIAggresive;
+        pidCoefficients.kD = kDAggresive;
 
         controller = new PIDFController(pidCoefficients);
+
+        pidCoefficientsAggresive.kP = kPAggresive;
+        pidCoefficientsAggresive.kI = kIAggresive;
+        pidCoefficientsAggresive.kD = kDAggresive;
+
+        controllerAggresive = new PIDFController(pidCoefficientsAggresive);
     }
 
     public void setFirstPID(boolean firstPID) {
@@ -125,9 +143,24 @@ public class IntakeExtension implements Subsystem
     }
     public void setPidControl()
     {
-        controller.updateError(currentTarget - extensionMotor.getCurrentPosition());
 
-        extensionMotor.setPower(controller.update());
+        if(aggresive)
+        {
+            controllerAggresive.updateError(currentTarget - extensionMotor.getCurrentPosition());
+
+            extensionMotor.setPower(controllerAggresive.update());
+        }
+        else
+        {
+            controller.updateError(currentTarget - extensionMotor.getCurrentPosition());
+
+            extensionMotor.setPower(controller.update());
+        }
+
+    }
+
+    public void setAggresive(boolean aggresive) {
+        this.aggresive = aggresive;
     }
 
     public void setTarget(double target)

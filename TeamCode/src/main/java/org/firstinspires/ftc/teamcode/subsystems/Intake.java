@@ -14,7 +14,7 @@ public class Intake implements Subsystem{
     private final RobotHardware robot;
     public static double intakeHandPivot = 0.195, intakeAmmoPivot = 0.125;
     public static double outtakeHandPivot = 0.65, outtakeAmmoPivot = .66; // פורק מהשאיבה הזוויות-מתוקן
-    public static double midHandPivot = 0.67, midAmmoPivot = 0.37;
+    public static double midHandPivot = 0.67, midAmmoPivot = 0.4;
     public static double top5HandPivot = .31, top5AmmoPivot = 0.13;
     public static double top5HandPivotAuto = 0.32, top5AmmoPivotAuto = 0.13; //auto ערימה של אוטונומי רק ה5
     public static double top54HandPivot = 0.28, top54AmmoPivot = 0.13; // ערימה של 54
@@ -33,6 +33,8 @@ public class Intake implements Subsystem{
     public static double closeRight = .72, closeLeft = 0.65; // סרבואים של תפיסה של שאיבה שהם פתוחים
     public static double indeterminateRight = 0.66, indeterminateLeft = 0.57; // סרבואים של תפיסה של שאיבה שהם פתוחים
 
+    public static double closeCauseWallRight;
+    public static double closeCauseWallLeft;
 
     public static void setSeeFarFrom(double seeFarFrom) {
         Intake.seeFarFrom = seeFarFrom;
