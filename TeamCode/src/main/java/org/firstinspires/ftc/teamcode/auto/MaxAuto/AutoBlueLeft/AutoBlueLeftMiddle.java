@@ -1,10 +1,5 @@
 package org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueLeft;
 
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.closeIntakeWhitePixelAction;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.depositBlue;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.depositSecondCycle;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.openIntakeWhitePixelAction;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.placePurplePixelSequence;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -12,6 +7,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -48,6 +44,9 @@ public class AutoBlueLeftMiddle {
     PlacePurpleActions intakeActions;
     UpdateActions updateActions;
 
+
+    public static int tempHeight = 1450;
+
     public SequentialAction blueLeftMiddle;
 
     public AutoBlueLeftMiddle(Telemetry telemetry, HardwareMap hardwareMap) {
@@ -72,6 +71,42 @@ public class AutoBlueLeftMiddle {
         intakeActions = new PlacePurpleActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
+        SequentialAction placePurplePixelAction = new SequentialAction(
+                new ParallelAction(
+                        intakeActions.moveIntake(Intake.Angle.INTAKE),
+                        intakeActions.openExtension( 400)),
+                new SleepAction(0.25),
+                intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN)
+        );
+
+        SequentialAction retractPurpleAction = new SequentialAction(
+                new SleepAction(0.5),
+                intakeActions.closeExtension(),
+                intakeActions.moveIntake(Intake.Angle.MID),
+                intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
+        );
+
+
+
+        SequentialAction placePurplePixelSequence = new SequentialAction(
+                depositActions.readyForDeposit(950),
+                new SleepAction(1.5),
+                placePurplePixelAction,
+                retractPurpleAction
+
+        );
+
+        SequentialAction depositBlue = new SequentialAction(
+                intakeActions.moveIntake(Intake.Angle.MID),
+                new SleepAction(.2),
+                depositActions.moveElevator(1300),
+                new SleepAction(1),
+                intakeActions.moveIntake(Intake.Angle.TOP_54_AUTO),
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 0),
+                new SleepAction(0.25),
+                depositActions.retractDeposit()
+
+        );
 
         //Trajectories
         Action placePurpleTraj = robot.drive.actionBuilder(robot.drive.pose)
@@ -107,6 +142,50 @@ public class AutoBlueLeftMiddle {
         ParallelAction placePreloadOnBoard = new ParallelAction(
                 placeYellowPixelTraj,
                 depositBlue
+        );
+
+        SequentialAction openIntakeWhitePixelAction = new SequentialAction(
+                new SleepAction(1.5),
+                intakeActions.moveIntake(Intake.Angle.TOP_54),
+                new SleepAction(.5),
+                intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
+                new SleepAction(2),
+                intakeActions.openExtension(450 )
+
+        );
+
+        SequentialAction closeIntakeWhitePixelAction = new SequentialAction(
+                intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
+                new SleepAction(.5),
+                intakeActions.moveStack(),
+                new SleepAction(.5),
+                intakeActions.moveIntake(Intake.Angle.OUTTAKE),
+                intakeActions.closeExtension()
+        );
+
+
+        SequentialAction readyForDepositAction = new SequentialAction(
+                intakeActions.moveIntake(Intake.Angle.MID),
+                depositActions.readyForDeposit(tempHeight)
+
+        );
+
+        SequentialAction depositSecondCycle = new SequentialAction(
+                new SleepAction(3.2),
+                readyForDepositAction,
+
+                intakeActions.moveIntake(Intake.Angle.MID),
+
+                intakeActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
+                new SleepAction(1),
+                depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
+
+                new SleepAction(0.1),
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
+
+                new SleepAction(0.4),
+                depositActions.moveElevator(tempHeight),
+                depositActions.retractDeposit()
         );
 
         ParallelAction intake54 = new ParallelAction(

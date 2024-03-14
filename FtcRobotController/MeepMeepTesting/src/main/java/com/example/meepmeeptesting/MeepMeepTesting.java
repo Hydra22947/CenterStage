@@ -262,10 +262,8 @@ public class MeepMeepTesting {
 
     public static void blueLeftMidMax(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
-<<<<<<< Updated upstream
                 .splineToLinearHeading(new Pose2d(40, 26, Math.toRadians(0)), Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(50.25, 34, Math.toRadians(0)), Math.toRadians(0))
-=======
 
                 .strafeToLinearHeading(new Vector2d(48, 34.25), Math.toRadians(0))
                 .strafeToLinearHeading(new Vector2d(48, 38), Math.toRadians(0))
@@ -275,7 +273,6 @@ public class MeepMeepTesting {
                 .splineToLinearHeading(new Pose2d(-42, 36, Math.toRadians(0)), Math.toRadians(-180))
 
                 //      .splineToSplineHeading()
->>>>>>> Stashed changes
 
                 // .strafeToLinearHeading(new Vector2d(48, 34.25), Math.toRadians(0))
 

@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueLeft;
 
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.closeIntakeWhitePixelAction;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.depositBlue;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.depositSecondCycle;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.openIntakeWhitePixelAction;
-import static org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions.placePurplePixelSequence;
+import static org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueLeft.BlueLeftSubsystemActions.closeIntakeWhitePixelAction;
+import static org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueLeft.BlueLeftSubsystemActions.depositBlue;
+import static org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueLeft.BlueLeftSubsystemActions.depositSecondCycle;
+import static org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueLeft.BlueLeftSubsystemActions.openIntakeWhitePixelAction;
+import static org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueLeft.BlueLeftSubsystemActions.placePurplePixelSequence;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;

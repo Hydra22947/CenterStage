@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
-import org.firstinspires.ftc.teamcode.auto.AutoConstants;
+import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
 import org.firstinspires.ftc.teamcode.auto.MaxAuto.Auto;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
