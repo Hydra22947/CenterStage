@@ -29,9 +29,9 @@ public class Intake implements Subsystem{
     public static double clickOffset = 0.1;
     double OFFSET_AMMO = 0;
 
-    public static double openRight = 0.5, openLeft = 0.38; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double closeRight = .8, closeLeft = 0.79; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double indeterminateRight = 0.68, indeterminateLeft = 0.63; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double openRight = 0.55, openLeft = 0.45; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double closeRight = .72, closeLeft = 0.65; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double indeterminateRight = 0.66, indeterminateLeft = 0.57; // סרבואים של תפיסה של שאיבה שהם פתוחים
 
 
     public static void setSeeFarFrom(double seeFarFrom) {

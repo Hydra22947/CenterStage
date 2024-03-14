@@ -1,5 +1,6 @@
 package com.example.meepmeeppima;
 
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
@@ -17,8 +18,8 @@ public class MeepMeepTesting {
                 .build();
 
 
-        setAnimation(meepMeep , myBot);
         BlueLeftMiddle(myBot);
+        setAnimation(meepMeep , myBot);
        // BlueLeftLeft(myBot);
        // BlueLeftRight(myBot);
 
@@ -38,27 +39,9 @@ public class MeepMeepTesting {
 
     public static void BlueLeftMiddle( RoadRunnerBotEntity myBot) {
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, -90))
-                .strafeToLinearHeading(new Vector2d(30 ,24 ), Math.toRadians(0))
-                .strafeTo(new Vector2d(50,28))
-                .waitSeconds(0.5)
-                .setTangent(190)
-                .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-42, 42, Math.toRadians(10)), Math.toRadians(-180))
-                //Place Preload on board
-                //  .splineToLinearHeading(new Pose2d(50.25, 34, Math.toRadians(0)), Math.toRadians(0))
-                .waitSeconds(.5)
-
-                //Intake 54
-
-                .strafeToLinearHeading(new Vector2d(-32, 58) , Math.toRadians(0))
-                .setTangent(Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(0))
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(48, 34.25, Math.toRadians(0)) , Math.toRadians(-90))
-                .strafeTo(new Vector2d(48.5, 34.25))
-
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-30, 12, 0))
+                        .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(52.25, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .build());
 
     }

@@ -225,6 +225,9 @@ public class AutoBlueRightMax extends LinearOpMode {
         Action depositSecondCycleTraj = robot.drive.actionBuilder(new Pose2d(-30, 12, Math.toRadians(0)))
                 .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(52.25, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .setTangent(Math.toRadians(-180))
+                .splineToConstantHeading(new Vector2d(30, 9.5), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-30, 12, Math.toRadians(0)), Math.toRadians(180))
                 .build();
 
         Action parkTraj = robot.drive.actionBuilder(new Pose2d(52.25, 40, Math.toRadians(0)))
@@ -252,25 +255,25 @@ public class AutoBlueRightMax extends LinearOpMode {
         );
 
         ParallelAction deposit43 = new ParallelAction(
-                depositSecondCycleTraj,
-                new SequentialAction(
-                        new SleepAction(1.5),
-                        transferAction,
-                        new SleepAction(.5),
-                        readyForDepositAction,
-
-
-                        intakeActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
-                        new SleepAction(1.5),
-                        depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
-
-                        new SleepAction(0.5),
-                        depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
-
-                        new SleepAction(0.4),
-                        depositActions.moveElevator(tempHeight),
-                        depositActions.retractDeposit())
-        );
+                depositSecondCycleTraj
+//                new SequentialAction(
+//                        new SleepAction(1.5),
+//                        transferAction,
+//                        new SleepAction(.5),
+//                        readyForDepositAction,
+//
+//
+//                        intakeActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
+//                        new SleepAction(1.5),
+//                        depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
+//
+//                        new SleepAction(0.5),
+//                        depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
+//
+//                        new SleepAction(0.4),
+//                        depositActions.moveElevator(tempHeight),
+//                        depositActions.retractDeposit())
+                );
 
 
         ParallelAction park = new ParallelAction(
@@ -282,8 +285,6 @@ public class AutoBlueRightMax extends LinearOpMode {
                 placePurplePixel,
                 intake54,
                 depositPreload,
-                intake43,
-                deposit43,
                 intake43,
                 deposit43
                 );
