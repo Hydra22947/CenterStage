@@ -14,18 +14,14 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.testing.vision.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.openftc.easyopencv.OpenCvCamera;
 
 import java.util.List;
 
-public class CheckAprilTagAction implements Action {
+public class ParallelAprilTagAction implements Action {
 
     RobotHardware robot = RobotHardware.getInstance();
     AprilTagProcessor aprilTag;
@@ -33,7 +29,7 @@ public class CheckAprilTagAction implements Action {
     private Action mainAction, continueAction;
     boolean found = false;
 
-    public CheckAprilTagAction(Action mainAction, Action continueAction) {
+    public ParallelAprilTagAction(Action mainAction, Action continueAction) {
         initCamera();
 
         this.mainAction = mainAction;

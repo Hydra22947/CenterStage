@@ -129,7 +129,7 @@ public class AutoRightBlueNoBOooooMbOOOm extends LinearOpMode {
                         .waitSeconds(1)
                         .stopAndAdd(new CheckAprilTagAction(
                                 CheckAprilTagAction.waitAction(),
-                                robot.drive.actionBuilder(new Pose2d(31,21,Math.toRadians(28.5)))
+                                robot.drive.actionBuilder(new Pose2d(31,21,Math.toRadians(24.5)))
                                         .splineToConstantHeading(new Vector2d(52, 32), Math.toRadians(0)).build()
                                 ))
 
