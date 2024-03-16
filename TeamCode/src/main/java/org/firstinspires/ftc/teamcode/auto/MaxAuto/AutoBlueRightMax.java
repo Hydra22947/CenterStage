@@ -127,9 +127,20 @@ public class AutoBlueRightMax extends LinearOpMode {
         );
         SequentialAction intake43Action = new SequentialAction(
                 new SleepAction(1.5),
-                openIntakeWhitePixelAction,
+
+                intakeActions.moveIntake(Intake.Angle.TOP_43),
+                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                new SleepAction(1),
+                intakeActions.openExtension(1250),
+
                 new SleepAction(.75),
-                closeIntakeWhitePixelAction
+
+                intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
+                new SleepAction(.5),
+                intakeActions.moveStack(),
+                intakeActions.moveIntake(Intake.Angle.OUTTAKE),
+                intakeActions.openExtension(-30)
+
         );
 
 
@@ -169,29 +180,29 @@ public class AutoBlueRightMax extends LinearOpMode {
                 depositActions.retractDeposit()
         );
 
-        SequentialAction deposit43Action = new SequentialAction(
-//                new SleepAction(1.5),
-                //transferAction,
-                //new SleepAction(.5),
-//                readyForDepositAction
-
-
-//                intakeActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
-//                new SleepAction(1.5),
-//                depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
-//
-//                new SleepAction(0.1),
-//                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
-//
-//                new SleepAction(0.4),
-//                depositActions.moveElevator(tempHeight),
-//                depositActions.retractDeposit()
-        );
 
         SequentialAction retractDeposit = new SequentialAction(
                 depositActions.retractDeposit()
         );
 
+
+        SequentialAction deposit43Action = new SequentialAction(
+                new SleepAction(1.5),
+                transferAction,
+                new SleepAction(.5),
+                readyForDepositAction,
+
+
+                intakeActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
+                new SleepAction(1.5),
+                depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
+
+                new SleepAction(0.5),
+                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
+
+                new SleepAction(0.4),
+                depositActions.moveElevator(tempHeight),
+                depositActions.retractDeposit());
 
         //Trajectories
 
@@ -200,7 +211,7 @@ public class AutoBlueRightMax extends LinearOpMode {
                 .build();
 
         Action intake5Traj = robot.drive.actionBuilder(new Pose2d(-34.5, 35.5, Math.toRadians(-90)))
-                .strafeToLinearHeading(new Vector2d(-53, 20), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-53.5, 21.5), Math.toRadians(0))
                 .waitSeconds(.5)
 
                 .build();
@@ -218,10 +229,9 @@ public class AutoBlueRightMax extends LinearOpMode {
         Action intake43Traj = robot.drive.actionBuilder(new Pose2d(54, 32, Math.toRadians(0)))
                 .setTangent(Math.toRadians(-180))
                 .splineToConstantHeading(new Vector2d(30, 9.5), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-30, 12, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-30, 10, Math.toRadians(0)), Math.toRadians(180))
                 .waitSeconds(.25)
                 .build();
-
 
 
         Action deposit43Traj = robot.drive.actionBuilder(new Pose2d(-30, 12, Math.toRadians(0)))
@@ -255,7 +265,7 @@ public class AutoBlueRightMax extends LinearOpMode {
         );
         ParallelAction deposit43 = new ParallelAction(
                 deposit43Traj,
-                depositAction
+                deposit43Action
         );
         ParallelAction park = new ParallelAction(
                 parkTraj,
@@ -267,11 +277,8 @@ public class AutoBlueRightMax extends LinearOpMode {
                 intake54,
                 depositPreload,
                 intake43,
-                new ParallelAction(
-                        deposit43Traj,
-                        depositAction
-                )
-                );
+                depositPreload
+        );
 
 
         while (opModeInInit() && !isStopRequested()) {
