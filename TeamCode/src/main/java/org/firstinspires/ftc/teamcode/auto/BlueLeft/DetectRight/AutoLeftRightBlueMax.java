@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.BlueLeft.DetectRight;
 
 // RR-specific imports
 
@@ -32,8 +32,10 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "2+2 - Auto Blue Left MAX Pima")
-public class AutoLeftBlueMax extends LinearOpMode {
+@Autonomous(name = "2+2 - Auto BlueLeftRight MAX ")
+public class AutoLeftRightBlueMax extends LinearOpMode {
+
+    //TODO: ONLY ON PRELOAD RIGHT AND MIDDLE ADD APRILTAG FAILSAFE , FOR ELIOR
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 
@@ -65,13 +67,10 @@ public class AutoLeftBlueMax extends LinearOpMode {
 
 
     public static int RIGHT_EXTENSION = 270;
-    public static int MIDDLE_EXTENSION = 300;
-    public static int LEFT_EXTENSION = 200;
 
-    Pose2d test;
 
-    SequentialAction blueLeftLeft;
-    SequentialAction blueLeftMiddle;
+    public static double delayBackDrop = 1;
+    public static double delayCycle = 1;
     SequentialAction blueLeftRight;
 
     @Override
@@ -136,29 +135,14 @@ public class AutoLeftBlueMax extends LinearOpMode {
         );
 
 
-        SequentialAction placePurplePixelAction_MIDDLE = new SequentialAction(
+        SequentialAction placePurplePixelAction_RIGHT = new SequentialAction(
                 new ParallelAction(
                         intakeActions.moveIntake(Intake.Angle.INTAKE),
-                        intakeActions.openExtension( MIDDLE_EXTENSION)),
-                new SleepAction(0.5),
+                        new SleepAction(0.1),
+                        intakeActions.openExtension( RIGHT_EXTENSION)),
+                new SleepAction(0.3),
                 intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN)
         );
-
-        SequentialAction placePurplePixelAction_LEFT = new SequentialAction(
-                new ParallelAction(
-                        intakeActions.moveIntake(Intake.Angle.INTAKE),
-                        intakeActions.openExtension( LEFT_EXTENSION)),
-                new SleepAction(0.5),
-                intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN)
-        );
-       SequentialAction placePurplePixelAction_RIGHT = new SequentialAction(
-               new ParallelAction(
-               intakeActions.moveIntake(Intake.Angle.INTAKE),
-               new SleepAction(0.1),
-               intakeActions.openExtension( RIGHT_EXTENSION)),
-               new SleepAction(0.5),
-               intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN)
-       );
 
         SequentialAction retractPurpleAction = new SequentialAction(
                 intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
@@ -173,6 +157,7 @@ public class AutoLeftBlueMax extends LinearOpMode {
                 new SleepAction(.5),
                 intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1),
+                new InstantAction(() -> intakeExtension.setAggresive(false)),
                 intakeActions.openExtension(750 )
 
         );
@@ -181,8 +166,10 @@ public class AutoLeftBlueMax extends LinearOpMode {
                 new SleepAction(2.5),
                 intakeActions.moveIntake(Intake.Angle.TOP_32),
                 new SleepAction(.5),
-                intakeActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE),
-                intakeActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN),
+                new ParallelAction(
+                        intakeActions.lock(PlacePurpleActions.CloseClaw.RIGHT_CLOSE),
+                        intakeActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN)
+                        ),
                 new SleepAction(1.5),
                 intakeActions.openExtension(750 )
 
@@ -200,17 +187,15 @@ public class AutoLeftBlueMax extends LinearOpMode {
 
         SequentialAction transferAction = new SequentialAction(
                 new InstantAction(() -> intakeExtension.setAggresive(true)),
-                new ParallelAction(intakeActions.openExtension(0), intakeActions.moveIntake(Intake.Angle.OUTTAKE)),
-                new SleepAction(0.5),
-                intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
-                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
-                new SleepAction(.75),
-                intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
-        );
-
-
-        SequentialAction retractDepositBlueMaxAction = new SequentialAction(
-                depositActions.retractDeposit()
+                new ParallelAction(
+                        intakeActions.openExtension(0),
+                        intakeActions.moveIntake(Intake.Angle.OUTTAKE),
+                        new SleepAction(0.5),
+                        intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
+                        intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
+                        new SleepAction(.75),
+                        intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
+                )
         );
 
 
@@ -235,28 +220,39 @@ public class AutoLeftBlueMax extends LinearOpMode {
         SequentialAction intake32Action = new SequentialAction(
                 openIntakeWhitePixelAction32,
                 new SleepAction(0.4),
-                closeIntakeWhitePixelAction
-
+                closeIntakeWhitePixelAction,
+                new ParallelAction(
+                        new SleepAction(0.3),
+                        transferAction
+                 )
         );
-
 
         Action placePurpleTraj_RIGHT = robot.drive.actionBuilder(robot.drive.pose)
                 .strafeToLinearHeading(new Vector2d(20 ,34.25), Math.toRadians(0))
                 .waitSeconds(.5)
                 .build();
 
-        Action placeYellowTraj_RIGHT = robot.drive.actionBuilder(new Pose2d(20, 31.25, Math.toRadians(0)))
+        Action placeYellowTraj_RIGHT = robot.drive.actionBuilder(new Pose2d(20, 38, Math.toRadians(0)))
                 .strafeTo(new Vector2d(52,31.25))
                 .waitSeconds(.5)
                 .build();
 
-        Action goForIntakeTop54 = robot.drive.actionBuilder(new Pose2d(50, 28 , Math.toRadians(0)))
+        Action goForIntakeTop54 = robot.drive.actionBuilder(new Pose2d(52, 38 , Math.toRadians(0)))
                 .setTangent(190)
                 .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(-41.8, 42.8, Math.toRadians(10)), Math.toRadians(-180))
                 .waitSeconds(0.7)
                 .build();
+
+        Action goForIntakeTop32 = robot.drive.actionBuilder(new Pose2d(52, 38 , Math.toRadians(0)))
+                .setTangent(190)
+                .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-41.8, 42.8, Math.toRadians(10)), Math.toRadians(-180))
+                .waitSeconds(0.7)
+                .build();
+
 
         Action goPlaceWhiteRIGHT_OR_TOP54 = robot.drive.actionBuilder(new Pose2d(-41.8, 42.5 ,Math.toRadians(10)))
                 .splineToLinearHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
@@ -267,7 +263,7 @@ public class AutoLeftBlueMax extends LinearOpMode {
                 .strafeTo(new Vector2d(49 , 38))
                 .build();
 
-        Action goPark = robot.drive.actionBuilder(new Pose2d( 48 , 34.25  , Math.toRadians(0)))
+        Action goPark = robot.drive.actionBuilder(new Pose2d( 49 , 38  , Math.toRadians(0)))
                 .strafeToLinearHeading(new Vector2d(46 , 34) ,  Math.toRadians(-90))
                 .build();
 
@@ -284,12 +280,12 @@ public class AutoLeftBlueMax extends LinearOpMode {
         ParallelAction intake54 = new ParallelAction(
                 goForIntakeTop54,
                 intake54Action,
-                new SleepAction(1),
+                new SleepAction(0.4),
                 transferAction
         );
 
         ParallelAction intake32 = new ParallelAction(
-                goForIntakeTop54,
+                goForIntakeTop32,
                 intake32Action
         );
 
