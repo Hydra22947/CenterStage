@@ -16,13 +16,16 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
+import org.firstinspires.ftc.teamcode.auto.MaxAuto.Auto;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -32,7 +35,7 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
 @Autonomous(name = "2+0 - Auto Blue Left Preload")
-public class BlueLeftMidPreload extends LinearOpMode {
+public class BlueLeftMidPreload extends Auto {
 
     //TODO: ONLY ON PRELOAD RIGHT AND MIDDLE ADD APRILTAG FAILSAFE , FOR ELIOR
     private final RobotHardware robot = RobotHardware.getInstance();
@@ -51,26 +54,16 @@ public class BlueLeftMidPreload extends LinearOpMode {
     PlacePurpleActions intakeActions;
     UpdateActions updateActions;
 
-
-    enum PropLocation
-    {
-        LEFT,
-        CENTER,
-        RIGHT
-    }
-
-    public static PropLocation propLocation = PropLocation.CENTER;
-
     public static int tempHeight = 1450;
     public static int minHeight = 950;
 
     public static int MIDDLE_EXTENSION = 300;
 
     public static double delayBackDrop = 1;
-    SequentialAction blueLeftRight;
+    SequentialAction blueLeftMid;
 
-    @Override
-    public void runOpMode() {
+
+    public BlueLeftMidPreload (Telemetry telemetry, HardwareMap hardwareMap, Intake intake, IntakeExtension intakeExtensiom, Outtake outtake, Claw claw, Elevator elevator) {
         time = new ElapsedTime();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -159,54 +152,21 @@ public class BlueLeftMidPreload extends LinearOpMode {
         );
 
 
-        blueLeftRight = new SequentialAction(
+        blueLeftMid = new SequentialAction(
                 placePurplePixel
                 , placePreloadOnBoard
                 , goPark
         );
 
-        while (opModeInInit() && !isStopRequested()) {
-            intake.setAngle(Intake.Angle.MID);
-
-            intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
-            claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
-            outtake.setAngle(Outtake.Angle.INTAKE);
-            telemetry.addLine("Initialized");
-            telemetry.update();
         }
 
-        waitForStart();
+    @Override
+    public void run()
+    {
+        runBlocking(new ParallelAction(
+                blueLeftMid
+        ));
 
-        if (isStopRequested()) return;
-
-        switch (propLocation)
-        {
-            case LEFT:
-                runBlocking(new ParallelAction(
-                        //trajBlueLeft,
-                        updateActions.updateSystems()
-                ));
-                break;
-            case CENTER:
-
-                runBlocking(new ParallelAction(
-                        blueLeftRight,
-                        updateActions.updateSystems()
-                ));
-                break;
-            case RIGHT:
-                runBlocking(new ParallelAction(
-                        //trajBlueRight,
-                        updateActions.updateSystems()
-                ));
-                break;
-        }
-
-        while (opModeIsActive()) {
-            robot.drive.updatePoseEstimate();
-        }
-
-        writeToFile(robot.drive.pose.heading.log());
     }
 
 
