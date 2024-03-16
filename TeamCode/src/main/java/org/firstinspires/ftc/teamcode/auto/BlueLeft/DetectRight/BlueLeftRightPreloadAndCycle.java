@@ -283,12 +283,25 @@ public class BlueLeftRightPreloadAndCycle extends LinearOpMode {
 
         switch (propLocation)
         {
-            case RIGHT:
+            case LEFT:
+                runBlocking(new ParallelAction(
+                        //trajBlueLeft,
+                        updateActions.updateSystems()
+                ));
+                break;
+            case CENTER:
+
                 runBlocking(new ParallelAction(
                         blueLeftRight,
                         updateActions.updateSystems()
                 ));
-
+                break;
+            case RIGHT:
+                runBlocking(new ParallelAction(
+                        //trajBlueRight,
+                        updateActions.updateSystems()
+                ));
+                break;
         }
 
         while (opModeIsActive()) {

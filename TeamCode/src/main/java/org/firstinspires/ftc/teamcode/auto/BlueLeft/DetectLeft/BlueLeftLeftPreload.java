@@ -16,16 +16,13 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
-import org.firstinspires.ftc.teamcode.auto.MaxAuto.Auto;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -35,7 +32,7 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
 @Autonomous(name = "2+0 - Auto BlueLeftLeft Preload")
-public class BlueLeftLeftPreload extends Auto {
+public class BlueLeftLeftPreload extends LinearOpMode {
 
     //TODO: ONLY ON PRELOAD RIGHT AND MIDDLE ADD APRILTAG FAILSAFE , FOR ELIOR
     private final RobotHardware robot = RobotHardware.getInstance();
@@ -54,15 +51,27 @@ public class BlueLeftLeftPreload extends Auto {
     PlacePurpleActions intakeActions;
     UpdateActions updateActions;
 
+
+    enum PropLocation
+    {
+        LEFT,
+        CENTER,
+        RIGHT
+    }
+
+    public static PropLocation propLocation = PropLocation.CENTER;
+
     public static int tempHeight = 1450;
     public static int minHeight = 950;
+
+
     public static int LEFT_EXTENSION = 200;
 
     public static double delayBackDrop = 1;
     SequentialAction blueLeftLeft;
 
-
-    public BlueLeftLeftPreload(Telemetry telemetry, HardwareMap hardwareMap, Intake intake, IntakeExtension intakeExtensiom, Outtake outtake, Claw claw, Elevator elevator) {
+    @Override
+    public void runOpMode() {
         time = new ElapsedTime();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -100,7 +109,7 @@ public class BlueLeftLeftPreload extends Auto {
                 new ParallelAction(
                         intakeActions.moveIntake(Intake.Angle.INTAKE),
                         new SleepAction(0.1),
-                        intakeActions.openExtension(LEFT_EXTENSION)),
+                        intakeActions.openExtension( LEFT_EXTENSION)),
                 new SleepAction(0.3),
                 intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN)
         );
@@ -115,6 +124,7 @@ public class BlueLeftLeftPreload extends Auto {
         );
 
 
+
         SequentialAction placePurplePixelSequence = new SequentialAction(
                 depositActions.readyForDeposit(minHeight),
                 new SleepAction(1.3),
@@ -124,18 +134,18 @@ public class BlueLeftLeftPreload extends Auto {
         );
 
         Action placePurpleTraj_LEFT = robot.drive.actionBuilder(robot.drive.pose)
-                .strafeToLinearHeading(new Vector2d(30, 34.25), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(30 ,34.25), Math.toRadians(0))
                 .waitSeconds(.5)
                 .build();
 
         Action placeYellowTraj_LEFT = robot.drive.actionBuilder(new Pose2d(30, 34.25, Math.toRadians(0)))
-                .strafeTo(new Vector2d(52, 38))
+                .strafeTo(new Vector2d(52,38))
                 .waitSeconds(.5)
                 .build();
 
 
-        Action goPark = robot.drive.actionBuilder(new Pose2d(52, 38, Math.toRadians(0)))
-                .strafeToLinearHeading(new Vector2d(46, 28), Math.toRadians(-90))
+        Action goPark = robot.drive.actionBuilder(new Pose2d( 52 , 38  , Math.toRadians(0)))
+                .strafeToLinearHeading(new Vector2d(46 , 28) ,  Math.toRadians(-90))
                 .build();
 
         ParallelAction placePurplePixel = new ParallelAction(
@@ -156,17 +166,36 @@ public class BlueLeftLeftPreload extends Auto {
                 , goPark
         );
 
+        while (opModeInInit() && !isStopRequested()) {
+            intake.setAngle(Intake.Angle.MID);
 
+            intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
+            claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
+            outtake.setAngle(Outtake.Angle.INTAKE);
+            telemetry.addLine("Initialized");
+            telemetry.update();
+        }
+
+        waitForStart();
+
+        if (isStopRequested()) return;
+
+        switch (propLocation)
+        {
+            case LEFT:
+                runBlocking(new ParallelAction(
+                        blueLeftLeft,
+                        updateActions.updateSystems()
+                ));
+                break;
+        }
+
+        while (opModeIsActive()) {
+            robot.drive.updatePoseEstimate();
+        }
+
+        writeToFile(robot.drive.pose.heading.log());
     }
-    @Override
-    public void run ()
-    {
-        runBlocking(new ParallelAction(
-                blueLeftLeft,
-                updateActions.updateSystems()
-        ));
 
-
-    }
 
 }
