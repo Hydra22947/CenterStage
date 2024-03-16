@@ -40,7 +40,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous(name = "2+0 - Auto Blue Left")
-public class AutoLeftBlue extends LinearOpMode {
+public class AutoBlueLeft extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 

@@ -40,8 +40,9 @@ public class MeepMeepTesting {
     public static void BlueLeftMiddle( RoadRunnerBotEntity myBot) {
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-30, 12, 0))
-                        .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
-                        .splineToLinearHeading(new Pose2d(52.25, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(52.25, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+
                 .build());
 
     }

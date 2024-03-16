@@ -32,8 +32,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "2+2 - Auto Blue Left MAX Pima")
-public class AutoLeftBlueMax extends LinearOpMode {
+@Autonomous(name = "2+2 - Auto Blue Left")
+public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 
@@ -58,10 +58,10 @@ public class AutoLeftBlueMax extends LinearOpMode {
         RIGHT
     }
 
-    public static PropLocation propLocation = PropLocation.CENTER;
+    public static PropLocation propLocation = PropLocation.RIGHT;
 
     public static int tempHeight = 1450;
-    public static int minHeight = 950;
+    public static int minHeight = 1000;
 
 
     public static int RIGHT_EXTENSION = 270;
@@ -102,11 +102,13 @@ public class AutoLeftBlueMax extends LinearOpMode {
                 intakeActions.moveIntake(Intake.Angle.MID),
                 new SleepAction(.2),
                 depositActions.moveElevator(minHeight),
-                new SleepAction(1),
-                intakeActions.moveIntake(Intake.Angle.TOP_54),
+                new SleepAction(1.1),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 0),
                 new SleepAction(0.25),
+                depositActions.moveElevator(minHeight+300),
+                new SleepAction(0.25),
                 depositActions.retractDeposit()
+
 
         );
         SequentialAction readyForDepositAction = new SequentialAction(
@@ -162,7 +164,7 @@ public class AutoLeftBlueMax extends LinearOpMode {
 
         SequentialAction retractPurpleAction = new SequentialAction(
                 intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
-                new SleepAction(0.5),
+                new SleepAction(0.2),
                 intakeActions.closeExtension(),
                 intakeActions.moveIntake(Intake.Angle.MID)
         );
@@ -242,11 +244,11 @@ public class AutoLeftBlueMax extends LinearOpMode {
 
         Action placePurpleTraj_RIGHT = robot.drive.actionBuilder(robot.drive.pose)
                 .strafeToLinearHeading(new Vector2d(20 ,34.25), Math.toRadians(0))
-                .waitSeconds(.5)
+//                .waitSeconds(.5)
                 .build();
 
         Action placeYellowTraj_RIGHT = robot.drive.actionBuilder(new Pose2d(20, 31.25, Math.toRadians(0)))
-                .strafeTo(new Vector2d(52,31.25))
+                .strafeTo(new Vector2d(52.5,30.25))
                 .waitSeconds(.5)
                 .build();
 
@@ -254,7 +256,7 @@ public class AutoLeftBlueMax extends LinearOpMode {
                 .setTangent(190)
                 .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-41.8, 42.8, Math.toRadians(10)), Math.toRadians(-180))
+                .splineToLinearHeading(new Pose2d(-41.8, 42, Math.toRadians(15)), Math.toRadians(-180))
                 .waitSeconds(0.7)
                 .build();
 
@@ -263,8 +265,7 @@ public class AutoLeftBlueMax extends LinearOpMode {
                 .setTangent(Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(22, 58, Math.toRadians(0)), Math.toRadians(0))
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(48.2, 38, Math.toRadians(0)) , Math.toRadians(-90))
-                .strafeTo(new Vector2d(49 , 38))
+                .splineToLinearHeading(new Pose2d(50.5, 38, Math.toRadians(0)) , Math.toRadians(-90))
                 .build();
 
         Action goPark = robot.drive.actionBuilder(new Pose2d( 48 , 34.25  , Math.toRadians(0)))
@@ -283,9 +284,7 @@ public class AutoLeftBlueMax extends LinearOpMode {
 
         ParallelAction intake54 = new ParallelAction(
                 goForIntakeTop54,
-                intake54Action,
-                new SleepAction(1),
-                transferAction
+                intake54Action
         );
 
         ParallelAction intake32 = new ParallelAction(
@@ -302,11 +301,10 @@ public class AutoLeftBlueMax extends LinearOpMode {
         blueLeftRight = new SequentialAction(
                 placePurplePixel
                 , placePreloadOnBoard
-                , intake54
+                , intake54,
+                new SleepAction(1),
+                transferAction
                 , deposit54
-                , intake32
-                , deposit54
-                , goPark
         );
 
         while (opModeInInit() && !isStopRequested()) {
@@ -334,13 +332,13 @@ public class AutoLeftBlueMax extends LinearOpMode {
             case CENTER:
 
                 runBlocking(new ParallelAction(
-                        blueLeftRight,
+//                        blueLeftRight,
                         updateActions.updateSystems()
                 ));
                 break;
             case RIGHT:
                 runBlocking(new ParallelAction(
-                        //trajBlueRight,
+                        blueLeftRight,
                         updateActions.updateSystems()
                 ));
                 break;

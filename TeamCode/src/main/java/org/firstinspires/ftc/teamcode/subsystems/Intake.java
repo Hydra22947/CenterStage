@@ -17,7 +17,7 @@ public class Intake implements Subsystem{
     public static double midHandPivot = 0.67, midAmmoPivot = 0.4;
     public static double top5HandPivot = .31, top5AmmoPivot = 0.13;
     public static double top5HandPivotAuto = 0.32, top5AmmoPivotAuto = 0.13; //auto ערימה של אוטונומי רק ה5
-    public static double top54HandPivot = 0.28, top54AmmoPivot = 0.13; // ערימה של 54
+    public static double top54HandPivot = 0.285, top54AmmoPivot = 0.13; // ערימה של 54
     public static double top54HandPivotAuto = 0.289, top54AmmoPivotAuto = 0.095;
     public static double top43HandPivot = 0.305, top43AmmoPivot = 0.12; // auto
     public static double top32HandPivot = 0.235, top32AmmoPivot = 0.13; // ערימה של 32
