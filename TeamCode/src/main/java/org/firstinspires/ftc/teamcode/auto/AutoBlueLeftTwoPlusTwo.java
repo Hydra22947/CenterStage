@@ -201,13 +201,13 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
 
         SequentialAction transferAction = new SequentialAction(
                 new InstantAction(() -> intakeExtension.setAggresive(true)),
-                new ParallelAction(intakeActions.openExtension(0), intakeActions.moveIntake(Intake.Angle.OUTTAKE)),
-                new ParallelAction(
-                        intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
-                        intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
-                ),
+                new InstantAction(() -> intakeExtension.setTarget(0)),
+                new InstantAction(() -> intake.move(Intake.Angle.OUTTAKE)),
+                new InstantAction(() -> claw.setBothClaw(Claw.ClawState.OPEN)),
                 new SleepAction(.5),
-                intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
+                new InstantAction(() -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH)),
+                new SleepAction(.5),
+                new InstantAction(() -> claw.setBothClaw(Claw.ClawState.CLOSED))
         );
 
 
@@ -228,15 +228,17 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
 
         );
 
-        SequentialAction intake54Action = new SequentialAction(
+        SequentialAction  intake54Action = new SequentialAction(
                 openIntakeWhitePixelAction54,
                 new SleepAction(0.4),
                 closeIntakeWhitePixelAction
         );
-        SequentialAction intake32Action = new SequentialAction(
-                openIntakeWhitePixelAction32
-        );
 
+        SequentialAction intake32Action = new SequentialAction(
+                openIntakeWhitePixelAction32,
+                new SleepAction(0.4),
+                closeIntakeWhitePixelAction
+        );
 
         Action placePurpleTraj_RIGHT = robot.drive.actionBuilder(robot.drive.pose)
                 .strafeToLinearHeading(new Vector2d(20 ,34.25), Math.toRadians(0))
@@ -274,9 +276,6 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
                 .build();
 
         Action goPlaceWhiteRIGHT_OR_TOP32 = robot.drive.actionBuilder(new Pose2d(-41.5, 45 ,Math.toRadians(15)))
-                .stopAndAdd(
-                        new ParallelAction(closeIntakeWhitePixelAction ,
-                        new SleepAction(0.2), transferAction))
                 .strafeTo(new Vector2d(-41.5 ,49 ))
                 .splineToLinearHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
                 .setTangent(Math.toRadians(0))
@@ -322,6 +321,8 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
                 new SleepAction(0.2));
 
         ParallelAction deposit32 = new ParallelAction(
+                transferAction,
+                new SleepAction(0.1),
                 goPlaceWhiteRIGHT_OR_TOP32,
                 depositSecondCycle
         );
