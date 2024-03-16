@@ -32,7 +32,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@Autonomous(name = "2+2 - Auto BlueLeftLeft MAX")
+@Autonomous(name = "2+2 - Auto BlueLeftLeft MAX ")
 public class AutoLeftLeftBlueMax extends LinearOpMode {
 
     //TODO: ONLY ON PRELOAD RIGHT AND MIDDLE ADD APRILTAG FAILSAFE , FOR ELIOR

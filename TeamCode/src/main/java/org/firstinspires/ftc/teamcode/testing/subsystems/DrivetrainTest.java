@@ -40,7 +40,12 @@ public class DrivetrainTest extends LinearOpMode {
         {
             gamepadEx.update();
 
+            telemetry.addData("x", robot.drive.pose.position.x);
+                telemetry.addData("y", robot.drive.pose.position.y);
+                telemetry.addData("heading (deg)", Math.toDegrees(robot.drive.pose.heading.toDouble()));
+                telemetry.update();
 
+            robot.drive.updatePoseEstimate();
             drivetrain.update();
             telemetry.update();
         }
