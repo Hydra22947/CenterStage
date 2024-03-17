@@ -315,10 +315,6 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
                 depositSecondCycle
         );
 
-        ParallelAction fixError = new ParallelAction(
-                closeIntakeWhitePixelAction,
-                transferAction,
-                new SleepAction(0.2));
 
         ParallelAction deposit32 = new ParallelAction(
                 transferAction,
