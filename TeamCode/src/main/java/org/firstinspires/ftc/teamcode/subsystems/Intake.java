@@ -30,7 +30,8 @@ public class Intake implements Subsystem{
     double OFFSET_AMMO = 0;
 
     public static double openRight = 0.55, openLeft = 0.45; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double closeRight = .72, closeLeft = 0.65; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double closeRight = .74, closeLeft = 0.66; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double superCloseRight = .81, superCloseLeft = 0.735; // סרבואים של תפיסה של שאיבה שהם פתוחים
     public static double indeterminateRight = 0.66, indeterminateLeft = 0.57; // סרבואים של תפיסה של שאיבה שהם פתוחים
 
     public static double closeCauseWallRight;
@@ -74,7 +75,8 @@ public class Intake implements Subsystem{
     {
         OPEN,
         INDETERMINATE,
-        CLOSE
+        CLOSE,
+        SUPER_CLOSE
     }
 
     public enum Type
@@ -214,6 +216,8 @@ public class Intake implements Subsystem{
                         return openLeft;
                     case INDETERMINATE:
                         return indeterminateLeft;
+                    case SUPER_CLOSE:
+                        return superCloseLeft;
                     default:
                         return 0.0;
                 }
@@ -225,6 +229,8 @@ public class Intake implements Subsystem{
                         return openRight;
                     case INDETERMINATE:
                         return indeterminateRight;
+                    case SUPER_CLOSE:
+                        return superCloseRight;
                     default:
                         return 0.0;
                 }

@@ -57,7 +57,7 @@ public class DepositActions {
     }
 
 
-    private void retractElevator() {
+    public void retractElevator() {
         outtake.setAngle(Outtake.Angle.INTAKE);
         elevator.setTarget(0);
         elevator.setPidControl();

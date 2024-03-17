@@ -42,7 +42,11 @@ public class PlacePurpleActions {
     public enum CloseClaw {
         LEFT_CLOSE,
         RIGHT_CLOSE,
-        BOTH_CLOSE
+        BOTH_CLOSE,
+
+        SUPER_LEFT_CLOSE,
+        SUPER_RIGHT_CLOSE,
+        SUPER_BOTH_CLOSE
     }
 
     OpenClaw openClaw;
@@ -181,6 +185,14 @@ public class PlacePurpleActions {
                     return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT), 500);
                 case RIGHT_CLOSE:
                     return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT), 500);
+
+                case SUPER_RIGHT_CLOSE:
+                    return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.SUPER_CLOSE, ClawSide.RIGHT), 500);
+                case SUPER_LEFT_CLOSE:
+                    return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.SUPER_CLOSE, ClawSide.LEFT), 500);
+                case SUPER_BOTH_CLOSE:
+                    return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.SUPER_CLOSE, ClawSide.BOTH), 500);
+
                 default:
                     return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH), 500);
 
