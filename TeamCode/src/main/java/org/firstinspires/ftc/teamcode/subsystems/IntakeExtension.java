@@ -31,7 +31,7 @@ public class IntakeExtension implements Subsystem
     PIDFController.PIDCoefficients pidCoefficientsAggresive = new PIDFController.PIDCoefficients();
 
 
-    boolean isAuto, firstPID = false, aggresive = false;
+    boolean isAuto, firstPID = false, aggresive = true;
     public IntakeExtension(Gamepad gamepad, boolean isAuto)
     {
         this.isAuto = isAuto;
@@ -49,21 +49,24 @@ public class IntakeExtension implements Subsystem
         {
             extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-            pidCoefficients.kP = kP;
-            pidCoefficients.kI = kI;
-            pidCoefficients.kD = kD;
-
-            controller = new PIDFController(pidCoefficients);
         }
 
         this.gamepad = gamepad;
         this.cGamepad = new BetterGamepad(gamepad);
 
-        pidCoefficients.kP = kP;
-        pidCoefficients.kI = kI;
-        pidCoefficients.kD = kD;
+
+
+        pidCoefficients.kP = kPAggresive;
+        pidCoefficients.kI = kIAggresive;
+        pidCoefficients.kD = kDAggresive;
 
         controller = new PIDFController(pidCoefficients);
+
+        pidCoefficientsAggresive.kP = kPAggresive;
+        pidCoefficientsAggresive.kI = kIAggresive;
+        pidCoefficientsAggresive.kD = kDAggresive;
+
+        controllerAggresive = new PIDFController(pidCoefficientsAggresive);
     }
 
 
