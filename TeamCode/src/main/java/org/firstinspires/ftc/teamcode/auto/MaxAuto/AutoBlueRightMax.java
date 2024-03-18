@@ -238,7 +238,7 @@ public class AutoBlueRightMax extends LinearOpMode {
         Action intake43Traj = robot.drive.actionBuilder(new Pose2d(54, 32, Math.toRadians(0)))
                 .setTangent(Math.toRadians(-180))
                 .splineToConstantHeading(new Vector2d(30, 9.5), Math.toRadians(180))
-                .strafeToLinearHeading(new Vector2d(-26, 11), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(-26, 11), Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(-30, 11, Math.toRadians(0)), Math.toRadians(180))
                 .waitSeconds(.25)
                 .build();
