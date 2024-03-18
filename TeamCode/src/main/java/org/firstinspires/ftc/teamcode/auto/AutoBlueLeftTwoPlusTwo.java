@@ -101,9 +101,8 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
                 intakeActions.moveIntake(Intake.Angle.MID),
                 new SleepAction(.2),
                 depositActions.moveElevator(minHeight),
-                new SleepAction(1.35),
+                new SleepAction(0.2),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 0),
-                new SleepAction(0.25),
                 depositActions.moveElevator(minHeight+300),
                 new InstantAction(()-> depositActions.retractElevator())
 
@@ -119,21 +118,21 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
         );
 
         SequentialAction depositSecondCycle = new SequentialAction(
-                new SleepAction(2),
                 readyForDepositAction,
 
 
                 intakeActions.moveIntake(Intake.Angle.MID),
 
                 intakeActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
-                new SleepAction(0.7),
+                new SleepAction(1.2),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
 
                 new SleepAction(0.3),
+                depositActions.moveElevator(tempHeight-100),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
-
-                new SleepAction(0.4),
-                depositActions.moveElevator(tempHeight),
+                depositActions.moveElevator(tempHeight - 150),
+                new SleepAction(0.6),
+                new SleepAction(0.15),
                 depositActions.retractDeposit()
         );
 
@@ -159,11 +158,11 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
                new ParallelAction(
                intakeActions.openExtension( RIGHT_EXTENSION)),
                new SleepAction(0.5),
-               intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN)
+               intakeActions.moveIntakeClaw(Intake.ClawState.OPEN,ClawSide.BOTH)
        );
 
         SequentialAction retractPurpleAction = new SequentialAction(
-                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.2),
                 new ParallelAction(
                         new InstantAction(() -> intakeExtension.setAggresive(false)),
@@ -174,20 +173,18 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
         );
 
         SequentialAction openIntakeWhitePixelAction54 = new SequentialAction(
-                new SleepAction(3),
                 intakeActions.moveIntake(Intake.Angle.TOP_54),
                 new ParallelAction(
                 new SleepAction(.5),
                 intakeActions.lock(PlacePurpleActions.CloseClaw.SUPER_RIGHT_CLOSE),
                 intakeActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN)),
-                new SleepAction(1.5),
+                new SleepAction(0.7),
                 new InstantAction(()-> intakeExtension.setAggresive(false)),
                 intakeActions.openExtension(430 )
 
         );
 
         SequentialAction openIntakeWhitePixelAction32 = new SequentialAction(
-                new SleepAction(2.85),
                 intakeActions.moveIntake(Intake.Angle.TOP_32),
                 new SleepAction(.5),
                 intakeActions.lock(PlacePurpleActions.CloseClaw.SUPER_RIGHT_CLOSE),
@@ -200,19 +197,21 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
 
 
         SequentialAction closeIntakeWhitePixelAction = new SequentialAction(
-                new SleepAction(1),
+                new SleepAction(.8),
                 intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(.5),
                 intakeActions.moveStack(),
-                new SleepAction(.5),
+                new SleepAction(.2),
                 intakeActions.moveIntake(Intake.Angle.OUTTAKE),
                 new InstantAction(() -> intakeExtension.setAggresive(true)),
-                intakeActions.closeExtension()
+                intakeActions.closeExtension(),
+                new SleepAction(.1),
+                returnTransfer()
         );
 
-        SequentialAction placePurplePixelSequence = new SequentialAction(
+       SequentialAction placePurplePixelSequence = new SequentialAction(
                 depositActions.readyForDeposit(minHeight),
-                new SleepAction(1),
+                new SleepAction(0.1),
                 placePurplePixelAction_RIGHT,
                 retractPurpleAction
 
@@ -220,7 +219,7 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
 
         SequentialAction  intake54Action = new SequentialAction(
                 openIntakeWhitePixelAction54,
-                new SleepAction(0.4),
+                new SleepAction(0.7),
                 closeIntakeWhitePixelAction
         );
 
@@ -231,91 +230,97 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
         );
 
         Action placePurpleTraj_RIGHT = robot.drive.actionBuilder(robot.drive.pose)
+                .afterTime(0.5 ,placePurplePixelSequence)
                 .strafeToLinearHeading(new Vector2d(20 ,34.25), Math.toRadians(0))
                 .build();
 
         Action placeYellowTraj_RIGHT = robot.drive.actionBuilder(new Pose2d(20, 34.25, Math.toRadians(0)))
+                .afterTime(0.9 , depositBlue)
                 .strafeTo(new Vector2d(51,28))
                 .build();
+
 
         Action goForIntakeTop54 = robot.drive.actionBuilder(new Pose2d(53, 28 , Math.toRadians(0)))
                 .strafeTo(new Vector2d(50,30.25 ))
                 .setTangent(190)
                 .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
+                .afterTime(2.3, intake54Action)
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-38.5, 44.4, Math.toRadians(12)), Math.toRadians(-180))
-                .strafeTo(new Vector2d(-46, 44.8))
-                .waitSeconds(0.7)
+                .splineToLinearHeading(new Pose2d(-38.5, 43, Math.toRadians(12)), Math.toRadians(-180))
+                .strafeTo(new Vector2d(-47.5, 43.3))
+                .waitSeconds(0.2)
                 .build();
 
 
-        Action goForIntakeTop32 = robot.drive.actionBuilder(new Pose2d(49, 39 , Math.toRadians(0)))
-                .strafeTo(new Vector2d(48,39.25 ))
+        Action goForIntakeTop32 = robot.drive.actionBuilder(new Pose2d(50.5, 39 , Math.toRadians(0)))
+                .strafeTo(new Vector2d(48,43 ))
                 .setTangent(190)
                 .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
+                .afterTime(2.3, intake32Action)
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-39.5, 45.1, Math.toRadians(15)), Math.toRadians(-180))
-                .strafeTo(new Vector2d(-50,  44.6))
-                .waitSeconds(0.7)
+                .splineToLinearHeading(new Pose2d(-39.5, 43, Math.toRadians(15)), Math.toRadians(-180))
+                .strafeTo(new Vector2d(-49,  45.5))
+                .waitSeconds(0.2)
                 .build();
 
-        Action goPlaceWhiteRIGHT_OR_TOP54 = robot.drive.actionBuilder(new Pose2d(-46, 44.8 ,Math.toRadians(15)))
+        Action goPlaceWhiteRIGHT_OR_TOP54 = robot.drive.actionBuilder(new Pose2d(-47.5, 44.5 ,Math.toRadians(15)))
                 .setTangent(Math.toRadians(90))
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(0))
+                .afterTime(0.3, depositSecondCycle)
                 .setTangent(Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(50, 39), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(50.5, 40), Math.toRadians(0))
                 .build();
 
-        Action goPlaceWhiteRIGHT_OR_TOP32 = robot.drive.actionBuilder(new Pose2d(-50, 44.6,Math.toRadians(15)))
+        Action goPlaceWhiteRIGHT_OR_TOP32 = robot.drive.actionBuilder(new Pose2d(-49, 45.5,Math.toRadians(15)))
 
                 .setTangent(Math.toRadians(90))
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(0))
+                .afterTime(0.3, returnDepositTop32())
                 .setTangent(Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(50, 39), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(50.5, 41), Math.toRadians(0))
                 .build();
 
-        Action goPark = robot.drive.actionBuilder(new Pose2d( 47 , 39  , Math.toRadians(0)))
+        Action goPark = robot.drive.actionBuilder(new Pose2d( 47 , 41  , Math.toRadians(0)))
                 .strafeToLinearHeading(new Vector2d(46 , 34) ,  Math.toRadians(-90))
                 .build();
 
+
         ParallelAction placePurplePixel = new ParallelAction(
-                placePurpleTraj_RIGHT,
-                placePurplePixelSequence
+                placePurpleTraj_RIGHT
+
         );
 
         ParallelAction placePreloadOnBoard = new ParallelAction(
-                placeYellowTraj_RIGHT,
-                depositBlue
+                placeYellowTraj_RIGHT
+
         );
 
         ParallelAction intake54 = new ParallelAction(
-                goForIntakeTop54,
-                intake54Action
+                goForIntakeTop54
+
         );
 
         ParallelAction intake32 = new ParallelAction(
-                goForIntakeTop32,
-                intake32Action
+                goForIntakeTop32
+
         );
 
         ParallelAction deposit54 = new ParallelAction(
-                returnTransfer(),
-                new SleepAction(0.1),
-                goPlaceWhiteRIGHT_OR_TOP54,
-                depositSecondCycle
+                goPlaceWhiteRIGHT_OR_TOP54
+
         );
 
 
         ParallelAction deposit32 = new ParallelAction(
-                returnTransfer(),
-                new SleepAction(0.1),
-                goPlaceWhiteRIGHT_OR_TOP32,
-                returnDepositTop32()
+                goPlaceWhiteRIGHT_OR_TOP32
+
         );
+
+
 
 
         blueLeftRight= new SequentialAction(
@@ -379,7 +384,7 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
             new InstantAction(() -> claw.setBothClaw(Claw.ClawState.OPEN)),
             new SleepAction(1),
             new InstantAction(() -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH)),
-            new SleepAction(1.3),
+            new SleepAction(0.3),
             new InstantAction(() -> claw.setBothClaw(Claw.ClawState.CLOSED))
     );
     }
@@ -388,36 +393,36 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
     SequentialAction returnLockTop32 ()
     {
         return  new SequentialAction(
-                new SleepAction(0.7),
+                new SleepAction(0.5),
                 intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(.5),
                 intakeActions.moveStack(),
-                new SleepAction(.5),
+                new SleepAction(.2),
                 intakeActions.moveIntake(Intake.Angle.OUTTAKE),
                 new InstantAction(() -> intakeExtension.setAggresive(true)),
-                intakeActions.closeExtension()
+                intakeActions.closeExtension(),
+                new SleepAction(0.3),
+                returnTransfer()
+
         );
     }
     SequentialAction returnDepositTop32 ()
     {
         return  new SequentialAction(
-                new SleepAction(2),
                 intakeActions.moveIntake(Intake.Angle.MID),
-                new SleepAction(0.5),
                 depositActions.readyForDeposit(tempHeight),
 
 
                 intakeActions.moveIntake(Intake.Angle.MID),
 
                 intakeActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
-                new SleepAction(0.7),
+                new SleepAction(1),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
 
-                new SleepAction(0.45),
+                new SleepAction(0.7),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
-
-                new SleepAction(0.4),
-                depositActions.moveElevator(tempHeight + 500),
+                new SleepAction(0.15),
+                depositActions.moveElevator(tempHeight + 800),
                 depositActions.retractDeposit()
         );
     }
