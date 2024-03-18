@@ -56,7 +56,7 @@ public class IntakeExtension implements Subsystem
 
 
 
-        pidCoefficients.kP = kPAggresive;
+            pidCoefficients.kP = kPAggresive;
         pidCoefficients.kI = kIAggresive;
         pidCoefficients.kD = kDAggresive;
 
