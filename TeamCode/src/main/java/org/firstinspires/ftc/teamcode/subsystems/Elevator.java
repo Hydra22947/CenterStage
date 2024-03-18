@@ -23,7 +23,7 @@ public class Elevator implements Subsystem
     public static double HANG = 500;
     double currentTargetRight = 0, currentTargetLeft = 0;
     boolean usePID = true;
-    public static double maxPower = 1;
+    public static double maxPower = 0.75;
     public static double kPR = 0.0075, kIR = 0, kDR = 0.01;
     public static double kPL = 0.005, kIL = 0, kDL = 0.01;
     public DcMotorEx elevatorMotorRight;
