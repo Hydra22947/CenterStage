@@ -295,11 +295,6 @@ public class OpMode extends LinearOpMode {
                     drivetrain.superSlow();
                 }
 
-                if(liftState == LiftState.RETRACT)
-                {
-                    clickIntakeFix();
-                }
-
                 if(startedDelayTransfer)
                 {
                     intakeMid = false;
@@ -347,8 +342,6 @@ public class OpMode extends LinearOpMode {
 
                 break;
             case INTAKE:
-                clickIntakeFix();
-
                 moveIntake();
 
                 if(firstReleaseThreeTimer)
@@ -451,8 +444,6 @@ public class OpMode extends LinearOpMode {
 
                 break;
             case INTAKE_EXTEND:
-                clickIntakeFix();
-
                 moveIntake();
                 heldExtension = true;
                 drivetrain.slow();
@@ -853,22 +844,6 @@ public class OpMode extends LinearOpMode {
                 outtakeState = OuttakeState.OUTTAKE;
                 break;
         }
-    }
-
-    void clickIntakeFix()
-    {
-        if(betterGamepad2.dpadRightOnce())
-        {
-            clicks++;
-        }
-        else if(betterGamepad2.dpadLeftOnce())
-        {
-            clicks--;
-        }
-
-
-        intake.setOFFSET_AMMO(clicks * intake.clickOffset);
-
     }
 
 

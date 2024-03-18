@@ -104,6 +104,7 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
                 new SleepAction(0.2),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 0),
                 depositActions.moveElevator(minHeight+300),
+                new SleepAction(0.2),
                 new InstantAction(()-> depositActions.retractElevator())
 
 
@@ -268,7 +269,7 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(0))
-                .afterTime(0.3, depositSecondCycle)
+                .afterTime(0.1, depositSecondCycle)
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(50.5, 40), Math.toRadians(0))
                 .build();
@@ -279,7 +280,7 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(0))
-                .afterTime(0.3, returnDepositTop32())
+                .afterTime(0.1, returnDepositTop32())
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(50.5, 41), Math.toRadians(0))
                 .build();
