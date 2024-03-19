@@ -432,7 +432,11 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
                 intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
                 new SleepAction(0.2),
                 intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
-                new SleepAction(0.1),
+                new SleepAction(0.3),
+                intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
+                new SleepAction(0.2),
+                intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
+                new SleepAction(0.2),
                 intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
                 new SleepAction(0.2),
                 intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
