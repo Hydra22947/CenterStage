@@ -31,7 +31,6 @@ public class Claw implements Subsystem {
         INTERMEDIATE,
         INTAKE,
         OPEN,
-        SUPER_CLOSED
 
     }
 
@@ -39,9 +38,9 @@ public class Claw implements Subsystem {
     public ClawState rightClaw = ClawState.OPEN;
 
     // LOOK FORM INTAKE
-    public static double openLeft = .36, closeLeft = 0.46 , superClosedLeft = 0;
+    public static double openLeft = .36, closeLeft = 0.46;
     public static double intakeRight = .4, intakeLeft = .38; // misha
-    public static double openRight = .38, closeRight = .48, superClosedRight = 0;
+    public static double openRight = .38, closeRight = .48;
     public static double intermediateLeft = .41, intermediateRight = .44;
 
     public Claw() {
@@ -83,8 +82,6 @@ public class Claw implements Subsystem {
         switch (side) {
             case LEFT:
                 switch (state) {
-                    case SUPER_CLOSED:
-                       return superClosedLeft;
                     case CLOSED:
                         return closeLeft;
                     case INTERMEDIATE:
@@ -98,8 +95,6 @@ public class Claw implements Subsystem {
                 }
             case RIGHT:
                 switch (state) {
-                    case SUPER_CLOSED:
-                        return superClosedRight;
                     case CLOSED:
                         return closeRight;
                     case INTERMEDIATE:
