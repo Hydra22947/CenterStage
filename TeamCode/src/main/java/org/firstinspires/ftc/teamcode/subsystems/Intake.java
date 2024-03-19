@@ -15,14 +15,17 @@ public class Intake implements Subsystem{
     public static double intakeHandPivot = 0.195, intakeAmmoPivot = 0.125;
     public static double outtakeHandPivot = 0.65, outtakeAmmoPivot = .66; // פורק מהשאיבה הזוויות-מתוקן
     public static double midHandPivot = 0.67, midAmmoPivot = 0.4;
+    public static double midTeleOpHandPivot = 0.5, midTeleopAmmoPivot = 0.65;
     public static double top5HandPivot = .31, top5AmmoPivot = 0.13;
     public static double top5HandPivotAuto = 0.31, top5AmmoPivotAuto = 0.13; //auto ערימה של אוטונומי רק ה5
     public static double top54HandPivot = 0.285, top54AmmoPivot = 0.13; // ערימה של 54
     public static double top54HandPivotAuto = 0.289, top54AmmoPivotAuto = 0.095;
-    public static double top43HandPivot = 0.295, top43AmmoPivot = 0.12; // auto
+    public static double top43HandPivot = 0.3, top43AmmoPivot = 0.12; // auto
     public static double top32HandPivot = 0.235, top32AmmoPivot = 0.13; // ערימה של 32
     public static double top32HandPivotAuto = 0.18, top32AmmoPivotAuto = 0.025;
     public static double top21HandPivot = 0.195, top21AmmoPivot = 0.125; // auto
+
+    public static double autoFixIntakeHandPivot = 0.68, autoFixIntakeAmmoPivot = 0.66;
 
     public static double STACK = 0.05;
     public static double RIGHT_SENSOR_ERROR = 0.3;
@@ -65,10 +68,11 @@ public class Intake implements Subsystem{
     {
         INTAKE,
         OUTTAKE,
-        MID,
+        MID, TELEOP_MID,
         TOP_54, TOP_43, TOP_32, TOP_21, TOP_5,
         TOP_5_AUTO,
-        TOP_54_AUTO, TOP_32_AUTO
+        TOP_54_AUTO, TOP_32_AUTO,
+        AUTO_FIX_INTAKE
     }
 
     public enum ClawState
@@ -273,6 +277,8 @@ public class Intake implements Subsystem{
                         return outtakeAmmoPivot + OFFSET_AMMO;
                     case MID:
                         return midAmmoPivot + OFFSET_AMMO;
+                    case TELEOP_MID:
+                        return midTeleopAmmoPivot + OFFSET_AMMO;
                     case TOP_21:
                         return top21AmmoPivot + OFFSET_AMMO;
                     case TOP_54:
@@ -289,6 +295,9 @@ public class Intake implements Subsystem{
                         return top5AmmoPivotAuto + OFFSET_AMMO;
                     case TOP_32_AUTO:
                         return top32AmmoPivotAuto + OFFSET_AMMO;
+                    case AUTO_FIX_INTAKE:
+                        return autoFixIntakeAmmoPivot + OFFSET_AMMO;
+
                     default:
                         return 0.0;
 
@@ -302,6 +311,8 @@ public class Intake implements Subsystem{
                         return outtakeHandPivot;
                     case MID:
                         return midHandPivot;
+                    case TELEOP_MID:
+                        return midTeleOpHandPivot + OFFSET_AMMO;
                     case TOP_21:
                         return top21HandPivot;
                     case TOP_32:
@@ -318,6 +329,8 @@ public class Intake implements Subsystem{
                         return top32HandPivotAuto;
                     case TOP_5_AUTO:
                         return top5HandPivotAuto;
+                    case AUTO_FIX_INTAKE:
+                        return autoFixIntakeHandPivot;
                     default:
                         return 0.0;
                 }
