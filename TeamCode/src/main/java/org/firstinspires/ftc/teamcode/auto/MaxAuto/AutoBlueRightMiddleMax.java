@@ -236,7 +236,7 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
                 .setTangent(-180)
                 .splineToSplineHeading(new Pose2d(-48, 41, Math.toRadians(0)), Math.toRadians(-90))
                 .afterTime(.5, intake5Action)
-                .splineToLinearHeading(new Pose2d(-46, 23, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-46, 23.25, Math.toRadians(0)), Math.toRadians(180))
                 .strafeToLinearHeading(new Vector2d(-52, 23.25), Math.toRadians(0))
 
                 .strafeToLinearHeading(new Vector2d(-48, 23.25), Math.toRadians(0))
