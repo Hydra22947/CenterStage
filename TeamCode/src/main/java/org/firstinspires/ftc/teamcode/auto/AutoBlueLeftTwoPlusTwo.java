@@ -131,6 +131,7 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
                 new SleepAction(0.3),
                 depositActions.moveElevator(tempHeight - 100),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
+                new SleepAction(0.2),
                 depositActions.moveElevator(tempHeight - 150),
                 new SleepAction(0.3),
                 depositActions.retractDeposit()
@@ -414,7 +415,6 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
                 intakeActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
-
                 new SleepAction(0.6),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
                 new SleepAction(0.3),
