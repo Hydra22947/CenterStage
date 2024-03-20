@@ -424,17 +424,16 @@ public class MeepMeepTesting {
     public static void blueRightRight(RoadRunnerBotEntity myBot) {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, 62, Math.toRadians(-90)))
 
-                .strafeToLinearHeading(new Vector2d(-34.5, 30), Math.toRadians(-90))
-                .setTangent(-180)
-                .splineToSplineHeading(new Pose2d(-48, 40, Math.toRadians(0)), Math.toRadians(-90))
-                .splineToLinearHeading(new Pose2d(-53.25, 21.5, Math.toRadians(0)), Math.toRadians(180))
+                //place purple
+                .strafeToLinearHeading(new Vector2d(-50, 44), Math.toRadians(-90))
 
-                .strafeToLinearHeading(new Vector2d(-44.25, 10), Math.toRadians(0))
 
-                //deposit
-                .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(54, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                .strafeToLinearHeading(new Vector2d(54, 32), Math.toRadians(0))
+                //intake from left stack
+                .strafeToSplineHeading(new Vector2d(-42, 45), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(-38, 12, Math.toRadians(-90)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-30, 9.75, Math.toRadians(0)), Math.toRadians(0))
+                .waitSeconds(1)
+                .strafeToLinearHeading(new Vector2d(-50, 12), Math.toRadians(0))
 
 
                 .build());

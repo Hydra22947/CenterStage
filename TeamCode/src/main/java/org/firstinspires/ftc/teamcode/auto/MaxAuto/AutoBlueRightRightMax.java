@@ -124,7 +124,7 @@ public class AutoBlueRightRightMax extends LinearOpMode {
         );
         SequentialAction intake5Action = new SequentialAction(
                 intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
-                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
 
                 new SleepAction(1),
 
@@ -179,7 +179,7 @@ public class AutoBlueRightRightMax extends LinearOpMode {
 
         SequentialAction depositAction = new SequentialAction(
 
-                depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 0),
+                depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
                 new SleepAction(1),
                 depositActions.moveElevator(1400),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
@@ -235,13 +235,13 @@ public class AutoBlueRightRightMax extends LinearOpMode {
 
         Action intake5Traj = robot.drive.actionBuilder(new Pose2d(-50, 44, Math.toRadians(-90)))
 
-                //intake from mid stack
-                .strafeToLinearHeading(new Vector2d(-49.5, 24), Math.toRadians(0))
-                .afterTime(.5, intake5Action)
-                .splineToLinearHeading(new Pose2d(-46, 23, Math.toRadians(0)), Math.toRadians(180))
-                .strafeToLinearHeading(new Vector2d(-52, 23), Math.toRadians(0))
+                //intake from left stack
+                .strafeToSplineHeading(new Vector2d(-42, 45), Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(-38, 12, Math.toRadians(-90)), Math.toRadians(-90))
+                .afterTime(0.5, intake5Action)
+                .strafeToLinearHeading(new Vector2d(-30, 9.75), Math.toRadians(0))
 
-                .strafeToLinearHeading(new Vector2d(-48, 23), Math.toRadians(0))
+
                 .afterTime(.5, fixIntake)
                 .strafeToLinearHeading(new Vector2d(-44.25, 10), Math.toRadians(0))
 
@@ -254,12 +254,11 @@ public class AutoBlueRightRightMax extends LinearOpMode {
 
                 .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(0))
 
-                .splineToLinearHeading(new Pose2d(54, 28.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .splineToLinearHeading(new Pose2d(54, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .afterTime(0, depositAction)
 
-                .strafeToLinearHeading(new Vector2d(54, 33), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(54, 28), Math.toRadians(0))
 
-                //  .strafeToLinearHeading(new Vector2d(54, 36), Math.toRadians(0)).setTangent(0)
 
                 .build();
 
