@@ -73,11 +73,11 @@ public class DepositActions {
             this.elevator = elevator;
             readyForDepositTimer = new Stopwatch();
             readyForDepositTimer.reset();
-            intake.move(Intake.Angle.MID);
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
             claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
             moveElevatorByTraj(elevator);
             outtake.setAngle(Outtake.Angle.OUTTAKE);
