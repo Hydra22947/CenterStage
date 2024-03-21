@@ -123,16 +123,17 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
                readyForDepositAction,
 
                 intakeActions.moveIntake(Intake.Angle.TELEOP_MID),
+                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
 
                 intakeActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
-                new SleepAction(1.2),
+                new SleepAction(1.45),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
 
                 new SleepAction(0.4),
-                depositActions.moveElevator(tempHeight - 100),
+                depositActions.moveElevator(tempHeight + 400),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
                 new SleepAction(0.2),
-                depositActions.moveElevator(tempHeight - 150),
+                depositActions.moveElevator(tempHeight -200),
                 new SleepAction(0.3),
                 depositActions.retractDeposit()
         );
@@ -309,35 +310,35 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
 
         Action placeYellowTraj_LEFT = robot.drive.actionBuilder(new Pose2d(40, 34.25, Math.toRadians(0)))
                 .afterTime(0.8 , depositBlue)
-                .strafeTo(new Vector2d(50,29))
+                .strafeTo(new Vector2d(50,39.5))
+                .waitSeconds(0.45)
+                .strafeTo(new Vector2d(48,43 ))
                 .build();
 
 
-        Action goForIntakeTop54_LEFT = robot.drive.actionBuilder(new Pose2d(50, 29 , Math.toRadians(0)))
-                .strafeTo(new Vector2d(48,43 ))
+        Action goForIntakeTop54_LEFT_OR_MIDDLE = robot.drive.actionBuilder(new Pose2d(48, 43 , Math.toRadians(0)))
                 .setTangent(190)
                 .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
-                .afterTime(2.1, intake54Action)
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
+                .afterTime(0.2, intake54Action)
                 .splineToLinearHeading(new Pose2d(-38.5, 37.3, Math.toRadians(0)), Math.toRadians(-180))
-                .strafeTo(new Vector2d(-47.5, 37.1))
+                .strafeTo(new Vector2d(-44.5, 37.4))
                 .waitSeconds(0.2)
                 //.afterTime(2.3, intake54Action)
                 .build();
 
 
-        Action goForIntakeTop32_LEFT_OR_MIDDLE = robot.drive.actionBuilder(new Pose2d(50.5, 29 , Math.toRadians(0)))
-                .strafeTo(new Vector2d(48,43 ))
+        Action goForIntakeTop32_LEFT_OR_MIDDLE = robot.drive.actionBuilder(new Pose2d(48, 43, Math.toRadians(0)))
                 .setTangent(190)
                 .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
-                .afterTime(2.3, intake32Action)
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
+                .afterTime(0.2, intake32Action)
                 .splineToLinearHeading(new Pose2d(-39.5, 37.3, Math.toRadians(0)), Math.toRadians(-180))
-                .strafeTo(new Vector2d(-47.5, 37.1))
+                .strafeTo(new Vector2d(-46, 38))
                 .waitSeconds(0.2)
                 .build();
 
-        Action goPlaceWhite_LEFT_OR_MIDDLE54 = robot.drive.actionBuilder(new Pose2d(-47.5, 37.1,Math.toRadians(15)))
+        Action goPlaceWhite_LEFT_OR_MIDDLE54 = robot.drive.actionBuilder(new Pose2d(-44.5, 37.4,Math.toRadians(15)))
                 .setTangent(Math.toRadians(90))
                 .afterTime(0,returnFixintake())
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
@@ -346,9 +347,10 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
                 .afterTime(0, depositSecondCycle)
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(50.5, 39), Math.toRadians(0))
+                .strafeTo(new Vector2d(48,43 ))
                 .build();
 
-        Action goPlaceWhite_LEFT_OR_MIDDLE32 = robot.drive.actionBuilder(new Pose2d(-48.5, 37.1,Math.toRadians(15)))
+        Action goPlaceWhite_LEFT_OR_MIDDLE32 = robot.drive.actionBuilder(new Pose2d(-47.5, 38,Math.toRadians(15)))
 
                 .setTangent(Math.toRadians(90))
                 .afterTime(0,returnFixintake())
@@ -369,19 +371,23 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
         Action placeYellowTraj_MIDDLE = robot.drive.actionBuilder(new Pose2d(30, 26, Math.toRadians(0)))
                 .afterTime(0.8 , depositBlue)
                 .strafeTo(new Vector2d(50,34.25))
+                .waitSeconds(0.45)
+                .strafeTo(new Vector2d(48,43 ))
                 .build();
 
-
+/*
         Action goForIntakeTop54_MIDDLE = robot.drive.actionBuilder(new Pose2d(50, 34.25, Math.toRadians(0)))
                 .setTangent(190)
                 .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
                 .afterTime(2.3, intake54Action)
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(-38.5, 37.3, Math.toRadians(0)), Math.toRadians(-180))
-                .strafeTo(new Vector2d(-46, 37.1))
+                .strafeTo(new Vector2d(-46, 37.3))
                 .waitSeconds(0.2)
                 .build();
 
+
+ */
         Action goPark_Right = robot.drive.actionBuilder(new Pose2d( 50.5 , 40  , Math.toRadians(0)))
                 .strafeToLinearHeading(new Vector2d(46 , 34) ,  Math.toRadians(-90))
                 .build();
@@ -424,8 +430,8 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
                 placeYellowTraj_LEFT
 
         );
-        ParallelAction intake54_Left = new ParallelAction(
-                goForIntakeTop54_LEFT
+        ParallelAction intake54_LeftOrMiddle = new ParallelAction(
+                goForIntakeTop54_LEFT_OR_MIDDLE
 
         );
         ParallelAction intake32_LeftOrMiddle = new ParallelAction(
@@ -452,9 +458,6 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
                 placeYellowTraj_MIDDLE
 
         );
-        ParallelAction intake54_Middle = new ParallelAction(
-                goForIntakeTop54_MIDDLE
-        );
 
 
 
@@ -472,7 +475,7 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
         blueLeftLeft= new SequentialAction(
                 placePurplePixel_Left
                 , placePreloadOnBoard_Left
-                , intake54_Left
+                , intake54_LeftOrMiddle
                 , deposit54_LeftOrMiddle
                 , intake32_LeftOrMiddle
                 , deposit32_LeftOrMiddle
@@ -483,7 +486,7 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
         blueLeftMiddle = new SequentialAction(
                 placePurplePixel_Middle
                 , placePreloadOnBoard_Middle
-                , intake54_Middle
+                , intake54_LeftOrMiddle
                 , deposit54_LeftOrMiddle
                 , intake32_LeftOrMiddle
                 , deposit32_LeftOrMiddle
@@ -553,10 +556,10 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
     {
         return  new SequentialAction(
                 intakeActions.moveIntake(Intake.Angle.MID),
+                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
                 depositActions.readyForDeposit(tempHeight + 400),
 
                 intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
-                intakeActions.moveIntake(Intake.Angle.MID),
 
                 intakeActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
                 new SleepAction(1),

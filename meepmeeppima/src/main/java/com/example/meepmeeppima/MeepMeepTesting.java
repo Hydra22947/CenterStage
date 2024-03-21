@@ -112,7 +112,8 @@ public class MeepMeepTesting {
 
                 .strafeTo(new Vector2d(48,43 ))
                 .setTangent(190)
-                .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
+                        .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
+               /*
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(-38.5, 37.3, Math.toRadians(0)), Math.toRadians(-180))
                 .strafeTo(new Vector2d(-45, 37.1))
@@ -145,6 +146,8 @@ public class MeepMeepTesting {
 
 
                 .strafeToLinearHeading(new Vector2d(46 , 34) ,  Math.toRadians(-90))
+
+                */
                 .build());
 
     }

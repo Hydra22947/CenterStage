@@ -648,6 +648,7 @@ public class OpMode extends LinearOpMode {
     {
         switch (liftState) {
             case RETRACT:
+                firstOuttake = true;
                 elevator.setTarget(0);
                 outtake.setAngle(Outtake.Angle.INTAKE);
 
@@ -743,8 +744,6 @@ public class OpMode extends LinearOpMode {
 
                 if (betterGamepad1.AOnce())  {
                     claw.setBothClaw(Claw.ClawState.OPEN);
-
-                    firstOuttake = true;
 
                     elevatorTargetRight = elevator.getTargetRight() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
                     elevatorTargetLeft = elevator.getTargetLeft() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
