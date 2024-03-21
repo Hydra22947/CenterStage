@@ -66,6 +66,8 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
     OpenCvWebcam webcam;
 
     SequentialAction blueRightMiddle;
+    SequentialAction readyForDepositAction;
+    int tempHeight;
 
     @Override
     public void runOpMode() {
@@ -96,46 +98,41 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
         intakeActions = new PlacePurpleActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
-        int tempHeight = 1500;
+        tempHeight = 1400;
 
 
         SequentialAction fixIntakeAction = new SequentialAction(
 
                 intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
-                new SleepAction(0.1),
                 intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
-                new SleepAction(0.2),
                 intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
-                new SleepAction(0.3),
-                intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
+                new SleepAction(0.25),
+                intakeActions.moveClaw(Claw.ClawState.INTERMEDIATE, ClawSide.BOTH),
                 new InstantAction(() -> intakeExtension.setAggresive(false)),
                 intakeActions.openExtension(75),
                 new SleepAction(0.2),
                 new InstantAction(() -> intakeExtension.setAggresive(true)),
                 intakeActions.openExtension(-20),
-                intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
-                new SleepAction(0.2),
-                intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
-                new SleepAction(0.2),
                 intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
 
         );
 
-        SequentialAction intake5Action = new SequentialAction(
+        SequentialAction intake5OpenAction = new SequentialAction(
                 intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
-                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
 
-                new SleepAction(1),
+        );
 
+        SequentialAction intake5CloseAction = new SequentialAction(
                 intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
                 intakeActions.moveStack(),
                 new SleepAction(.5),
 
                 intakeActions.moveIntake(Intake.Angle.OUTTAKE),
 
-                new SleepAction(1),
+                new SleepAction(2),
                 intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
-                new SleepAction(.5),
+                new SleepAction(1.5),
                 intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
 
         );
@@ -160,27 +157,20 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
                 intakeActions.moveIntake(Intake.Angle.OUTTAKE),
                 new SleepAction(0.5),
                 intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
+                new SleepAction(.5),
                 intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
-                new SleepAction(.75),
+                new SleepAction(1),
                 intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
 
 
-                );
-
-
-        SequentialAction readyForDepositAction = new SequentialAction(
-                new SleepAction(1),
-                intakeActions.moveIntake(Intake.Angle.TELEOP_MID),
-                new SleepAction(1),
-                depositActions.readyForDeposit(tempHeight)
-
         );
+
 
         SequentialAction depositAction = new SequentialAction(
 
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 0),
                 new SleepAction(1),
-                depositActions.moveElevator(1400),
+                depositActions.moveElevator(1600),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1500),
 
                 new SleepAction(1),
@@ -188,7 +178,11 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
                 depositActions.retractDeposit()
         );
 
-
+        readyForDepositAction = new SequentialAction(
+                new SleepAction(1),
+                intakeActions.moveIntake(Intake.Angle.TELEOP_MID),
+                new SleepAction(1),
+                depositActions.readyForDeposit(tempHeight));
         SequentialAction retractDeposit = new SequentialAction(
                 depositActions.retractDeposit()
         );
@@ -213,12 +207,11 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
         Action intake5Traj = robot.drive.actionBuilder(new Pose2d(-32, 33, Math.toRadians(-90)))
                 .setTangent(-180)
                 .splineToSplineHeading(new Pose2d(-48, 41, Math.toRadians(0)), Math.toRadians(-90))
-                .afterTime(.5, intake5Action)
+                .stopAndAdd(intake5OpenAction)
                 .splineToLinearHeading(new Pose2d(-46, 23.5, Math.toRadians(0)), Math.toRadians(180))
-                .strafeToLinearHeading(new Vector2d(-52.5, 24), Math.toRadians(0))
-
-                .strafeToLinearHeading(new Vector2d(-48, 24), Math.toRadians(0))
-                .afterTime(.5, fixIntakeAction)
+                .strafeToLinearHeading(new Vector2d(-52.5, 23.5), Math.toRadians(0))
+                .stopAndAdd(intake5CloseAction)
+                .strafeToLinearHeading(new Vector2d(-48, 23.5), Math.toRadians(0))
 
                 .strafeToLinearHeading(new Vector2d(-44.25, 10), Math.toRadians(0))
 
@@ -227,11 +220,11 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
         Action depositPreloadTraj = robot.drive.actionBuilder(new Pose2d(-44.25, 10, Math.toRadians(0)))
 
                 //deposit
-                .afterTime(0.25, readyForDepositAction)
+                .afterTime(0.5, readyForDepositAction)
 
                 .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(0))
 
-                .splineToLinearHeading(new Pose2d(54, 29, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .splineToLinearHeading(new Pose2d(54, 29.75, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .afterTime(0, depositAction)
 
                 .strafeToLinearHeading(new Vector2d(54, 34), Math.toRadians(0))
@@ -239,10 +232,10 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
 
                 .build();
 
-        Action intake43Traj = robot.drive.actionBuilder(new Pose2d(54,  34, Math.toRadians(0)))
+        Action intake43Traj = robot.drive.actionBuilder(new Pose2d(54, 34, Math.toRadians(0)))
                 .setTangent(Math.toRadians(-180))
-                .splineToConstantHeading(new Vector2d(28, 10.5), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-31, 10.5, Math.toRadians(0)), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(24, 11.25), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-32, 11.25, Math.toRadians(0)), Math.toRadians(180))
                 .waitSeconds(.25)
 
                 .build();
@@ -251,8 +244,8 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
         Action deposit43Traj = robot.drive.actionBuilder(new Pose2d(-31, 10, Math.toRadians(0)))
                 .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
 
-                .afterTime(.25, readyForDepositAction)
-                .splineToLinearHeading(new Pose2d(52.5, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .afterTime(.25, updateElevatorHeight(1700))
+                .splineToLinearHeading(new Pose2d(52.5, 26, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .afterTime(0, deposit43Action)
                 .build();
 
@@ -270,7 +263,8 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
         );
 
         ParallelAction depositPreload = new ParallelAction(
-                depositPreloadTraj
+                depositPreloadTraj,
+                fixIntake()
         );
 
         ParallelAction intake43 = new ParallelAction(
@@ -383,6 +377,14 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
 
     }
 
+
+    Action updateElevatorHeight(int height) {
+        return new SequentialAction(
+                readyForDepositAction,
+                depositActions.moveElevator(height));
+
+    }
+
     SequentialAction fixIntake() {
         return new SequentialAction(
 
@@ -400,9 +402,7 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
                 new InstantAction(() -> intakeExtension.setAggresive(true)),
                 intakeActions.openExtension(-20),
                 intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
-                new SleepAction(0.2),
                 intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
-                new SleepAction(0.2),
                 intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
         );
     }
