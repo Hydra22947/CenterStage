@@ -33,7 +33,7 @@ public class VisionTest extends LinearOpMode{
         RED_RIGHT
     }
 
-    public static SideColor sideColor = SideColor.BLUE_LEFT;
+    public static SideColor sideColor = SideColor.RED_RIGHT;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -64,8 +64,6 @@ public class VisionTest extends LinearOpMode{
                 break;
         }
 
-        FtcDashboard.getInstance().startCameraStream(webcam, 0);
-
         webcam.setMillisecondsPermissionTimeout(5000); // Timeout for obtaining permission is configurable. Set before opening.
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
@@ -83,6 +81,8 @@ public class VisionTest extends LinearOpMode{
                  */
             }
         });
+        FtcDashboard.getInstance().startCameraStream(webcam, 0);
+
 
         telemetry.addLine("Waiting for start");
         telemetry.update();
@@ -120,7 +120,7 @@ public class VisionTest extends LinearOpMode{
                 switch (sideColor)
                 {
                     case BLUE_LEFT:
-                        propPipelineBlueLeft.setNoProp(PropPipelineBlueLeft.getNoProp() + 1);
+                        propPipelineBlueLeft.setNoProp(propPipelineBlueLeft.getNoProp() + 1);
                         break;
                     case BLUE_RIGHT:
                         propPipelineBlueRight.setNoProp(propPipelineBlueRight.getNoProp() + 1);
@@ -139,7 +139,7 @@ public class VisionTest extends LinearOpMode{
                 switch (sideColor)
                 {
                     case BLUE_LEFT:
-                        propPipelineBlueLeft.setNoProp(PropPipelineBlueLeft.getNoProp() - 1);
+                        propPipelineBlueLeft.setNoProp(propPipelineBlueLeft.getNoProp() - 1);
                         break;
                     case BLUE_RIGHT:
                         propPipelineBlueRight.setNoProp(propPipelineBlueRight.getNoProp() - 1);

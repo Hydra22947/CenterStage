@@ -324,7 +324,7 @@ public class AutoBlueRightRightMax extends LinearOpMode {
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addData("POS", propPipelineRedRight.getLocation());
-            telemetry.addData("NO PROP", propPipelineRedRight.NO_PROP);
+//            telemetry.addData("NO PROP", propPipelineRedRight.NO_PROP);
             switch (propPipelineRedRight.getLocation()) {
                 case Left:
                     propLocation = PropLocation.LEFT;
@@ -338,9 +338,9 @@ public class AutoBlueRightRightMax extends LinearOpMode {
             }
 
             if (betterGamepad2.dpadUpOnce()) {
-                propPipelineRedRight.NO_PROP++;
+//                propPipelineRedRight.NO_PROP++;
             } else if (betterGamepad2.dpadDownOnce()) {
-                propPipelineRedRight.NO_PROP--;
+//                propPipelineRedRight.NO_PROP--;
             }
             telemetry.addLine("Initialized");
             telemetry.update();

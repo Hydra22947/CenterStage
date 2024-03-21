@@ -1,14 +1,18 @@
 package org.firstinspires.ftc.teamcode.testing.vision;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 
+import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.core.CvType;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @Config
@@ -21,19 +25,22 @@ public class PropPipelineRedRight extends OpenCvPipeline {
     double avgRight = 0, avgCenter = 0;
     // red, not seeing the left line
 
-    public static double NO_PROP = 100;
+    public static double NO_PROP_CENTER = 100;
+    public static double NO_PROP_RIGHT = 100;
 
 
     public static int widthRight = 175, heightRight = 190;
     public static int widthCenter = 350, heightCenter = 180;
 
-    public static int redMinH = 0;
-    public static int redMinS = 104;
+    public static int redMinH = 115;
+    public static int redMinS = 0;
     public static int redMinV = 0;
-    public static int redMaxH = 179;
+    public static int redMaxH = 130;
     public static int redMaxS = 255;
     public static int redMaxV = 255;
+    public static int idkNumber = 10;
     private Mat workingMatrix = new Mat();
+    private Mat returnMatrix = new Mat();
     public enum Location
     {
         Left,
@@ -50,9 +57,9 @@ public class PropPipelineRedRight extends OpenCvPipeline {
 
     @Override
     public final Mat processFrame(Mat input) {
-        input.copyTo(workingMatrix);
+        Imgproc.cvtColor(input, workingMatrix, Imgproc.COLOR_BGR2HSV); // Convert to HSV color space
 
-        Imgproc.cvtColor(workingMatrix, workingMatrix, Imgproc.COLOR_BGR2HSV); // Convert to HSV color space
+        Mat kernel = Mat.ones(idkNumber,idkNumber, CvType.CV_32F);
 
         // Define the range of blue color in HSV
         Scalar redMin = new Scalar(redMinH, redMinS, redMinV);
@@ -62,8 +69,12 @@ public class PropPipelineRedRight extends OpenCvPipeline {
         Core.inRange(workingMatrix, redMin, redMax, workingMatrix);
 
         // Perform bitwise AND operation to isolate blue regions in the input image
+        Imgproc.morphologyEx(workingMatrix, workingMatrix, Imgproc.MORPH_OPEN, kernel);
+        Imgproc.morphologyEx(workingMatrix, workingMatrix, Imgproc.MORPH_CLOSE, kernel);
+        workingMatrix.copyTo(returnMatrix);
         Core.bitwise_and(input, input, workingMatrix);
 
+        // TODO: remove bitwise, and get returnMatrix and add the left center and that i will count the white
         // Define regions of interest
         Mat matLeft = workingMatrix.submat(rightY, heightRight + rightY, rightX, rightX + widthRight);
         Mat matCenter = workingMatrix.submat(centerY, heightCenter + centerY, centerX, centerX + widthCenter);
@@ -78,17 +89,17 @@ public class PropPipelineRedRight extends OpenCvPipeline {
 
 
         // Find the region with the maximum average blue intensity
-        if(avgRight > NO_PROP && avgCenter > NO_PROP)
+        if(avgRight > NO_PROP_RIGHT && avgCenter > NO_PROP_CENTER)
         {
             location = Location.Left;
         }
-        else if (avgRight > avgCenter) {
+        else if (avgRight < NO_PROP_RIGHT) {
             location = Location.Center;
-        } else if (avgCenter > avgRight) {
+        } else if (avgCenter < NO_PROP_CENTER) {
             location = Location.Right;
         }
 
-        return workingMatrix;
+        return returnMatrix;
     }
 
 
@@ -110,10 +121,10 @@ public class PropPipelineRedRight extends OpenCvPipeline {
     }
 
     public static void setNoProp(double noProp) {
-        NO_PROP = noProp;
+        NO_PROP_CENTER = noProp;
     }
 
     public static double getNoProp() {
-        return NO_PROP;
+        return NO_PROP_CENTER;
     }
 }
