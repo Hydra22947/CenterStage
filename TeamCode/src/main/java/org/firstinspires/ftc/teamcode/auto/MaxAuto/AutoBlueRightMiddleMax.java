@@ -230,7 +230,7 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(54, 30.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .afterTime(0, depositAction)
 
-                .strafeToLinearHeading(new Vector2d(54, 34), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(54, 34.5), Math.toRadians(0))
 
 
                 .build();
@@ -240,16 +240,15 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
                 .afterTime(1, intake43Action)
                 .splineToConstantHeading(new Vector2d(24, 10.5), Math.toRadians(180))
                 .strafeToLinearHeading(new Vector2d(-20, 10.5), Math.toRadians(0))
-                .strafeToLinearHeading(new Vector2d(-31.5, 10.5), Math.toRadians(0))
-                .waitSeconds(.25)
-
+                .strafeToLinearHeading(new Vector2d(-29.5, 10.5), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-31.75, 10.5), Math.toRadians(0))
                 .build();
 
 
         Action deposit43Traj = robot.drive.actionBuilder(new Pose2d(-31, 10.75, Math.toRadians(0)))
                 .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
 
-                .afterTime(0, updateElevatorHeight(1700))
+                .afterTime(0.25, updateElevatorHeight(1700))
                 .splineToLinearHeading(new Pose2d(52.5, 26, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .afterTime(0, deposit43Action)
                 .build();
@@ -400,9 +399,8 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
                 intakeActions.openExtension(75),
                 new InstantAction(() -> intakeExtension.setAggresive(true)),
                 intakeActions.openExtension(-20),
-                intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
-                intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
                 intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
+
         );
     }
 
