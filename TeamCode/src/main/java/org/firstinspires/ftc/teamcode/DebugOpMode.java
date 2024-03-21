@@ -54,7 +54,7 @@ public class DebugOpMode extends LinearOpMode {
     int openedXTimes = 0, clicks = 0;
     boolean retract = false,  goToMid = false, intakeMid = true, canIntake = true, startedDelayTransfer = false, heldExtension = false, firstReleaseThreeTimer = true;
     boolean override = false, had2Pixels = false, hang = false, resetRightTrigger = true, closeClaw = false, wasClosed = false, firstExtend = true, XPressed = false;
-    boolean overrideIntakeExtension = false, secondHalf = false, endGame = false, movedStack = false, outtakeToOuttake = true, firstReleaseThree = true;
+    boolean overrideIntakeExtension = false, secondHalf = false, endGame = false, movedStack = false, outtakeToOuttake = true, firstReleaseThree = true, firstOuttake = true;
 
     public enum IntakeState {
         RETRACT,
@@ -674,6 +674,12 @@ public class DebugOpMode extends LinearOpMode {
                 }
                 break;
             case EXTRACT:
+
+                if(firstOuttake)
+                {
+                    claw.setBothClaw(Claw.ClawState.CLOSED);
+                    firstOuttake = false;
+                }
                 canIntake = false;
                 intakeState = IntakeState.RETRACT;
 
@@ -743,6 +749,8 @@ public class DebugOpMode extends LinearOpMode {
                     elevatorTargetRight = elevator.getTargetRight() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
                     elevatorTargetLeft = elevator.getTargetLeft() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
                     openedXTimes++;
+
+                    firstOuttake = true;
 
                     elevatorReset = getTime();
                     retract = true;
