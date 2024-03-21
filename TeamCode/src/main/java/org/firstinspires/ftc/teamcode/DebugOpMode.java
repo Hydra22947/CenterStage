@@ -650,6 +650,7 @@ public class DebugOpMode extends LinearOpMode {
     {
         switch (liftState) {
             case RETRACT:
+                firstOuttake = true;
                 elevator.setTarget(0);
                 outtake.setAngle(Outtake.Angle.INTAKE);
 
@@ -749,8 +750,6 @@ public class DebugOpMode extends LinearOpMode {
                     elevatorTargetRight = elevator.getTargetRight() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
                     elevatorTargetLeft = elevator.getTargetLeft() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
                     openedXTimes++;
-
-                    firstOuttake = true;
 
                     elevatorReset = getTime();
                     retract = true;
