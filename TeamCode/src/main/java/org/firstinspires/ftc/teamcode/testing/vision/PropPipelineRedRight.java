@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.testing.vision;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 
-import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
@@ -19,23 +16,22 @@ import org.openftc.easyopencv.OpenCvPipeline;
 public class PropPipelineRedRight extends OpenCvPipeline {
 
     // blue , not seeing the right line
-    public static int rightX = 450, rightY = 40;
-    public static int centerX = 0, centerY = 50;
+    public static int rightX = 440, rightY = 50;
+    public static int centerX = 0, centerY = 80;
 
     double avgRight = 0, avgCenter = 0;
     // red, not seeing the left line
 
-    public static double NO_PROP_CENTER = 100;
-    public static double NO_PROP_RIGHT = 100;
+    public static double MIN_PIXELS = 1500;
 
 
-    public static int widthRight = 175, heightRight = 190;
-    public static int widthCenter = 350, heightCenter = 180;
+    public static int widthRight = 160, heightRight = 160;
+    public static int widthCenter = 150, heightCenter = 130;
 
-    public static int redMinH = 115;
-    public static int redMinS = 0;
-    public static int redMinV = 0;
-    public static int redMaxH = 130;
+    public static int redMinH = 120;
+    public static int redMinS = 120;
+    public static int redMinV = 70;
+    public static int redMaxH = 150;
     public static int redMaxS = 255;
     public static int redMaxV = 255;
     public static int idkNumber = 10;
@@ -71,33 +67,31 @@ public class PropPipelineRedRight extends OpenCvPipeline {
         // Perform bitwise AND operation to isolate blue regions in the input image
         Imgproc.morphologyEx(workingMatrix, workingMatrix, Imgproc.MORPH_OPEN, kernel);
         Imgproc.morphologyEx(workingMatrix, workingMatrix, Imgproc.MORPH_CLOSE, kernel);
-        workingMatrix.copyTo(returnMatrix);
-        Core.bitwise_and(input, input, workingMatrix);
 
-        // TODO: remove bitwise, and get returnMatrix and add the left center and that i will count the white
         // Define regions of interest
-        Mat matLeft = workingMatrix.submat(rightY, heightRight + rightY, rightX, rightX + widthRight);
+        Mat matRight = workingMatrix.submat(rightY, heightRight + rightY, rightX, rightX + widthRight);
         Mat matCenter = workingMatrix.submat(centerY, heightCenter + centerY, centerX, centerX + widthCenter);
 
         // Draw rectangles around regions of interest
-        Imgproc.rectangle(workingMatrix, new Rect(rightX, rightY, widthRight, heightRight), new Scalar(0, 255, 0));
-        Imgproc.rectangle(workingMatrix, new Rect(centerX, centerY, widthCenter, heightCenter), new Scalar(0, 255, 0));
+        Imgproc.rectangle(workingMatrix, new Rect(rightX, rightY, widthRight, heightRight), new Scalar(255, 255, 255));
+        Imgproc.rectangle(workingMatrix, new Rect(centerX, centerY, widthCenter, heightCenter), new Scalar(255, 255, 255));
 
         // Calculate the average intensity of blue color in each region
-        avgRight = Core.mean(matLeft).val[2];
-        avgCenter = Core.mean(matCenter).val[2];
-
+        avgRight = Core.countNonZero(matRight);
+        avgCenter = Core.countNonZero(matCenter);
 
         // Find the region with the maximum average blue intensity
-        if(avgRight > NO_PROP_RIGHT && avgCenter > NO_PROP_CENTER)
+        if(avgRight < MIN_PIXELS && avgCenter < MIN_PIXELS)
         {
             location = Location.Left;
         }
-        else if (avgRight < NO_PROP_RIGHT) {
-            location = Location.Center;
-        } else if (avgCenter < NO_PROP_CENTER) {
+        else if (avgRight > MIN_PIXELS && avgRight > avgCenter) {
             location = Location.Right;
+        } else if (avgCenter > MIN_PIXELS && avgCenter > avgRight) {
+            location = Location.Center;
         }
+
+        workingMatrix.copyTo(returnMatrix);
 
         return returnMatrix;
     }
@@ -120,11 +114,11 @@ public class PropPipelineRedRight extends OpenCvPipeline {
         return location;
     }
 
-    public static void setNoProp(double noProp) {
-        NO_PROP_CENTER = noProp;
+    public static void setMinPixels(double noProp) {
+        MIN_PIXELS = noProp;
     }
 
-    public static double getNoProp() {
-        return NO_PROP_CENTER;
+    public static double getMinPixels() {
+        return MIN_PIXELS;
     }
 }

@@ -9,18 +9,23 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Arclength;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Pose2dDual;
+import com.acmerobotics.roadrunner.PosePath;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
+import org.firstinspires.ftc.teamcode.auto.Actions.FailSafes.CheckAprilTagAction;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
@@ -30,10 +35,11 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
+import org.jetbrains.annotations.NotNull;
 
 @Config
-@Autonomous(name = "2+2 - Auto Blue Left")
-public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
+@Autonomous(name = "2+4 - Auto Blue Left")
+public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 
@@ -281,16 +287,34 @@ public class AutoBlueLeftTwoPlusTwo extends LinearOpMode {
                 .waitSeconds(0.2)
                 .build();
 
-        Action goPlaceWhiteRIGHT_OR_TOP54 = robot.drive.actionBuilder(new Pose2d(-47.5, 44.5,Math.toRadians(15)))
-                .setTangent(Math.toRadians(90))
-                .afterTime(0,returnFixintake())
-                .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
-                .setTangent(Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(0))
-                .afterTime(0, depositSecondCycle)
-                .setTangent(Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(50.5, 40), Math.toRadians(0))
-                .build();
+        VelConstraint baseVelConstraint = new VelConstraint() {
+            @Override
+            public double maxRobotVel(@NotNull Pose2dDual<Arclength> pose2dDual, @NotNull PosePath posePath, double v) {
+                if (pose2dDual.position.x.value() > 32 && pose2dDual.position.x.value() < 35) {
+                    return 5;
+                } else {
+                    return 50.0;
+                }
+            }
+        };
+
+        Action goPlaceWhiteRIGHT_OR_TOP54 = new CheckAprilTagAction(
+                        robot.drive.actionBuilder(new Pose2d(-47.5,44.5,Math.toRadians(15)))
+                                .setTangent(Math.toRadians(90))
+                                .afterTime(0,returnFixintake())
+                                .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
+                                .setTangent(Math.toRadians(0))
+                                .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(0))
+                                .afterTime(0, new ParallelAction(depositSecondCycle,
+                                        new InstantAction(() -> CheckAprilTagAction.turnOnDetection())))
+                                .setTangent(Math.toRadians(0))
+                                .splineToSplineHeading(new Pose2d(50.5, 40, Math.toRadians(0)), Math.toRadians(20), baseVelConstraint).build(),
+                        new SequentialAction(robot.drive.actionBuilder(robot.drive.pose)
+                                .strafeToLinearHeading(new Vector2d(50.5, 60), Math.toRadians(-90)).build(),
+                                new InstantAction(() -> depositActions.retractDeposit()),
+                                new SleepAction(1),
+                                new InstantAction(() -> requestOpModeStop()))
+                );
 
         Action goPlaceWhiteRIGHT_OR_TOP32 = robot.drive.actionBuilder(new Pose2d(-48.5, 44.4,Math.toRadians(15)))
                 .setTangent(Math.toRadians(90))

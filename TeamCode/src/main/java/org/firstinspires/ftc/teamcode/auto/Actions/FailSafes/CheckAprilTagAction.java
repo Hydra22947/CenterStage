@@ -4,12 +4,14 @@ import android.util.Size;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.util.RobotLog;
 
+import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -24,20 +26,26 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.openftc.easyopencv.OpenCvCamera;
 
 import java.util.List;
+import java.util.Timer;
 
+@Config
 public class CheckAprilTagAction implements Action {
 
     RobotHardware robot = RobotHardware.getInstance();
     AprilTagProcessor aprilTag;
     VisionPortal visionPortal;
-    private Action mainAction, continueAction;
+    private Action mainAction, stopAction;
     boolean found = false;
+    static boolean detect = false;
+    static double detectTime = 0;
+    public double detectDelay = 1;
 
-    public CheckAprilTagAction(Action mainAction, Action continueAction) {
+    public CheckAprilTagAction(Action mainAction, Action stopAction) {
         initCamera();
+        detect = false;
 
         this.mainAction = mainAction;
-        this.continueAction = continueAction;
+        this.stopAction = stopAction;
     }
 
     void initCamera() {
@@ -93,16 +101,26 @@ public class CheckAprilTagAction implements Action {
         return new StopAction();
     }
 
+    public static void turnOnDetection()
+    {
+        detect = true;
+        detectTime = System.currentTimeMillis();
+    }
+
+
     @Override
     public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-        if (aprilTag.getDetections().size() > 1 || found)
+        if((detect && (((System.currentTimeMillis() - detectTime) / 1000) >= detectDelay) && aprilTag.getDetections().size() > 1) || found)
         {
             found = true;
-            return this.continueAction.run(telemetryPacket);
+            return this.mainAction.run(telemetryPacket);
         }
+        else if(!found && (detect && (((System.currentTimeMillis() - detectTime) / 1000) >= detectDelay)))
+        {
+            return stopAction.run(telemetryPacket);
 
+        }
         reportDetections(aprilTag.getDetections(), telemetryPacket);
-
         return mainAction.run(telemetryPacket);
     }
 

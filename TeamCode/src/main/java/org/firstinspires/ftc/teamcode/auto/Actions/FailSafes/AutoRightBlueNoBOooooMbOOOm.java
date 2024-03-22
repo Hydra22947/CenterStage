@@ -147,7 +147,7 @@ public class AutoRightBlueNoBOooooMbOOOm extends LinearOpMode {
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addData("POS", propPipelineBlueRight.getLocation());
-            telemetry.addData("NO PROP", propPipelineBlueRight.NO_PROP);
+//            telemetry.addData("NO PROP", propPipelineBlueRight.NO_PROP);
 
             telemetry.addLine("Initialized");
             telemetry.update();

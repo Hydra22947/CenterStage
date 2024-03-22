@@ -375,7 +375,7 @@ public class AutoLeftRed extends LinearOpMode {
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addData("POS", propPipelineRedLeft.getLocation());
-            telemetry.addData("NO PROP", propPipelineRedLeft.NO_PROP);
+//            telemetry.addData("NO PROP", propPipelineRedLeft.MIN_PIXELS);
            switch (propPipelineRedLeft.getLocation()) {
                 case Left:
                     propLocation = PropLocation.LEFT;
@@ -390,11 +390,11 @@ public class AutoLeftRed extends LinearOpMode {
 
             if(betterGamepad2.dpadUpOnce())
             {
-                propPipelineRedLeft.NO_PROP++;
+//                propPipelineRedLeft.NO_PROP++;
             }
             else if(betterGamepad2.dpadDownOnce())
             {
-                propPipelineRedLeft.NO_PROP--;
+//                propPipelineRedLeft.NO_PROP--;
             }
 
             telemetry.addLine("Initialized");

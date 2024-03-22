@@ -120,16 +120,16 @@ public class VisionTest extends LinearOpMode{
                 switch (sideColor)
                 {
                     case BLUE_LEFT:
-                        propPipelineBlueLeft.setNoProp(propPipelineBlueLeft.getNoProp() + 1);
+                        propPipelineBlueLeft.setMinPixels(propPipelineBlueLeft.getMinPixels() + 1);
                         break;
                     case BLUE_RIGHT:
-                        propPipelineBlueRight.setNoProp(propPipelineBlueRight.getNoProp() + 1);
+                        propPipelineBlueRight.setMinPixels(propPipelineBlueRight.getMinPixels() + 1);
                         break;
                     case RED_LEFT:
-                        propPipelineRedLeft.setNoProp(propPipelineRedLeft.getNoProp() + 1);
+                        propPipelineRedLeft.setMinPixels(propPipelineRedLeft.getMinPixels() + 1);
                         break;
                     case RED_RIGHT:
-                        propPipelineRedRight.setNoProp(propPipelineRedRight.getNoProp() + 1);
+                        propPipelineRedRight.setMinPixels(propPipelineRedRight.getMinPixels() + 1);
                         break;
                 }
             }
@@ -139,16 +139,16 @@ public class VisionTest extends LinearOpMode{
                 switch (sideColor)
                 {
                     case BLUE_LEFT:
-                        propPipelineBlueLeft.setNoProp(propPipelineBlueLeft.getNoProp() - 1);
+                        propPipelineBlueLeft.setMinPixels(propPipelineBlueLeft.getMinPixels() - 1);
                         break;
                     case BLUE_RIGHT:
-                        propPipelineBlueRight.setNoProp(propPipelineBlueRight.getNoProp() - 1);
+                        propPipelineBlueRight.setMinPixels(propPipelineBlueRight.getMinPixels() - 1);
                         break;
                     case RED_LEFT:
-                        propPipelineRedLeft.setNoProp(propPipelineRedLeft.getNoProp() - 1);
+                        propPipelineRedLeft.setMinPixels(propPipelineRedLeft.getMinPixels() - 1);
                         break;
                     case RED_RIGHT:
-                        propPipelineRedRight.setNoProp(propPipelineRedRight.getNoProp() - 1);
+                        propPipelineRedRight.setMinPixels(propPipelineRedRight.getMinPixels() - 1);
                         break;
                 }
             }
@@ -157,6 +157,8 @@ public class VisionTest extends LinearOpMode{
         }
 
         waitForStart();
+
+        webcam.stopStreaming();
 
     }
 
