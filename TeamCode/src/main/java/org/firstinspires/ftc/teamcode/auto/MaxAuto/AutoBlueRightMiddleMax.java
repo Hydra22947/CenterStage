@@ -159,7 +159,7 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 0),
                 new SleepAction(1),
                 depositActions.moveElevator(1300),
-                new SleepAction(.5),
+                new SleepAction(.3),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1500),
 
                 new SleepAction(.5),
@@ -172,15 +172,12 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
                 intakeActions.moveIntake(Intake.Angle.TELEOP_MID),
                 new SleepAction(.5),
                 depositActions.readyForDeposit(tempHeight));
-        SequentialAction retractDeposit = new SequentialAction(
-                depositActions.retractDeposit()
-        );
 
 
         SequentialAction deposit43Action = new SequentialAction(
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
 
-                new SleepAction(0.5),
+                new SleepAction(0.3),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
 
                 new SleepAction(0.4),
@@ -198,13 +195,11 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(-48, 41, Math.toRadians(0)), Math.toRadians(-90))
                 .splineToLinearHeading(new Pose2d(-46, 23, Math.toRadians(0)), Math.toRadians(180))
                 .afterTime(0, intake5OpenAction)
-
-                .waitSeconds(.25)
-
+                .waitSeconds(0.25)
                 .strafeToLinearHeading(new Vector2d(-53, 23), Math.toRadians(0))
                 .stopAndAdd(intake5CloseAction)
                 .strafeToLinearHeading(new Vector2d(-48, 23), Math.toRadians(0))
-                .strafeToLinearHeading(new Vector2d(-44.25, 10), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-42, 10), Math.toRadians(0))
 
 
                 .build();
@@ -214,23 +209,21 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
                 //deposit
                 .afterTime(1.5, readyForDepositAction)
                 .afterTime(0, returnFixintake())
-                .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(0))
-
-                .splineToLinearHeading(new Pose2d(54, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .setTangent(0)
+                .splineToConstantHeading(new Vector2d(40, 10), Math.toRadians(0))
                 .afterTime(0, depositAction)
 
-                .strafeToLinearHeading(new Vector2d(54, 34.5), Math.toRadians(0))
-
+                .setTangent(0)
+                .splineToConstantHeading(new Vector2d(54, 34.5), Math.toRadians(0))
 
                 .build();
 
-        Action intake43Traj = robot.drive.actionBuilder(new Pose2d(54, 34, Math.toRadians(0)))
+        Action intake43Traj = robot.drive.actionBuilder(new Pose2d(54, 34.5, Math.toRadians(0)))
                 .setTangent(Math.toRadians(-180))
-                .afterTime(1, intake43OpenAction)
+                .afterTime(1.25, intake43OpenAction)
                 .splineToConstantHeading(new Vector2d(24, 10.5), Math.toRadians(180))
                 .strafeToLinearHeading(new Vector2d(-20, 10.5), Math.toRadians(0))
                 .strafeToLinearHeading(new Vector2d(-28.5, 10.5), Math.toRadians(0))
-                .waitSeconds(.25)
                 .strafeToLinearHeading(new Vector2d(-32, 10.5), Math.toRadians(0))
 
                 .stopAndAdd(intake43CloseAction)
