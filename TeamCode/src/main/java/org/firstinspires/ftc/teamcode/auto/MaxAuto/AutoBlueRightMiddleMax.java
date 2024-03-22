@@ -177,7 +177,7 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
         SequentialAction deposit43Action = new SequentialAction(
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
 
-                new SleepAction(0.3),
+                new SleepAction(0.7),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
 
                 new SleepAction(0.4),
@@ -223,8 +223,7 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
                 .afterTime(1.25, intake43OpenAction)
                 .splineToConstantHeading(new Vector2d(24, 10.5), Math.toRadians(180))
                 .strafeToLinearHeading(new Vector2d(-20, 10.5), Math.toRadians(0))
-                .strafeToLinearHeading(new Vector2d(-28.5, 10.5), Math.toRadians(0))
-                .strafeToLinearHeading(new Vector2d(-32, 10.5), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-36.5, 10.5), Math.toRadians(0))
 
                 .stopAndAdd(intake43CloseAction)
 

@@ -19,7 +19,7 @@ public class Plane  {
     public PlaneState state = PlaneState.LOADED;
 
     // LOOK FORM INTAKE
-    public static double shot = 0.6, loaded = .1;
+    public static double shot = 0.5, loaded = .2;
 
     public Plane() {
 
