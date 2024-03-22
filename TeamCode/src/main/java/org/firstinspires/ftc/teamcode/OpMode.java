@@ -103,7 +103,7 @@ public class OpMode extends LinearOpMode {
         robot.init(hardwareMap, telemetry);
 
         drivetrain = new Drivetrain(gamepad1, true);
-        elevator = new Elevator(gamepad2, false, true);
+        elevator = new Elevator(gamepad2, false, false);
         outtake = new Outtake();
         claw = new Claw();
         intake = new Intake();

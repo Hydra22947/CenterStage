@@ -103,7 +103,7 @@ public class DebugOpMode extends LinearOpMode {
         robot.init(hardwareMap, telemetry);
 
         drivetrain = new Drivetrain(gamepad1, true);
-        elevator = new Elevator(gamepad2, true, true);
+        elevator = new Elevator(gamepad2, true, false);
         outtake = new Outtake();
         claw = new Claw();
         intake = new Intake();

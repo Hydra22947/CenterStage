@@ -124,9 +124,8 @@ public class AutoBlueRightLeftMax extends LinearOpMode {
         SequentialAction intake43OpenAction = new SequentialAction(
                 new SleepAction(1.5),
 
-                intakeActions.moveIntake(Intake.Angle.TOP_54),
+                intakeActions.moveIntake(Intake.Angle.TOP_54_AUTO),
                 intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
-                new SleepAction(.5),
                 intakeActions.openExtension(900)
         );
 
@@ -142,7 +141,7 @@ public class AutoBlueRightLeftMax extends LinearOpMode {
                         intakeActions.openExtension(-30)
                 ),
                 new SleepAction(0.25),
-                intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
+                intakeActions.moveClaw(Claw.ClawState.INTAKE, ClawSide.BOTH),
                 new SleepAction(.25),
                 intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
                 new SleepAction(0.5),
@@ -157,7 +156,7 @@ public class AutoBlueRightLeftMax extends LinearOpMode {
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 0),
                 new SleepAction(1),
                 depositActions.moveElevator(1400),
-                new SleepAction(1.7),
+                new SleepAction(.5),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1500),
 
                 new SleepAction(1),
@@ -185,13 +184,13 @@ public class AutoBlueRightLeftMax extends LinearOpMode {
         //Trajectories
 
         Action placePurpleTraj = robot.drive.actionBuilder(robot.drive.pose)
-                .strafeToLinearHeading(new Vector2d(-31.5, 37.5), Math.toRadians(-40))
+                .strafeToLinearHeading(new Vector2d(-30, 37.5), Math.toRadians(-40))
                 .build();
 
         Action intake5Traj = robot.drive.actionBuilder(new Pose2d(-37.5, 37.5, Math.toRadians(-40)))
 
                 .setTangent(-180)
-                .splineToSplineHeading(new Pose2d(-48, 41, Math.toRadians(0)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(-46, 41, Math.toRadians(0)), Math.toRadians(-90))
                 .splineToLinearHeading(new Pose2d(-46, 23, Math.toRadians(0)), Math.toRadians(180))
                 .afterTime(0, intake5OpenAction)
                 .waitSeconds(0.25)
@@ -211,7 +210,7 @@ public class AutoBlueRightLeftMax extends LinearOpMode {
                 .afterTime(0, returnFixintake())
                 .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(0))
 
-                .splineToLinearHeading(new Pose2d(54, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .splineToLinearHeading(new Pose2d(54, 38, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .afterTime(0, depositAction)
 
                 .strafeToLinearHeading(new Vector2d(54, 42), Math.toRadians(0))
@@ -222,9 +221,9 @@ public class AutoBlueRightLeftMax extends LinearOpMode {
         Action intake43Traj = robot.drive.actionBuilder(new Pose2d(54, 34, Math.toRadians(0)))
                 .setTangent(Math.toRadians(-180))
                 .afterTime(.75, intake43OpenAction)
-                .splineToConstantHeading(new Vector2d(24, 10.5), Math.toRadians(180))
-                .strafeToLinearHeading(new Vector2d(-20, 10.5), Math.toRadians(0))
-                .strafeToLinearHeading(new Vector2d(-34, 10.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(24, 10), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(-20, 10), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-32.75, 10), Math.toRadians(0))
 
                 .stopAndAdd(intake43CloseAction)
 
@@ -237,7 +236,7 @@ public class AutoBlueRightLeftMax extends LinearOpMode {
                 .afterTime(1.5, updateElevatorHeight(1700))
 
                 .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(52.5, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .splineToLinearHeading(new Pose2d(52.5, 30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .afterTime(0, deposit43Action)
                 .build();
 

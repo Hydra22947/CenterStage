@@ -165,26 +165,22 @@ public class Elevator implements Subsystem
 
             }
         }
-        else
-        {
-            firstPID();
-        }
     }
 
-    void firstPID()
-    {
-        elevatorMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        elevatorMotorRight.setTargetPosition((int)currentTargetRight);
-        elevatorMotorLeft.setTargetPosition((int)currentTargetLeft);
-
-        elevatorMotorRight.setPower(1);
-        elevatorMotorLeft.setPower(1);
-
-        elevatorMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
+//    void firstPID()
+//    {
+//        elevatorMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        elevatorMotorRight.setTargetPosition((int)currentTargetRight);
+//        elevatorMotorLeft.setTargetPosition((int)currentTargetLeft);
+//
+//        elevatorMotorRight.setPower(1);
+//        elevatorMotorLeft.setPower(1);
+//
+//        elevatorMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        elevatorMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//    }
     public void setPidControl()
     {
         controllerR.updateError(currentTargetRight - elevatorMotorRight.getCurrentPosition());
