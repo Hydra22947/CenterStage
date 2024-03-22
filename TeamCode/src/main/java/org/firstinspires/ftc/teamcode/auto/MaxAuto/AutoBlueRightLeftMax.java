@@ -124,7 +124,7 @@ public class AutoBlueRightLeftMax extends LinearOpMode {
         SequentialAction intake43OpenAction = new SequentialAction(
                 new SleepAction(1.5),
 
-                intakeActions.moveIntake(Intake.Angle.TOP_54_AUTO),
+                intakeActions.moveIntake(Intake.Angle.TOP_54),
                 intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
                 intakeActions.openExtension(900)
         );
@@ -165,7 +165,6 @@ public class AutoBlueRightLeftMax extends LinearOpMode {
         );
 
         readyForDepositAction = new SequentialAction(
-                //       new SleepAction(1),
                 intakeActions.moveIntake(Intake.Angle.TELEOP_MID),
                 new SleepAction(.75),
                 depositActions.readyForDeposit(tempHeight));
@@ -231,7 +230,7 @@ public class AutoBlueRightLeftMax extends LinearOpMode {
 
 
         Action deposit43Traj = robot.drive.actionBuilder(new Pose2d(-32.5, 10.5, Math.toRadians(0)))
-                
+
                 .afterTime(0, returnFixintake())
                 .afterTime(1.5, updateElevatorHeight(1700))
 
