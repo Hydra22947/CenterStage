@@ -172,6 +172,11 @@ public class OpMode extends LinearOpMode {
                 outtakeToOuttake = !outtakeToOuttake;
             }
 
+            if(gamepad2.left_trigger != 0 || gamepad1.left_trigger != 0)
+            {
+                drivetrain.superSlow();
+            }
+
 
             if (liftState != LiftState.EXTRACT && gamepad2.left_stick_y != 0 && !overrideIntakeExtension) {
                 intakeExtension.setUsePID(false);
@@ -446,7 +451,6 @@ public class OpMode extends LinearOpMode {
             case INTAKE_EXTEND:
                 moveIntake();
                 heldExtension = true;
-                drivetrain.slow();
 
                 if(firstReleaseThreeTimer)
                 {
@@ -700,8 +704,6 @@ public class OpMode extends LinearOpMode {
                 if ((getTime() - previousElevator) >= WAIT_DELAY_TILL_OUTTAKE) {
                     moveOuttake();
                 }
-
-                drivetrain.slow();
 
                 if(betterGamepad1.dpadRightOnce())
                 {

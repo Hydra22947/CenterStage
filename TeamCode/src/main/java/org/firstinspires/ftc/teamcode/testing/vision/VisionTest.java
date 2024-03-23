@@ -95,62 +95,16 @@ public class VisionTest extends LinearOpMode{
             {
                 case BLUE_LEFT:
                     telemetry.addData("POS", propPipelineBlueLeft.location.toString());
-                    telemetry.addData("LEFT", propPipelineBlueLeft.getAvgLeft());
-                    telemetry.addData("CENTER", propPipelineBlueLeft.getAvgCenter());
                     break;
                 case BLUE_RIGHT:
                     telemetry.addData("POS", propPipelineBlueRight.location.toString());
-                    telemetry.addData("RIGHT", propPipelineBlueRight.getAvgRight());
-                    telemetry.addData("CENTER", propPipelineBlueRight.getAvgCenter());
                     break;
                 case RED_LEFT:
                     telemetry.addData("POS", propPipelineRedLeft.location.toString());
-                    telemetry.addData("LEFT", propPipelineRedLeft.getAvgLeft());
-                    telemetry.addData("CENTER", propPipelineRedLeft.getAvgCenter());
                     break;
                 case RED_RIGHT:
                     telemetry.addData("POS", propPipelineRedRight.location.toString());
-                    telemetry.addData("RIGHT", propPipelineRedRight.getAvgRight());
-                    telemetry.addData("CENTER", propPipelineRedRight.getAvgCenter());
                     break;
-            }
-
-            if(gamepad.dpadUpOnce())
-            {
-                switch (sideColor)
-                {
-                    case BLUE_LEFT:
-                        propPipelineBlueLeft.setMinPixels(propPipelineBlueLeft.getMinPixels() + 1);
-                        break;
-                    case BLUE_RIGHT:
-                        propPipelineBlueRight.setMinPixels(propPipelineBlueRight.getMinPixels() + 1);
-                        break;
-                    case RED_LEFT:
-                        propPipelineRedLeft.setMinPixels(propPipelineRedLeft.getMinPixels() + 1);
-                        break;
-                    case RED_RIGHT:
-                        propPipelineRedRight.setMinPixels(propPipelineRedRight.getMinPixels() + 1);
-                        break;
-                }
-            }
-
-            if(gamepad.dpadDownOnce())
-            {
-                switch (sideColor)
-                {
-                    case BLUE_LEFT:
-                        propPipelineBlueLeft.setMinPixels(propPipelineBlueLeft.getMinPixels() - 1);
-                        break;
-                    case BLUE_RIGHT:
-                        propPipelineBlueRight.setMinPixels(propPipelineBlueRight.getMinPixels() - 1);
-                        break;
-                    case RED_LEFT:
-                        propPipelineRedLeft.setMinPixels(propPipelineRedLeft.getMinPixels() - 1);
-                        break;
-                    case RED_RIGHT:
-                        propPipelineRedRight.setMinPixels(propPipelineRedRight.getMinPixels() - 1);
-                        break;
-                }
             }
 
             telemetry.update();

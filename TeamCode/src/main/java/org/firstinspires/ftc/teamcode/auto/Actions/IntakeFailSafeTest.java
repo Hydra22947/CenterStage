@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.Actions.FailSafes;
+package org.firstinspires.ftc.teamcode.auto.Actions;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
 import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.writeToFile;
@@ -16,6 +16,7 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -40,6 +41,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous(name = "intakeFailSafeTest")
+@Disabled
 public class IntakeFailSafeTest extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();

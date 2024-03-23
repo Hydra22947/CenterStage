@@ -102,23 +102,8 @@ public class PropPipelineRedLeft extends OpenCvPipeline {
 
     }
 
-    public double getAvgLeft() {
-        return avgLeft;
-    }
-
-    public double getAvgCenter() {
-        return avgCenter;
-    }
-
     public Location getLocation() {
         return location;
     }
 
-    public static void setMinPixels(double noProp) {
-        MIN_PIXELS = noProp;
-    }
-
-    public static double getMinPixels() {
-        return MIN_PIXELS;
-    }
 }
