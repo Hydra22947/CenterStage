@@ -17,11 +17,10 @@ public class Drivetrain{
     private BetterGamepad _cGamepad1;
 
     private final RobotHardware robot;
-    Vector2d input;
     public static double maxPower = 1;
     public static double slowerSpin = 0.5;
     public double power = 0, twist = 0;
-    boolean slow = false;
+    double botHeading = 0, y = 0, x = 0, rotY = 0, rotX = 0;
 
     //Constructor
     public Drivetrain(Gamepad gamepad1, boolean blueAlliance)
@@ -41,19 +40,19 @@ public class Drivetrain{
     public void update() {
         _cGamepad1.update();
 
-        double y = Range.clip(-_cGamepad1.left_stick_y, -power, power); // Remember, Y stick value is reversed
-        double x = Range.clip(_cGamepad1.left_stick_x, -power, power);
+        y = Range.clip(-_cGamepad1.left_stick_y, -power, power); // Remember, Y stick value is reversed
+        x = Range.clip(_cGamepad1.left_stick_x, -power, power);
         twist = Range.clip(_cGamepad1.right_stick_x, -power * slowerSpin, power * slowerSpin);
 
         if (_cGamepad1.XOnce()) {
             robot.imu.resetYaw();
         }
 
-        double botHeading = robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        botHeading = robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + robot.getImuOffset();
 
         // Rotate the movement direction counter to the bot's rotation
-        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+        rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+        rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
         rotX = rotX * 1.1;  // Counteract imperfect strafing
 

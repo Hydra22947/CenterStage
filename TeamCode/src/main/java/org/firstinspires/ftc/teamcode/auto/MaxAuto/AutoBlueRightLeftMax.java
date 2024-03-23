@@ -133,14 +133,14 @@ public class AutoBlueRightLeftMax extends LinearOpMode {
                 intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.2),
                 intakeActions.moveStack(),
-
                 new SleepAction(.5),
                 new ParallelAction(
-                        intakeActions.openExtension(-30),
+                        intakeActions.moveIntake(Intake.Angle.OUTTAKE),
 
                         new SequentialAction(
                                 new SleepAction(0.3),
-                                intakeActions.moveIntake(Intake.Angle.OUTTAKE)
+                                intakeActions.openExtension(-30)
+
 
                                 )
 
@@ -195,7 +195,7 @@ public class AutoBlueRightLeftMax extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-36, 23, Math.toRadians(0)), Math.toRadians(180))
                 .strafeToLinearHeading(new Vector2d(-46, 23), Math.toRadians(0))
                 .stopAndAdd(intake5OpenAction)
-                .strafeToLinearHeading(new Vector2d(-54, 23), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-54, 23.5), Math.toRadians(0))
                 .stopAndAdd(intake5CloseAction)
                 .splineToLinearHeading(new Pose2d(-42, 10, Math.toRadians(0)), Math.toRadians(0))
 
@@ -206,10 +206,10 @@ public class AutoBlueRightLeftMax extends LinearOpMode {
 
 
                 //deposit
-                .afterTime(0, returnFixintakeTop43())
 
-                .afterTime(.75, readyForDepositAction)
+                .afterTime(1, readyForDepositAction)
                 .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(0))
+                .afterTime(0, returnFixintake5())
 
                 .splineToLinearHeading(new Pose2d(52, 35, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .afterTime(0, depositAction)
@@ -224,9 +224,9 @@ public class AutoBlueRightLeftMax extends LinearOpMode {
 
                 .afterTime(.5, intake43OpenAction)
 
-                .strafeToLinearHeading(new Vector2d(-30, 11), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-30, 11.25), Math.toRadians(0))
 
-                .strafeToLinearHeading(new Vector2d(-45, 11), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-45, 11.25), Math.toRadians(0))
 
                 .stopAndAdd(intake43CloseAction)
 

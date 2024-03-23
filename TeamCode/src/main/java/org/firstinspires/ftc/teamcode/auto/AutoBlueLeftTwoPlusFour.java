@@ -25,7 +25,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
-import org.firstinspires.ftc.teamcode.auto.Actions.FailSafes.CheckAprilTagAction;
+import org.firstinspires.ftc.teamcode.auto.Actions.CheckAprilTagAction;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
