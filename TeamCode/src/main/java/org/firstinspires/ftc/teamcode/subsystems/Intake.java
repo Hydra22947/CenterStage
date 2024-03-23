@@ -12,14 +12,14 @@ import org.jetbrains.annotations.NotNull;
 public class Intake implements Subsystem{
 
     private final RobotHardware robot;
-    public static double intakeHandPivot = 0.195, intakeAmmoPivot = 0.125;
+    public static double intakeHandPivot = 0.195, intakeAmmoPivot = 0.13;
     public static double outtakeHandPivot = 0.65, outtakeAmmoPivot = .66; // פורק מהשאיבה הזוויות-מתוקן
     public static double midHandPivot = 0.67, midAmmoPivot = 0.4;
     public static double midTeleOpHandPivot = 0.5, midTeleopAmmoPivot = 0.65;
     public static double top5HandPivot = .31, top5AmmoPivot = 0.13;
-    public static double top5HandPivotAuto = 0.31, top5AmmoPivotAuto = 0.13; //auto ערימה של אוטונומי רק ה5
+    public static double top5HandPivotAuto = 0.315, top5AmmoPivotAuto = 0.13; //auto ערימה של אוטונומי רק ה5
     public static double top54HandPivot = 0.295, top54AmmoPivot = 0.125; // ערימה של 54
-    public static double top54HandPivotAuto = 0.285, top54AmmoPivotAuto = 0.095;
+    public static double top54HandPivotAuto = 0.28, top54AmmoPivotAuto = 0.095;
     public static double top43HandPivot = 0.29, top43AmmoPivot = 0.12; // auto
     public static double top32HandPivot = 0.235, top32AmmoPivot = 0.13; // ערימה של 32
     public static double top32HandPivotAuto = 0.18, top32AmmoPivotAuto = 0.025;
@@ -32,10 +32,10 @@ public class Intake implements Subsystem{
     public static double clickOffset = 0.1;
     double OFFSET_AMMO = 0;
 
-    public static double openRight = 0.55, openLeft = 0.45; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double openRight = 0.535, openLeft = 0.435; // סרבואים של תפיסה של שאיבה שהם פתוחים
     public static double closeRight = .75, closeLeft = 0.67; // סרבואים של תפיסה של שאיבה שהם פתוחים
     public static double superCloseRight = .81, superCloseLeft = 0.735; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double indeterminateRight = 0.66, indeterminateLeft = 0.57; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double indeterminateRight = 0.645, indeterminateLeft = 0.555; // סרבואים של תפיסה של שאיבה שהם פתוחים
 
     public static double closeCauseWallRight;
     public static double closeCauseWallLeft;

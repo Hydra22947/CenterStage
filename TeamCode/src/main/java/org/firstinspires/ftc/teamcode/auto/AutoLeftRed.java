@@ -271,7 +271,7 @@ public class AutoLeftRed extends LinearOpMode {
                         .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-44.25, -10), Math.toRadians(0))
 
-                        .waitSeconds(9.5)
+                        .waitSeconds(10)
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, -8.5), Math.toRadians(0))
