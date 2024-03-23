@@ -68,14 +68,14 @@ public class Drivetrain{
         robot.imu.resetYaw();
 
         // check if we are blue/red alliance and set zero angle - For centric drive
-        if(!blueAlliance)
-        {
-            robot.setImuOffset(-Math.PI);
-        }
-        else if(blueAlliance)
-        {
-            robot.setImuOffset(Math.PI);
-        }
+//        if(!blueAlliance)
+//        {
+//            robot.setImuOffset(-Math.PI);
+//        }
+//        else if(blueAlliance)
+//        {
+//            robot.setImuOffset(Math.PI);
+//        }
     }
 
 
