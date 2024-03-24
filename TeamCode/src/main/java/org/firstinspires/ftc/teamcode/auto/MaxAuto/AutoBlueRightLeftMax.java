@@ -224,13 +224,13 @@ public class AutoBlueRightLeftMax extends LinearOpMode {
 
                 .afterTime(0.6 ,intake43CloseAction)
                 .strafeToLinearHeading(new Vector2d(-44.5, 10), Math.toRadians(0))
-                .afterTime(0.7, pleaseFixIntake())
 
                 .build();
 
 
         Action deposit43Traj = robot.drive.actionBuilder(new Pose2d(-44.5, 9, Math.toRadians(0)))
 
+                .afterTime(0, pleaseFixIntake())
                 .afterTime(1.25, updateElevatorHeight(1700))
 
                 .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
