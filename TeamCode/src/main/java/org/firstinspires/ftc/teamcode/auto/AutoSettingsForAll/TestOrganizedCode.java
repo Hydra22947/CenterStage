@@ -9,6 +9,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -24,7 +25,7 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
 @Autonomous(name = "2+2 - Auto Blue Left MAX Organized Code")
-
+@Disabled
 public class TestOrganizedCode extends LinearOpMode {
 
         private final RobotHardware robot = RobotHardware.getInstance();

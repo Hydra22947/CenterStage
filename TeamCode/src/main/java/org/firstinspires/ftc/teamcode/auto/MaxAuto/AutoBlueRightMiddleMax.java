@@ -38,6 +38,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous(name = "2+3 - Auto Right Middle Blue MAX")
+
 public class AutoBlueRightMiddleMax extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
@@ -200,8 +201,6 @@ public class AutoBlueRightMiddleMax extends LinearOpMode {
                 .stopAndAdd(intake5CloseAction)
                 .strafeToLinearHeading(new Vector2d(-48, 23), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(-42, 10), Math.toRadians(0))
-
-
                 .build();
 
         Action depositPreloadTraj = robot.drive.actionBuilder(new Pose2d(-44.25, 10, Math.toRadians(0)))
