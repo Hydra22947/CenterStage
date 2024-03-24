@@ -250,8 +250,7 @@ public class AutoRightRed extends LinearOpMode {
             intake.setAngle(Intake.Angle.MID);
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
-            telemetry.addData("POS", propPipelineRedRight.getLocation());
-//            telemetry.addData("NO PROP", propPipelineRedRight.NO_PROP);
+            telemetry.addData("POS", propLocation.name());
 
             switch (propPipelineRedRight.getLocation()) {
                 case Left:

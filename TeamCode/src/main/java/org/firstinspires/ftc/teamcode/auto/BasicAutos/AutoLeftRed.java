@@ -319,7 +319,8 @@ public class AutoLeftRed extends LinearOpMode {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
-            telemetry.addData("POS", propPipelineRedLeft.getLocation());
+            telemetry.addData("POS", propLocation.name());
+            telemetry.addData("elevator pos", elevatorHeight);
 
            switch (propPipelineRedLeft.getLocation()) {
                 case Left:

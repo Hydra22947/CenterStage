@@ -45,11 +45,11 @@ public class DebugOpMode extends LinearOpMode {
 
     // delays
     public static double delayTransfer = 300, delayRelease = 750, delayCloseTransfer = 350, XDelay = 500;
-    public static double WAIT_DELAY_TILL_OUTTAKE = 150, WAIT_DELAY_TILL_CLOSE = 250, ELEVATOR_ZERO = 10;
+    public static double WAIT_DELAY_TILL_OUTTAKE = 150, WAIT_DELAY_TILL_CLOSE = 250, ELEVATOR_ZERO = 10, COOL_DOWN = 500;
     public static double DEFAULT_INTAKE_EXTEND_PRECENTAGE = 42.5, SHORT_INTAKE_EXTEND_PRECENTAGE = 25, delayReleaseFromIntake = 500;
     // variables
     double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
-    double elevatorTargetRight = 1300, intakePrecentage = DEFAULT_INTAKE_EXTEND_PRECENTAGE, releaseFromIntake = 0, startXDelay = 0;
+    double elevatorTargetRight = 1300, intakePrecentage = DEFAULT_INTAKE_EXTEND_PRECENTAGE, releaseFromIntake = 0, startXDelay = 0, cooldown = 0;
     double elevatorTargetLeft = 1300;
     int openedXTimes = 0, clicks = 0;
     boolean retract = false,  goToMid = false, intakeMid = true, canIntake = true, startedDelayTransfer = false, heldExtension = false, firstReleaseThreeTimer = true;
@@ -707,15 +707,15 @@ public class DebugOpMode extends LinearOpMode {
                     moveOuttake();
                 }
 
-                if(betterGamepad1.dpadRightOnce())
+                if(betterGamepad1.dpadRightOnce() && cooldowned())
                 {
                     claw.setRightClaw(Claw.ClawState.OPEN);
                 }
-                else if(betterGamepad1.dpadLeftOnce())
+                else if(betterGamepad1.dpadLeftOnce() && cooldowned())
                 {
                     claw.setLeftClaw(Claw.ClawState.OPEN);
                 }
-                else if(betterGamepad1.dpadDownOnce())
+                else if(betterGamepad1.dpadDownOnce() && cooldowned())
                 {
                     claw.setBothClaw(Claw.ClawState.INTERMEDIATE);
                 }
@@ -724,21 +724,25 @@ public class DebugOpMode extends LinearOpMode {
                 {
                     elevatorTargetRight += 150;
                     elevatorTargetLeft += 150;
+                    coolDownReset();
                 }
                 else if(betterGamepad2.leftBumperOnce())
                 {
                     elevatorTargetRight -= 150;
                     elevatorTargetLeft -= 150;
+                    coolDownReset();
                 }
                 else if(betterGamepad2.dpadLeftOnce())
                 {
                     elevatorTargetRight -= 415;
                     elevatorTargetLeft -= 415;
+                    coolDownReset();
                 }
                 else if(betterGamepad2.dpadRightOnce())
                 {
                     elevatorTargetRight += 415;
                     elevatorTargetLeft += 415;
+                    coolDownReset();
                 }
 
                 if(betterGamepad2.touchpadOnce())
@@ -746,7 +750,7 @@ public class DebugOpMode extends LinearOpMode {
                     switchOuttake();
                 }
 
-                if (betterGamepad1.AOnce())  {
+                if (betterGamepad1.AOnce() && cooldowned())  {
                     claw.setBothClaw(Claw.ClawState.OPEN);
 
                     elevatorTargetRight = elevator.getTargetRight() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
@@ -855,6 +859,16 @@ public class DebugOpMode extends LinearOpMode {
                 outtakeState = OuttakeState.OUTTAKE;
                 break;
         }
+    }
+
+    boolean cooldowned()
+    {
+        return (getTime() - cooldown) >= COOL_DOWN;
+    }
+
+    void coolDownReset()
+    {
+        cooldown = getTime();
     }
 
 

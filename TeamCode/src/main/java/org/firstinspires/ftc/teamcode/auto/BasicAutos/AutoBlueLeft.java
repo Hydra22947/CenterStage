@@ -267,7 +267,7 @@ public class AutoBlueLeft extends LinearOpMode {
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
-            telemetry.addData("POS", propPipelineBlueLeft.getLocation());
+            telemetry.addData("POS", propLocation.name());
 
             switch (propPipelineBlueLeft.getLocation())
             {

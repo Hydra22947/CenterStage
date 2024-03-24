@@ -9,6 +9,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.checkerframework.checker.units.qual.C;
@@ -39,9 +40,12 @@ public class CheckAprilTagAction implements Action {
     static boolean detect = false;
     static double detectTime = 0;
     public double detectDelay = 1;
+    public static double timeLeftForAuto = 8;
+    ElapsedTime time;
 
-    public CheckAprilTagAction(Action mainAction, Action stopAction) {
+    public CheckAprilTagAction(ElapsedTime time, Action mainAction, Action stopAction) {
         initCamera();
+        this.time = time;
         detect = false;
 
         this.mainAction = mainAction;
@@ -115,7 +119,7 @@ public class CheckAprilTagAction implements Action {
             found = true;
             return this.mainAction.run(telemetryPacket);
         }
-        else if(!found && (detect && (((System.currentTimeMillis() - detectTime) / 1000) >= detectDelay)))
+        else if(!found && (detect && (((System.currentTimeMillis() - detectTime) / 1000) >= detectDelay)) && ((30 - time.seconds()) >= timeLeftForAuto))
         {
             return stopAction.run(telemetryPacket);
 

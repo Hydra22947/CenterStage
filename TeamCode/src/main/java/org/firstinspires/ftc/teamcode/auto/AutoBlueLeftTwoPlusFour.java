@@ -23,6 +23,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.CheckAprilTagAction;
@@ -298,25 +299,29 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
             }
         };
 
-        Action goPlaceWhiteRIGHT_OR_TOP54 = new CheckAprilTagAction(
-                        robot.drive.actionBuilder(new Pose2d(-47.5,44.5,Math.toRadians(15)))
-                                .setTangent(Math.toRadians(90))
-                                .afterTime(0,returnFixintake())
-                                .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
-                                .setTangent(Math.toRadians(0))
-                                .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(0))
-                                .afterTime(0, new ParallelAction(depositSecondCycle,
-                                        new InstantAction(() -> CheckAprilTagAction.turnOnDetection())))
-                                .setTangent(Math.toRadians(0))
-                                .splineToSplineHeading(new Pose2d(50.5, 40, Math.toRadians(0)), Math.toRadians(20), baseVelConstraint).build(),
-                        new SequentialAction(robot.drive.actionBuilder(robot.drive.pose)
-                                .strafeToLinearHeading(new Vector2d(50.5, 60), Math.toRadians(-90)).build(),
-                                new InstantAction(() -> depositActions.retractDeposit()),
-                                new SleepAction(1),
-                                new InstantAction(() -> requestOpModeStop()))
+        Action goPlaceWhiteRIGHT_OR_TOP54 = new CheckAprilTagAction(time,
+                robot.drive.actionBuilder(new Pose2d(-47.5,44.5,Math.toRadians(15)))
+                        .setTangent(Math.toRadians(90))
+                        .afterTime(0,returnFixintake())
+                        .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
+                        .setTangent(Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(0))
+                        .afterTime(0, new ParallelAction(depositSecondCycle,
+                                new InstantAction(() -> CheckAprilTagAction.turnOnDetection())))
+                        .setTangent(Math.toRadians(0))
+                        .splineToSplineHeading(new Pose2d(50.5, 40, Math.toRadians(0)), Math.toRadians(20), baseVelConstraint).build(),
+                new SequentialAction(robot.drive.actionBuilder(new Pose2d(50.5, 40, Math.toRadians(0)))
+                        .strafeToLinearHeading(new Vector2d(50.5, 60), Math.toRadians(-90)).build(),
+                        new InstantAction(() -> intake.move(Intake.Angle.TELEOP_MID)),
+                        new InstantAction(() -> claw.setBothClaw(Claw.ClawState.CLOSED)),
+                        new InstantAction(() -> outtake.setAngle(Outtake.Angle.INTAKE)),
+                        new InstantAction(() -> elevator.setTarget(0)),
+                        new SleepAction(1),
+                        new InstantAction(() -> requestOpModeStop()))
                 );
 
-        Action goPlaceWhiteRIGHT_OR_TOP32 = robot.drive.actionBuilder(new Pose2d(-48.5, 44.4,Math.toRadians(15)))
+        Action goPlaceWhiteRIGHT_OR_TOP32 = new CheckAprilTagAction(time,
+                robot.drive.actionBuilder(new Pose2d(-48.5, 44.4,Math.toRadians(15)))
                 .setTangent(Math.toRadians(90))
                 .afterTime(0,returnFixintake())
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
@@ -325,7 +330,16 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                 .afterTime(0, returnDepositTop32())
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(50.5, 40), Math.toRadians(0))
-                .build();
+                .build(),
+                new SequentialAction(robot.drive.actionBuilder(new Pose2d(50.5, 40, Math.toRadians(0)))
+                        .strafeToLinearHeading(new Vector2d(50.5, 60), Math.toRadians(-90)).build(),
+                        new InstantAction(() -> intake.move(Intake.Angle.TELEOP_MID)),
+                        new InstantAction(() -> claw.setBothClaw(Claw.ClawState.CLOSED)),
+                        new InstantAction(() -> outtake.setAngle(Outtake.Angle.INTAKE)),
+                        new InstantAction(() -> elevator.setTarget(0)),
+                        new SleepAction(1),
+                        new InstantAction(() -> requestOpModeStop()))
+                );
 
         Action placePurpleTraj_LEFT = robot.drive.actionBuilder(robot.drive.pose)
                 .afterTime(1 ,placePurplePixelSequence_Left)
@@ -531,6 +545,8 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
+
+        time.reset();
 
         switch (propLocation)
         {

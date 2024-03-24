@@ -64,32 +64,32 @@ public class AprilTagTesting {
     static AccelConstraint baseAccelConstraint = new ProfileAccelConstraint(-10.0, 25.0);
     public static void path( RoadRunnerBotEntity myBot) {
 
-
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d( -47.5, 44.5, Math.toRadians(15)))
-                .setTangent(Math.toRadians(90))
-                .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
-                .setTangent(Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(0))
-                .setTangent(Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(50.5, 40, Math.toRadians(0)), Math.toRadians(20), baseVelConstraint)
-                .build());
-
-//        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-40, 62, Math.toRadians(-90)))
 //
-//                .strafeToLinearHeading(new Vector2d(-44.25, 10), Math.toRadians(0))
-//                .strafeToLinearHeading(new Vector2d(15, 8), Math.toRadians(0))
-//                .splineToSplineHeading(new Pose2d(31, 20, Math.toRadians(24.5)), Math.toRadians(60),
-//                        baseVelConstraint, baseAccelConstraint)
-//
-//
-//
-//
-//                // detect
-//
-//                .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0))
-//
-//                .waitSeconds(.5)
+//        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d( -47.5, 44.5, Math.toRadians(15)))
+//                .setTangent(Math.toRadians(90))
+//                .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
+//                .setTangent(Math.toRadians(0))
+//                .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(0))
+//                .setTangent(Math.toRadians(0))
+//                .splineToSplineHeading(new Pose2d(50.5, 40, Math.toRadians(0)), Math.toRadians(20), baseVelConstraint)
 //                .build());
+
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-40, 62, Math.toRadians(-90)))
+
+                .strafeToLinearHeading(new Vector2d(-44.25, 10), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(15, 8), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(31, 20, Math.toRadians(24.5)), Math.toRadians(60),
+                        baseVelConstraint, baseAccelConstraint)
+
+
+
+
+                // detect
+
+                .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0))
+
+                .waitSeconds(.5)
+                .build());
 
 
 
