@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.jetbrains.annotations.NotNull;
 
 @Config
-public class Intake implements Subsystem{
+public class Intake implements Subsystem {
 
     private final RobotHardware robot;
     public static double intakeHandPivot = 0.195, intakeAmmoPivot = 0.13;
@@ -18,8 +18,8 @@ public class Intake implements Subsystem{
     public static double midTeleOpHandPivot = 0.5, midTeleopAmmoPivot = 0.65;
     public static double top5HandPivot = .31, top5AmmoPivot = 0.13;
     public static double top5HandPivotAuto = 0.315, top5AmmoPivotAuto = 0.13; //auto ערימה של אוטונומי רק ה5
-    public static double top54HandPivot = 0.295, top54AmmoPivot = 0.125; // ערימה של 54
-    public static double top54HandPivotAuto = 0.28, top54AmmoPivotAuto = 0.095;
+    public static double top54HandPivot = 0.29, top54AmmoPivot = 0.125; // ערימה של 54
+    public static double top54HandPivotAuto = 0.29, top54AmmoPivotAuto = 0.125;
     public static double top43HandPivot = 0.29, top43AmmoPivot = 0.12; // auto
     public static double top32HandPivot = 0.235, top32AmmoPivot = 0.13; // ערימה של 32
     public static double top32HandPivotAuto = 0.18, top32AmmoPivotAuto = 0.025;
@@ -27,7 +27,7 @@ public class Intake implements Subsystem{
 
     public static double autoFixIntakeHandPivot = 0.68, autoFixIntakeAmmoPivot = 0.66;
 
-    public static double STACK = 0.05;
+    public static double STACK = 0.3;
     public static double RIGHT_SENSOR_ERROR = 0.3;
     public static double clickOffset = 0.1;
     double OFFSET_AMMO = 0;
@@ -64,8 +64,7 @@ public class Intake implements Subsystem{
 
     }
 
-    public enum Angle
-    {
+    public enum Angle {
         INTAKE,
         OUTTAKE,
         MID, TELEOP_MID,
@@ -75,16 +74,14 @@ public class Intake implements Subsystem{
         AUTO_FIX_INTAKE
     }
 
-    public enum ClawState
-    {
+    public enum ClawState {
         OPEN,
         INDETERMINATE,
         CLOSE,
         SUPER_CLOSE
     }
 
-    public enum Type
-    {
+    public enum Type {
         AMMO,
         HAND
     }
@@ -94,8 +91,7 @@ public class Intake implements Subsystem{
     ClawState clawStateRight = ClawState.OPEN;
 
 
-    public Intake()
-    {
+    public Intake() {
         this.robot = RobotHardware.getInstance();
     }
 
@@ -104,57 +100,45 @@ public class Intake implements Subsystem{
         updateState(Type.HAND);
 
 
-        if(checkIfPixelInRight(robot.colorRight))
-        {
+        if (checkIfPixelInRight(robot.colorRight)) {
             robot.closeRight(true);
-        }
-        else
-        {
+        } else {
             robot.closeRight(false);
         }
 
-        if(checkIfPixelIn(robot.colorLeft))
-        {
+        if (checkIfPixelIn(robot.colorLeft)) {
             robot.closeLeft(true);
-        }
-        else
-        {
+        } else {
             robot.closeLeft(false);
         }
 
 
-        if(checkIfPixelInRight(robot.colorRight) && checkIfPixelIn(robot.colorLeft))
-        {
+        if (checkIfPixelInRight(robot.colorRight) && checkIfPixelIn(robot.colorLeft)) {
             robot.setHas2Pixels(true);
-        }
-        else
-        {
+        } else {
             robot.setHas2Pixels(false);
         }
     }
 
-    public void move(Angle angle)
-    {
+    public void move(Angle angle) {
         setAngle(angle);
 
         updateState(Type.AMMO);
         updateState(Type.HAND);
     }
 
-    public void moveStack()
-    {
-        this.robot.intakeAngleServo.setPosition((getPosition(angle, Type.AMMO)) + STACK);
-        this.robot.intakeHandPivotLeftServo.setPosition(getPosition(angle, Type.HAND));
-        this.robot.intakeHandPivotRightServo.setPosition(getPosition(angle, Type.HAND));
+    public void moveStack() {
+        this.robot.intakeAngleServo.setPosition((getPosition(angle, Type.AMMO)) - STACK);
+        this.robot.intakeHandPivotLeftServo.setPosition(getPosition(Angle.INTAKE, Type.HAND));
+        this.robot.intakeHandPivotRightServo.setPosition(getPosition(Angle.INTAKE, Type.HAND));
     }
 
-    public void returnStack()
-    {
+
+    public void returnStack() {
         this.robot.intakeAngleServo.setPosition((getPosition(angle, Type.AMMO) - STACK));
         this.robot.intakeHandPivotLeftServo.setPosition(getPosition(angle, Type.HAND));
         this.robot.intakeHandPivotRightServo.setPosition(getPosition(angle, Type.HAND));
     }
-
 
 
     public Angle getAngle() {
@@ -167,10 +151,11 @@ public class Intake implements Subsystem{
         updateState(Type.AMMO);
         updateState(Type.HAND);
     }
+
     public void updateState(@NotNull Type type) {
         double position = getPosition(angle, type);
 
-        switch(type) {
+        switch (type) {
             case AMMO:
                 this.robot.intakeAngleServo.setPosition(position);
                 break;
@@ -207,11 +192,8 @@ public class Intake implements Subsystem{
     }
 
 
-
-    private double getClawStatePosition(ClawState state, ClawSide side)
-    {
-        switch (side)
-        {
+    private double getClawStatePosition(ClawState state, ClawSide side) {
+        switch (side) {
             case LEFT:
                 switch (state) {
                     case CLOSE:
@@ -251,24 +233,20 @@ public class Intake implements Subsystem{
         return clawStateRight;
     }
 
-    public boolean checkIfPixelIn(RevColorSensorV3 sensor)
-    {
+    public boolean checkIfPixelIn(RevColorSensorV3 sensor) {
         return -seeFarFrom <= sensor.getDistance(DistanceUnit.CM) && sensor.getDistance(DistanceUnit.CM) <= seeFarFrom;
     }
 
-    public boolean checkIfPixelInRight(RevColorSensorV3 sensor)
-    {
-        return -(seeFarFrom+RIGHT_SENSOR_ERROR) <= sensor.getDistance(DistanceUnit.CM) && sensor.getDistance(DistanceUnit.CM) <= (seeFarFrom+RIGHT_SENSOR_ERROR);
+    public boolean checkIfPixelInRight(RevColorSensorV3 sensor) {
+        return -(seeFarFrom + RIGHT_SENSOR_ERROR) <= sensor.getDistance(DistanceUnit.CM) && sensor.getDistance(DistanceUnit.CM) <= (seeFarFrom + RIGHT_SENSOR_ERROR);
     }
 
-    public boolean closedClaw()
-    {
+    public boolean closedClaw() {
         return clawStateLeft == ClawState.CLOSE && clawStateRight == ClawState.CLOSE;
     }
-    private double getPosition(Angle angle, Type type)
-    {
-        switch (type)
-        {
+
+    private double getPosition(Angle angle, Type type) {
+        switch (type) {
             case AMMO:
                 switch (angle) {
                     case INTAKE:
