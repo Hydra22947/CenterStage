@@ -185,15 +185,13 @@ public class AutoBlueRightRightMax extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-50, 44), Math.toRadians(-90))
                 .build();
 
-        Action intake5Traj = robot.drive.actionBuilder(new Pose2d(-50, 44, Math.toRadians(0)))
+        Action intake5Traj = robot.drive.actionBuilder(new Pose2d(-50, 44, Math.toRadians(-90)))
                 .strafeToSplineHeading(new Vector2d(-42, 45), Math.toRadians(-90))
                 .splineToLinearHeading(new Pose2d(-38, 11, Math.toRadians(-90)), Math.toRadians(-90))
                 .strafeToLinearHeading(new Vector2d(-45, 11), Math.toRadians(0))
                 .stopAndAdd(intake5OpenAction)
                 .strafeToLinearHeading(new Vector2d(-54.5, 11), Math.toRadians(0))
                 .stopAndAdd(intake5CloseAction)
-
-
                 .build();
 
         Action depositPreloadTraj = robot.drive.actionBuilder(new Pose2d(-42, 10, Math.toRadians(0)))
