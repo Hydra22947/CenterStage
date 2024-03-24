@@ -203,7 +203,7 @@ public class AutoBlueRightLeftMax extends LinearOpMode {
                 //deposit
                 .afterTime(0, pleaseFixIntake())
                 .afterTime(.75, readyForDepositAction)
-                .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(30, 8, Math.toRadians(0)), Math.toRadians(0))
 
                 .splineToLinearHeading(new Pose2d(52, 30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .afterTime(0, depositAction)
