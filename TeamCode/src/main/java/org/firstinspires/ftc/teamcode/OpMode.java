@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
@@ -102,7 +103,7 @@ public class OpMode extends LinearOpMode {
 
         robot.init(hardwareMap, telemetry);
 
-        drivetrain = new Drivetrain(gamepad1, true);
+        drivetrain = new Drivetrain(gamepad1, true, false);
         elevator = new Elevator(gamepad2, false, false);
         outtake = new Outtake();
         claw = new Claw();
@@ -216,7 +217,6 @@ public class OpMode extends LinearOpMode {
             intakeStateMachine();
             elevatorStateMachine();
 
-
             telemetry.update();
         }
     }
@@ -291,7 +291,7 @@ public class OpMode extends LinearOpMode {
                     intakeState = IntakeState.INTAKE_EXTEND;
                     override = false;
                 }
-                else if(liftState == LiftState.RETRACT && (gamepad2.left_trigger == 0 || gamepad1.left_trigger == 0))
+                else if(liftState == LiftState.RETRACT && (gamepad2.left_trigger == 0 && gamepad1.left_trigger == 0))
                 {
                     drivetrain.fast();
                 }
@@ -589,7 +589,7 @@ public class OpMode extends LinearOpMode {
                     intakeState = IntakeState.INTAKE_EXTEND;
                     override = false;
                 }
-                else if(liftState == LiftState.RETRACT && (gamepad2.left_trigger == 0 || gamepad1.left_trigger == 0))
+                else if(liftState == LiftState.RETRACT && (gamepad2.left_trigger == 0 && gamepad1.left_trigger == 0))
                 {
                     drivetrain.fast();
                 }

@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
-import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.writeToFile;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -148,12 +146,6 @@ public class TestOrganizedCode extends LinearOpMode {
                     ));
                     break;
             }
-
-            while (opModeIsActive()) {
-                robot.drive.updatePoseEstimate();
-            }
-
-            writeToFile(robot.drive.pose.heading.log());
         }
 
 

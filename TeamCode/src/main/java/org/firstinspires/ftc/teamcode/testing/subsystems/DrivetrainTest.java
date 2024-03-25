@@ -27,7 +27,7 @@ public class DrivetrainTest extends LinearOpMode {
 
         robot.init(hardwareMap, telemetry);
 
-        drivetrain = new Drivetrain(gamepad1, true);
+        drivetrain = new Drivetrain(gamepad1, true, true);
 
         while (opModeInInit()) {
             telemetry.addLine("Robot Initialized.");

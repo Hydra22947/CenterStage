@@ -6,8 +6,12 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
+
+import java.io.File;
 
 @Config
 public class Drivetrain{
@@ -15,6 +19,7 @@ public class Drivetrain{
     boolean blueAlliance;
 
     private BetterGamepad _cGamepad1;
+    boolean first = true;
 
     private final RobotHardware robot;
     public static double maxPower = 1;
@@ -23,7 +28,7 @@ public class Drivetrain{
     double botHeading = 0, y = 0, x = 0, rotY = 0, rotX = 0;
 
     //Constructor
-    public Drivetrain(Gamepad gamepad1, boolean blueAlliance)
+    public Drivetrain(Gamepad gamepad1, boolean blueAlliance, boolean debug)
     {
         this.robot = RobotHardware.getInstance();
 
@@ -34,7 +39,7 @@ public class Drivetrain{
 
         this.blueAlliance = blueAlliance;
 
-        resetAngle();
+        resetAngle(debug);
     }
 
     public void update() {
@@ -63,19 +68,9 @@ public class Drivetrain{
     }
 
 
-    public void resetAngle()
+    public void resetAngle(boolean debug)
     {
         robot.imu.resetYaw();
-
-        // check if we are blue/red alliance and set zero angle - For centric drive
-//        if(!blueAlliance)
-//        {
-//            robot.setImuOffset(-Math.PI);
-//        }
-//        else if(blueAlliance)
-//        {
-//            robot.setImuOffset(Math.PI);
-//        }
     }
 
 
@@ -88,12 +83,11 @@ public class Drivetrain{
     public void superSlow()
     {
         power = maxPower / 2.3;
-        slowerSpin = 0.8;
+        slowerSpin = 0.6;
     }
 
-    public void slow()
+    public double getAngle()
     {
-        power = maxPower;
-        slowerSpin = 0.5;
+        return robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + robot.getImuOffset();
     }
 }

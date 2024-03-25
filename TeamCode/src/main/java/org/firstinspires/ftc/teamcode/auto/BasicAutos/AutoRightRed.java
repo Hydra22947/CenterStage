@@ -4,7 +4,6 @@ package org.firstinspires.ftc.teamcode.auto.BasicAutos;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
 import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.cycleVision;
-import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.writeToFile;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -20,6 +19,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
@@ -140,8 +140,8 @@ public class AutoRightRed extends LinearOpMode {
         SequentialAction placePurplePixelBlueRight = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
                 new SleepAction(0.5),
-                placePurpleActions.openExtension(920),
-                new SleepAction(0.8),
+                placePurpleActions.openExtension(800),
+                new SleepAction(1),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.1),
                 placePurpleActions.openExtension(800),
@@ -216,7 +216,7 @@ public class AutoRightRed extends LinearOpMode {
         Action trajRedLeft =
                 robot.drive.actionBuilder(robot.drive.pose)
                         .stopAndAdd(depositActions.readyForDeposit(tempHeight))
-                        .splineToLinearHeading(new Pose2d(34.7, -32, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(31, -32, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixelBlueRight)
                         .setTangent(0)
                         .waitSeconds(.2)
@@ -290,6 +290,8 @@ public class AutoRightRed extends LinearOpMode {
 
         if (isStopRequested()) return;
 
+        webcam.stopStreaming();
+
         switch (propLocation) {
             case RIGHT:
                 runBlocking(new ParallelAction(
@@ -310,11 +312,6 @@ public class AutoRightRed extends LinearOpMode {
                 ));
                 break;
         }
-
-        while (opModeIsActive()) {
-            robot.drive.updatePoseEstimate();
-        }
-        writeToFile(robot.drive.pose.heading.log());
     }
 
 

@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
-import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.writeToFile;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -59,6 +57,7 @@ public class AutoBlueRight extends LinearOpMode {
     DepositActions depositActions;
     PlacePurpleActions intakeActions;
     UpdateActions updateActions;
+    boolean shouldUseAprilTag = true;
 
     public enum PropLocation {
         LEFT,
@@ -253,18 +252,29 @@ public class AutoBlueRight extends LinearOpMode {
             }
         };
 
-        Action depositPreloadTrajLeft = robot.drive.actionBuilder(new Pose2d(-55.2, 22, Math.toRadians(0)))
-                .splineToLinearHeading( new Pose2d(-42, 10, Math.toRadians(0)), Math.toRadians(0))
-                //deposit
-                .afterTime(0, pleaseFixIntake())
-                .splineToLinearHeading(new Pose2d(15, 8,Math.toRadians(0)), Math.toRadians(0))
-                .afterTime(0.85, readyForDepositAction)
-                .splineToSplineHeading(new Pose2d(31, 20, Math.toRadians(24.5)), Math.toRadians(60), baseVelConstraint)
-                .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                .afterTime(0, depositAction)
-                .strafeToSplineHeading(new Vector2d(51, 38.2), Math.toRadians(0))
-                .strafeToSplineHeading(new Vector2d(51, 34), Math.toRadians(0))
-                .build();
+        Action depositPreloadTrajLeft =// new CheckAprilTagAction(shouldUseAprilTag, time,
+                robot.drive.actionBuilder(new Pose2d(-55.2, 22, Math.toRadians(0)))
+                        .splineToLinearHeading( new Pose2d(-42, 10, Math.toRadians(0)), Math.toRadians(0))
+                        //deposit
+                        .afterTime(0, pleaseFixIntake())
+                        .splineToLinearHeading(new Pose2d(15, 8,Math.toRadians(0)), Math.toRadians(0))
+                        .afterTime(0.85, readyForDepositAction)
+                        .splineToSplineHeading(new Pose2d(31, 20, Math.toRadians(24.5)), Math.toRadians(60), baseVelConstraint)
+                        .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .afterTime(0, depositAction)
+                        .strafeToSplineHeading(new Vector2d(51, 38.2), Math.toRadians(0))
+                        .strafeToSplineHeading(new Vector2d(51, 34), Math.toRadians(0))
+                        .build();//,
+//                new SequentialAction(robot.drive.actionBuilder(new Pose2d(31, 20, Math.toRadians(0)))
+//                        .strafeToLinearHeading(new Vector2d(50.5, 30), Math.toRadians(-90)).build(),
+//                        new InstantAction(() -> intake.move(Intake.Angle.TELEOP_MID)),
+//                        new InstantAction(() -> claw.setBothClaw(Claw.ClawState.CLOSED)),
+//                        new InstantAction(() -> outtake.setAngle(Outtake.Angle.INTAKE)),
+//                        new InstantAction(() -> elevator.setTarget(0)),
+//                        new SleepAction(1),
+//                        new InstantAction(() -> requestOpModeStop()))
+//        );
+
 
         Action depositPreloadTrajMiddle = robot.drive.actionBuilder(new Pose2d(-32, 10, Math.toRadians(0)))
                 //deposit
@@ -462,8 +472,11 @@ public class AutoBlueRight extends LinearOpMode {
         }
 
         waitForStart();
+        webcam.stopStreaming();
 
         if (isStopRequested()) return;
+
+        time.reset();
 
         switch (propLocation) {
             case LEFT:
@@ -486,12 +499,6 @@ public class AutoBlueRight extends LinearOpMode {
                 break;
         }
 
-
-        while (opModeIsActive()) {
-            robot.drive.updatePoseEstimate();
-        }
-
-        writeToFile(robot.drive.pose.heading.log());
     }
 
     void initCamera() {

@@ -5,6 +5,8 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 
+import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -20,6 +22,7 @@ public class UpdateActions {
     private Outtake outtake;
     private Claw claw;
     private IntakeExtension intakeExtension;
+    RobotHardware robot = RobotHardware.getInstance();
 
     int counter = 0;
     public UpdateActions(Elevator elevator, Intake intake, Claw claw, Outtake outtake, IntakeExtension intakeExtension) {
@@ -43,8 +46,7 @@ public class UpdateActions {
             intake.move(intake.getAngle());
             claw.update();
             outtake.update();
-
-            telemetryPacket.addLine(String.valueOf(elevator.getTargetLeft()));
+            robot.drive.updatePoseEstimate();
 
             return true;
         }

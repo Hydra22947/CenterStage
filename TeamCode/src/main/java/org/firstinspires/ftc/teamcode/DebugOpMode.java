@@ -102,7 +102,7 @@ public class DebugOpMode extends LinearOpMode {
 
         robot.init(hardwareMap, telemetry);
 
-        drivetrain = new Drivetrain(gamepad1, true);
+        drivetrain = new Drivetrain(gamepad1, true, true);
         elevator = new Elevator(gamepad2, true, false);
         outtake = new Outtake();
         claw = new Claw();
@@ -293,13 +293,9 @@ public class DebugOpMode extends LinearOpMode {
                     intakeState = IntakeState.INTAKE_EXTEND;
                     override = false;
                 }
-                else if(liftState == LiftState.RETRACT && (gamepad2.left_trigger == 0 || gamepad1.left_trigger == 0))
+                else if(liftState == LiftState.RETRACT && (gamepad2.left_trigger == 0 && gamepad1.left_trigger == 0))
                 {
                     drivetrain.fast();
-                }
-                else if(gamepad2.left_trigger != 0 || gamepad1.left_trigger != 0)
-                {
-                    drivetrain.superSlow();
                 }
 
                 if(startedDelayTransfer)
@@ -591,7 +587,7 @@ public class DebugOpMode extends LinearOpMode {
                     intakeState = IntakeState.INTAKE_EXTEND;
                     override = false;
                 }
-                else if(liftState == LiftState.RETRACT  && (gamepad2.left_trigger == 0 || gamepad1.left_trigger == 0))
+                else if(liftState == LiftState.RETRACT  && (gamepad2.left_trigger == 0 && gamepad1.left_trigger == 0))
                 {
                     drivetrain.fast();
                 }

@@ -1,12 +1,8 @@
 package org.firstinspires.ftc.teamcode.auto.BasicAutos;
 
-// RR-specific imports
-
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
 
 import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.cycleVision;
-import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.writeToFile;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -21,6 +17,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
@@ -62,6 +59,7 @@ public class AutoBlueLeft extends LinearOpMode {
     public static AutoSettings.PropLocation propLocation = AutoSettings.PropLocation.MIDDLE;
     PropPipelineBlueLeft propPipelineBlueLeft;
     OpenCvWebcam webcam;
+    boolean vision = true;
 
     public static int tempHeight = 900;
     boolean first = true;
@@ -155,8 +153,8 @@ public class AutoBlueLeft extends LinearOpMode {
         SequentialAction placePurplePixelBlueRight = new SequentialAction(
                 placePurpleActions.moveIntake(Intake.Angle.INTAKE),
                 new SleepAction(0.5),
-                placePurpleActions.openExtension(820),
-                new SleepAction(0.6),
+                placePurpleActions.openExtension(800),
+                new SleepAction(1),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.1),
                 placePurpleActions.openExtension(780),
@@ -231,7 +229,7 @@ public class AutoBlueLeft extends LinearOpMode {
         Action trajBlueRight =
                 robot.drive.actionBuilder(robot.drive.pose)
                         .stopAndAdd(depositActions.readyForDeposit(tempHeight))
-                        .splineToLinearHeading(new Pose2d(34.7,  32, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(31,  32, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixelBlueRight)
                         .setTangent(0)
                         .waitSeconds(.2)
@@ -269,17 +267,20 @@ public class AutoBlueLeft extends LinearOpMode {
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addData("POS", propLocation.name());
 
-            switch (propPipelineBlueLeft.getLocation())
+            if(vision)
             {
-                  case Left:
-                      propLocation = AutoSettings.PropLocation.LEFT;
-                      break;
-                  case Right:
-                      propLocation = AutoSettings.PropLocation.RIGHT;
-                       break;
-                 case Center:
-                      propLocation = AutoSettings.PropLocation.MIDDLE;
-                      break;
+                switch (propPipelineBlueLeft.getLocation())
+                {
+                    case Left:
+                        propLocation = AutoSettings.PropLocation.LEFT;
+                        break;
+                    case Right:
+                        propLocation = AutoSettings.PropLocation.RIGHT;
+                        break;
+                    case Center:
+                        propLocation = AutoSettings.PropLocation.MIDDLE;
+                        break;
+                }
             }
 
             if(betterGamepad2.dpadUpOnce())
@@ -289,14 +290,11 @@ public class AutoBlueLeft extends LinearOpMode {
                     webcam.stopStreaming();
                     first = false;
                 }
+                vision = false;
 
                 propLocation = cycleVision(propLocation);
             }
-            else if(betterGamepad2.dpadDownOnce())
-            {
-                initCamera();
-                webcam.setPipeline(propPipelineBlueLeft);
-            }
+
             telemetry.addLine("Initialized");
             telemetry.update();
         }
@@ -304,6 +302,8 @@ public class AutoBlueLeft extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
+
+        webcam.stopStreaming();
 
         switch (propLocation)
         {
@@ -327,13 +327,6 @@ public class AutoBlueLeft extends LinearOpMode {
                 break;
         }
 
-
-        while (opModeIsActive())
-        {
-            robot.drive.updatePoseEstimate();
-        }
-
-        writeToFile(robot.drive.pose.heading.log());
     }
 
     void initCamera()

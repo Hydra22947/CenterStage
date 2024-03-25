@@ -5,14 +5,13 @@ package org.firstinspires.ftc.teamcode.auto.BasicAutos;
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
 
 import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.cycleVision;
-import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.writeToFile;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -27,6 +26,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
@@ -211,7 +211,7 @@ public class AutoLeftRed extends LinearOpMode {
                         .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-35, -11), Math.toRadians(0))
 
-                        .waitSeconds(9.5)
+                        .stopAndAdd(new ParallelAction(new SleepAction(9.5), returnFixintake()))
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, -12), Math.toRadians(0))
@@ -254,7 +254,7 @@ public class AutoLeftRed extends LinearOpMode {
                         .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-44.25, -10), Math.toRadians(0))
 
-                        .waitSeconds(10)
+                        .stopAndAdd(new ParallelAction(new SleepAction(10), returnFixintake()))
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, -8.5), Math.toRadians(0))
@@ -294,7 +294,7 @@ public class AutoLeftRed extends LinearOpMode {
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
 
-                        .waitSeconds(8.5)
+                        .stopAndAdd(new ParallelAction(new SleepAction(8.5), returnFixintake()))
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30.25, -9.5), Math.toRadians(0))
@@ -367,6 +367,8 @@ public class AutoLeftRed extends LinearOpMode {
 
         if (isStopRequested()) return;
 
+        webcam.stopStreaming();
+
         switch (propLocation) {
             case LEFT:
                 runBlocking(new ParallelAction(
@@ -387,12 +389,6 @@ public class AutoLeftRed extends LinearOpMode {
                 ));
                 break;
         }
-
-        while (opModeIsActive()) {
-            robot.drive.updatePoseEstimate();
-        }
-
-        writeToFile(robot.drive.pose.heading.log());
     }
 
     void initCamera() {
@@ -417,5 +413,30 @@ public class AutoLeftRed extends LinearOpMode {
         });
 
     }
+
+    SequentialAction returnFixintake () {
+        return new SequentialAction(
+                new SleepAction(.5),
+                new InstantAction(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH)),
+                new SleepAction(0.1),
+                new InstantAction(() -> claw.setBothClaw(Claw.ClawState.OPEN)),
+                new SleepAction(0.2),
+                new InstantAction(() -> claw.setBothClaw(Claw.ClawState.CLOSED)),
+                new SleepAction(0.3),
+                new InstantAction(() -> claw.setBothClaw(Claw.ClawState.OPEN)),
+                new InstantAction(() -> intakeExtension.setAggresive(true)),
+                new InstantAction(() -> intakeExtension.setTarget(250)),
+                new SleepAction(0.2),
+                new InstantAction(() -> intakeExtension.setAggresive(true)),
+                new InstantAction(() -> intakeExtension.setTarget(0)),
+                new InstantAction(() -> claw.setBothClaw(Claw.ClawState.CLOSED)),
+                new SleepAction(0.2),
+                new InstantAction(() -> claw.setBothClaw(Claw.ClawState.OPEN)),
+                new SleepAction(0.2),
+                new InstantAction(() -> claw.setBothClaw(Claw.ClawState.CLOSED))
+
+        );
+    }
+
 
 }

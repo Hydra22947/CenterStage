@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.auto.Actions;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
-import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.writeToFile;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -232,10 +230,8 @@ public class IntakeFailSafeTest extends LinearOpMode {
             telemetry.update();
         }
 
-        writeToFile(robot.drive.pose.heading.log());
-
-
         waitForStart();
+        webcam.stopStreaming();
 
         if (isStopRequested()) return;
 

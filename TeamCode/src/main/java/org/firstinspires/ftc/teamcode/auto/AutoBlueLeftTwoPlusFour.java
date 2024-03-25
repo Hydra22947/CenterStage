@@ -3,7 +3,8 @@ package org.firstinspires.ftc.teamcode.auto;
 // RR-specific imports
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
-import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.writeToFile;
+
+//import static org.firstinspires.ftc.teamcode.auto.Actions.CheckAprilTagAction.initAprilTag;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -26,7 +27,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
-import org.firstinspires.ftc.teamcode.auto.Actions.CheckAprilTagAction;
+//import org.firstinspires.ftc.teamcode.auto.Actions.CheckAprilTagAction;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
@@ -36,7 +37,9 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineBlueLeft;
+import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.jetbrains.annotations.NotNull;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -61,6 +64,7 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
     DepositActions depositActions;
     PlacePurpleActions intakeActions;
     UpdateActions updateActions;
+    AprilTagProcessor aprilTagProcessor;
 
     public enum PropLocation
     {
@@ -83,9 +87,11 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
     SequentialAction blueLeftLeft;
     SequentialAction blueLeftMiddle;
     SequentialAction blueLeftRight;
+    boolean shouldUseAprilTag = true;
 
     @Override
     public void runOpMode() {
+        BetterGamepad betterGamepad2 = new BetterGamepad(gamepad2);
         propPipelineBlueLeft = new PropPipelineBlueLeft();
         time = new ElapsedTime();
 
@@ -307,28 +313,29 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
             }
         };
 
-        Action goPlaceWhiteRIGHT_OR_TOP54 = new CheckAprilTagAction(time,
+        Action goPlaceWhiteRIGHT_OR_TOP54 =// new CheckAprilTagAction(shouldUseAprilTag, time,
                 robot.drive.actionBuilder(new Pose2d(-47.5,44.5,Math.toRadians(15)))
                         .setTangent(Math.toRadians(90))
                         .afterTime(0,returnFixintake())
                         .splineToConstantHeading(new Vector2d(-32, 58), Math.toRadians(0))
                         .setTangent(Math.toRadians(0))
                         .splineToSplineHeading(new Pose2d(22, 58, Math.toRadians(-30)), Math.toRadians(0))
-                        .afterTime(1, new ParallelAction(depositSecondCycle,
-                                new InstantAction(() -> CheckAprilTagAction.turnOnDetection())))
+//                        .afterTime(1, new ParallelAction(depositSecondCycle,
+//                                new InstantAction(() -> CheckAprilTagAction.turnOnDetection())))
+                        .afterTime(1, depositSecondCycle)
                         .setTangent(Math.toRadians(0))
-                        .splineToSplineHeading(new Pose2d(50.5, 40, Math.toRadians(0)), Math.toRadians(20), baseVelConstraint).build(),
-                new SequentialAction(robot.drive.actionBuilder(new Pose2d(50.5, 40, Math.toRadians(0)))
-                        .strafeToLinearHeading(new Vector2d(50.5, 60), Math.toRadians(-90)).build(),
-                        new InstantAction(() -> intake.move(Intake.Angle.TELEOP_MID)),
-                        new InstantAction(() -> claw.setBothClaw(Claw.ClawState.CLOSED)),
-                        new InstantAction(() -> outtake.setAngle(Outtake.Angle.INTAKE)),
-                        new InstantAction(() -> elevator.setTarget(0)),
-                        new SleepAction(1),
-                        new InstantAction(() -> requestOpModeStop()))
-                );
+                        .splineToSplineHeading(new Pose2d(50.5, 40, Math.toRadians(0)), Math.toRadians(20)/*, baseVelConstraint*/).build();//,
+//                new SequentialAction(robot.drive.actionBuilder(new Pose2d(50.5, 40, Math.toRadians(0)))
+//                        .strafeToLinearHeading(new Vector2d(50.5, 60), Math.toRadians(-90)).build(),
+//                        new InstantAction(() -> intake.move(Intake.Angle.TELEOP_MID)),
+//                        new InstantAction(() -> claw.setBothClaw(Claw.ClawState.CLOSED)),
+//                        new InstantAction(() -> outtake.setAngle(Outtake.Angle.INTAKE)),
+//                        new InstantAction(() -> elevator.setTarget(0)),
+//                        new SleepAction(1),
+//                        new InstantAction(() -> requestOpModeStop()))
+                //);
 
-        Action goPlaceWhiteRIGHT_OR_TOP32 = new CheckAprilTagAction(time,
+        Action goPlaceWhiteRIGHT_OR_TOP32 = //new CheckAprilTagAction(shouldUseAprilTag, time,
                 robot.drive.actionBuilder(new Pose2d(-48.5, 44.4,Math.toRadians(15)))
                 .setTangent(Math.toRadians(90))
                 .afterTime(0,returnFixintake())
@@ -338,16 +345,17 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                 .afterTime(0, returnDepositTop32())
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(50.5, 40), Math.toRadians(0))
-                .build(),
-                new SequentialAction(robot.drive.actionBuilder(new Pose2d(50.5, 40, Math.toRadians(0)))
-                        .strafeToLinearHeading(new Vector2d(50.5, 60), Math.toRadians(-90)).build(),
-                        new InstantAction(() -> intake.move(Intake.Angle.TELEOP_MID)),
-                        new InstantAction(() -> claw.setBothClaw(Claw.ClawState.CLOSED)),
-                        new InstantAction(() -> outtake.setAngle(Outtake.Angle.INTAKE)),
-                        new InstantAction(() -> elevator.setTarget(0)),
-                        new SleepAction(1),
-                        new InstantAction(() -> requestOpModeStop()))
-                );
+                        .build();
+
+//                new SequentialAction(robot.drive.actionBuilder(new Pose2d(50.5, 40, Math.toRadians(0)))
+//                        .strafeToLinearHeading(new Vector2d(50.5, 60), Math.toRadians(-90)).build(),
+//                        new InstantAction(() -> intake.move(Intake.Angle.TELEOP_MID)),
+//                        new InstantAction(() -> claw.setBothClaw(Claw.ClawState.CLOSED)),
+//                        new InstantAction(() -> outtake.setAngle(Outtake.Angle.INTAKE)),
+//                        new InstantAction(() -> elevator.setTarget(0)),
+//                        new SleepAction(1),
+//                        new InstantAction(() -> requestOpModeStop())
+//                );
 
         Action placePurpleTraj_LEFT = robot.drive.actionBuilder(robot.drive.pose)
                 .afterTime(1 ,placePurplePixelSequence_Left)
@@ -542,12 +550,14 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
         );
 
         while (opModeInInit() && !isStopRequested()) {
+            betterGamepad2.update();
+
             intake.setAngle(Intake.Angle.MID);
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addData("POS", propPipelineBlueLeft.getLocation());
-            telemetry.addData("elevator pos", tempHeight);
+            telemetry.addData("use april tag? (a - yes, y - no)", shouldUseAprilTag);
 
             switch (propPipelineBlueLeft.getLocation()) {
                 case Left:
@@ -561,6 +571,15 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                     break;
             }
 
+            if(betterGamepad2.AOnce())
+            {
+                shouldUseAprilTag = true;
+            }
+            else if(betterGamepad2.YOnce())
+            {
+                shouldUseAprilTag = false;
+            }
+
             telemetry.addLine("Initialized");
             telemetry.update();
         }
@@ -571,6 +590,8 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
         if (isStopRequested()) return;
 
         time.reset();
+
+        //initAprilTag();
 
         switch (propLocation)
         {
@@ -592,12 +613,6 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                         updateActions.updateSystems()));
                 break;
         }
-
-        while (opModeIsActive()) {
-            robot.drive.updatePoseEstimate();
-        }
-
-        writeToFile(robot.drive.pose.heading.log());
     }
 
 
