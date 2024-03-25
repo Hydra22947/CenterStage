@@ -12,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 public class Intake implements Subsystem {
 
     private final RobotHardware robot;
-    public static double intakeHandPivot = 0.22, intakeAmmoPivot = 0.12;
-    public static double outtakeHandPivot = 0.66, outtakeAmmoPivot = .675; // פורק מהשאיבה הזוויות-מתוקן
+    public static double intakeHandPivot = 0.195, intakeAmmoPivot = 0.135;
+    public static double outtakeHandPivot = 0.65, outtakeAmmoPivot = .675; // פורק מהשאיבה הזוויות-מתוקן
     public static double midHandPivot = 0.67, midAmmoPivot = 0.4;
     public static double midTeleOpHandPivot = 0.5, midTeleopAmmoPivot = 0.65;
     public static double top5HandPivot = .31, top5AmmoPivot = 0.13;
@@ -44,8 +44,8 @@ public class Intake implements Subsystem {
         Intake.seeFarFrom = seeFarFrom;
     }
 
-    public static double seeFarFrom = 4.5;
-    public static final double maxSeeFarFrom = 4.5;
+    public static double seeFarFrom = 3.5;
+    public static final double maxSeeFarFrom = 3.5;
     public static final double minSeeFarFrom = 2;
 
     @Override
