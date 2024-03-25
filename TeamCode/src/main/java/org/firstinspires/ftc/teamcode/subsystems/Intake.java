@@ -17,7 +17,7 @@ public class Intake implements Subsystem {
     public static double midHandPivot = 0.67, midAmmoPivot = 0.4;
     public static double midTeleOpHandPivot = 0.5, midTeleopAmmoPivot = 0.65;
     public static double top5HandPivot = .31, top5AmmoPivot = 0.13;
-    public static double top5HandPivotAuto = 0.315, top5AmmoPivotAuto = 0.13; //auto ערימה של אוטונומי רק ה5
+    public static double top5HandPivotAuto = 0.315, top5AmmoPivotAuto = 0.135; //auto ערימה של אוטונומי רק ה5
     public static double top54HandPivot = 0.29, top54AmmoPivot = 0.125; // ערימה של 54
     public static double top54HandPivotAuto = 0.29, top54AmmoPivotAuto = 0.135;
     public static double top43HandPivot = 0.28, top43AmmoPivot = 0.135; // auto
@@ -35,7 +35,7 @@ public class Intake implements Subsystem {
     public static double openRight = 0.535, openLeft = 0.435; // סרבואים של תפיסה של שאיבה שהם פתוחים
     public static double closeRight = .75, closeLeft = 0.67; // סרבואים של תפיסה של שאיבה שהם פתוחים
     public static double superCloseRight = .81, superCloseLeft = 0.735; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double indeterminateRight = 0.62, indeterminateLeft = 0.555; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double indeterminateRight = 0.605, indeterminateLeft = 0.54; // סרבואים של תפיסה של שאיבה שהם פתוחים
 
     public static double closeCauseWallRight;
     public static double closeCauseWallLeft;

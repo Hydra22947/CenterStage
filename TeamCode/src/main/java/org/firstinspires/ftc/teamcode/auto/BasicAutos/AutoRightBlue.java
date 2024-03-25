@@ -68,7 +68,7 @@ public class AutoRightBlue extends LinearOpMode {
     PlacePurpleActions placePurpleActions;
     UpdateActions updateActions;
 
-    public static AutoSettings.PropLocation propLocation = AutoSettings.PropLocation.RIGHT;
+    public static AutoSettings.PropLocation propLocation = AutoSettings.PropLocation.MIDDLE;
     PropPipelineBlueRight propPipelineBlueRight;
     OpenCvWebcam webcam;
     boolean first = true;

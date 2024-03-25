@@ -18,7 +18,7 @@ public class MeepMeepTesting {
                 .build();
 
 
-        BlueRightLeft(myBot);
+        BlueMiddleLeft(myBot);
         setAnimation(meepMeep, myBot);
         // BlueLeftLeft(myBot);
         // BlueLeftRight(myBot);
@@ -39,32 +39,64 @@ public class MeepMeepTesting {
     public static void BlueRightLeft(RoadRunnerBotEntity myBot) {
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-40, 62, Math.toRadians(0)))
-                .strafeToLinearHeading(new Vector2d(-29, 37.75), Math.toRadians(-40))
+              //  .afterTime(0, pleaseFixIntakeClose())
+             //   .afterTime(1, readyForDepositAction)
 
-                .splineToSplineHeading(new Pose2d(-36, 36, Math.toRadians(-20)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-45.5, 22, Math.toRadians(0)), Math.toRadians(180))
-                //.stopAndAdd(intake5OpenAction)
-                .strafeToLinearHeading(new Vector2d(-53.5, 22 ),  Math.toRadians(0))
-            //    .stopAndAdd(intake5CloseAction)
-
-                .splineToLinearHeading(new Pose2d(-42, 10, Math.toRadians(0)), Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(30, 8, Math.toRadians(0)), Math.toRadians(0))
                 //deposit
-             //   .afterTime(0, pleaseFixIntake())
-             //   .afterTime(0, readyForDepositAction)
-
-                .splineToLinearHeading(new Pose2d(52, 30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-             //   .afterTime(0, depositAction)
-                .strafeToSplineHeading(new Vector2d(52, 40), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(52, 34, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+             //   .afterTime(0.5, depositAction)
+                .strafeToSplineHeading(new Vector2d(52, 25), Math.toRadians(0))
 
                 .setTangent(Math.toRadians(-180))
                 .splineToLinearHeading(new Pose2d(24, 9, Math.toRadians(0)), Math.toRadians(180))
 
 
-           //     .afterTime(0.9, intake43OpenAction)
-                .splineToLinearHeading(new Pose2d(-36, 9.65, Math.toRadians(0)), Math.toRadians(-180))
+
+                .build());
+
+    }
+
+    public static void BlueMiddleLeft(RoadRunnerBotEntity myBot) {
+
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-40, -62, Math.toRadians(90)))
+                .strafeToLinearHeading(new Vector2d(-32, -33), Math.toRadians(90))
 
 
+                .setTangent(180)
+                .splineToSplineHeading(new Pose2d(-48, -41, Math.toRadians(0)), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-46, -23, Math.toRadians(0)), Math.toRadians(-180))
+              //  .afterTime(0, intake5OpenAction)
+                .waitSeconds(0.25)
+                .strafeToLinearHeading(new Vector2d(-53, -23), Math.toRadians(0))
+              //  .stopAndAdd(intake5CloseAction)
+
+               // .afterTime(0, pleaseFixIntakeClose())
+
+                .splineToLinearHeading(new Pose2d(-42, -10, Math.toRadians(0)), Math.toRadians(0))
+           //     .afterTime(.5, readyForDepositAction)
+
+                .splineToLinearHeading(new Pose2d(30, -10, Math.toRadians(0)), Math.toRadians(0))
+
+                //deposit
+                .splineToLinearHeading(new Pose2d(52, -28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+          //      .afterTime(0, depositAction)
+                .strafeToSplineHeading(new Vector2d(52, -35), Math.toRadians(0))
+
+                .setTangent(Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(24, -9.25, Math.toRadians(0)), Math.toRadians(-180))
+              //  .afterTime(0.9, intake43OpenAction)
+                .splineToLinearHeading(new Pose2d(-36, -9.25, Math.toRadians(0)), Math.toRadians(-180))
+                .waitSeconds(.2)
+       //         .afterTime(0.6, intake43CloseAction)
+                .strafeToLinearHeading(new Vector2d(-44, -10.8), Math.toRadians(0))
+
+
+            //    .afterTime(0, pleaseFixIntakeFar())
+             //   .afterTime(1, updateElevatorHeight(1600))
+                .strafeToLinearHeading(new Vector2d(30, -12), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(52, -26, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+            //    .afterTime(0, deposit43Action)
 
                 .build());
 
