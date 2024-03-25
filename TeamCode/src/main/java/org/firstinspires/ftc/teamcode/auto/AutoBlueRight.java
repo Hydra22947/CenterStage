@@ -27,14 +27,12 @@ import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
-import org.firstinspires.ftc.teamcode.auto.MaxAuto.AutoBlueRightMiddleMax;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineBlueRight;
-import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineRedRight;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.jetbrains.annotations.NotNull;
@@ -68,7 +66,7 @@ public class AutoBlueRight extends LinearOpMode {
         RIGHT
     }
 
-    public static AutoBlueRightMiddleMax.PropLocation propLocation = AutoBlueRightMiddleMax.PropLocation.MIDDLE;
+    public static PropLocation propLocation = PropLocation.MIDDLE;
     PropPipelineBlueRight propPipelineBlueRight;
     OpenCvWebcam webcam;
 
@@ -449,13 +447,13 @@ public class AutoBlueRight extends LinearOpMode {
 
             switch (propPipelineBlueRight.getLocation()) {
                 case Left:
-                    propLocation = AutoBlueRightMiddleMax.PropLocation.LEFT;
+                    propLocation = PropLocation.LEFT;
                     break;
                 case Right:
-                    propLocation = AutoBlueRightMiddleMax.PropLocation.RIGHT;
+                    propLocation = PropLocation.RIGHT;
                     break;
                 case Center:
-                    propLocation = AutoBlueRightMiddleMax.PropLocation.MIDDLE;
+                    propLocation = PropLocation.MIDDLE;
                     break;
             }
 

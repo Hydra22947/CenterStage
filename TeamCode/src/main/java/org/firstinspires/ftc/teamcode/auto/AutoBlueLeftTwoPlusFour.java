@@ -23,7 +23,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.checkerframework.checker.units.qual.C;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.CheckAprilTagAction;
@@ -35,8 +35,13 @@ import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
+import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineBlueLeft;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.jetbrains.annotations.NotNull;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous(name = "2+4 - Auto Blue Left")
@@ -60,12 +65,13 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
     public enum PropLocation
     {
         LEFT,
-        CENTER,
+        MIDDLE,
         RIGHT
     }
 
-    public static PropLocation propLocation = PropLocation.RIGHT;
-
+    public static PropLocation propLocation = PropLocation.MIDDLE;
+    PropPipelineBlueLeft propPipelineBlueLeft;
+    OpenCvWebcam webcam;
     public static int tempHeight = 1450;
     public static int minHeight = 1000;
 
@@ -74,14 +80,13 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
     public static int MIDDLE_EXTENSION = 300;
     public static int LEFT_EXTENSION = 200;
 
-    Pose2d test;
-
     SequentialAction blueLeftLeft;
     SequentialAction blueLeftMiddle;
     SequentialAction blueLeftRight;
 
     @Override
     public void runOpMode() {
+        propPipelineBlueLeft = new PropPipelineBlueLeft();
         time = new ElapsedTime();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -89,6 +94,9 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
         robot.init(hardwareMap, telemetry, autoConstants.startPoseBlueLeft);
 
         autoConstants = new AutoConstants();
+
+        initCamera();
+        webcam.setPipeline(propPipelineBlueLeft);
 
         elevator = new Elevator(true);
         outtake = new Outtake();
@@ -242,7 +250,7 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
 
         SequentialAction  intake54Action = new SequentialAction(
                 openIntakeWhitePixelAction54,
-                new SleepAction(1.8),
+                new SleepAction(2),
                 closeIntakeWhitePixelAction
         );
 
@@ -261,12 +269,12 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
 
         Action placeYellowTraj_RIGHT = robot.drive.actionBuilder(new Pose2d(20, 34.25, Math.toRadians(0)))
                 .afterTime(1 , depositBlue)
-                .strafeTo(new Vector2d(51.2,28))
+                .splineToConstantHeading(new Vector2d(50.5,28) , Math.toRadians(0))
                 .build();
 
 
-        Action goForIntakeTop54 = robot.drive.actionBuilder(new Pose2d(53, 28 , Math.toRadians(0)))
-                .strafeTo(new Vector2d(50,30.25))
+        Action goForIntakeTop54 = robot.drive.actionBuilder(new Pose2d(50.5, 28 , Math.toRadians(0)))
+                .splineToConstantHeading(new Vector2d(48,30.25) , Math.toRadians(0))
                 .setTangent(190)
                 .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
                 .afterTime(2.3, intake54Action)
@@ -291,7 +299,7 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
         VelConstraint baseVelConstraint = new VelConstraint() {
             @Override
             public double maxRobotVel(@NotNull Pose2dDual<Arclength> pose2dDual, @NotNull PosePath posePath, double v) {
-                if (pose2dDual.position.x.value() > 32 && pose2dDual.position.x.value() < 35) {
+                if (pose2dDual.position.x.value() > 35 && pose2dDual.position.x.value() < 39) {
                     return 5;
                 } else {
                     return 50.0;
@@ -303,10 +311,10 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                 robot.drive.actionBuilder(new Pose2d(-47.5,44.5,Math.toRadians(15)))
                         .setTangent(Math.toRadians(90))
                         .afterTime(0,returnFixintake())
-                        .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(-32, 58), Math.toRadians(0))
                         .setTangent(Math.toRadians(0))
-                        .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(0))
-                        .afterTime(0, new ParallelAction(depositSecondCycle,
+                        .splineToSplineHeading(new Pose2d(22, 58, Math.toRadians(-30)), Math.toRadians(0))
+                        .afterTime(1, new ParallelAction(depositSecondCycle,
                                 new InstantAction(() -> CheckAprilTagAction.turnOnDetection())))
                         .setTangent(Math.toRadians(0))
                         .splineToSplineHeading(new Pose2d(50.5, 40, Math.toRadians(0)), Math.toRadians(20), baseVelConstraint).build(),
@@ -385,6 +393,7 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                 .afterTime(0, depositSecondCycle)
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(50.5, 39), Math.toRadians(0))
+                .waitSeconds(0.1)
                 .strafeTo(new Vector2d(48,43 ))
                 .build();
 
@@ -534,16 +543,31 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
 
         while (opModeInInit() && !isStopRequested()) {
             intake.setAngle(Intake.Angle.MID);
-
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
+            telemetry.addData("POS", propPipelineBlueLeft.getLocation());
+            telemetry.addData("elevator pos", tempHeight);
+
+            switch (propPipelineBlueLeft.getLocation()) {
+                case Left:
+                    propLocation = PropLocation.LEFT;
+                    break;
+                case Right:
+                    propLocation = PropLocation.RIGHT;
+                    break;
+                case Center:
+                    propLocation = PropLocation.MIDDLE;
+                    break;
+            }
+
             telemetry.addLine("Initialized");
             telemetry.update();
         }
 
         waitForStart();
 
+        webcam.stopStreaming();
         if (isStopRequested()) return;
 
         time.reset();
@@ -556,8 +580,7 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                         updateActions.updateSystems()
                 ));
                 break;
-            case CENTER:
-
+            case MIDDLE:
                 runBlocking(new ParallelAction(
                         blueLeftMiddle,
                         updateActions.updateSystems()
@@ -635,5 +658,28 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                 intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
 
         );
+    }
+
+    void initCamera() {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+
+        FtcDashboard.getInstance().startCameraStream(webcam, 0);
+
+        webcam.setMillisecondsPermissionTimeout(5000); // Timeout for obtaining permission is configurable. Set before opening.
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                webcam.startStreaming(640, 480, OpenCvCameraRotation.UPSIDE_DOWN);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                /*
+                 * This will be called if the camera could not be opened
+                 */
+            }
+        });
+
     }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.MaxAuto;
+package org.firstinspires.ftc.teamcode.auto;
 
 //Interface to run each side of auto
 public abstract class Auto {
