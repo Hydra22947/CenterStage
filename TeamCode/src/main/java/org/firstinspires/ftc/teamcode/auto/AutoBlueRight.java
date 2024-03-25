@@ -241,25 +241,24 @@ public class AutoBlueRight extends LinearOpMode {
                 .stopAndAdd(intake5CloseAction)
                 .build();
 
-        VelConstraint baseVelConstraint = new VelConstraint() {
-            @Override
-            public double maxRobotVel(@NotNull Pose2dDual<Arclength> pose2dDual, @NotNull PosePath posePath, double v) {
-                if (pose2dDual.position.x.value() > 30 && pose2dDual.position.x.value() < 37.5) {
-                    return 5;
-                } else {
-                    return 50.0;
-                }
-            }
-        };
+//        VelConstraint baseVelConstraint = new VelConstraint() {
+//            @Override
+//            public double maxRobotVel(@NotNull Pose2dDual<Arclength> pose2dDual, @NotNull PosePath posePath, double v) {
+//                if (pose2dDual.position.x.value() > 30 && pose2dDual.position.x.value() < 37.5) {
+//                    return 5;
+//                } else {
+//                    return 50.0;
+//                }
+//            }
+//        };
 
         Action depositPreloadTrajLeft =// new CheckAprilTagAction(shouldUseAprilTag, time,
                 robot.drive.actionBuilder(new Pose2d(-55.2, 22, Math.toRadians(0)))
                         .splineToLinearHeading( new Pose2d(-42, 10, Math.toRadians(0)), Math.toRadians(0))
                         //deposit
                         .afterTime(0, pleaseFixIntake())
-                        .splineToLinearHeading(new Pose2d(15, 8,Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(38, 10,Math.toRadians(0)), Math.toRadians(0))
                         .afterTime(0.85, readyForDepositAction)
-                        .splineToSplineHeading(new Pose2d(31, 20, Math.toRadians(24.5)), Math.toRadians(60), baseVelConstraint)
                         .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .afterTime(0, depositAction)
                         .strafeToSplineHeading(new Vector2d(51, 38.2), Math.toRadians(0))
@@ -275,23 +274,20 @@ public class AutoBlueRight extends LinearOpMode {
 //                        new InstantAction(() -> requestOpModeStop()))
 //        );
 
-
         Action depositPreloadTrajMiddle = robot.drive.actionBuilder(new Pose2d(-32, 10, Math.toRadians(0)))
                 //deposit
                 .afterTime(0.5, pleaseFixIntake())
-                .splineToLinearHeading(new Pose2d(15,8 ,Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(38, 10,Math.toRadians(0)), Math.toRadians(0))
                 .afterTime(0.85, readyForDepositAction)
-                .splineToSplineHeading(new Pose2d(31, 20, Math.toRadians(24.5)), Math.toRadians(60), baseVelConstraint)
-                .splineToLinearHeading(new Pose2d(52, 26.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .afterTime(0, depositAction)
                 .strafeToSplineHeading(new Vector2d(52, 34), Math.toRadians(0))
                 .build();
 
         Action depositPreloadTrajRight = robot.drive.actionBuilder(new Pose2d(-52.5, 11, Math.toRadians(0)))
                 .afterTime(0.5, pleaseFixIntake())
-                .splineToLinearHeading(new Pose2d(15, 8,Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(38, 10,Math.toRadians(0)), Math.toRadians(0))
                 .afterTime(0.85, readyForDepositAction)
-                .splineToSplineHeading(new Pose2d(31, 20, Math.toRadians(24.5)), Math.toRadians(60), baseVelConstraint)
                 .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .afterTime(0, depositAction)
                 .strafeToSplineHeading(new Vector2d(51, 24.5), Math.toRadians(0))
@@ -330,24 +326,22 @@ public class AutoBlueRight extends LinearOpMode {
         Action deposit43Traj_MiddleOrLeft = robot.drive.actionBuilder(new Pose2d(-44.5, 10.5, Math.toRadians(0)))
 
                 .afterTime(0, pleaseFixIntake())
-
-
-                .strafeToLinearHeading(new Vector2d(15, 8), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(38, 10,Math.toRadians(0)), Math.toRadians(0))
                 .afterTime(0.85, updateElevatorHeight(1600))
-                .splineToSplineHeading(new Pose2d(31, 20, Math.toRadians(24.5)), Math.toRadians(60), baseVelConstraint)
-                .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .afterTime(0, deposit43Action)
                 .build();
+
+
 
         Action deposit43Traj_Right = robot.drive.actionBuilder(new Pose2d(-44.5, 11.9, Math.toRadians(0)))
 
                 .afterTime(0, pleaseFixIntake())
 
 
-                .strafeToLinearHeading(new Vector2d(15, 8), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(38, 10,Math.toRadians(0)), Math.toRadians(0))
                 .afterTime(0.85, updateElevatorHeight(1600))
-                .splineToSplineHeading(new Pose2d(31, 20, Math.toRadians(24.5)), Math.toRadians(60), baseVelConstraint)
-                .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .afterTime(0, deposit43Action)
                 .build();
 

@@ -313,18 +313,20 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
             }
         };
 
+
         Action goPlaceWhiteRIGHT_OR_TOP54 =// new CheckAprilTagAction(shouldUseAprilTag, time,
                 robot.drive.actionBuilder(new Pose2d(-47.5,44.5,Math.toRadians(15)))
                         .setTangent(Math.toRadians(90))
                         .afterTime(0,returnFixintake())
-                        .splineToConstantHeading(new Vector2d(-32, 58), Math.toRadians(0))
+                        .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
                         .setTangent(Math.toRadians(0))
-                        .splineToSplineHeading(new Pose2d(22, 58, Math.toRadians(-30)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(35, 58, Math.toRadians(0)), Math.toRadians(0))
+
 //                        .afterTime(1, new ParallelAction(depositSecondCycle,
 //                                new InstantAction(() -> CheckAprilTagAction.turnOnDetection())))
                         .afterTime(1, depositSecondCycle)
                         .setTangent(Math.toRadians(0))
-                        .splineToSplineHeading(new Pose2d(50.5, 40, Math.toRadians(0)), Math.toRadians(20)/*, baseVelConstraint*/).build();//,
+                        .splineToLinearHeading(new Pose2d(50.5, 40, Math.toRadians(0)), Math.toRadians(0)/*, baseVelConstraint*/).build();//,
 //                new SequentialAction(robot.drive.actionBuilder(new Pose2d(50.5, 40, Math.toRadians(0)))
 //                        .strafeToLinearHeading(new Vector2d(50.5, 60), Math.toRadians(-90)).build(),
 //                        new InstantAction(() -> intake.move(Intake.Angle.TELEOP_MID)),
@@ -341,11 +343,10 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                 .afterTime(0,returnFixintake())
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
                 .setTangent(Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(22, 58), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(35, 58, Math.toRadians(0)), Math.toRadians(0))
                 .afterTime(0, returnDepositTop32())
                 .setTangent(Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(50.5, 40), Math.toRadians(0))
-                        .build();
+                .splineToLinearHeading(new Pose2d(50.5, 40, Math.toRadians(0)), Math.toRadians(0)/*, baseVelConstraint*/).build();//,
 
 //                new SequentialAction(robot.drive.actionBuilder(new Pose2d(50.5, 40, Math.toRadians(0)))
 //                        .strafeToLinearHeading(new Vector2d(50.5, 60), Math.toRadians(-90)).build(),

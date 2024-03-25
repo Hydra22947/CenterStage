@@ -74,23 +74,13 @@ public class AprilTagTesting {
 //                .splineToSplineHeading(new Pose2d(50.5, 40, Math.toRadians(0)), Math.toRadians(20), baseVelConstraint)
 //                .build());
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-40, 62, Math.toRadians(-90)))
 
-                .strafeToLinearHeading(new Vector2d(-44.25, 10), Math.toRadians(0))
-                .strafeToLinearHeading(new Vector2d(15, 8), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(31, 20, Math.toRadians(24.5)), Math.toRadians(60),
-                        baseVelConstraint, baseAccelConstraint)
-
-
-
-
-                // detect
-
-                .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0))
-
-                .waitSeconds(.5)
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-55.2, 22, Math.toRadians(0)))
+                .splineToLinearHeading( new Pose2d(-42, 10, Math.toRadians(0)), Math.toRadians(0))
+                //deposit
+                .splineToLinearHeading(new Pose2d(38, 10,Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .build());
-
 
 
 
