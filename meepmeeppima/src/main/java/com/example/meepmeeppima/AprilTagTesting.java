@@ -75,11 +75,19 @@ public class AprilTagTesting {
 //                .build());
 
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-55.2, 22, Math.toRadians(0)))
-                .splineToLinearHeading( new Pose2d(-42, 10, Math.toRadians(0)), Math.toRadians(0))
-                //deposit
-                .splineToLinearHeading(new Pose2d(38, 10,Math.toRadians(0)), Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-32, 33, Math.toRadians(-90)))
+                .setTangent(-180)
+                .splineToSplineHeading(new Pose2d(-48, 41, Math.toRadians(0)), Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(-46, 23, Math.toRadians(0)), Math.toRadians(180))
+                .waitSeconds(0.25)
+                .strafeToLinearHeading(new Vector2d(-53, 23), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-48, 23), Math.toRadians(0))
+                //.splineToConstantHeading(new Vector2d(-32, 10), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-42, 10, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(30, 8, Math.toRadians(0)), Math.toRadians(0))
+
+                        .splineToLinearHeading(new Pose2d(52.25, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .strafeToSplineHeading(new Vector2d(51, 40), Math.toRadians(0))
                 .build());
 
 
