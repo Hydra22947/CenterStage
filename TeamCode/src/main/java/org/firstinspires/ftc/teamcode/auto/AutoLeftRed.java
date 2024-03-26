@@ -196,7 +196,7 @@ public class AutoLeftRed extends LinearOpMode {
         //Trajectories
 
         Action placePurpleTrajRight = robot.drive.actionBuilder(robot.drive.pose)
-                .strafeToLinearHeading(new Vector2d(-29, -40), Math.toRadians(40))
+                .splineToLinearHeading(new Pose2d(-29, -40, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         Action placePurpleTrajMiddle = robot.drive.actionBuilder(robot.drive.pose)
@@ -204,7 +204,7 @@ public class AutoLeftRed extends LinearOpMode {
                 .build();
 
         Action placePurpleTrajLeft = robot.drive.actionBuilder(robot.drive.pose)
-                .strafeToLinearHeading(new Vector2d(-48, -43), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(-45, -43), Math.toRadians(90))
                 .build();
 
         Action intake5TrajLeft = robot.drive.actionBuilder(new Pose2d(-48, -44, Math.toRadians(90)))
@@ -222,16 +222,16 @@ public class AutoLeftRed extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-48, -26, Math.toRadians(0)), Math.toRadians(-180))
                 .afterTime(0, intake5OpenAction)
                 .waitSeconds(0.25)
-                .strafeToLinearHeading(new Vector2d(-53, -26), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-53.1, -26), Math.toRadians(0))
                 .stopAndAdd(intake5CloseAction)
                 .build();
 
-        Action intake5TrajRight = robot.drive.actionBuilder(new Pose2d(-50, -43, Math.toRadians(90)))
+        Action intake5TrajRight = robot.drive.actionBuilder(new Pose2d(-50, -43, Math.toRadians(0)))
                 .strafeToSplineHeading(new Vector2d(-42, -45), Math.toRadians(90))
                 .splineToLinearHeading(new Pose2d(-38, -14, Math.toRadians(90)), Math.toRadians(90))
                 .strafeToLinearHeading(new Vector2d(-45, -14), Math.toRadians(0))
                 .stopAndAdd(intake5OpenAction)
-                .strafeToLinearHeading(new Vector2d(-53.25, -14), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-53.1, -14), Math.toRadians(0))
                 .stopAndAdd(intake5CloseAction)
                 .build();
 
@@ -296,15 +296,15 @@ public class AutoLeftRed extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(30, -12), Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(52, -30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .afterTime(0, depositAction)
-                .strafeToSplineHeading(new Vector2d(50.6, -44), Math.toRadians(0))
+                .strafeToSplineHeading(new Vector2d(50.6, -44), Math.toRadians(5))
                 .build();
 
 
         Action intake43Traj_Left = robot.drive.actionBuilder(new Pose2d(50, -30, Math.toRadians(0)))
                 .setTangent(Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(24, -9.25, Math.toRadians(0)), Math.toRadians(-180))
+                .splineToLinearHeading(new Pose2d(24, -9.5, Math.toRadians(0)), Math.toRadians(-180))
                 .afterTime(0.9, intake43OpenAction)
-                .splineToLinearHeading(new Pose2d(-35.9, -9.25, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-35.9, -9.5, Math.toRadians(0)), Math.toRadians(180))
                 .waitSeconds(.2)
                 .afterTime(0.6, intake43CloseAction)
                 .strafeToLinearHeading(new Vector2d(-44, -10.8), Math.toRadians(0))
@@ -313,9 +313,9 @@ public class AutoLeftRed extends LinearOpMode {
 
         Action intake43Traj_Middle = robot.drive.actionBuilder(new Pose2d(51, -38, Math.toRadians(0)))
                 .setTangent(Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(24, -9.25, Math.toRadians(0)), Math.toRadians(-180))
+                .splineToLinearHeading(new Pose2d(24, -9.5, Math.toRadians(0)), Math.toRadians(-180))
                 .afterTime(0.9, intake43OpenAction)
-                .splineToLinearHeading(new Pose2d(-36, -9.25, Math.toRadians(0)), Math.toRadians(-180))
+                .splineToLinearHeading(new Pose2d(-36, -9.5, Math.toRadians(0)), Math.toRadians(-180))
                 .waitSeconds(.2)
                 .afterTime(0.6, intake43CloseAction)
                 .strafeToLinearHeading(new Vector2d(-44, -10.8), Math.toRadians(0))

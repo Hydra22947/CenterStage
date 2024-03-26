@@ -174,6 +174,9 @@ public class AutoBlueLeft extends LinearOpMode {
                         .stopAndAdd(placePurplePixelBlueLeft)
                         .setTangent(0)
                         .waitSeconds(.1)
+                        .stopAndAdd(placePurpleActions.moveIntake(Intake.Angle.MID))
+                        .waitSeconds(.2)
+                        .stopAndAdd(placePurpleActions.closeExtension())
                         .strafeTo(new Vector2d(50, 40.7))
                         .stopAndAdd(depositBlueLeft)
                         .waitSeconds(0.5)
@@ -202,7 +205,7 @@ public class AutoBlueLeft extends LinearOpMode {
                         .waitSeconds(.2)
                         .stopAndAdd(placePurpleActions.moveIntake(Intake.Angle.MID))
                         .waitSeconds(.2)
-                        .stopAndAdd(placePurpleActions.closeExtension())
+                        .stopAndAdd(placePurpleActions.openExtension(0))
                         //Place Preload on board
                         .splineToLinearHeading(new Pose2d(51, 34, Math.toRadians(0)), Math.toRadians(0))
                         .waitSeconds(.1)

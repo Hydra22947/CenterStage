@@ -160,7 +160,10 @@ public class AutoRightRed extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(48, -34.25, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixelBlueLeft)
                         .setTangent(0)
-                        .waitSeconds(.1)
+                        .waitSeconds(.2)
+                        .stopAndAdd(placePurpleActions.moveIntake(Intake.Angle.MID))
+                        .waitSeconds(.2)
+                        .stopAndAdd(placePurpleActions.closeExtension())
                         .strafeTo(new Vector2d(50.75, -40.5))
                         .stopAndAdd(depositBlueRight)
                         .waitSeconds(0.5)
@@ -197,7 +200,7 @@ public class AutoRightRed extends LinearOpMode {
                         .waitSeconds(0.5)
                         //Park
                         .setTangent(Math.toRadians(-90))
-                        .strafeTo(new Vector2d(50, -33))
+                        .strafeTo(new Vector2d(45, -33))
                         //Park Close To Wall
                         .strafeTo(new Vector2d(45, -60))
                         .stopAndAdd(retractDepositBlueMiddle)
@@ -219,6 +222,8 @@ public class AutoRightRed extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(31, -32, Math.toRadians(0)), Math.toRadians(0))
                         .stopAndAdd(placePurplePixelBlueRight)
                         .setTangent(0)
+                        .waitSeconds(.2)
+                        .stopAndAdd(placePurpleActions.moveIntake(Intake.Angle.MID))
                         .waitSeconds(.2)
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
