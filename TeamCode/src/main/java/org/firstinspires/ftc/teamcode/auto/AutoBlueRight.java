@@ -478,6 +478,7 @@ public class AutoBlueRight extends LinearOpMode {
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addData("POS", propLocation.name());
             telemetry.addData("elevator pos", tempHeight);
+            telemetry.update();
 
             switch (propPipelineBlueRight.getLocation()) {
                 case Left:
