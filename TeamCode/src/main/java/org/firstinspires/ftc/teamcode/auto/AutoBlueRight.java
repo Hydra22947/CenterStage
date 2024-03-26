@@ -300,7 +300,7 @@ public class AutoBlueRight extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(50.75, 34, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .afterTime(0, depositAction)
-                .strafeToSplineHeading(new Vector2d(50.6, 25), Math.toRadians(-8))
+                .strafeToSplineHeading(new Vector2d(50.6, 25), Math.toRadians(-12))
                 .build();
 
 
@@ -328,15 +328,15 @@ public class AutoBlueRight extends LinearOpMode {
 
         Action intake43Traj_Right = robot.drive.actionBuilder(new Pose2d(52, 25, Math.toRadians(0)))
                 .setTangent(Math.toRadians(-180))
-                .splineToLinearHeading(new Pose2d(24, 9, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(24, 10, Math.toRadians(0)), Math.toRadians(180))
 
 
                 .afterTime(0.9, intake43OpenActionRight)
-                .splineToLinearHeading(new Pose2d(-36, 10.5, Math.toRadians(0)), Math.toRadians(-180))
+                .splineToLinearHeading(new Pose2d(-36, 10, Math.toRadians(0)), Math.toRadians(-180))
                 .waitSeconds(.2)
 
                 .afterTime(0.6, intake43CloseAction)
-                .strafeToLinearHeading(new Vector2d(-43.95, 10.9), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-43.95, 9), Math.toRadians(0))
 
                 .build();
 
