@@ -207,12 +207,12 @@ public class AutoLeftRed extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-48, -43), Math.toRadians(90))
                 .build();
 
-        Action intake5TrajLeft = robot.drive.actionBuilder(new Pose2d(-29, -40, Math.toRadians(40)))
-                //  .splineToSplineHeading(new Pose2d(-40, 40, Math.toRadians(-40)), Math.toRadians(180))
-                //   .splineToLinearHeading(new Pose2d(-45.5, 22, Math.toRadians(0)), Math.toRadians(180))
-                .strafeToLinearHeading(new Vector2d(-45.5, -22), Math.toRadians(0))
+        Action intake5TrajLeft = robot.drive.actionBuilder(new Pose2d(-48, -44, Math.toRadians(90)))
+                .strafeToSplineHeading(new Vector2d(-42, -45), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-38, -11, Math.toRadians(90)), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(-45, -11), Math.toRadians(0))
                 .stopAndAdd(intake5OpenAction)
-                .strafeToLinearHeading(new Vector2d(-53.5, -22), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-53, -11), Math.toRadians(0))
                 .stopAndAdd(intake5CloseAction)
                 .build();
 
@@ -247,7 +247,7 @@ public class AutoLeftRed extends LinearOpMode {
 //        };
 
         Action depositPreloadTrajLeft =// new CheckAprilTagAction(shouldUseAprilTag, time,
-                robot.drive.actionBuilder(new Pose2d(-55.2, -22, Math.toRadians(0)))
+                robot.drive.actionBuilder(new Pose2d(-53, -11, Math.toRadians(0)))
                         .afterTime(0.5, pleaseFixIntakeClose())
 
                         .splineToLinearHeading(new Pose2d(-42, -10, Math.toRadians(0)), Math.toRadians(0))
@@ -255,10 +255,10 @@ public class AutoLeftRed extends LinearOpMode {
                         .afterTime(.5, readyForDepositAction)
 
                         .splineToLinearHeading(new Pose2d(30, -10, Math.toRadians(0)), Math.toRadians(0))
-                        .splineToLinearHeading(new Pose2d(52, -30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(52, -36, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .afterTime(0, new InstantAction(() -> claw.setRightClaw(Claw.ClawState.OPEN)))
                         .afterTime(0, depositAction)
-
-                        .strafeToLinearHeading(new Vector2d(52, -40), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(52, -30), Math.toRadians(0))
 
                         .build();
 
@@ -300,11 +300,11 @@ public class AutoLeftRed extends LinearOpMode {
                 .build();
 
 
-        Action intake43Traj_Left = robot.drive.actionBuilder(new Pose2d(51, -34, Math.toRadians(0)))
+        Action intake43Traj_Left = robot.drive.actionBuilder(new Pose2d(50, -30, Math.toRadians(0)))
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(24, -9.25, Math.toRadians(0)), Math.toRadians(-180))
                 .afterTime(0.9, intake43OpenAction)
-                .splineToLinearHeading(new Pose2d(-36, -9.25, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-35.9, -9.25, Math.toRadians(0)), Math.toRadians(180))
                 .waitSeconds(.2)
                 .afterTime(0.6, intake43CloseAction)
                 .strafeToLinearHeading(new Vector2d(-44, -10.8), Math.toRadians(0))
@@ -349,7 +349,7 @@ public class AutoLeftRed extends LinearOpMode {
                 .afterTime(0, pleaseFixIntakeFar())
                 .afterTime(1, updateElevatorHeight(1600))
                 .strafeToLinearHeading(new Vector2d(30, -12), Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(52, -28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .splineToLinearHeading(new Pose2d(52, -30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .afterTime(0, deposit43Action)
                 .build();
 
