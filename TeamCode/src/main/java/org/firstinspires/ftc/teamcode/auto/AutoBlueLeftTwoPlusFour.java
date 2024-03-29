@@ -49,7 +49,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous(name = "2+4 - Auto Blue Left")
-@Disabled
+
 public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
@@ -153,11 +153,9 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                 new SleepAction(1.45),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
 
-                new SleepAction(0.4),
+                new SleepAction(0.25),
                 depositActions.moveElevator(tempHeight + 400),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
-                new SleepAction(0.2),
-                depositActions.moveElevator(tempHeight -200),
                 new SleepAction(0.3),
                 depositActions.retractDeposit()
         );
@@ -273,7 +271,7 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
 
         Action placePurpleTraj_RIGHT = robot.drive.actionBuilder(robot.drive.pose)
                 .afterTime(0.5 ,placePurplePixelSequence_Right)
-                .strafeToLinearHeading(new Vector2d(20 ,34.25), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(20 ,34.25, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         Action placeYellowTraj_RIGHT = robot.drive.actionBuilder(new Pose2d(20, 34.25, Math.toRadians(0)))
@@ -283,20 +281,19 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
 
 
         Action goForIntakeTop54 = robot.drive.actionBuilder(new Pose2d(50.5, 28 , Math.toRadians(0)))
-                .splineToConstantHeading(new Vector2d(48,30.25) , Math.toRadians(0))
-                .setTangent(190)
+                .splineToLinearHeading(new Pose2d(49,34.25 , Math.toRadians(0)) , Math.toRadians(180))
                 .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
                 .afterTime(2.3, intake54Action)
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(-38.5, 43.6, Math.toRadians(12)), Math.toRadians(-180))
-                .strafeTo(new Vector2d(-44.5, 37.4))
+                .strafeTo(new Vector2d(-44.5, 44.5))
                 .waitSeconds(0.2)
                 .build();
 
 
-        Action goForIntakeTop32 = robot.drive.actionBuilder(new Pose2d(50.5, 39 , Math.toRadians(0)))
-                .strafeTo(new Vector2d(48,43 ))
+        Action goForIntakeTop32 = robot.drive.actionBuilder(new Pose2d(50.5, 40 , Math.toRadians(0)))
                 .setTangent(190)
+                .splineToLinearHeading(new Pose2d(43,43 , Math.toRadians(0)) ,Math.toRadians(180))
                 .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
                 .afterTime(2.3, intake32Action)
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
@@ -325,23 +322,15 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                         .setTangent(Math.toRadians(0))
                         .splineToLinearHeading(new Pose2d(35, 58, Math.toRadians(0)), Math.toRadians(0))
 
-//                        .afterTime(1, new ParallelAction(depositSecondCycle,
-//                                new InstantAction(() -> CheckAprilTagAction.turnOnDetection())))
                         .afterTime(0.8, depositSecondCycle)
                         .setTangent(Math.toRadians(0))
-                        .splineToLinearHeading(new Pose2d(50.5, 40, Math.toRadians(0)), Math.toRadians(0)/*, baseVelConstraint*/).build();//,
-//                new SequentialAction(robot.drive.actionBuilder(new Pose2d(50.5, 40, Math.toRadians(0)))
-//                        .strafeToLinearHeading(new Vector2d(50.5, 60), Math.toRadians(-90)).build(),
-//                        new InstantAction(() -> intake.move(Intake.Angle.TELEOP_MID)),
-//                        new InstantAction(() -> claw.setBothClaw(Claw.ClawState.CLOSED)),
-//                        new InstantAction(() -> outtake.setAngle(Outtake.Angle.INTAKE)),
-//                        new InstantAction(() -> elevator.setTarget(0)),
-//                        new SleepAction(1),
-//                        new InstantAction(() -> requestOpModeStop()))
-                //);
+                        .splineToLinearHeading(new Pose2d(50.5, 40, Math.toRadians(0)), Math.toRadians(0))
+                        .waitSeconds(0.2)
+                        .build();
 
-        Action goPlaceWhiteRIGHT_OR_TOP32 = //new CheckAprilTagAction(shouldUseAprilTag, time,
-                robot.drive.actionBuilder(new Pose2d(-48.5, 44.4,Math.toRadians(15)))
+
+
+        Action goPlaceWhiteRIGHT_OR_TOP32 = robot.drive.actionBuilder(new Pose2d(-48.5, 44.4,Math.toRadians(15)))
                 .setTangent(Math.toRadians(90))
                 .afterTime(0,returnFixintake())
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
@@ -349,7 +338,10 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(35, 58, Math.toRadians(0)), Math.toRadians(0))
                 .afterTime(0, returnDepositTop32())
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(50.5, 40, Math.toRadians(0)), Math.toRadians(0)/*, baseVelConstraint*/).build();//,
+                .splineToLinearHeading(new Pose2d(50.5, 40, Math.toRadians(0)), Math.toRadians(0))
+                .waitSeconds(0.2)
+                .build();//,
+
 
 //                new SequentialAction(robot.drive.actionBuilder(new Pose2d(50.5, 40, Math.toRadians(0)))
 //                        .strafeToLinearHeading(new Vector2d(50.5, 60), Math.toRadians(-90)).build(),
@@ -363,40 +355,37 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
 
         Action placePurpleTraj_LEFT = robot.drive.actionBuilder(robot.drive.pose)
                 .afterTime(1 ,placePurplePixelSequence_Left)
-                .strafeToLinearHeading(new Vector2d(40 ,34.25), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(40 ,34.25, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         Action placeYellowTraj_LEFT = robot.drive.actionBuilder(new Pose2d(40, 34.25, Math.toRadians(0)))
                 .afterTime(0.8 , depositBlue)
-                .strafeTo(new Vector2d(50,39.5))
-                .waitSeconds(0.45)
-                .strafeTo(new Vector2d(48,43 ))
+                .splineToConstantHeading(new Vector2d(50,39.5), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(43,43 ), Math.toRadians(0))
                 .build();
 
 
-        Action goForIntakeTop54_LEFT_OR_MIDDLE = robot.drive.actionBuilder(new Pose2d(48, 43 , Math.toRadians(0)))
-                .setTangent(190)
+        Action goForIntakeTop54_LEFT_OR_MIDDLE = robot.drive.actionBuilder(new Pose2d(43, 43 , Math.toRadians(0)))
                 .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
+                .afterTime(1.3, intake54Action)
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
-                .afterTime(0.2, intake54Action)
                 .splineToLinearHeading(new Pose2d(-38.5, 37.3, Math.toRadians(0)), Math.toRadians(-180))
-                .strafeTo(new Vector2d(-44.5, 37.4))
-                .waitSeconds(0.2)
+                .strafeTo(new Vector2d(-45, 37))
                 //.afterTime(2.3, intake54Action)
                 .build();
 
 
-        Action goForIntakeTop32_LEFT_OR_MIDDLE = robot.drive.actionBuilder(new Pose2d(48, 43, Math.toRadians(0)))
+        Action goForIntakeTop32_LEFT_OR_MIDDLE = robot.drive.actionBuilder(new Pose2d(39, 34.25, Math.toRadians(0)))
                 .setTangent(190)
                 .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
+                .afterTime(1.2, intake32Action)
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
-                .afterTime(0.2, intake32Action)
                 .splineToLinearHeading(new Pose2d(-39.5, 37.3, Math.toRadians(0)), Math.toRadians(-180))
-                .strafeTo(new Vector2d(-46, 38))
-                .waitSeconds(0.2)
+                .strafeTo(new Vector2d(-45, 37))
+
                 .build();
 
-        Action goPlaceWhite_LEFT_OR_MIDDLE54 = robot.drive.actionBuilder(new Pose2d(-44.5, 37.4,Math.toRadians(15)))
+        Action goPlaceWhite_LEFT_OR_MIDDLE54 = robot.drive.actionBuilder(new Pose2d(-45, 37,Math.toRadians(15)))
                 .setTangent(Math.toRadians(90))
                 .afterTime(0,returnFixintake())
                 .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)), Math.toRadians(0))
@@ -405,11 +394,12 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                 .afterTime(0, depositSecondCycle)
                 .setTangent(Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(50.5, 39), Math.toRadians(0))
-                .waitSeconds(0.1)
-                .strafeTo(new Vector2d(48,43 ))
+                .waitSeconds(0.2)
+                .setTangent(-180)
+                .splineToLinearHeading(new Pose2d(43,34 , Math.toRadians(0)) ,Math.toRadians(180))
                 .build();
 
-        Action goPlaceWhite_LEFT_OR_MIDDLE32 = robot.drive.actionBuilder(new Pose2d(-47.5, 38,Math.toRadians(15)))
+        Action goPlaceWhite_LEFT_OR_MIDDLE32 = robot.drive.actionBuilder(new Pose2d(-45, 37,Math.toRadians(15)))
 
                 .setTangent(Math.toRadians(90))
                 .afterTime(0,returnFixintake())
@@ -424,14 +414,17 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
 
         Action placePurpleTraj_MIDDLE = robot.drive.actionBuilder(robot.drive.pose)
                 .afterTime(1 , placePurplePixelSequence_Middle)
-                .strafeToLinearHeading(new Vector2d(30 ,26), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(30 ,26, Math.toRadians(0)) , Math.toRadians(0))
                 .build();
 
         Action placeYellowTraj_MIDDLE = robot.drive.actionBuilder(new Pose2d(30, 26, Math.toRadians(0)))
                 .afterTime(0.8 , depositBlue)
-                .strafeTo(new Vector2d(50,34.25))
+                .splineToConstantHeading(new Vector2d(50,34.25 ), Math.toRadians(0))
                 .waitSeconds(0.45)
-                .strafeTo(new Vector2d(48,43 ))
+
+                .strafeTo(new Vector2d(39, 34.25))
+                //.splineToLinearHeading(new Pose2d(49,34.25  , Math.toRadians(0)) , Math.toRadians(190))
+
                 .build();
 
 /*
