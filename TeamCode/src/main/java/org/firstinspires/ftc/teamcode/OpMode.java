@@ -168,10 +168,10 @@ public class OpMode extends LinearOpMode {
                 plane.toggle();
             }
 
-            if(betterGamepad2.shareOnce())
-            {
-                outtakeToOuttake = !outtakeToOuttake;
-            }
+//            if(betterGamepad2.shareOnce())
+//            {
+//                outtakeToOuttake = !outtakeToOuttake;
+//            }
 
             if(gamepad2.left_trigger != 0 || gamepad1.left_trigger != 0)
             {
@@ -748,7 +748,7 @@ public class OpMode extends LinearOpMode {
                     switchOuttake();
                 }
 
-                if (betterGamepad1.AOnce() && cooldowned())  {
+                if (betterGamepad1.AOnce() && cooldowned() || (betterGamepad2.shareOnce() && cooldowned()))  {
                     claw.setBothClaw(Claw.ClawState.OPEN);
 
                     elevatorTargetRight = elevator.getTargetRight() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
@@ -780,7 +780,7 @@ public class OpMode extends LinearOpMode {
                 }
 
 
-                if (betterGamepad1.AOnce() || betterGamepad1.leftBumperOnce())
+                if (betterGamepad1.AOnce() || betterGamepad1.leftBumperOnce()  || betterGamepad2.shareOnce())
                 {
                     liftState = LiftState.RETRACT;
                 }

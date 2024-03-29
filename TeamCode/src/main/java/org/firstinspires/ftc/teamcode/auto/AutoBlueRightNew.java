@@ -1,24 +1,20 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
-
 import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.cycleVision;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Arclength;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Pose2dDual;
-import com.acmerobotics.roadrunner.PosePath;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.VelConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -37,15 +33,15 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineBlueRight;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
-import org.jetbrains.annotations.NotNull;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
-@Autonomous(name = "2+3 - Auto Right Blue")
-public class AutoBlueRight extends LinearOpMode {
+@Autonomous(name = "2+1 - Auto Right Blue NEW")
+@Disabled
+public class AutoBlueRightNew extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 
@@ -219,7 +215,7 @@ public class AutoBlueRight extends LinearOpMode {
                 .stopAndAdd(intake5OpenAction)
                 .strafeToLinearHeading(new Vector2d(-54, 23.8), Math.toRadians(0))
                 .stopAndAdd(intake5CloseAction)
-                .waitSeconds(3.5)
+                .waitSeconds(10)
                 .build();
 
         Action intake5TrajMiddle = robot.drive.actionBuilder(new Pose2d(-32, 33, Math.toRadians(-90)))
@@ -230,17 +226,17 @@ public class AutoBlueRight extends LinearOpMode {
                 .waitSeconds(0.25)
                 .strafeToLinearHeading(new Vector2d(-52.9, 24), Math.toRadians(0))
                 .stopAndAdd(intake5CloseAction)
-                .waitSeconds(2.5)
+                .waitSeconds(9)
                 .build();
 
         Action intake5TrajRight = robot.drive.actionBuilder(new Pose2d(-50, 43, Math.toRadians(-90)))
                 .strafeToSplineHeading(new Vector2d(-42, 45), Math.toRadians(-90))
                 .splineToLinearHeading(new Pose2d(-38, 11, Math.toRadians(-90)), Math.toRadians(-90))
-                .strafeToLinearHeading(new Vector2d(-45, 13), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-45, 10.75), Math.toRadians(0))
                 .stopAndAdd(intake5OpenAction)
-                .strafeToLinearHeading(new Vector2d(-52.65, 13), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-52.65, 10.75), Math.toRadians(0))
                 .stopAndAdd(intake5CloseAction)
-                .waitSeconds(2)
+                .waitSeconds(10)
                 .build();
 
 //        VelConstraint baseVelConstraint = new VelConstraint() {
@@ -326,7 +322,7 @@ public class AutoBlueRight extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-36, 9.25, Math.toRadians(0)), Math.toRadians(-180))
                 .waitSeconds(.2)
                 .afterTime(0.6, intake43CloseAction)
-                .strafeToLinearHeading(new Vector2d(-43.75, 10.8), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-44, 10.8), Math.toRadians(0))
                 .build();
 
 
@@ -374,7 +370,7 @@ public class AutoBlueRight extends LinearOpMode {
                 .build();
 
 
-        Action parkTraj = robot.drive.actionBuilder(new Pose2d(52, 28, Math.toRadians(0)))
+        Action parkTraj = robot.drive.actionBuilder(new Pose2d(52, 40, Math.toRadians(0)))
                 .strafeToLinearHeading(new Vector2d(46, 30), Math.toRadians(-90))
                 .build();
 
@@ -449,8 +445,6 @@ public class AutoBlueRight extends LinearOpMode {
                 placePurplePixelLeft,
                 intake5Left,
                 depositPreloadLeft,
-                intake43Traj_Left,
-                deposit43_Left,
                 park
         );
 
@@ -458,8 +452,6 @@ public class AutoBlueRight extends LinearOpMode {
                 placePurplePixelMiddle,
                 intake5Middle,
                 depositPreloadMiddle,
-                intake43_Middle,
-                deposit43_Middle,
                 park
         );
 
@@ -467,8 +459,6 @@ public class AutoBlueRight extends LinearOpMode {
                 placePurplePixelRight,
                 intake5Right,
                 depositPreloadRight,
-                intake43_Right,
-                deposit43_Right,
                 park
         );
 

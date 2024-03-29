@@ -207,7 +207,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .stopAndAdd(transferBlueMiddle)
                         .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-35, 11), Math.toRadians(0))
-                        .stopAndAdd(new ParallelAction(new SleepAction(9.5), returnFixintake()))
+                        .stopAndAdd(new ParallelAction(new SleepAction(10.5), returnFixintake()))
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
                         .afterDisp(.7, readyIntakeBlue)
@@ -245,12 +245,12 @@ public class AutoRightBlue extends LinearOpMode {
                         .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-44.25, 10), Math.toRadians(0))
 
-                        .stopAndAdd(new ParallelAction(new SleepAction(9.5), returnFixintake()))
+                        .stopAndAdd(new ParallelAction(new SleepAction(10.5), returnFixintake()))
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(0))
                         .afterDisp(.7, readyIntakeBlue)
-                        //for no pixels change to 950
+                        .afterDisp(0.3, readyForDeposit)                        //for no pixels change to 950
                         .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
@@ -321,11 +321,11 @@ public class AutoRightBlue extends LinearOpMode {
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
 
-                        .stopAndAdd(new ParallelAction(new SleepAction(8.5), returnFixintake()))
+                        .stopAndAdd(new ParallelAction(new SleepAction(10.5), returnFixintake()))
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30.25, 9.5), Math.toRadians(0))
-                        .afterDisp(.7, readyIntakeBlue)
+                        .afterDisp(.7, readyForDeposit)
                         //for no pixels change to 950
                         .splineToLinearHeading(new Pose2d(52.75, 29, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositIntermediate)

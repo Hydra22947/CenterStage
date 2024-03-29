@@ -211,15 +211,15 @@ public class AutoLeftRed extends LinearOpMode {
                         .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-35, -11), Math.toRadians(0))
 
-                        .stopAndAdd(new ParallelAction(new SleepAction(9.5), returnFixintake()))
+                        .stopAndAdd(new ParallelAction(new SleepAction(10), returnFixintake()))
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, -12), Math.toRadians(0))
                         .afterDisp(.7, readyIntakeBlue)
-                        .afterDisp(0.5, readyForDeposit)
+                        .afterDisp(0.3, readyForDeposit)
                         //for no pixels change to 950
 
-                        .splineToLinearHeading(new Pose2d(52.25, -38, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(52.25, -34, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositIntermediate)
                         .splineToLinearHeading(new Pose2d(52.25, -42, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
@@ -259,7 +259,11 @@ public class AutoLeftRed extends LinearOpMode {
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, -8.5), Math.toRadians(0))
                         .afterDisp(.7, readyIntakeBlue)
+                        .afterDisp(0.3, readyForDeposit)
                         //for no pixels change to 950
+                        .splineToLinearHeading(new Pose2d(52.25, -30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .stopAndAdd(depositIntermediate)
+
                         .splineToLinearHeading(new Pose2d(52, -35.75, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
@@ -294,11 +298,16 @@ public class AutoLeftRed extends LinearOpMode {
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
 
-                        .stopAndAdd(new ParallelAction(new SleepAction(8.5), returnFixintake()))
+                        .stopAndAdd(new ParallelAction(new SleepAction(10), returnFixintake()))
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30.25, -9.5), Math.toRadians(0))
                         .afterDisp(.7, readyIntakeBlue)
+                        .afterDisp(0.3, readyForDeposit)
+
+                        .splineToLinearHeading(new Pose2d(52.25, -38, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .stopAndAdd(depositIntermediate)
+
                         //for no pixels change to 950
                         .splineToLinearHeading(new Pose2d(52.75, -29, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
