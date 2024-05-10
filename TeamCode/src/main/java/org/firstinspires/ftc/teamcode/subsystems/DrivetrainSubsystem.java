@@ -1,48 +1,38 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.geometry.Vector2d;
+import com.arcrobotics.ftclib.command.Subsystem;
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 
-import java.io.File;
-
 @Config
-public class Drivetrain{
-
-    boolean blueAlliance;
+public class DrivetrainSubsystem extends SubsystemBase {
 
     private BetterGamepad _cGamepad1;
-    boolean first = true;
-
-    private final RobotHardware robot;
+    private final RobotHardware robot = RobotHardware.getInstance();;
     public static double maxPower = 1;
     public static double slowerSpin = 0.5;
     public double power = 0, twist = 0;
     double botHeading = 0, y = 0, x = 0, rotY = 0, rotX = 0;
 
     //Constructor
-    public Drivetrain(Gamepad gamepad1, boolean blueAlliance, boolean debug)
+    public DrivetrainSubsystem(Gamepad gamepad1)
     {
-        this.robot = RobotHardware.getInstance();
-
         // gamepad helper to see if pressed button once
         this._cGamepad1 = new BetterGamepad(gamepad1);
 
         power = maxPower;
 
-        this.blueAlliance = blueAlliance;
-
-        resetAngle(debug);
+        robot.imu.resetYaw();
     }
 
-    public void update() {
+    @Override
+    public void periodic() {
         _cGamepad1.update();
 
         y = Range.clip(-_cGamepad1.left_stick_y, -power, power); // Remember, Y stick value is reversed
@@ -66,13 +56,6 @@ public class Drivetrain{
         robot.dtFrontRightMotor.setPower(rotY - rotX - twist);
         robot.dtBackRightMotor.setPower(rotY + rotX - twist);
     }
-
-
-    public void resetAngle(boolean debug)
-    {
-        robot.imu.resetYaw();
-    }
-
 
     public void fast()
     {

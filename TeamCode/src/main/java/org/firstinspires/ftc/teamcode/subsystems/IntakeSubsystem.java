@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.command.Subsystem;
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -9,60 +11,39 @@ import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.jetbrains.annotations.NotNull;
 
 @Config
-public class Intake implements Subsystem {
+public class IntakeSubsystem extends SubsystemBase {
 
     private final RobotHardware robot;
     public static double intakeHandPivot = 0.2, intakeAmmoPivot = 0.12;
-    public static double outtakeHandPivot = 0.64, outtakeAmmoPivot = .67; // פורק מהשאיבה הזוויות-מתוקן
+    public static double outtakeHandPivot = 0.64, outtakeAmmoPivot = .67;
     public static double midHandPivot = 0.67, midAmmoPivot = 0.4;
     public static double midTeleOpHandPivot = 0.5, midTeleopAmmoPivot = 0.65;
     public static double top5HandPivot = .31, top5AmmoPivot = 0.13;
-    public static double top5HandPivotAuto = 0.315, top5AmmoPivotAuto = 0.13; //auto ערימה של אוטונומי רק ה5
-    public static double top54HandPivot = 0.29, top54AmmoPivot = 0.125; // ערימה של 54
+    public static double top5HandPivotAuto = 0.315, top5AmmoPivotAuto = 0.13;
+    public static double top54HandPivot = 0.29, top54AmmoPivot = 0.125;
     public static double top54HandPivotAuto = 0.29, top54AmmoPivotAuto = 0.135;
-    public static double top43HandPivot = 0.28, top43AmmoPivot = 0.1; // auto
-    public static double top32HandPivot = 0.235, top32AmmoPivot = 0.13; // ערימה של 32
+    public static double top43HandPivot = 0.28, top43AmmoPivot = 0.1;
+    public static double top32HandPivot = 0.235, top32AmmoPivot = 0.13;
     public static double top32HandPivotAuto = 0.18, top32AmmoPivotAuto = 0.025;
-    public static double top21HandPivot = 0.195, top21AmmoPivot = 0.125; // auto
-
+    public static double top21HandPivot = 0.195, top21AmmoPivot = 0.125;
     public static double autoFixIntakeHandPivot = 0.68, autoFixIntakeAmmoPivot = 0.66;
 
     public static double STACK = 0.3;
     public static double RIGHT_SENSOR_ERROR = 0;
-    public static double clickOffset = 0.1;
     double OFFSET_AMMO = 0;
 
-    public static double openRight = 0.535, openLeft = 0.435; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double closeRight = .77, closeLeft = 0.69; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double superCloseRight = .81, superCloseLeft = 0.735; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double indeterminateRight = 0.605, indeterminateLeft = 0.54; // סרבואים של תפיסה של שאיבה שהם פתוחים
-
-    public static double closeCauseWallRight;
-    public static double closeCauseWallLeft;
+    public static double openRight = 0.535, openLeft = 0.435;
+    public static double closeRight = .77, closeLeft = 0.69;
+    public static double superCloseRight = .81, superCloseLeft = 0.735;
+    public static double indeterminateRight = 0.605, indeterminateLeft = 0.54;
 
     public static void setSeeFarFrom(double seeFarFrom) {
-        Intake.seeFarFrom = seeFarFrom;
+        IntakeSubsystem.seeFarFrom = seeFarFrom;
     }
 
     public static double seeFarFrom = 3.5;
     public static final double maxSeeFarFrom = 3.5;
     public static final double minSeeFarFrom = 2;
-
-    @Override
-    public void play() {
-
-    }
-
-    @Override
-    public void loop(boolean allowMotors) {
-        updateState(Type.AMMO);
-        updateState(Type.HAND);
-    }
-
-    @Override
-    public void stop() {
-
-    }
 
     public enum Angle {
         INTAKE,
@@ -91,33 +72,22 @@ public class Intake implements Subsystem {
     ClawState clawStateRight = ClawState.OPEN;
 
 
-    public Intake() {
+    public IntakeSubsystem() {
         this.robot = RobotHardware.getInstance();
     }
 
-    public void update() {
+    @Override
+    public void periodic() {
         updateState(Type.AMMO);
         updateState(Type.HAND);
+        updateState(getClawStateLeft(), ClawSide.LEFT);
+        updateState(getClawStateRight(), ClawSide.RIGHT);
 
 
-        if (checkIfPixelInRight(robot.colorRight)) {
-            robot.closeRight(true);
-        } else {
-            robot.closeRight(false);
-        }
+        robot.closeRight(checkIfPixelInRight(robot.colorRight));
+        robot.closeLeft(checkIfPixelIn(robot.colorLeft));
+        robot.setHas2Pixels(checkIfPixelInRight(robot.colorRight) && checkIfPixelIn(robot.colorLeft));
 
-        if (checkIfPixelIn(robot.colorLeft)) {
-            robot.closeLeft(true);
-        } else {
-            robot.closeLeft(false);
-        }
-
-
-        if (checkIfPixelInRight(robot.colorRight) && checkIfPixelIn(robot.colorLeft)) {
-            robot.setHas2Pixels(true);
-        } else {
-            robot.setHas2Pixels(false);
-        }
     }
 
     public void move(Angle angle) {
@@ -166,7 +136,7 @@ public class Intake implements Subsystem {
         }
     }
 
-    public double updateClawState(@NotNull ClawState state, @NotNull ClawSide side) {
+    public double updateState(@NotNull ClawState state, @NotNull ClawSide side) {
         double position = getClawStatePosition(state, side);
 
         switch (side) {

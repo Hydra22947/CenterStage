@@ -6,26 +6,24 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings;
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
-import org.firstinspires.ftc.teamcode.subsystems.Elevator;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake;
+import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeExtensionSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 public class UpdateActions {
 
 
-    private Elevator elevator;
-    private Intake intake;
-    private Outtake outtake;
+    private LiftSubsystem elevator;
+    private IntakeSubsystem intake;
+    private OuttakeSubsystem outtake;
     private Claw claw;
-    private IntakeExtension intakeExtension;
+    private IntakeExtensionSubsystem intakeExtension;
     RobotHardware robot = RobotHardware.getInstance();
 
     int counter = 0;
-    public UpdateActions(Elevator elevator, Intake intake, Claw claw, Outtake outtake, IntakeExtension intakeExtension) {
+    public UpdateActions(LiftSubsystem elevator, IntakeSubsystem intake, Claw claw, OuttakeSubsystem outtake, IntakeExtensionSubsystem intakeExtension) {
         this.elevator = elevator;
         this.intake = intake;
         this.claw = claw;
@@ -41,8 +39,8 @@ public class UpdateActions {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             intakeExtension.setPidControl();
             elevator.setPidControl();
-            intake.updateClawState(intake.getClawStateLeft(), ClawSide.LEFT);
-            intake.updateClawState(intake.getClawStateRight(), ClawSide.RIGHT);
+            intake.updateState(intake.getClawStateLeft(), ClawSide.LEFT);
+            intake.updateState(intake.getClawStateRight(), ClawSide.RIGHT);
             intake.move(intake.getAngle());
             claw.update();
             outtake.update();

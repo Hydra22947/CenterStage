@@ -5,14 +5,11 @@ import static org.firstinspires.ftc.teamcode.auto.Actions.ActionHelper.activateS
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.SleepAction;
 
-import org.checkerframework.checker.units.qual.A;
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
-import org.firstinspires.ftc.teamcode.subsystems.Elevator;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake;
+import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeExtensionSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.firstinspires.ftc.teamcode.util.Stopwatch;
 
@@ -26,17 +23,17 @@ public class DepositActions {
     }
 
     ;
-    private Elevator elevator;
-    private Intake intake;
-    private Outtake outtake;
+    private LiftSubsystem elevator;
+    private IntakeSubsystem intake;
+    private OuttakeSubsystem outtake;
     private Claw claw;
 
-    private IntakeExtension extension;
+    private IntakeExtensionSubsystem extension;
 
     private boolean activated;
 
 
-    public DepositActions(Elevator elevator, Intake intake, Claw claw, Outtake outtake, IntakeExtension extension) {
+    public DepositActions(LiftSubsystem elevator, IntakeSubsystem intake, Claw claw, OuttakeSubsystem outtake, IntakeExtensionSubsystem extension) {
         this.elevator = elevator;
         this.intake = intake;
         this.extension = extension;
@@ -52,13 +49,13 @@ public class DepositActions {
 
     //This function will prepare the intake and outtake  for deposit
     private void resetIntakeOuttake() {
-        intake.move(Intake.Angle.MID);
-        outtake.setAngle(Outtake.Angle.OUTTAKE);
+        intake.move(IntakeSubsystem.Angle.MID);
+        outtake.setAngle(OuttakeSubsystem.Angle.OUTTAKE);
     }
 
 
     public void retractElevator() {
-        outtake.setAngle(Outtake.Angle.INTAKE);
+        outtake.setAngle(OuttakeSubsystem.Angle.INTAKE);
         elevator.setTarget(0);
         elevator.setPidControl();
     }
@@ -80,7 +77,7 @@ public class DepositActions {
 
             claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
             moveElevatorByTraj(elevator);
-            outtake.setAngle(Outtake.Angle.OUTTAKE);
+            outtake.setAngle(OuttakeSubsystem.Angle.OUTTAKE);
 
             return false;
         }
@@ -89,9 +86,9 @@ public class DepositActions {
 
     public class MoveOuttake implements Action {
         Stopwatch readyForDepositTimer;
-        Outtake.Angle angle;
+        OuttakeSubsystem.Angle angle;
 
-        public MoveOuttake (Outtake.Angle angle) {
+        public MoveOuttake (OuttakeSubsystem.Angle angle) {
             this.angle = angle;
         }
 
@@ -184,7 +181,7 @@ public class DepositActions {
     public Action placeIntermediatePixel(Cycles currentCycle, long d) {
         return new PlaceIntermediatePixel(currentCycle, d);
     }
-    public Action moveOuttake (Outtake.Angle thisAngle) { return new MoveOuttake(thisAngle); }
+    public Action moveOuttake (OuttakeSubsystem.Angle thisAngle) { return new MoveOuttake(thisAngle); }
 
     public Action moveElevator (int thisTarget) { return new MoveElevator(thisTarget); }
 

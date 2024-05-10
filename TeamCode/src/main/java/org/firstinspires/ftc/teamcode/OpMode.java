@@ -10,14 +10,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings;
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
-import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
-import org.firstinspires.ftc.teamcode.subsystems.Elevator;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake;
-import org.firstinspires.ftc.teamcode.subsystems.Plane;
+import org.firstinspires.ftc.teamcode.subsystems.DrivetrainSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeExtensionSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.DroneSubsystem;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
@@ -29,13 +27,13 @@ public class OpMode extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
 
     // subsystems
-    Drivetrain drivetrain;
-    Elevator elevator;
-    Intake intake;
-    Outtake outtake;
+    DrivetrainSubsystem drivetrain;
+    LiftSubsystem elevator;
+    IntakeSubsystem intake;
+    OuttakeSubsystem outtake;
     Claw claw;
-    IntakeExtension intakeExtension;
-    Plane plane;
+    IntakeExtensionSubsystem intakeExtension;
+    DroneSubsystem plane;
     ElapsedTime codeTime;
     Gamepad.RumbleEffect customRumbleEffect;    // Use to build a custom rumble sequence.
 
@@ -103,20 +101,18 @@ public class OpMode extends LinearOpMode {
 
         robot.init(hardwareMap, telemetry);
 
-        drivetrain = new Drivetrain(gamepad1, true, false);
-        elevator = new Elevator(gamepad2, false, false);
-        outtake = new Outtake();
+        drivetrain = new DrivetrainSubsystem(gamepad1);
+        elevator = new LiftSubsystem(gamepad2, false, false);
+        outtake = new OuttakeSubsystem();
         claw = new Claw();
-        intake = new Intake();
-        plane = new Plane();
-        intakeExtension = new IntakeExtension(gamepad2, false);
+        intake = new IntakeSubsystem();
+        plane = new DroneSubsystem();
+        intakeExtension = new IntakeExtensionSubsystem(gamepad2, false);
         codeTime = new ElapsedTime();
-        intake.setAngle(Intake.Angle.OUTTAKE);
-        intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH);
+        intake.setAngle(IntakeSubsystem.Angle.OUTTAKE);
+        intake.updateState(IntakeSubsystem.ClawState.INDETERMINATE, ClawSide.BOTH);
         claw.setBothClaw(Claw.ClawState.INTAKE);
-        outtake.setAngle(Outtake.Angle.INTAKE);
-        elevator.setAuto(false);
-        intakeExtension.setAuto(false);
+        outtake.setAngle(OuttakeSubsystem.Angle.INTAKE);
 
         intake.update();
         claw.update();
@@ -155,8 +151,8 @@ public class OpMode extends LinearOpMode {
             betterGamepad2.update();
             drivetrain.update();
             intake.update();
-            intake.updateClawState(intake.getClawStateLeft(), ClawSide.LEFT);
-            intake.updateClawState(intake.getClawStateRight(), ClawSide.RIGHT);
+            intake.updateState(intake.getClawStateLeft(), ClawSide.LEFT);
+            intake.updateState(intake.getClawStateRight(), ClawSide.RIGHT);
             intakeExtension.update();
             outtake.update();
             elevator.update();
@@ -303,7 +299,7 @@ public class OpMode extends LinearOpMode {
                 if(startedDelayTransfer)
                 {
                     intakeMid = false;
-                    intake.move(Intake.Angle.OUTTAKE);
+                    intake.move(IntakeSubsystem.Angle.OUTTAKE);
                     startedDelayTransfer = false;
 
                     releaseTimer = getTime();
@@ -311,7 +307,7 @@ public class OpMode extends LinearOpMode {
 
                 if((getTime() - releaseTimer) >= delayRelease && had2Pixels)
                 {
-                    intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH);
+                    intake.updateState(IntakeSubsystem.ClawState.INDETERMINATE, ClawSide.BOTH);
 
                     closeTransferTimer = getTime();
 
@@ -332,17 +328,17 @@ public class OpMode extends LinearOpMode {
                 }
                 else if((liftState == LiftState.EXTRACT || liftState == LiftState.HANG || liftState == LiftState.STUCK_3) && intakeMid)
                 {
-                    intake.move(Intake.Angle.TELEOP_MID);
+                    intake.move(IntakeSubsystem.Angle.TELEOP_MID);
                     goToTransferTimer = getTime();
                 }
                 else if((elevator.getPos() <= ELEVATOR_ZERO) && !XPressed)
                 {
-                    intake.move(Intake.Angle.OUTTAKE);
+                    intake.move(IntakeSubsystem.Angle.OUTTAKE);
                 }
                 else if(XPressed && (getTime() - startXDelay) >= XDelay)
                 {
                     XPressed = false;
-                    intake.move(Intake.Angle.OUTTAKE);
+                    intake.move(IntakeSubsystem.Angle.OUTTAKE);
                 }
 
                 break;
@@ -357,7 +353,7 @@ public class OpMode extends LinearOpMode {
 
                 if(firstReleaseThree && ((getTime() - releaseFromIntake) >= delayReleaseFromIntake))
                 {
-                    intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
+                    intake.updateState(IntakeSubsystem.ClawState.OPEN, ClawSide.BOTH);
                     firstReleaseThree = false;
                 }
 
@@ -387,40 +383,40 @@ public class OpMode extends LinearOpMode {
 
                     startedDelayTransfer = true;
 
-                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
+                    intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.BOTH);
                 }
                 else if(robot.isCloseLeft() && !robot.has2Pixels() && !override)
                 {
-                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT);
+                    intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.LEFT);
                 }
                 else if(robot.isCloseRight() && !robot.has2Pixels() && !override)
                 {
-                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);
+                    intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.RIGHT);
                 }
                 else if(!startedDelayTransfer && !override)
                 {
-                    intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
+                    intake.updateState(IntakeSubsystem.ClawState.OPEN, ClawSide.BOTH);
                 }
 
-                if(betterGamepad2.dpadRightOnce() && intake.getClawStateRight() == Intake.ClawState.OPEN)
+                if(betterGamepad2.dpadRightOnce() && intake.getClawStateRight() == IntakeSubsystem.ClawState.OPEN)
                 {
                     override = true;
-                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);
+                    intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.RIGHT);
                 }
                 else if(betterGamepad2.dpadRightOnce())
                 {
                     override = true;
-                    intake.updateClawState(Intake.ClawState.OPEN, ClawSide.RIGHT);
+                    intake.updateState(IntakeSubsystem.ClawState.OPEN, ClawSide.RIGHT);
                 }
-                if(betterGamepad2.dpadLeftOnce() && intake.getClawStateLeft() == Intake.ClawState.OPEN)
+                if(betterGamepad2.dpadLeftOnce() && intake.getClawStateLeft() == IntakeSubsystem.ClawState.OPEN)
                 {
                     override = true;
-                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT);
+                    intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.LEFT);
                 }
                 else if(betterGamepad2.dpadLeftOnce())
                 {
                     override = true;
-                    intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT);
+                    intake.updateState(IntakeSubsystem.ClawState.OPEN, ClawSide.LEFT);
                 }
 
                 if((intake.closedClaw() && override) && betterGamepad1.rightBumperOnce())
@@ -460,7 +456,7 @@ public class OpMode extends LinearOpMode {
 
                 if(firstReleaseThree && ((getTime() - releaseFromIntake) >= delayReleaseFromIntake))
                 {
-                    intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
+                    intake.updateState(IntakeSubsystem.ClawState.OPEN, ClawSide.BOTH);
                     firstReleaseThree = false;
                 }
 
@@ -484,40 +480,40 @@ public class OpMode extends LinearOpMode {
 
                     startedDelayTransfer = true;
 
-                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
+                    intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.BOTH);
                 }
                 else if(robot.isCloseLeft() && !robot.has2Pixels() && !override)
                 {
-                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT);
+                    intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.LEFT);
                 }
                 else if(robot.isCloseRight() && !robot.has2Pixels() && !override)
                 {
-                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);
+                    intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.RIGHT);
                 }
                 else if(!startedDelayTransfer && !override)
                 {
-                    intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
+                    intake.updateState(IntakeSubsystem.ClawState.OPEN, ClawSide.BOTH);
                 }
 
-                if(betterGamepad2.dpadRightOnce() && intake.getClawStateRight() == Intake.ClawState.OPEN)
+                if(betterGamepad2.dpadRightOnce() && intake.getClawStateRight() == IntakeSubsystem.ClawState.OPEN)
                 {
                     override = true;
-                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);
+                    intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.RIGHT);
                 }
                 else if(betterGamepad2.dpadRightOnce())
                 {
                     override = true;
-                    intake.updateClawState(Intake.ClawState.OPEN, ClawSide.RIGHT);
+                    intake.updateState(IntakeSubsystem.ClawState.OPEN, ClawSide.RIGHT);
                 }
-                if(betterGamepad2.dpadLeftOnce() && intake.getClawStateLeft() == Intake.ClawState.OPEN)
+                if(betterGamepad2.dpadLeftOnce() && intake.getClawStateLeft() == IntakeSubsystem.ClawState.OPEN)
                 {
                     override = true;
-                    intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT);
+                    intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.LEFT);
                 }
                 else if(betterGamepad2.dpadLeftOnce())
                 {
                     override = true;
-                    intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT);
+                    intake.updateState(IntakeSubsystem.ClawState.OPEN, ClawSide.LEFT);
                 }
 
                 if((getTime() - transferTimer) >= delayTransfer && startedDelayTransfer)
@@ -601,7 +597,7 @@ public class OpMode extends LinearOpMode {
                 if(startedDelayTransfer)
                 {
                     intakeMid = false;
-                    intake.move(Intake.Angle.OUTTAKE);
+                    intake.move(IntakeSubsystem.Angle.OUTTAKE);
                     startedDelayTransfer = false;
 
                     releaseTimer = getTime();
@@ -627,12 +623,12 @@ public class OpMode extends LinearOpMode {
                 }
                 else if((liftState == LiftState.EXTRACT || liftState == LiftState.HANG || liftState == LiftState.STUCK_3) && intakeMid)
                 {
-                    intake.move(Intake.Angle.TELEOP_MID);
+                    intake.move(IntakeSubsystem.Angle.TELEOP_MID);
                     goToTransferTimer = getTime();
                 }
                 else if(elevator.getPos() <= ELEVATOR_ZERO)
                 {
-                    intake.move(Intake.Angle.OUTTAKE);
+                    intake.move(IntakeSubsystem.Angle.OUTTAKE);
                 }
 
                 break;
@@ -654,25 +650,25 @@ public class OpMode extends LinearOpMode {
             case RETRACT:
                 firstOuttake = true;
                 elevator.setTarget(0);
-                outtake.setAngle(Outtake.Angle.INTAKE);
+                outtake.setAngle(OuttakeSubsystem.Angle.INTAKE);
 
                 canIntake = true;
 
                 if (betterGamepad1.YOnce())
                 {
-                    intake.move(Intake.Angle.TELEOP_MID);
+                    intake.move(IntakeSubsystem.Angle.TELEOP_MID);
                     previousElevator = getTime();
                     claw.setBothClaw(Claw.ClawState.CLOSED);
                     liftState = LiftState.EXTRACT;
                 }
                 else if(betterGamepad2.dpadUpOnce())
                 {
-                    intake.move(Intake.Angle.TELEOP_MID);
+                    intake.move(IntakeSubsystem.Angle.TELEOP_MID);
                     liftState = LiftState.HANG;
                 }
                 else if(betterGamepad2.XOnce())
                 {
-                    intake.move(Intake.Angle.TELEOP_MID);
+                    intake.move(IntakeSubsystem.Angle.TELEOP_MID);
                     liftState = LiftState.STUCK_3;
                 }
                 break;
@@ -688,17 +684,17 @@ public class OpMode extends LinearOpMode {
 
                 if(retract)
                 {
-                    elevator.setTarget(elevatorTargetRight + (openedXTimes * (Elevator.ELEVATOR_INCREMENT * 3.5)), elevatorTargetLeft + (openedXTimes * (Elevator.ELEVATOR_INCREMENT * 3.5)));
+                    elevator.setTarget(elevatorTargetRight + (openedXTimes * (LiftSubsystem.ELEVATOR_INCREMENT * 3.5)), elevatorTargetLeft + (openedXTimes * (LiftSubsystem.ELEVATOR_INCREMENT * 3.5)));
                 }
                 else
                 {
-                    elevator.setTarget(elevatorTargetRight + (openedXTimes * (Elevator.ELEVATOR_INCREMENT)), elevatorTargetLeft + (openedXTimes * (Elevator.ELEVATOR_INCREMENT)));
+                    elevator.setTarget(elevatorTargetRight + (openedXTimes * (LiftSubsystem.ELEVATOR_INCREMENT)), elevatorTargetLeft + (openedXTimes * (LiftSubsystem.ELEVATOR_INCREMENT)));
                 }
 
                 if(gamepad2.right_stick_y != 0)
                 {
-                    elevatorTargetRight = elevator.getPosRight() - (openedXTimes * (Elevator.ELEVATOR_INCREMENT));
-                    elevatorTargetLeft = elevator.getPosLeft() - (openedXTimes * (Elevator.ELEVATOR_INCREMENT));
+                    elevatorTargetRight = elevator.getPosRight() - (openedXTimes * (LiftSubsystem.ELEVATOR_INCREMENT));
+                    elevatorTargetLeft = elevator.getPosLeft() - (openedXTimes * (LiftSubsystem.ELEVATOR_INCREMENT));
                 }
 
                 if ((getTime() - previousElevator) >= WAIT_DELAY_TILL_OUTTAKE) {
@@ -751,8 +747,8 @@ public class OpMode extends LinearOpMode {
                 if (betterGamepad1.AOnce() && cooldowned() || (betterGamepad2.shareOnce() && cooldowned()))  {
                     claw.setBothClaw(Claw.ClawState.OPEN);
 
-                    elevatorTargetRight = elevator.getTargetRight() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
-                    elevatorTargetLeft = elevator.getTargetLeft() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
+                    elevatorTargetRight = elevator.getTargetRight() - (openedXTimes * LiftSubsystem.ELEVATOR_INCREMENT);
+                    elevatorTargetLeft = elevator.getTargetLeft() - (openedXTimes * LiftSubsystem.ELEVATOR_INCREMENT);
                     openedXTimes++;
 
                     elevatorReset = getTime();
@@ -772,11 +768,11 @@ public class OpMode extends LinearOpMode {
 
                 if(!hang)
                 {
-                    elevator.setTarget(Elevator.HANG_OPEN);
+                    elevator.setTarget(LiftSubsystem.HANG_OPEN);
                 }
                 else
                 {
-                    elevator.setTarget(Elevator.HANG);
+                    elevator.setTarget(LiftSubsystem.HANG);
                 }
 
 
@@ -786,7 +782,7 @@ public class OpMode extends LinearOpMode {
                 }
                 break;
             case STUCK_3:
-                outtake.setAngle(Outtake.Angle.OUTTAKE);
+                outtake.setAngle(OuttakeSubsystem.Angle.OUTTAKE);
 
                 if(betterGamepad1.dpadDownOnce())
                 {
@@ -818,17 +814,17 @@ public class OpMode extends LinearOpMode {
         switch(intakeLevel)
         {
             case TOP_54:
-                intake.move(Intake.Angle.TOP_54);
-                intake.setSeeFarFrom(Intake.minSeeFarFrom);
+                intake.move(IntakeSubsystem.Angle.TOP_54);
+                intake.setSeeFarFrom(IntakeSubsystem.minSeeFarFrom);
                 break;
             case TOP_32:
-                intake.move(Intake.Angle.TOP_32);
-                intake.setSeeFarFrom(Intake.minSeeFarFrom);
+                intake.move(IntakeSubsystem.Angle.TOP_32);
+                intake.setSeeFarFrom(IntakeSubsystem.minSeeFarFrom);
 
                 break;
             case INTAKE:
-                intake.move(Intake.Angle.INTAKE);
-                intake.setSeeFarFrom(Intake.maxSeeFarFrom);
+                intake.move(IntakeSubsystem.Angle.INTAKE);
+                intake.setSeeFarFrom(IntakeSubsystem.maxSeeFarFrom);
                 break;
         }
     }
@@ -838,10 +834,10 @@ public class OpMode extends LinearOpMode {
         switch (outtakeState)
         {
             case OUTTAKE:
-                outtake.setAngle(Outtake.Angle.OUTTAKE);
+                outtake.setAngle(OuttakeSubsystem.Angle.OUTTAKE);
                 break;
             case OUTTAKE_LONG:
-                outtake.setAngle(Outtake.Angle.OUTTAKE_LONG);
+                outtake.setAngle(OuttakeSubsystem.Angle.OUTTAKE_LONG);
                 break;
         }
     }

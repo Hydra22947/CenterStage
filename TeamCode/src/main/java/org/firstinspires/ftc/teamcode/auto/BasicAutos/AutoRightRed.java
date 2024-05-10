@@ -19,18 +19,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings;
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
-import org.firstinspires.ftc.teamcode.subsystems.Elevator;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeExtensionSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineRedRight;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
@@ -46,11 +44,11 @@ public class AutoRightRed extends LinearOpMode {
     ElapsedTime time;
 
     // subsystems
-    Elevator elevator;
-    Intake intake;
-    Outtake outtake;
+    LiftSubsystem elevator;
+    IntakeSubsystem intake;
+    OuttakeSubsystem outtake;
     Claw claw;
-    IntakeExtension intakeExtension;
+    IntakeExtensionSubsystem intakeExtension;
     AutoConstants autoConstants;
 
 
@@ -81,11 +79,11 @@ public class AutoRightRed extends LinearOpMode {
         webcam.setPipeline(propPipelineRedRight);
 
 
-        elevator = new Elevator(true);
-        outtake = new Outtake();
+        elevator = new LiftSubsystem(true);
+        outtake = new OuttakeSubsystem();
         claw = new Claw();
-        intake = new Intake();
-        intakeExtension = new IntakeExtension(true);
+        intake = new IntakeSubsystem();
+        intakeExtension = new IntakeExtensionSubsystem(true);
 
         intakeExtension.setAuto(true);
         elevator.setAuto(true);
@@ -96,7 +94,7 @@ public class AutoRightRed extends LinearOpMode {
 
 
         SequentialAction placePurplePixelBlueLeft = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
+                placePurpleActions.moveIntake(IntakeSubsystem.Angle.INTAKE),
                 new SleepAction(.5),
                 placePurpleActions.openExtension(600),
                 new SleepAction(1.5),
@@ -104,7 +102,7 @@ public class AutoRightRed extends LinearOpMode {
                 new SleepAction(0.1),
                 placePurpleActions.openExtension(550),
                 new SleepAction(0.2),
-                placePurpleActions.moveIntake(Intake.Angle.MID),
+                placePurpleActions.moveIntake(IntakeSubsystem.Angle.MID),
                 placePurpleActions.closeExtension(),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
@@ -114,7 +112,7 @@ public class AutoRightRed extends LinearOpMode {
         );
 
         SequentialAction placePurplePixelBlueMiddle = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
+                placePurpleActions.moveIntake(IntakeSubsystem.Angle.INTAKE),
                 new SleepAction(0.5),
                 placePurpleActions.openExtension(790),
                 new SleepAction(1.5),
@@ -122,7 +120,7 @@ public class AutoRightRed extends LinearOpMode {
                 new SleepAction(0.1),
                 placePurpleActions.closeExtension(),
                 new SleepAction(0.1),
-                placePurpleActions.moveIntake(Intake.Angle.MID),
+                placePurpleActions.moveIntake(IntakeSubsystem.Angle.MID),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
@@ -138,7 +136,7 @@ public class AutoRightRed extends LinearOpMode {
         );
 
         SequentialAction placePurplePixelBlueRight = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.INTAKE),
+                placePurpleActions.moveIntake(IntakeSubsystem.Angle.INTAKE),
                 new SleepAction(0.5),
                 placePurpleActions.openExtension(800),
                 new SleepAction(1),
@@ -146,7 +144,7 @@ public class AutoRightRed extends LinearOpMode {
                 new SleepAction(0.1),
                 placePurpleActions.openExtension(800),
                 new SleepAction(0.2),
-                placePurpleActions.moveIntake(Intake.Angle.MID),
+                placePurpleActions.moveIntake(IntakeSubsystem.Angle.MID),
                 placePurpleActions.closeExtension(),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
@@ -161,7 +159,7 @@ public class AutoRightRed extends LinearOpMode {
                         .stopAndAdd(placePurplePixelBlueLeft)
                         .setTangent(0)
                         .waitSeconds(.2)
-                        .stopAndAdd(placePurpleActions.moveIntake(Intake.Angle.MID))
+                        .stopAndAdd(placePurpleActions.moveIntake(IntakeSubsystem.Angle.MID))
                         .waitSeconds(.2)
                         .stopAndAdd(placePurpleActions.closeExtension())
                         .strafeTo(new Vector2d(50.75, -40.5))
@@ -190,7 +188,7 @@ public class AutoRightRed extends LinearOpMode {
                         .stopAndAdd(placePurplePixelBlueMiddle)
                         .setTangent(0)
                         .waitSeconds(.2)
-                        .stopAndAdd(placePurpleActions.moveIntake(Intake.Angle.MID))
+                        .stopAndAdd(placePurpleActions.moveIntake(IntakeSubsystem.Angle.MID))
                         .waitSeconds(.2)
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
@@ -223,7 +221,7 @@ public class AutoRightRed extends LinearOpMode {
                         .stopAndAdd(placePurplePixelBlueRight)
                         .setTangent(0)
                         .waitSeconds(.2)
-                        .stopAndAdd(placePurpleActions.moveIntake(Intake.Angle.MID))
+                        .stopAndAdd(placePurpleActions.moveIntake(IntakeSubsystem.Angle.MID))
                         .waitSeconds(.2)
                         .stopAndAdd(placePurpleActions.closeExtension())
                         //Place Preload on board
@@ -252,8 +250,8 @@ public class AutoRightRed extends LinearOpMode {
         while (opModeInInit() && !isStopRequested()) {
             betterGamepad2.update();
 
-            intake.setAngle(Intake.Angle.MID);
-            intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
+            intake.setAngle(IntakeSubsystem.Angle.MID);
+            intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             telemetry.addData("POS", propLocation.name());
 
@@ -286,7 +284,7 @@ public class AutoRightRed extends LinearOpMode {
             }
 
 
-            outtake.setAngle(Outtake.Angle.INTAKE);
+            outtake.setAngle(OuttakeSubsystem.Angle.INTAKE);
             telemetry.addLine("Initialized");
             telemetry.update();
         }

@@ -24,12 +24,10 @@ import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings;
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
-import org.firstinspires.ftc.teamcode.subsystems.Elevator;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake;
-import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineBlueRight;
+import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeExtensionSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineRedLeft;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
@@ -45,11 +43,11 @@ public class AutoLeftRed extends LinearOpMode {
     ElapsedTime time;
 
     // subsystems
-    Elevator elevator;
-    Intake intake;
-    Outtake outtake;
+    LiftSubsystem elevator;
+    IntakeSubsystem intake;
+    OuttakeSubsystem outtake;
     Claw claw;
-    IntakeExtension intakeExtension;
+    IntakeExtensionSubsystem intakeExtension;
     AutoConstants autoConstants;
 
 
@@ -87,11 +85,11 @@ public class AutoLeftRed extends LinearOpMode {
         webcam.setPipeline(propPipelineRedLeft);
 
 
-        elevator = new Elevator(true);
-        outtake = new Outtake();
+        elevator = new LiftSubsystem(true);
+        outtake = new OuttakeSubsystem();
         claw = new Claw();
-        intake = new Intake();
-        intakeExtension = new IntakeExtension(true);
+        intake = new IntakeSubsystem();
+        intakeExtension = new IntakeExtensionSubsystem(true);
 
         intakeExtension.setAuto(true);
         elevator.setAuto(true);
@@ -101,8 +99,8 @@ public class AutoLeftRed extends LinearOpMode {
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
         SequentialAction intake5OpenAction = new SequentialAction(
-                intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
-                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
+                intakeActions.moveIntake(IntakeSubsystem.Angle.TOP_5_AUTO),
+                intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.OPEN, ClawSide.BOTH)
 
         );
 
@@ -111,10 +109,10 @@ public class AutoLeftRed extends LinearOpMode {
                 new SleepAction(.5),
                 intakeActions.moveStack(),
 
-                intakeActions.moveIntake(Intake.Angle.OUTTAKE),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.OUTTAKE),
 
                 new SleepAction(0.5),
-                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
+                intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.INDETERMINATE, ClawSide.BOTH),
                 new SleepAction(.5),
                 intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
 
@@ -124,12 +122,12 @@ public class AutoLeftRed extends LinearOpMode {
         SequentialAction intake43OpenAction = new SequentialAction(
 
 
-                intakeActions.moveIntake(Intake.Angle.TOP_54_AUTO),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.TOP_54_AUTO),
                 new InstantAction(() -> intakeExtension.setAggresive(true)),
 
                 new ParallelAction(
 
-                        intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                        intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.OPEN, ClawSide.BOTH),
                         intakeActions.openExtension(450)
                 )
         );
@@ -137,12 +135,12 @@ public class AutoLeftRed extends LinearOpMode {
         SequentialAction intake43OpenActionRight = new SequentialAction(
 
 
-                intakeActions.moveIntake(Intake.Angle.TOP_43),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.TOP_43),
                 new InstantAction(() -> intakeExtension.setAggresive(true)),
 
                 new ParallelAction(
 
-                        intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                        intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.OPEN, ClawSide.BOTH),
                         intakeActions.openExtension(450)
                 )
         );
@@ -154,15 +152,15 @@ public class AutoLeftRed extends LinearOpMode {
                 new SleepAction(.5),
                 intakeActions.closeExtension(),
                 new SleepAction(.5),
-                intakeActions.moveIntake(Intake.Angle.OUTTAKE),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.OUTTAKE),
 
 
                 intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
                 new SleepAction(.5),
-                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
+                intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.INDETERMINATE, ClawSide.BOTH),
                 new SleepAction(.25),
                 intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
-                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
+                intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.OPEN, ClawSide.BOTH)
 
 
         );
@@ -179,7 +177,7 @@ public class AutoLeftRed extends LinearOpMode {
 
         readyForDepositAction = new SequentialAction(
                 intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
-                intakeActions.moveIntake(Intake.Angle.TELEOP_MID),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.TELEOP_MID),
                 new SleepAction(.75),
                 depositActions.readyForDeposit(tempHeight));
 
@@ -265,9 +263,9 @@ public class AutoLeftRed extends LinearOpMode {
         //,
 //                new SequentialAction(robot.drive.actionBuilder(new Pose2d(31, 20, Math.toRadians(0)))
 //                        .strafeToLinearHeading(new Vector2d(50.5, 30), Math.toRadians(-90)).build(),
-//                        new InstantAction(() -> intake.move(Intake.Angle.TELEOP_MID)),
+//                        new InstantAction(() -> intake.move(IntakeSubsystem.Angle.TELEOP_MID)),
 //                        new InstantAction(() -> claw.setBothClaw(Claw.ClawState.CLOSED)),
-//                        new InstantAction(() -> outtake.setAngle(Outtake.Angle.INTAKE)),
+//                        new InstantAction(() -> outtake.setAngle(OuttakeSubsystem.Angle.INTAKE)),
 //                        new InstantAction(() -> elevator.setTarget(0)),
 //                        new SleepAction(1),
 //                        new InstantAction(() -> requestOpModeStop()))
@@ -467,11 +465,11 @@ public class AutoLeftRed extends LinearOpMode {
 
         while (opModeInInit() && !isStopRequested()) {
             betterGamepad2.update();
-            intake.setAngle(Intake.Angle.MID);
+            intake.setAngle(IntakeSubsystem.Angle.MID);
             intakeExtension.setTarget(0);
-            intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
+            intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
-            outtake.setAngle(Outtake.Angle.INTAKE);
+            outtake.setAngle(OuttakeSubsystem.Angle.INTAKE);
             telemetry.addData("POS", propLocation.name());
             telemetry.addData("elevator pos", tempHeight);
             telemetry.update();
@@ -562,7 +560,7 @@ public class AutoLeftRed extends LinearOpMode {
 
     Action updateElevatorHeight(int height) {
         return new SequentialAction(
-                intakeActions.moveIntake(Intake.Angle.TELEOP_MID),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.TELEOP_MID),
                 new SleepAction(.75),
                 depositActions.readyForDeposit(height));
     }
@@ -570,7 +568,7 @@ public class AutoLeftRed extends LinearOpMode {
 
     SequentialAction pleaseFixIntakeFar() {
         return new SequentialAction(
-                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.OPEN, ClawSide.BOTH),
                 intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
                 intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
                 intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
@@ -589,7 +587,7 @@ public class AutoLeftRed extends LinearOpMode {
 
     SequentialAction pleaseFixIntakeClose() {
         return new SequentialAction(
-                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.OPEN, ClawSide.BOTH),
                 intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
                 intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
                 intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
@@ -612,7 +610,7 @@ public class AutoLeftRed extends LinearOpMode {
         return new SequentialAction(
 
 
-                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
+                intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.INDETERMINATE, ClawSide.BOTH),
                 new SleepAction(0.1),
                 intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
                 new InstantAction(() -> intakeExtension.setAggresive(false)),

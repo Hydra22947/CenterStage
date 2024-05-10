@@ -4,22 +4,19 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
-import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
-@TeleOp(name = "Outtake Test", group = "A")
+@TeleOp(name = "OuttakeSubsystem Test", group = "A")
 public class OuttakeTest extends CommandOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
     BetterGamepad gamepadEx;
-    Outtake outtake;
-    Claw claw;
+    OuttakeSubsystem outtake;
 
-    public static Outtake.Angle angle = Outtake.Angle.INTAKE;
+    public static OuttakeSubsystem.Angle angle = OuttakeSubsystem.Angle.INTAKE;
     public static boolean DEBUG = true;
 
 
@@ -31,13 +28,13 @@ public class OuttakeTest extends CommandOpMode {
         {
             if(gamepad1.right_bumper)
             {
-                claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
-                outtake.setAngle(Outtake.Angle.OUTTAKE);
+                outtake.updateState(OuttakeSubsystem.ClawState.CLOSED, ClawSide.BOTH);
+                outtake.setAngle(OuttakeSubsystem.Angle.OUTTAKE);
             }
             else if(gamepad1.left_bumper)
             {
-                outtake.setAngle(Outtake.Angle.INTAKE);
-                claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
+                outtake.setAngle(OuttakeSubsystem.Angle.INTAKE);
+                outtake.updateState(OuttakeSubsystem.ClawState.OPEN, ClawSide.BOTH);
             }
         }
         else
@@ -53,8 +50,7 @@ public class OuttakeTest extends CommandOpMode {
         gamepadEx = new BetterGamepad(gamepad1);
         robot.init(hardwareMap, telemetry);
 
-        outtake = new Outtake();
-        claw = new Claw();
+        outtake = new OuttakeSubsystem();
     }
 
 }

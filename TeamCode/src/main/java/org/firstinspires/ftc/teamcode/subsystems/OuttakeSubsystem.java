@@ -1,38 +1,20 @@
 package org.firstinspires.ftc.teamcode.subsystems;
-
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.command.Subsystem;
+import com.arcrobotics.ftclib.command.SubsystemBase;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.jetbrains.annotations.NotNull;
 
 @Config
-public class Claw implements Subsystem {
+public class OuttakeSubsystem extends SubsystemBase {
+
     private final RobotHardware robot;
 
-    @Override
-    public void play() {
-
-    }
-
-    @Override
-    public void loop(boolean allowMotors) {
-        updateState(leftClaw, ClawSide.LEFT);
-        updateState(rightClaw, ClawSide.RIGHT);
-    }
-
-    @Override
-    public void stop() {
-
-    }
-
-    public enum ClawState {
-        CLOSED,
-        INTERMEDIATE,
-        INTAKE,
-        OPEN,
-
-    }
+    public static double intakeHandPivot = 0.75, intakeClawPivot = 0.095;
+    public static double outtakeHandPivot = 0.29, outtakeClawPivot = 0.935;
+    public static double outtakeHandPivotLong = .41, outtakeClawPivotLong = .89;
 
     public ClawState leftClaw = ClawState.OPEN;
     public ClawState rightClaw = ClawState.OPEN;
@@ -43,14 +25,83 @@ public class Claw implements Subsystem {
     public static double openRight = .38, closeRight = 0.49;
     public static double intermediateLeft = .41, intermediateRight = .44;
 
-    public Claw() {
-        this.robot = RobotHardware.getInstance();
-        updateState(ClawState.OPEN, ClawSide.BOTH);
+
+    public enum ClawState {
+        CLOSED,
+        INTERMEDIATE,
+        INTAKE,
+        OPEN,
+
     }
 
-    public void update() {
+    public enum Angle
+    {
+        INTAKE,
+        OUTTAKE,
+        OUTTAKE_LONG
+    }
+
+    public enum Type
+    {
+        CLAW,
+        HAND
+    }
+
+    Angle angle = Angle.INTAKE;
+    public OuttakeSubsystem()
+    {
+        this.robot = RobotHardware.getInstance();
+    }
+
+
+    @Override
+    public void periodic() {
+        updateState(Type.HAND);
+        updateState(Type.CLAW);
         updateState(leftClaw, ClawSide.LEFT);
         updateState(rightClaw, ClawSide.RIGHT);
+    }
+
+    public void setAngle(@NotNull Angle angle) {
+        this.angle = angle;
+
+        updateState(Type.HAND);
+        updateState(Type.CLAW);
+    }
+
+    public void updateState(@NotNull Type type) {
+
+        switch(type) {
+            case CLAW:
+                switch (angle){
+                    case INTAKE:
+                        this.robot.outtakeClawPivotServo.setPosition(intakeClawPivot);
+                        break;
+                    case OUTTAKE:
+                        this.robot.outtakeClawPivotServo.setPosition(outtakeClawPivot);
+                        break;
+                    case OUTTAKE_LONG:
+                        this.robot.outtakeClawPivotServo.setPosition(outtakeClawPivotLong);
+                        break;
+                }
+                break;
+            case HAND:
+                switch (angle){
+                    case INTAKE:
+                        this.robot.outtakeHandRightServo.setPosition(intakeHandPivot);
+                        this.robot.outtakeHandLeftServo.setPosition(intakeHandPivot);
+                        break;
+                    case OUTTAKE:
+                        this.robot.outtakeHandRightServo.setPosition(outtakeHandPivot);
+                        this.robot.outtakeHandLeftServo.setPosition(outtakeHandPivot);
+                        break;
+                    case OUTTAKE_LONG:
+                        this.robot.outtakeHandRightServo.setPosition(outtakeHandPivotLong);
+                        this.robot.outtakeHandLeftServo.setPosition(outtakeHandPivotLong);
+                        break;
+                }
+                break;
+        }
     }
 
     public void updateState(@NotNull ClawState state, @NotNull ClawSide side) {
@@ -124,4 +175,5 @@ public class Claw implements Subsystem {
         this.rightClaw = state;
         this.leftClaw = state;
     }
+
 }

@@ -14,11 +14,10 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
-import org.firstinspires.ftc.teamcode.subsystems.Elevator;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeExtensionSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 @Config
@@ -30,11 +29,11 @@ public class TestOrganizedCode extends LinearOpMode {
         ElapsedTime time;
 
     // subsystems
-    Elevator elevator;
-    Intake intake;
-    Outtake outtake;
+    LiftSubsystem elevator;
+    IntakeSubsystem intake;
+    OuttakeSubsystem outtake;
     Claw claw;
-    IntakeExtension intakeExtension;
+    IntakeExtensionSubsystem intakeExtension;
     AutoConstants autoConstants;
 
 
@@ -71,11 +70,11 @@ public class TestOrganizedCode extends LinearOpMode {
 
             autoConstants = new AutoConstants();
 
-            elevator = new Elevator(true);
-            outtake = new Outtake();
+            elevator = new LiftSubsystem(true);
+            outtake = new OuttakeSubsystem();
             claw = new Claw();
-            intake = new Intake();
-            intakeExtension = new IntakeExtension(true);
+            intake = new IntakeSubsystem();
+            intakeExtension = new IntakeExtensionSubsystem(true);
 
             intakeExtension.setAuto(true);
             elevator.setAuto(true);
@@ -111,11 +110,11 @@ public class TestOrganizedCode extends LinearOpMode {
 
             );
             while (opModeInInit() && !isStopRequested()) {
-                intake.setAngle(Intake.Angle.MID);
+                intake.setAngle(IntakeSubsystem.Angle.MID);
 
-                intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
+                intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.BOTH);
                 claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
-                outtake.setAngle(Outtake.Angle.INTAKE);
+                outtake.setAngle(OuttakeSubsystem.Angle.INTAKE);
                 telemetry.addLine("Initialized");
                 telemetry.update();
             }

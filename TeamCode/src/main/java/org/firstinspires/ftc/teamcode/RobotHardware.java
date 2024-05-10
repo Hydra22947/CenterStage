@@ -4,13 +4,11 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -19,7 +17,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.DrivetrainSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeExtensionSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.DroneSubsystem;
 import org.firstinspires.ftc.teamcode.util.Angle;
+import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterServo;
 import org.firstinspires.ftc.teamcode.util.wrappers.BetterSubsystem;
 
@@ -29,15 +34,26 @@ import java.util.Arrays;
 @Config
 public class RobotHardware {
 
+    public DrivetrainSubsystem drivetrain;
+    public LiftSubsystem elevator;
+    public OuttakeSubsystem outtake;
+    public IntakeSubsystem intake;
+    public DroneSubsystem drone;
+    public IntakeExtensionSubsystem intakeExtension;
+
     //drivetrain
     public HardwareMap hardwareMap;
     public DcMotorEx dtFrontLeftMotor;
     public DcMotorEx dtFrontRightMotor;
     public DcMotorEx dtBackLeftMotor;
     public DcMotorEx dtBackRightMotor;
-    // elevator
+
+    // lift
+    public DcMotorEx liftMotorRight;
+    public DcMotorEx liftMotorLeft;
 
     // intake
+    public DcMotorEx intakeExtensionMotor;
     public BetterServo intakeClawLeftServo;
     public BetterServo intakeClawRightServo;
     public BetterServo intakeAngleServo;
@@ -112,17 +128,21 @@ public class RobotHardware {
         this.dtBackLeftMotor = hardwareMap.get(DcMotorEx.class, "mBL");
         this.dtBackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.dtBackLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
         this.dtFrontLeftMotor = hardwareMap.get(DcMotorEx.class, "mFL");
         this.dtFrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.dtFrontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
         this.dtBackRightMotor = hardwareMap.get(DcMotorEx.class, "mBR");
         this.dtBackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         this.dtFrontRightMotor = hardwareMap.get(DcMotorEx.class, "mFR");
         this.dtFrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+
+        // LIFT
+        this.liftMotorRight = hardwareMap.get(DcMotorEx.class, "mER");
+        this.liftMotorLeft = hardwareMap.get(DcMotorEx.class, "mEL");
+        liftMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.liftMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.liftMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // INTAKE
         this.intakeAngleServo = new BetterServo(hardwareMap.get(Servo.class, "sIA"));
@@ -133,6 +153,9 @@ public class RobotHardware {
         // COLOR/DS SENSORS
         this.colorRight = hardwareMap.get(RevColorSensorV3.class, "cR");
         this.colorLeft = hardwareMap.get(RevColorSensorV3.class, "cL");
+        this.intakeExtensionMotor = hardwareMap.get(DcMotorEx.class, "mE");
+        intakeExtensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.intakeExtensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // HAND
         this.intakeHandPivotRightServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPR"));
@@ -140,13 +163,11 @@ public class RobotHardware {
         intakeHandPivotLeftServo.setDirection(Servo.Direction.REVERSE);
 
         // OUTTAKE
-        // CLAW
         this.outtakeClawLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sCL"));
         this.outtakeClawLeftServo.setDirection(Servo.Direction.REVERSE);
         this.outtakeClawRightServo = new BetterServo(hardwareMap.get(Servo.class, "sCR"));
         this.outtakeClawPivotServo = new BetterServo(hardwareMap.get(Servo.class, "sC"));
         this.outtakeClawPivotServo.setDirection(Servo.Direction.REVERSE);
-        // HAND
         this.outtakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
         this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
 
@@ -160,6 +181,25 @@ public class RobotHardware {
         init(hardwareMap, telemetry, new Pose2d(0,0,0));
     }
 
+    public void init(final HardwareMap hardwareMap, final Telemetry telemetry, boolean debug, Gamepad gamepad1, Gamepad gamepad2)
+    {
+        init(hardwareMap, telemetry, new Pose2d(0,0,0));
+
+        drivetrain = new DrivetrainSubsystem(gamepad1);
+        elevator = new LiftSubsystem(gamepad2, debug);
+        outtake = new OuttakeSubsystem();
+        intake = new IntakeSubsystem();
+        drone = new DroneSubsystem();
+        intakeExtension = new IntakeExtensionSubsystem(gamepad2, debug);
+        intake.setAngle(IntakeSubsystem.Angle.OUTTAKE);
+        intake.updateState(IntakeSubsystem.ClawState.INDETERMINATE, ClawSide.BOTH);
+        outtake.setBothClaw(OuttakeSubsystem.ClawState.INTAKE);
+        outtake.setAngle(OuttakeSubsystem.Angle.INTAKE);
+
+        intake.periodic();
+        outtake.periodic();
+        intakeExtension.periodic();
+    }
 
     public void loopVoltage(HardwareMap hardwareMap)
     {

@@ -21,15 +21,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
-import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
-import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
-import org.firstinspires.ftc.teamcode.subsystems.Elevator;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeExtensionSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineRedLeft;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -46,11 +42,11 @@ public class IntakeFailSafeTest extends LinearOpMode {
     ElapsedTime time;
 
     // subsystems
-    Elevator elevator;
-    Intake intake;
-    Outtake outtake;
+    LiftSubsystem elevator;
+    IntakeSubsystem intake;
+    OuttakeSubsystem outtake;
     Claw claw;
-    IntakeExtension intakeExtension;
+    IntakeExtensionSubsystem intakeExtension;
     AutoConstants autoConstants;
 
     DepositActions depositActions;
@@ -97,11 +93,11 @@ public class IntakeFailSafeTest extends LinearOpMode {
 
         autoConstants = new AutoConstants();
 
-        elevator = new Elevator(true);
-        outtake = new Outtake();
+        elevator = new LiftSubsystem(true);
+        outtake = new OuttakeSubsystem();
         claw = new Claw();
-        intake = new Intake();
-        intakeExtension = new IntakeExtension(true);
+        intake = new IntakeSubsystem();
+        intakeExtension = new IntakeExtensionSubsystem(true);
 
         intakeExtension.setAuto(true);
         elevator.setAuto(true);
@@ -113,17 +109,17 @@ public class IntakeFailSafeTest extends LinearOpMode {
         intakeFailSafe = IntakeFailSafe.ACTIVATED;
 
         SequentialAction depositRedMiddle = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.MID),
+                placePurpleActions.moveIntake(IntakeSubsystem.Angle.MID),
                 depositActions.readyForDeposit(1100),
                 placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
                 new SleepAction(0.5),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 600)
         );
         SequentialAction transferRedMiddle = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
+                placePurpleActions.moveIntake(IntakeSubsystem.Angle.OUTTAKE),
                 new SleepAction(0.5),
                 placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.RIGHT),
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                placePurpleActions.moveIntakeClaw(IntakeSubsystem.ClawState.OPEN, ClawSide.BOTH),
                 new SleepAction(.5),
                 placePurpleActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
         );
@@ -132,7 +128,7 @@ public class IntakeFailSafeTest extends LinearOpMode {
                 new SleepAction(1.5),
                 placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1),
-                placePurpleActions.moveIntake(Intake.Angle.MID),
+                placePurpleActions.moveIntake(IntakeSubsystem.Angle.MID),
                 placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
         );
 
@@ -142,8 +138,8 @@ public class IntakeFailSafeTest extends LinearOpMode {
 
 
         SequentialAction intakePixelRedMiddle = new SequentialAction(
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
-                placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
+                placePurpleActions.moveIntakeClaw(IntakeSubsystem.ClawState.OPEN, ClawSide.BOTH),
+                placePurpleActions.moveIntake(IntakeSubsystem.Angle.TOP_5_AUTO),
                 new SleepAction(.7),
                 placePurpleActions.openExtension(750),
                 new SleepAction(1),
@@ -154,7 +150,7 @@ public class IntakeFailSafeTest extends LinearOpMode {
 
         );
         SequentialAction readyIntakeRedMiddle = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.INTAKE)
+                placePurpleActions.moveIntake(IntakeSubsystem.Angle.INTAKE)
         );
 
 
@@ -198,7 +194,7 @@ public class IntakeFailSafeTest extends LinearOpMode {
         Action goForPlacement = robot.drive.actionBuilder(robot.drive.pose)
                 .strafeToLinearHeading(new Vector2d(30, -9), Math.toRadians(0))
                 .afterDisp(0.9, depositActions.readyForDeposit(1100))
-                .afterDisp(1, placePurpleActions.moveIntake(Intake.Angle.MID))
+                .afterDisp(1, placePurpleActions.moveIntake(IntakeSubsystem.Angle.MID))
                 .splineToLinearHeading(new Pose2d(51.55, -32.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .stopAndAdd(depositRedMiddle)
                 .waitSeconds(.5)
@@ -211,8 +207,8 @@ public class IntakeFailSafeTest extends LinearOpMode {
 
 
         while (opModeInInit() && !isStopRequested()) {
-            intake.setAngle(Intake.Angle.MID);
-            intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
+            intake.setAngle(IntakeSubsystem.Angle.MID);
+            intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
             robot.drive.updatePoseEstimate();
             switch (propPipelineRedLeft.getLocation()) {

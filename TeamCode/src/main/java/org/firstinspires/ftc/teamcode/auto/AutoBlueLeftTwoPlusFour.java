@@ -21,7 +21,6 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -32,11 +31,10 @@ import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
-import org.firstinspires.ftc.teamcode.subsystems.Elevator;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeExtensionSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineBlueLeft;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
@@ -55,11 +53,11 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
     ElapsedTime time;
 
     // subsystems
-    Elevator elevator;
-    Intake intake;
-    Outtake outtake;
+    LiftSubsystem elevator;
+    IntakeSubsystem intake;
+    OuttakeSubsystem outtake;
     Claw claw;
-    IntakeExtension intakeExtension;
+    IntakeExtensionSubsystem intakeExtension;
     AutoConstants autoConstants;
 
 
@@ -106,11 +104,11 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
         initCamera();
         webcam.setPipeline(propPipelineBlueLeft);
 
-        elevator = new Elevator(true);
-        outtake = new Outtake();
+        elevator = new LiftSubsystem(true);
+        outtake = new OuttakeSubsystem();
         claw = new Claw();
-        intake = new Intake();
-        intakeExtension = new IntakeExtension(true);
+        intake = new IntakeSubsystem();
+        intakeExtension = new IntakeExtensionSubsystem(true);
 
         intakeExtension.setAuto(true);
         elevator.setAuto(true);
@@ -121,7 +119,7 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
 
 
         SequentialAction depositBlue = new SequentialAction(
-                intakeActions.moveIntake(Intake.Angle.TELEOP_MID),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.TELEOP_MID),
                 new SleepAction(.2),
                 depositActions.moveElevator(minHeight),
                 new SleepAction(0.2),
@@ -136,7 +134,7 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
 
         );
         SequentialAction readyForDepositAction = new SequentialAction(
-                intakeActions.moveIntake(Intake.Angle.MID),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.MID),
                 new SleepAction(0.5),
                 depositActions.readyForDeposit(tempHeight)
 
@@ -146,8 +144,8 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
 
                readyForDepositAction,
 
-                intakeActions.moveIntake(Intake.Angle.TELEOP_MID),
-                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.TELEOP_MID),
+                intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.INDETERMINATE, ClawSide.BOTH),
 
                 intakeActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
                 new SleepAction(1.45),
@@ -163,26 +161,26 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
 
         SequentialAction placePurplePixelAction_MIDDLE = new SequentialAction(
                 new ParallelAction(
-                        intakeActions.moveIntake(Intake.Angle.INTAKE),
+                        intakeActions.moveIntake(IntakeSubsystem.Angle.INTAKE),
                         intakeActions.openExtension( MIDDLE_EXTENSION)),
                 new SleepAction(0.5),
-                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN,ClawSide.BOTH)
+                intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.OPEN,ClawSide.BOTH)
         );
 
         SequentialAction placePurplePixelAction_LEFT = new SequentialAction(
                 new ParallelAction(
-                        intakeActions.moveIntake(Intake.Angle.INTAKE),
+                        intakeActions.moveIntake(IntakeSubsystem.Angle.INTAKE),
                         intakeActions.openExtension( LEFT_EXTENSION)),
                 new SleepAction(0.5),
-               intakeActions.moveIntakeClaw(Intake.ClawState.OPEN,ClawSide.BOTH)
+               intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.OPEN,ClawSide.BOTH)
         );
        SequentialAction placePurplePixelAction_RIGHT = new SequentialAction(
-               intakeActions.moveIntake(Intake.Angle.INTAKE),
+               intakeActions.moveIntake(IntakeSubsystem.Angle.INTAKE),
                new SleepAction(0.6),
                new ParallelAction(
                intakeActions.openExtension( RIGHT_EXTENSION)),
                new SleepAction(0.5),
-               intakeActions.moveIntakeClaw(Intake.ClawState.OPEN,ClawSide.BOTH)
+               intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.OPEN,ClawSide.BOTH)
        );
 
         SequentialAction retractPurpleAction = new SequentialAction(
@@ -192,12 +190,12 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                         new InstantAction(() -> intakeExtension.setAggresive(true)),
                         intakeActions.closeExtension(),
                         new SleepAction(0.2),
-                        intakeActions.moveIntake(Intake.Angle.MID)
+                        intakeActions.moveIntake(IntakeSubsystem.Angle.MID)
                 )
         );
 
         SequentialAction openIntakeWhitePixelAction54 = new SequentialAction(
-                intakeActions.moveIntake(Intake.Angle.TOP_54),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.TOP_54),
                 new ParallelAction(
                 new SleepAction(.5),
                 intakeActions.lock(PlacePurpleActions.CloseClaw.SUPER_RIGHT_CLOSE),
@@ -209,7 +207,7 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
         );
 
         SequentialAction openIntakeWhitePixelAction32 = new SequentialAction(
-                intakeActions.moveIntake(Intake.Angle.TOP_32),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.TOP_32),
                 new SleepAction(.5),
                 intakeActions.lock(PlacePurpleActions.CloseClaw.SUPER_RIGHT_CLOSE),
                 intakeActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN),
@@ -226,7 +224,7 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                 new InstantAction(() -> intakeExtension.setAggresive(true)),
                 intakeActions.closeExtension(),
                 new SleepAction(.1),
-                intakeActions.moveIntake(Intake.Angle.OUTTAKE)
+                intakeActions.moveIntake(IntakeSubsystem.Angle.OUTTAKE)
 
                 //returnTransfer()
         );
@@ -345,9 +343,9 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
 
 //                new SequentialAction(robot.drive.actionBuilder(new Pose2d(50.5, 40, Math.toRadians(0)))
 //                        .strafeToLinearHeading(new Vector2d(50.5, 60), Math.toRadians(-90)).build(),
-//                        new InstantAction(() -> intake.move(Intake.Angle.TELEOP_MID)),
+//                        new InstantAction(() -> intake.move(IntakeSubsystem.Angle.TELEOP_MID)),
 //                        new InstantAction(() -> claw.setBothClaw(Claw.ClawState.CLOSED)),
-//                        new InstantAction(() -> outtake.setAngle(Outtake.Angle.INTAKE)),
+//                        new InstantAction(() -> outtake.setAngle(OuttakeSubsystem.Angle.INTAKE)),
 //                        new InstantAction(() -> elevator.setTarget(0)),
 //                        new SleepAction(1),
 //                        new InstantAction(() -> requestOpModeStop())
@@ -552,10 +550,10 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
         while (opModeInInit() && !isStopRequested()) {
             betterGamepad2.update();
 
-            intake.setAngle(Intake.Angle.MID);
-            intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
+            intake.setAngle(IntakeSubsystem.Angle.MID);
+            intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.BOTH);
             claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
-            outtake.setAngle(Outtake.Angle.INTAKE);
+            outtake.setAngle(OuttakeSubsystem.Angle.INTAKE);
             telemetry.addData("POS", propPipelineBlueLeft.getLocation());
             telemetry.addData("use april tag? (a - yes, y - no)", shouldUseAprilTag);
 
@@ -624,7 +622,7 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                 new InstantAction(() -> intakeExtension.setAggresive(true)),
                 intakeActions.closeExtension(),
                 new SleepAction(.1),
-                intakeActions.moveIntake(Intake.Angle.OUTTAKE)
+                intakeActions.moveIntake(IntakeSubsystem.Angle.OUTTAKE)
 
               //  returnTransfer()
 
@@ -633,8 +631,8 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
     SequentialAction returnDepositTop32 ()
     {
         return  new SequentialAction(
-                intakeActions.moveIntake(Intake.Angle.MID),
-                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.MID),
+                intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.INDETERMINATE, ClawSide.BOTH),
                 depositActions.readyForDeposit(tempHeight + 400),
 
                 intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
@@ -654,7 +652,7 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
     SequentialAction returnFixintake () {
         return new SequentialAction(
                 new SleepAction(.5),
-                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.OPEN, ClawSide.BOTH),
                 new SleepAction(0.1),
                 intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
                 new SleepAction(0.2),

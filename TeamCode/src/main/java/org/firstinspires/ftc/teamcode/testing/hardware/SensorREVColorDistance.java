@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.testing.hardware;
 
-import static org.firstinspires.ftc.teamcode.subsystems.Intake.seeFarFrom;
+import static org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem.seeFarFrom;
 
 import android.graphics.Color;
 

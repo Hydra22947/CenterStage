@@ -15,11 +15,10 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
-import org.firstinspires.ftc.teamcode.subsystems.Elevator;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeExtensionSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 
 public class MaxBlueConstants {
@@ -28,11 +27,11 @@ public class MaxBlueConstants {
     ElapsedTime time;
 
     // subsystems
-    Elevator elevator;
-    Intake intake;
-    Outtake outtake;
+    LiftSubsystem elevator;
+    IntakeSubsystem intake;
+    OuttakeSubsystem outtake;
     Claw claw;
-    IntakeExtension intakeExtension;
+    IntakeExtensionSubsystem intakeExtension;
     AutoConstants autoConstants;
 
 
@@ -97,7 +96,7 @@ public class MaxBlueConstants {
 
     Telemetry telemetry;
     HardwareMap hW;
-    public MaxBlueConstants (Elevator elevator, Intake intake, Outtake outtake, Claw claw, IntakeExtension intakeExtension , HardwareMap hW , Telemetry telemetry)
+    public MaxBlueConstants (LiftSubsystem elevator, IntakeSubsystem intake, OuttakeSubsystem outtake, Claw claw, IntakeExtensionSubsystem intakeExtension , HardwareMap hW , Telemetry telemetry)
     {
 
         this.hW = hW;
@@ -117,7 +116,7 @@ public class MaxBlueConstants {
 
         openIntakeWhitePixelAction54 = new SequentialAction(
                 new SleepAction(4),
-                intakeActions.moveIntake(Intake.Angle.TOP_54),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.TOP_54),
                 new SleepAction(.5),
                 intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1.5),
@@ -127,7 +126,7 @@ public class MaxBlueConstants {
 
          openIntakeWhitePixelAction32 = new SequentialAction(
                 new SleepAction(4),
-                intakeActions.moveIntake(Intake.Angle.TOP_32),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.TOP_32),
                 new SleepAction(.5),
                 intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1.5),
@@ -225,7 +224,7 @@ public class MaxBlueConstants {
 
         SequentialAction openIntakeWhitePixelAction54 = new SequentialAction(
                 new SleepAction(4),
-                intakeActions.moveIntake(Intake.Angle.TOP_54),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.TOP_54),
                 new SleepAction(.5),
                 intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1.5),
@@ -235,7 +234,7 @@ public class MaxBlueConstants {
 
         SequentialAction openIntakeWhitePixelAction32 = new SequentialAction(
                 new SleepAction(4),
-                intakeActions.moveIntake(Intake.Angle.TOP_32),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.TOP_32),
                 new SleepAction(.5),
                 intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1.5),
@@ -248,23 +247,23 @@ public class MaxBlueConstants {
                 new SleepAction(.5),
                 intakeActions.moveStack(),
                 new SleepAction(.5),
-                intakeActions.moveIntake(Intake.Angle.OUTTAKE),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.OUTTAKE),
                 intakeActions.closeExtension()
         );
 
         SequentialAction retractPurpleAction = new SequentialAction(
-                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.OPEN, ClawSide.BOTH),
                 new SleepAction(0.5),
                 intakeActions.closeExtension(),
-                intakeActions.moveIntake(Intake.Angle.MID)
+                intakeActions.moveIntake(IntakeSubsystem.Angle.MID)
         );
 
         SequentialAction transferAction = new SequentialAction(
                 new InstantAction(() -> intakeExtension.setAggresive(true)),
-                new ParallelAction(intakeActions.openExtension(0), intakeActions.moveIntake(Intake.Angle.OUTTAKE)),
+                new ParallelAction(intakeActions.openExtension(0), intakeActions.moveIntake(IntakeSubsystem.Angle.OUTTAKE)),
                 new SleepAction(0.5),
                 intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
-                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
+                intakeActions.moveIntakeClaw(IntakeSubsystem.ClawState.INDETERMINATE, ClawSide.BOTH),
                 new SleepAction(.75),
                 intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
         );
@@ -281,11 +280,11 @@ public class MaxBlueConstants {
         );
 
         SequentialAction depositBlue = new SequentialAction(
-                intakeActions.moveIntake(Intake.Angle.MID),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.MID),
                 new SleepAction(.2),
                 depositActions.moveElevator(minHeight),
                 new SleepAction(1),
-                intakeActions.moveIntake(Intake.Angle.TOP_54),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.TOP_54),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 0),
                 new SleepAction(0.25),
                 depositActions.retractDeposit()
@@ -304,7 +303,7 @@ public class MaxBlueConstants {
         );
 
         SequentialAction readyForDepositAction = new SequentialAction(
-                intakeActions.moveIntake(Intake.Angle.MID),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.MID),
                 new SleepAction(0.5),
                 depositActions.readyForDeposit(tempHeight)
 
@@ -315,7 +314,7 @@ public class MaxBlueConstants {
                 readyForDepositAction,
 
 
-                intakeActions.moveIntake(Intake.Angle.MID),
+                intakeActions.moveIntake(IntakeSubsystem.Angle.MID),
 
                 intakeActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
                 new SleepAction(1),

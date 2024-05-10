@@ -7,16 +7,15 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeExtensionSubsystem;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.firstinspires.ftc.teamcode.util.Stopwatch;
 
 public class PlacePurpleActions {
 
-    private Intake intake;
-    private IntakeExtension intakeExtension;
+    private IntakeSubsystem intake;
+    private IntakeExtensionSubsystem intakeExtension;
     Claw claw;
 
     public enum Length {
@@ -54,7 +53,7 @@ public class PlacePurpleActions {
     Length length;
     FailSafe failSafe;
 
-    public PlacePurpleActions(Intake intake, IntakeExtension intakeExtension, Claw claw) {
+    public PlacePurpleActions(IntakeSubsystem intake, IntakeExtensionSubsystem intakeExtension, Claw claw) {
         this.intake = intake;
         this.claw = claw;
         this.intakeExtension = intakeExtension;
@@ -75,7 +74,7 @@ public class PlacePurpleActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return activateSystem(placePurpleMidTimer, () -> intake.move(Intake.Angle.INTAKE), 0);
+            return activateSystem(placePurpleMidTimer, () -> intake.move(IntakeSubsystem.Angle.INTAKE), 0);
         }
     }
 
@@ -94,11 +93,11 @@ public class PlacePurpleActions {
 
             switch (openClaw) {
                 case LEFT_OPEN:
-                    return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.LEFT), 5000);
+                    return activateSystem(releaseTimer, () -> intake.updateState(IntakeSubsystem.ClawState.OPEN, ClawSide.LEFT), 5000);
                 case RIGHT_OPEN:
-                    return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.RIGHT), 5000);
+                    return activateSystem(releaseTimer, () -> intake.updateState(IntakeSubsystem.ClawState.OPEN, ClawSide.RIGHT), 5000);
                 default:
-                    return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH), 5000);
+                    return activateSystem(releaseTimer, () -> intake.updateState(IntakeSubsystem.ClawState.OPEN, ClawSide.BOTH), 5000);
 
             }
 
@@ -120,11 +119,11 @@ public class PlacePurpleActions {
 
             switch (failSafe) {
                 case ACTIVATED:
-                    return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH), 5000);
+                    return activateSystem(releaseTimer, () -> intake.updateState(IntakeSubsystem.ClawState.INDETERMINATE, ClawSide.BOTH), 5000);
                 case DEACTIVATED:
-                    return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH), 5000);
+                    return activateSystem(releaseTimer, () -> intake.updateState(IntakeSubsystem.ClawState.OPEN, ClawSide.BOTH), 5000);
                 default:
-                    return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH), 5000);
+                    return activateSystem(releaseTimer, () -> intake.updateState(IntakeSubsystem.ClawState.INDETERMINATE, ClawSide.BOTH), 5000);
             }
 
         }
@@ -134,17 +133,17 @@ public class PlacePurpleActions {
 
 
     public class MoveIntakeClaw implements Action {
-        Intake.ClawState clawState;
+        IntakeSubsystem.ClawState clawState;
         ClawSide clawSide;
 
-        public MoveIntakeClaw(Intake.ClawState clawState, ClawSide clawSide) {
+        public MoveIntakeClaw(IntakeSubsystem.ClawState clawState, ClawSide clawSide) {
             this.clawState = clawState;
             this.clawSide = clawSide;
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            intake.updateClawState(clawState, clawSide);
+            intake.updateState(clawState, clawSide);
             return false;
         }
 
@@ -182,19 +181,19 @@ public class PlacePurpleActions {
 
             switch (closeClaw) {
                 case LEFT_CLOSE:
-                    return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT), 500);
+                    return activateSystem(lockTimer, () -> intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.LEFT), 500);
                 case RIGHT_CLOSE:
-                    return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT), 500);
+                    return activateSystem(lockTimer, () -> intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.RIGHT), 500);
 
                 case SUPER_RIGHT_CLOSE:
-                    return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.SUPER_CLOSE, ClawSide.RIGHT), 500);
+                    return activateSystem(lockTimer, () -> intake.updateState(IntakeSubsystem.ClawState.SUPER_CLOSE, ClawSide.RIGHT), 500);
                 case SUPER_LEFT_CLOSE:
-                    return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.SUPER_CLOSE, ClawSide.LEFT), 500);
+                    return activateSystem(lockTimer, () -> intake.updateState(IntakeSubsystem.ClawState.SUPER_CLOSE, ClawSide.LEFT), 500);
                 case SUPER_BOTH_CLOSE:
-                    return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.SUPER_CLOSE, ClawSide.BOTH), 500);
+                    return activateSystem(lockTimer, () -> intake.updateState(IntakeSubsystem.ClawState.SUPER_CLOSE, ClawSide.BOTH), 500);
 
                 default:
-                    return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH), 500);
+                    return activateSystem(lockTimer, () -> intake.updateState(IntakeSubsystem.ClawState.CLOSE, ClawSide.BOTH), 500);
 
             }
         }
@@ -250,8 +249,8 @@ public class PlacePurpleActions {
 
 
     public  class MoveIntake implements Action {
-        Intake.Angle angle;
-        public MoveIntake(Intake.Angle angle) {
+        IntakeSubsystem.Angle angle;
+        public MoveIntake(IntakeSubsystem.Angle angle) {
             this.angle = angle;
         }
 
@@ -267,11 +266,11 @@ public class PlacePurpleActions {
         return new PlacePurpleMid();
     }
 
-    public Action moveIntake(Intake.Angle angle) {
+    public Action moveIntake(IntakeSubsystem.Angle angle) {
         return new MoveIntake(angle);
     }
 
-    public Action moveIntakeClaw(Intake.ClawState clawState, ClawSide clawSide) {
+    public Action moveIntakeClaw(IntakeSubsystem.ClawState clawState, ClawSide clawSide) {
         return new MoveIntakeClaw(clawState, clawSide);
     }
 

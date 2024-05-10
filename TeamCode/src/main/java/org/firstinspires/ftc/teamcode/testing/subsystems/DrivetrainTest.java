@@ -7,15 +7,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 
 @Config
-@TeleOp(name = "Drivetrain Test", group = "A")
+@TeleOp(name = "DrivetrainSubsystem Test", group = "A")
 public class DrivetrainTest extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
-    Drivetrain drivetrain;
+    DrivetrainSubsystem drivetrain;
 
     BetterGamepad gamepadEx;
 
@@ -27,7 +27,7 @@ public class DrivetrainTest extends LinearOpMode {
 
         robot.init(hardwareMap, telemetry);
 
-        drivetrain = new Drivetrain(gamepad1, true, true);
+        drivetrain = new DrivetrainSubsystem(gamepad1);
 
         while (opModeInInit()) {
             telemetry.addLine("Robot Initialized.");
