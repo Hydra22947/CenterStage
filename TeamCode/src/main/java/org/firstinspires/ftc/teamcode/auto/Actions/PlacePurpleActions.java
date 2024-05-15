@@ -185,15 +185,7 @@ public class PlacePurpleActions {
                     return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT), 500);
                 case RIGHT_CLOSE:
                     return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT), 500);
-
-                case SUPER_RIGHT_CLOSE:
-                    return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.SUPER_CLOSE, ClawSide.RIGHT), 500);
-                case SUPER_LEFT_CLOSE:
-                    return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.SUPER_CLOSE, ClawSide.LEFT), 500);
-                case SUPER_BOTH_CLOSE:
-                    return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.SUPER_CLOSE, ClawSide.BOTH), 500);
-
-                default:
+                  default:
                     return activateSystem(lockTimer, () -> intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH), 500);
 
             }

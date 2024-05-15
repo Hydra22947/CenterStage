@@ -28,7 +28,6 @@ public class Claw implements Subsystem {
 
     public enum ClawState {
         CLOSED,
-        INTERMEDIATE,
         INTAKE,
         OPEN,
 
@@ -38,10 +37,10 @@ public class Claw implements Subsystem {
     public ClawState rightClaw = ClawState.OPEN;
 
     // LOOK FORM INTAKE
-    public static double openLeft = .36, closeLeft = 0.48;
-    public static double intakeRight = .4, intakeLeft = .38; // misha
-    public static double openRight = .38, closeRight = 0.49;
-    public static double intermediateLeft = .41, intermediateRight = .44;
+    public static double intakeRight = .53, intakeLeft = 0.46;
+    public static double openRight = .46, openLeft = 0.52;
+    public static double closeRight = .42, closeLeft = .57; // misha
+
 
     public Claw() {
         this.robot = RobotHardware.getInstance();
@@ -84,8 +83,6 @@ public class Claw implements Subsystem {
                 switch (state) {
                     case CLOSED:
                         return closeLeft;
-                    case INTERMEDIATE:
-                        return intermediateLeft;
                     case INTAKE:
                         return intakeLeft;
                     case OPEN:
@@ -97,8 +94,6 @@ public class Claw implements Subsystem {
                 switch (state) {
                     case CLOSED:
                         return closeRight;
-                    case INTERMEDIATE:
-                        return intermediateRight;
                     case INTAKE:
                         return intakeRight;
                     case OPEN:

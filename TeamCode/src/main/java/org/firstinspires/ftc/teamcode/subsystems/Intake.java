@@ -12,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 public class Intake implements Subsystem {
 
     private final RobotHardware robot;
-    public static double intakeHandPivot = 0.2, intakeAmmoPivot = 0.12;
-    public static double outtakeHandPivot = 0.64, outtakeAmmoPivot = .67; // פורק מהשאיבה הזוויות-מתוקן
+    public static double intakeHandPivot = 0.05, intakeAmmoPivot = 0;
+    public static double outtakeHandPivot = 0.575, outtakeAmmoPivot = .4; // פורק מהשאיבה הזוויות-מתוקן
     public static double midHandPivot = 0.67, midAmmoPivot = 0.4;
     public static double midTeleOpHandPivot = 0.5, midTeleopAmmoPivot = 0.65;
     public static double top5HandPivot = .31, top5AmmoPivot = 0.13;
@@ -32,10 +32,9 @@ public class Intake implements Subsystem {
     public static double clickOffset = 0.1;
     double OFFSET_AMMO = 0;
 
-    public static double openRight = 0.535, openLeft = 0.435; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double closeRight = .77, closeLeft = 0.69; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double superCloseRight = .81, superCloseLeft = 0.735; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double indeterminateRight = 0.605, indeterminateLeft = 0.54; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double openRight = 0.1, openLeft = 0.1;
+    public static double closeRight = .275, closeLeft = 0.3; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double indeterminateRight = 0.28, indeterminateLeft = 0.2; // סרבואים של תפיסה של שאיבה שהם פתוחים
 
     public static double closeCauseWallRight;
     public static double closeCauseWallLeft;
@@ -78,7 +77,6 @@ public class Intake implements Subsystem {
         OPEN,
         INDETERMINATE,
         CLOSE,
-        SUPER_CLOSE
     }
 
     public enum Type {
@@ -129,15 +127,13 @@ public class Intake implements Subsystem {
 
     public void moveStack() {
         this.robot.intakeAngleServo.setPosition((getPosition(angle, Type.AMMO)) - STACK);
-        this.robot.intakeHandPivotLeftServo.setPosition(getPosition(Angle.INTAKE, Type.HAND));
-        this.robot.intakeHandPivotRightServo.setPosition(getPosition(Angle.INTAKE, Type.HAND));
+        this.robot.intakeHandPivotServo.setPosition(getPosition(Angle.INTAKE, Type.HAND));
     }
 
 
     public void returnStack() {
         this.robot.intakeAngleServo.setPosition((getPosition(angle, Type.AMMO) - STACK));
-        this.robot.intakeHandPivotLeftServo.setPosition(getPosition(angle, Type.HAND));
-        this.robot.intakeHandPivotRightServo.setPosition(getPosition(angle, Type.HAND));
+        this.robot.intakeHandPivotServo.setPosition(getPosition(angle, Type.HAND));
     }
 
 
@@ -160,8 +156,7 @@ public class Intake implements Subsystem {
                 this.robot.intakeAngleServo.setPosition(position);
                 break;
             case HAND:
-                this.robot.intakeHandPivotLeftServo.setPosition(position);
-                this.robot.intakeHandPivotRightServo.setPosition(position);
+                this.robot.intakeHandPivotServo.setPosition(position);
                 break;
         }
     }
@@ -202,8 +197,6 @@ public class Intake implements Subsystem {
                         return openLeft;
                     case INDETERMINATE:
                         return indeterminateLeft;
-                    case SUPER_CLOSE:
-                        return superCloseLeft;
                     default:
                         return 0.0;
                 }
@@ -215,8 +208,6 @@ public class Intake implements Subsystem {
                         return openRight;
                     case INDETERMINATE:
                         return indeterminateRight;
-                    case SUPER_CLOSE:
-                        return superCloseRight;
                     default:
                         return 0.0;
                 }

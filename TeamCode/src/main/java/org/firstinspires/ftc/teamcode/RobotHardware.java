@@ -41,8 +41,7 @@ public class RobotHardware {
     public BetterServo intakeClawLeftServo;
     public BetterServo intakeClawRightServo;
     public BetterServo intakeAngleServo;
-    public BetterServo intakeHandPivotRightServo;
-    public BetterServo intakeHandPivotLeftServo;
+    public BetterServo intakeHandPivotServo;
     public RevColorSensorV3 colorRight;
     public RevColorSensorV3 colorLeft;
 
@@ -50,8 +49,8 @@ public class RobotHardware {
     public BetterServo outtakeClawLeftServo;
     public BetterServo outtakeClawRightServo;
     public BetterServo outtakeClawPivotServo;
-    public BetterServo outtakeHandRightServo;
-    public BetterServo outtakeHandLeftServo;
+    public BetterServo outtakeHandServo;
+    public BetterServo outtakeSpinServo;
 
 
     public BetterServo planeServo;
@@ -135,20 +134,17 @@ public class RobotHardware {
         this.colorLeft = hardwareMap.get(RevColorSensorV3.class, "cL");
 
         // HAND
-        this.intakeHandPivotRightServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPR"));
-        this.intakeHandPivotLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPL"));
-        intakeHandPivotLeftServo.setDirection(Servo.Direction.REVERSE);
+        this.intakeHandPivotServo = new BetterServo(hardwareMap.get(Servo.class, "sIHPR"));
 
         // OUTTAKE
         // CLAW
         this.outtakeClawLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sCL"));
-        this.outtakeClawLeftServo.setDirection(Servo.Direction.REVERSE);
         this.outtakeClawRightServo = new BetterServo(hardwareMap.get(Servo.class, "sCR"));
         this.outtakeClawPivotServo = new BetterServo(hardwareMap.get(Servo.class, "sC"));
         this.outtakeClawPivotServo.setDirection(Servo.Direction.REVERSE);
         // HAND
-        this.outtakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
-        this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
+        this.outtakeHandServo = new BetterServo(hardwareMap.get(Servo.class, "sH"));
+        this.outtakeSpinServo = new BetterServo(hardwareMap.get(Servo.class, "sSO"));
 
         this.planeServo = new BetterServo(hardwareMap.get(Servo.class, "sP"));
 

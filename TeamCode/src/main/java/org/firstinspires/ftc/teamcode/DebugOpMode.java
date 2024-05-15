@@ -711,10 +711,6 @@ public class DebugOpMode extends LinearOpMode {
                 {
                     claw.setLeftClaw(Claw.ClawState.OPEN);
                 }
-                else if(betterGamepad1.dpadDownOnce() && cooldowned())
-                {
-                    claw.setBothClaw(Claw.ClawState.INTERMEDIATE);
-                }
 
                 if(betterGamepad2.rightBumperOnce())
                 {
@@ -785,11 +781,6 @@ public class DebugOpMode extends LinearOpMode {
                 break;
             case STUCK_3:
                 outtake.setAngle(Outtake.Angle.OUTTAKE);
-
-                if(betterGamepad1.dpadDownOnce() || betterGamepad1.leftBumperOnce())
-                {
-                    claw.setBothClaw(Claw.ClawState.INTERMEDIATE);
-                }
 
                 if(betterGamepad2.XOnce())
                 {

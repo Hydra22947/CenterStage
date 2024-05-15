@@ -130,7 +130,7 @@ public class DepositActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return !activateSystem(placePixelTimer, () -> claw.updateState(Claw.ClawState.INTERMEDIATE, ClawSide.BOTH), delay);
+            return !activateSystem(placePixelTimer, () -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), delay);
         }
     }
 
