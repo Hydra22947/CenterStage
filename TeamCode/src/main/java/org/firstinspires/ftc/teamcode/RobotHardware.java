@@ -49,7 +49,8 @@ public class RobotHardware {
     public BetterServo outtakeClawLeftServo;
     public BetterServo outtakeClawRightServo;
     public BetterServo outtakeClawPivotServo;
-    public BetterServo outtakeHandServo;
+    public BetterServo outtakeHandLeftServo;
+    public BetterServo outtakeHandRightServo;
     public BetterServo outtakeSpinServo;
 
 
@@ -143,7 +144,9 @@ public class RobotHardware {
         this.outtakeClawPivotServo = new BetterServo(hardwareMap.get(Servo.class, "sC"));
         this.outtakeClawPivotServo.setDirection(Servo.Direction.REVERSE);
         // HAND
-        this.outtakeHandServo = new BetterServo(hardwareMap.get(Servo.class, "sH"));
+        this.outtakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
+        this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
+        this.outtakeHandRightServo.setDirection(Servo.Direction.REVERSE);
         this.outtakeSpinServo = new BetterServo(hardwareMap.get(Servo.class, "sSO"));
 
         this.planeServo = new BetterServo(hardwareMap.get(Servo.class, "sP"));

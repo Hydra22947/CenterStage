@@ -12,9 +12,9 @@ import org.jetbrains.annotations.NotNull;
 public class Intake implements Subsystem {
 
     private final RobotHardware robot;
-    public static double intakeHandPivot = 0.05, intakeAmmoPivot = 0;
-    public static double outtakeHandPivot = 0.575, outtakeAmmoPivot = .4; // פורק מהשאיבה הזוויות-מתוקן
-    public static double midHandPivot = 0.67, midAmmoPivot = 0.4;
+    public static double intakeHandPivot = 0.075, intakeAmmoPivot = 0.275;
+    public static double outtakeHandPivot = 0.55, outtakeAmmoPivot = .72; // פורק מהשאיבה הזוויות-מתוקן
+    public static double midHandPivot = 0.55, midAmmoPivot = .75;
     public static double midTeleOpHandPivot = 0.5, midTeleopAmmoPivot = 0.65;
     public static double top5HandPivot = .31, top5AmmoPivot = 0.13;
     public static double top5HandPivotAuto = 0.315, top5AmmoPivotAuto = 0.13; //auto ערימה של אוטונומי רק ה5
@@ -34,7 +34,7 @@ public class Intake implements Subsystem {
 
     public static double openRight = 0.1, openLeft = 0.1;
     public static double closeRight = .275, closeLeft = 0.3; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double indeterminateRight = 0.28, indeterminateLeft = 0.2; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double indeterminateRight = 0.15, indeterminateLeft = 0.15; // סרבואים של תפיסה של שאיבה שהם פתוחים
 
     public static double closeCauseWallRight;
     public static double closeCauseWallLeft;

@@ -700,7 +700,7 @@ public class DebugOpMode extends LinearOpMode {
                 }
 
                 if ((getTime() - previousElevator) >= WAIT_DELAY_TILL_OUTTAKE) {
-                    moveOuttake();
+                    outtake.setAngle(Outtake.Angle.OUTTAKE);
                 }
 
                 if(betterGamepad1.dpadRightOnce() && cooldowned())
@@ -782,6 +782,7 @@ public class DebugOpMode extends LinearOpMode {
             case STUCK_3:
                 outtake.setAngle(Outtake.Angle.OUTTAKE);
 
+
                 if(betterGamepad2.XOnce())
                 {
                     claw.setBothClaw(Claw.ClawState.CLOSED);
@@ -821,20 +822,6 @@ public class DebugOpMode extends LinearOpMode {
                 break;
         }
     }
-
-    void moveOuttake()
-    {
-        switch (outtakeState)
-        {
-            case OUTTAKE:
-                outtake.setAngle(Outtake.Angle.OUTTAKE);
-                break;
-            case OUTTAKE_LONG:
-                outtake.setAngle(Outtake.Angle.OUTTAKE_LONG);
-                break;
-        }
-    }
-
     void switchOuttake()
     {
         switch (outtakeState)

@@ -11,10 +11,9 @@ public class Outtake implements Subsystem{
 
     private final RobotHardware robot;
 
-    public static double intakeHandPivot = 0.75, intakeClawPivot = 0.095;
-    public static double outtakeHandPivot = 0.29, outtakeClawPivot = 0.935;
-    public static double outtakeHandPivotLong = .41, outtakeClawPivotLong = .89;
-    public static double outtakeSpinDefault = 0.31, outtakeSpin45 = 0.1505;
+    public static double intakeHandPivot = 0.165, intakeClawPivot = 0.95;
+    public static double outtakeHandPivot = 0.7, outtakeClawPivot = 1;
+    public static double outtakeSpinIntake = 0.32, outtakeSpinOuttake = 0.89, outtakeSpin45 = 0.1505;
     public static double outtakeSpinDouble = 0.0325;
 
     public static double power = 1;
@@ -41,8 +40,7 @@ public class Outtake implements Subsystem{
     public enum Angle
     {
         INTAKE,
-        OUTTAKE,
-        OUTTAKE_LONG
+        OUTTAKE
     }
 
     public enum Type
@@ -73,32 +71,29 @@ public class Outtake implements Subsystem{
 
     public void updateState(@NotNull Type type) {
 
-        this.robot.outtakeSpinServo.setPosition(outtakeSpinDefault);
 
         switch(type) {
             case CLAW:
                 switch (angle){
                     case INTAKE:
                         this.robot.outtakeClawPivotServo.setPosition(intakeClawPivot);
+                        this.robot.outtakeSpinServo.setPosition(outtakeSpinIntake);
                         break;
                     case OUTTAKE:
                         this.robot.outtakeClawPivotServo.setPosition(outtakeClawPivot);
-                        break;
-                    case OUTTAKE_LONG:
-                        this.robot.outtakeClawPivotServo.setPosition(outtakeClawPivotLong);
-                        break;
+                        this.robot.outtakeSpinServo.setPosition(outtakeSpinOuttake);
+                                                break;
                 }
                 break;
             case HAND:
                 switch (angle){
                     case INTAKE:
-                        this.robot.outtakeHandServo.setPosition(intakeHandPivot);
+                        this.robot.outtakeHandLeftServo.setPosition(intakeHandPivot);
+                        this.robot.outtakeHandRightServo.setPosition(intakeHandPivot);
                         break;
                     case OUTTAKE:
-                        this.robot.outtakeHandServo.setPosition(outtakeHandPivot);
-                        break;
-                    case OUTTAKE_LONG:
-                        this.robot.outtakeHandServo.setPosition(outtakeHandPivotLong);
+                        this.robot.outtakeHandLeftServo.setPosition(outtakeHandPivot);
+                        this.robot.outtakeHandRightServo.setPosition(outtakeHandPivot);
                         break;
                 }
                 break;

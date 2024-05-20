@@ -18,8 +18,8 @@ public class Elevator implements Subsystem
     private final RobotHardware robot = RobotHardware.getInstance();
     public static double ELEVATOR_INCREMENT = 70;
     public static double BASE_LEVEL = 1000;
-    public static double MAX_LEVEL = 3450;
-    public static double HANG_OPEN = 3150;
+    public static double MAX_LEVEL = 2500;
+    public static double HANG_OPEN = 2400;
     public static double HANG = 500;
     double currentTargetRight = 0, currentTargetLeft = 0;
     boolean usePID = true;

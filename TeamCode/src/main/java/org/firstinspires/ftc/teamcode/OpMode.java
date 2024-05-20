@@ -702,7 +702,7 @@ public class OpMode extends LinearOpMode {
                 }
 
                 if ((getTime() - previousElevator) >= WAIT_DELAY_TILL_OUTTAKE) {
-                    moveOuttake();
+                    outtake.setAngle(Outtake.Angle.OUTTAKE);
                 }
 
                 if(betterGamepad1.dpadRightOnce() && cooldowned())
@@ -820,19 +820,6 @@ public class OpMode extends LinearOpMode {
             case INTAKE:
                 intake.move(Intake.Angle.INTAKE);
                 intake.setSeeFarFrom(Intake.maxSeeFarFrom);
-                break;
-        }
-    }
-
-    void moveOuttake()
-    {
-        switch (outtakeState)
-        {
-            case OUTTAKE:
-                outtake.setAngle(Outtake.Angle.OUTTAKE);
-                break;
-            case OUTTAKE_LONG:
-                outtake.setAngle(Outtake.Angle.OUTTAKE_LONG);
                 break;
         }
     }
