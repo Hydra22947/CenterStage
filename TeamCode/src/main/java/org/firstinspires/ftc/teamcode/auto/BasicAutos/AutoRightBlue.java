@@ -27,10 +27,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
-import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
+import org.firstinspires.ftc.teamcode.auto.Actions.IntakeActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings;
@@ -65,7 +64,7 @@ public class AutoRightBlue extends LinearOpMode {
 
 
     DepositActions depositActions;
-    PlacePurpleActions placePurpleActions;
+    IntakeActions intakeActions;
     UpdateActions updateActions;
 
     public static AutoSettings.PropLocation propLocation = AutoSettings.PropLocation.MIDDLE;
@@ -104,18 +103,18 @@ public class AutoRightBlue extends LinearOpMode {
         elevator.setAuto(true);
 
         depositActions = new DepositActions(elevator, intake, claw, outtake, intakeExtension);
-        placePurpleActions = new PlacePurpleActions(intake, intakeExtension, claw);
+        intakeActions = new IntakeActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
 
         SequentialAction readyIntakeBlue = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.MID)
+                intakeActions.moveIntake(Intake.Angle.MID)
         );
 
 
         SequentialAction depositBlueMiddle = new SequentialAction(
 
-                placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
+                intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
                 new SleepAction(0.5),
@@ -124,7 +123,7 @@ public class AutoRightBlue extends LinearOpMode {
 
         SequentialAction depositIntermediate = new SequentialAction(
 
-                placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
+                intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 0),
 
@@ -133,7 +132,7 @@ public class AutoRightBlue extends LinearOpMode {
 
         SequentialAction depositTwoPixels = new SequentialAction(
 
-                placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
+                intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 0),
 
@@ -144,12 +143,12 @@ public class AutoRightBlue extends LinearOpMode {
                 depositActions.moveElevator(1850)
         );
         SequentialAction transferBlueMiddle = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
+                intakeActions.moveIntake(Intake.Angle.OUTTAKE),
                 new SleepAction(0.5),
-                placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
+                intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
+                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
                 new SleepAction(1),
-                placePurpleActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
+                intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
         );
 
 
@@ -158,34 +157,34 @@ public class AutoRightBlue extends LinearOpMode {
         );
 
         SequentialAction intakePixelBlueMiddle = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
+                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
                 new SleepAction(1),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
+                intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE)
 
         );
 
         SequentialAction intakePixelBlueLeft = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
+                intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
+                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
         );
 
         SequentialAction intakePixelBlueRight = new SequentialAction(
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
-                placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
+                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
                 new SleepAction(1),
-                placePurpleActions.openExtension(700)
+                intakeActions.openExtension(700)
         );
 
         SequentialAction intakePixelBlueClose = new SequentialAction(
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
+                intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.5),
-                placePurpleActions.moveStack(),
-                placePurpleActions.openExtension(-20)
+                intakeActions.moveStack(),
+                intakeActions.openExtension(-20)
 
         );
         SequentialAction readyForDeposit = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.MID),
+                intakeActions.moveIntake(Intake.Angle.MID),
                 new SleepAction(.25),
                 depositActions.readyForDeposit(elevatorHeight)
         );
@@ -201,7 +200,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .stopAndAdd(intakePixelBlueLeft)
                         .strafeToLinearHeading(new Vector2d(-53.5, 25), Math.toRadians(0))
                         .waitSeconds(.1)
-                        .stopAndAdd(placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE))
+                        .stopAndAdd(intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE))
 
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
@@ -238,7 +237,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .waitSeconds(.1)
                         .strafeToLinearHeading(new Vector2d(-53.5, 26), Math.toRadians(0))
                         .waitSeconds(.1)
-                        .stopAndAdd(placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE))
+                        .stopAndAdd(intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE))
 
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)

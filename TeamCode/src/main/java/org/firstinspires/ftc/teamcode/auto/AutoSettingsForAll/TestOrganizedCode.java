@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
-import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
+import org.firstinspires.ftc.teamcode.auto.Actions.IntakeActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
@@ -39,7 +39,7 @@ public class TestOrganizedCode extends LinearOpMode {
 
 
     DepositActions depositActions;
-    PlacePurpleActions intakeActions;
+    IntakeActions intakeActions;
     UpdateActions updateActions;
 
     MaxBlueConstants maxBlueConstants;
@@ -81,7 +81,7 @@ public class TestOrganizedCode extends LinearOpMode {
             elevator.setAuto(true);
 
             depositActions = new DepositActions(elevator, intake, claw, outtake, intakeExtension);
-            intakeActions = new PlacePurpleActions(intake, intakeExtension, claw);
+            intakeActions = new IntakeActions(intake, intakeExtension, claw);
             updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
             blueLeftRight = new SequentialAction(

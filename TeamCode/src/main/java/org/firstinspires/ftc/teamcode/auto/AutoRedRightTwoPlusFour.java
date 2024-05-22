@@ -29,7 +29,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 //import org.firstinspires.ftc.teamcode.auto.Actions.CheckAprilTagAction;
-import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
+import org.firstinspires.ftc.teamcode.auto.Actions.IntakeActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
@@ -37,7 +37,6 @@ import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
-import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineBlueLeft;
 import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineRedRight;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
@@ -65,7 +64,7 @@ public class AutoRedRightTwoPlusFour extends LinearOpMode {
 
 
     DepositActions depositActions;
-    PlacePurpleActions intakeActions;
+    IntakeActions intakeActions;
     UpdateActions updateActions;
     AprilTagProcessor aprilTagProcessor;
 
@@ -116,7 +115,7 @@ public class AutoRedRightTwoPlusFour extends LinearOpMode {
         elevator.setAuto(true);
 
         depositActions = new DepositActions(elevator, intake, claw, outtake, intakeExtension);
-        intakeActions = new PlacePurpleActions(intake, intakeExtension, claw);
+        intakeActions = new IntakeActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
 
@@ -149,7 +148,7 @@ public class AutoRedRightTwoPlusFour extends LinearOpMode {
                 intakeActions.moveIntake(Intake.Angle.TELEOP_MID),
                 intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
 
-                intakeActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
+                intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(1.45),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
 
@@ -186,7 +185,7 @@ public class AutoRedRightTwoPlusFour extends LinearOpMode {
         );
 
         SequentialAction retractPurpleAction = new SequentialAction(
-                intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
+                intakeActions.release(IntakeActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(0.2),
                 new ParallelAction(
                         new InstantAction(() -> intakeExtension.setAggresive(true)),
@@ -200,8 +199,8 @@ public class AutoRedRightTwoPlusFour extends LinearOpMode {
                 intakeActions.moveIntake(Intake.Angle.TOP_54),
                 new ParallelAction(
                         new SleepAction(.5),
-                        intakeActions.lock(PlacePurpleActions.CloseClaw.SUPER_RIGHT_CLOSE),
-                        intakeActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN)),
+                        intakeActions.lock(IntakeActions.CloseClaw.SUPER_RIGHT_CLOSE),
+                        intakeActions.release(IntakeActions.OpenClaw.LEFT_OPEN)),
                 new SleepAction(0.7),
                 new InstantAction(()-> intakeExtension.setAggresive(false)),
                 intakeActions.openExtension(430 )
@@ -211,8 +210,8 @@ public class AutoRedRightTwoPlusFour extends LinearOpMode {
         SequentialAction openIntakeWhitePixelAction32 = new SequentialAction(
                 intakeActions.moveIntake(Intake.Angle.TOP_32),
                 new SleepAction(.5),
-                intakeActions.lock(PlacePurpleActions.CloseClaw.SUPER_RIGHT_CLOSE),
-                intakeActions.release(PlacePurpleActions.OpenClaw.LEFT_OPEN),
+                intakeActions.lock(IntakeActions.CloseClaw.SUPER_RIGHT_CLOSE),
+                intakeActions.release(IntakeActions.OpenClaw.LEFT_OPEN),
                 new SleepAction(1),
                 new InstantAction(() -> intakeExtension.setAggresive(false)),
                 intakeActions.openExtension(430 )
@@ -221,7 +220,7 @@ public class AutoRedRightTwoPlusFour extends LinearOpMode {
 
 
         SequentialAction closeIntakeWhitePixelAction = new SequentialAction(
-                intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
+                intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(.5),
                 new InstantAction(() -> intakeExtension.setAggresive(true)),
                 intakeActions.closeExtension(),
@@ -681,7 +680,7 @@ public class AutoRedRightTwoPlusFour extends LinearOpMode {
     SequentialAction returnLockTop32 ()
     {
         return  new SequentialAction(
-                intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
+                intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(.45 ),
                 new InstantAction(() -> intakeExtension.setAggresive(true)),
                 intakeActions.closeExtension(),
@@ -699,9 +698,9 @@ public class AutoRedRightTwoPlusFour extends LinearOpMode {
                 intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
                 depositActions.readyForDeposit(tempHeight + 400),
 
-                intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
+                intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE),
 
-                intakeActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
+                intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
                 new SleepAction(0.2),

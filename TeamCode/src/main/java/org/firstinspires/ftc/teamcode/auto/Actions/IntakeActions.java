@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.firstinspires.ftc.teamcode.util.Stopwatch;
 
-public class PlacePurpleActions {
+public class IntakeActions {
 
     private Intake intake;
     private IntakeExtension intakeExtension;
@@ -54,7 +54,7 @@ public class PlacePurpleActions {
     Length length;
     FailSafe failSafe;
 
-    public PlacePurpleActions(Intake intake, IntakeExtension intakeExtension, Claw claw) {
+    public IntakeActions(Intake intake, IntakeExtension intakeExtension, Claw claw) {
         this.intake = intake;
         this.claw = claw;
         this.intakeExtension = intakeExtension;

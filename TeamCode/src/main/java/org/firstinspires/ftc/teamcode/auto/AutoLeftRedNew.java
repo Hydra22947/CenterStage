@@ -21,7 +21,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
-import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
+import org.firstinspires.ftc.teamcode.auto.Actions.IntakeActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings;
@@ -55,7 +55,7 @@ public class AutoLeftRedNew extends LinearOpMode {
 
 
     DepositActions depositActions;
-    PlacePurpleActions intakeActions;
+    IntakeActions intakeActions;
     UpdateActions updateActions;
     boolean shouldUseAprilTag = true;
 
@@ -98,7 +98,7 @@ public class AutoLeftRedNew extends LinearOpMode {
         elevator.setAuto(true);
 
         depositActions = new DepositActions(elevator, intake, claw, outtake, intakeExtension);
-        intakeActions = new PlacePurpleActions(intake, intakeExtension, claw);
+        intakeActions = new IntakeActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
         SequentialAction intake5OpenAction = new SequentialAction(
@@ -108,7 +108,7 @@ public class AutoLeftRedNew extends LinearOpMode {
         );
 
         SequentialAction intake5CloseAction = new SequentialAction(
-                intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
+                intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(.5),
                 intakeActions.moveStack(),
 
@@ -151,7 +151,7 @@ public class AutoLeftRedNew extends LinearOpMode {
 
         SequentialAction intake43CloseAction = new SequentialAction(
                 new SleepAction(.2),
-                intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
+                intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(.5),
                 intakeActions.closeExtension(),
                 new SleepAction(.5),

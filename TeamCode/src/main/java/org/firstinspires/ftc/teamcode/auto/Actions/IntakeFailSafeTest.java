@@ -21,9 +21,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
-import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
-import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
@@ -54,7 +51,7 @@ public class IntakeFailSafeTest extends LinearOpMode {
     AutoConstants autoConstants;
 
     DepositActions depositActions;
-    PlacePurpleActions placePurpleActions;
+    IntakeActions intakeActions;
     UpdateActions updateActions;
 
     public static double fixPoseIntakeY = 0;
@@ -107,33 +104,33 @@ public class IntakeFailSafeTest extends LinearOpMode {
         elevator.setAuto(true);
 
         depositActions = new DepositActions(elevator, intake, claw, outtake, intakeExtension);
-        placePurpleActions = new PlacePurpleActions(intake, intakeExtension, claw);
+        intakeActions = new IntakeActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
         intakeFailSafe = IntakeFailSafe.ACTIVATED;
 
         SequentialAction depositRedMiddle = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.MID),
+                intakeActions.moveIntake(Intake.Angle.MID),
                 depositActions.readyForDeposit(1100),
-                placePurpleActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
+                intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(0.5),
                 depositActions.placePixel(DepositActions.Cycles.PRELOAD, 600)
         );
         SequentialAction transferRedMiddle = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.OUTTAKE),
+                intakeActions.moveIntake(Intake.Angle.OUTTAKE),
                 new SleepAction(0.5),
-                placePurpleActions.moveClaw(Claw.ClawState.OPEN, ClawSide.RIGHT),
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.RIGHT),
+                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
                 new SleepAction(.5),
-                placePurpleActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
+                intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
         );
         SequentialAction placePurplePixelCloseRedMiddle = new SequentialAction(
 
                 new SleepAction(1.5),
-                placePurpleActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
+                intakeActions.release(IntakeActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1),
-                placePurpleActions.moveIntake(Intake.Angle.MID),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE)
+                intakeActions.moveIntake(Intake.Angle.MID),
+                intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE)
         );
 
         SequentialAction retractDepositRedMiddle = new SequentialAction(
@@ -142,19 +139,19 @@ public class IntakeFailSafeTest extends LinearOpMode {
 
 
         SequentialAction intakePixelRedMiddle = new SequentialAction(
-                placePurpleActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
-                placePurpleActions.moveIntake(Intake.Angle.TOP_5_AUTO),
+                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
                 new SleepAction(.7),
-                placePurpleActions.openExtension(750),
+                intakeActions.openExtension(750),
                 new SleepAction(1),
-                placePurpleActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
+                intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.5),
-                placePurpleActions.moveStack(),
-                placePurpleActions.closeExtension()
+                intakeActions.moveStack(),
+                intakeActions.closeExtension()
 
         );
         SequentialAction readyIntakeRedMiddle = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.INTAKE)
+                intakeActions.moveIntake(Intake.Angle.INTAKE)
         );
 
 
@@ -198,7 +195,7 @@ public class IntakeFailSafeTest extends LinearOpMode {
         Action goForPlacement = robot.drive.actionBuilder(robot.drive.pose)
                 .strafeToLinearHeading(new Vector2d(30, -9), Math.toRadians(0))
                 .afterDisp(0.9, depositActions.readyForDeposit(1100))
-                .afterDisp(1, placePurpleActions.moveIntake(Intake.Angle.MID))
+                .afterDisp(1, intakeActions.moveIntake(Intake.Angle.MID))
                 .splineToLinearHeading(new Pose2d(51.55, -32.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                 .stopAndAdd(depositRedMiddle)
                 .waitSeconds(.5)

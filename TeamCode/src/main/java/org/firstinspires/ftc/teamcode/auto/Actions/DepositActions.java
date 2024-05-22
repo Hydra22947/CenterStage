@@ -107,10 +107,10 @@ public class DepositActions {
         Stopwatch placePixelTimer;
         long delay = 0;
 
-        public PlacePixel(Cycles current, long d) {
+        public PlacePixel() {
             placePixelTimer = new Stopwatch();
             placePixelTimer.reset();
-            delay = d;
+            delay = 500;
         }
 
         @Override
@@ -178,8 +178,8 @@ public class DepositActions {
     }
 
 
-    public Action placePixel(Cycles currentCycle, long d) {
-        return new PlacePixel(currentCycle, d);
+    public Action placePixel() {
+        return new PlacePixel();
     }
     public Action placeIntermediatePixel(Cycles currentCycle, long d) {
         return new PlaceIntermediatePixel(currentCycle, d);

@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
-import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
+import org.firstinspires.ftc.teamcode.auto.Actions.IntakeActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
@@ -37,7 +37,7 @@ public class MaxBlueConstants {
 
 
     DepositActions depositActions;
-    PlacePurpleActions intakeActions;
+    IntakeActions intakeActions;
     UpdateActions updateActions;
 
 
@@ -112,14 +112,14 @@ public class MaxBlueConstants {
        this.intakeExtension = intakeExtension;
 
        depositActions = new DepositActions(elevator , intake , claw , outtake , intakeExtension);
-       intakeActions = new PlacePurpleActions(intake, intakeExtension, claw);
+       intakeActions = new IntakeActions(intake, intakeExtension, claw);
        updateActions = new UpdateActions(elevator , intake , claw , outtake , intakeExtension);
 
         openIntakeWhitePixelAction54 = new SequentialAction(
                 new SleepAction(4),
                 intakeActions.moveIntake(Intake.Angle.TOP_54),
                 new SleepAction(.5),
-                intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
+                intakeActions.release(IntakeActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1.5),
                 intakeActions.openExtension(750 )
 
@@ -129,7 +129,7 @@ public class MaxBlueConstants {
                 new SleepAction(4),
                 intakeActions.moveIntake(Intake.Angle.TOP_32),
                 new SleepAction(.5),
-                intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
+                intakeActions.release(IntakeActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1.5),
                 intakeActions.openExtension(750 )
 
@@ -227,7 +227,7 @@ public class MaxBlueConstants {
                 new SleepAction(4),
                 intakeActions.moveIntake(Intake.Angle.TOP_54),
                 new SleepAction(.5),
-                intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
+                intakeActions.release(IntakeActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1.5),
                 intakeActions.openExtension(750 )
 
@@ -237,14 +237,14 @@ public class MaxBlueConstants {
                 new SleepAction(4),
                 intakeActions.moveIntake(Intake.Angle.TOP_32),
                 new SleepAction(.5),
-                intakeActions.release(PlacePurpleActions.OpenClaw.BOTH_OPEN),
+                intakeActions.release(IntakeActions.OpenClaw.BOTH_OPEN),
                 new SleepAction(1.5),
                 intakeActions.openExtension(750 )
 
         );
 
         SequentialAction closeIntakeWhitePixelAction = new SequentialAction(
-                intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
+                intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(.5),
                 intakeActions.moveStack(),
                 new SleepAction(.5),
@@ -317,7 +317,7 @@ public class MaxBlueConstants {
 
                 intakeActions.moveIntake(Intake.Angle.MID),
 
-                intakeActions.failSafeClaw(PlacePurpleActions.FailSafe.ACTIVATED),
+                intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
 

@@ -8,27 +8,25 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Arclength;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Pose2dDual;
-import com.acmerobotics.roadrunner.PosePath;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.VelConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
-import org.firstinspires.ftc.teamcode.auto.Actions.PlacePurpleActions;
+import org.firstinspires.ftc.teamcode.auto.Actions.IntakeActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings;
+import org.firstinspires.ftc.teamcode.auto.FailSafe.PositionLocker;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -37,15 +35,14 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.testing.vision.PropPipelineBlueRight;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
-import org.jetbrains.annotations.NotNull;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Config
+@Disabled
 @Autonomous(name = "2+3 - Auto Right Blue")
-public class AutoBlueRight extends LinearOpMode {
+public class AutoBlueRightWithLock extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 
@@ -59,8 +56,10 @@ public class AutoBlueRight extends LinearOpMode {
 
 
     DepositActions depositActions;
-    PlacePurpleActions intakeActions;
+    IntakeActions intakeActions;
     UpdateActions updateActions;
+    PositionLocker poseLocker;
+    PositionLocker.LockPositionAction poseLockerAction;
     boolean shouldUseAprilTag = true;
 
     public static AutoSettings.PropLocation propLocation = AutoSettings.PropLocation.MIDDLE;
@@ -101,8 +100,10 @@ public class AutoBlueRight extends LinearOpMode {
         elevator.setAuto(true);
 
         depositActions = new DepositActions(elevator, intake, claw, outtake, intakeExtension);
-        intakeActions = new PlacePurpleActions(intake, intakeExtension, claw);
+        intakeActions = new IntakeActions(intake, intakeExtension, claw);
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
+        poseLocker = new PositionLocker(this.robot.drive);
+        poseLockerAction = poseLocker.new LockPositionAction(new Pose2d(0,0,0));
 
         SequentialAction intake5OpenAction = new SequentialAction(
                 intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
@@ -111,7 +112,7 @@ public class AutoBlueRight extends LinearOpMode {
         );
 
         SequentialAction intake5CloseAction = new SequentialAction(
-                intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
+                intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(.5),
                 intakeActions.moveStack(),
 
@@ -154,7 +155,7 @@ public class AutoBlueRight extends LinearOpMode {
 
         SequentialAction intake43CloseAction = new SequentialAction(
                 new SleepAction(.2),
-                intakeActions.lock(PlacePurpleActions.CloseClaw.BOTH_CLOSE),
+                intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(.5),
                 intakeActions.closeExtension(),
                 new SleepAction(.5),
@@ -202,9 +203,9 @@ public class AutoBlueRight extends LinearOpMode {
         Action placePurpleTrajLeft = robot.drive.actionBuilder(robot.drive.pose)
                 .splineToLinearHeading(new Pose2d(-33, 28, Math.toRadians(0)), Math.toRadians(0))
                 .build();
-
         Action placePurpleTrajMiddle = robot.drive.actionBuilder(robot.drive.pose)
                 .strafeToLinearHeading(new Vector2d(-32, 33), Math.toRadians(-90))
+
                 .build();
 
         Action placePurpleTrajRight = robot.drive.actionBuilder(robot.drive.pose)
@@ -215,6 +216,7 @@ public class AutoBlueRight extends LinearOpMode {
                 //  .splineToSplineHeading(new Pose2d(-40, 40, Math.toRadians(-40)), Math.toRadians(180))
                 //   .splineToLinearHeading(new Pose2d(-45.5, 22, Math.toRadians(0)), Ma
                 //   th.toRadians(180))
+
                 .strafeToLinearHeading(new Vector2d(-45.5, 22), Math.toRadians(0))
                 .stopAndAdd(intake5OpenAction)
                 .strafeToLinearHeading(new Vector2d(-54, 23.8), Math.toRadians(0))
@@ -236,6 +238,7 @@ public class AutoBlueRight extends LinearOpMode {
         Action intake5TrajRight = robot.drive.actionBuilder(new Pose2d(-50, 43, Math.toRadians(-90)))
                 .strafeToSplineHeading(new Vector2d(-42, 45), Math.toRadians(-90))
                 .splineToLinearHeading(new Pose2d(-38, 11, Math.toRadians(-90)), Math.toRadians(-90))
+                .afterTime(0,poseLocker.new LockPositionAction(new Pose2d(-45,13, Math.toRadians(-90))))
                 .strafeToLinearHeading(new Vector2d(-45, 13), Math.toRadians(0))
                 .stopAndAdd(intake5OpenAction)
                 .strafeToLinearHeading(new Vector2d(-52.65, 13), Math.toRadians(0))
