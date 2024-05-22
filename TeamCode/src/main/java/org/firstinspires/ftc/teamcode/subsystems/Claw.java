@@ -118,5 +118,6 @@ public class Claw implements Subsystem {
     public void setBothClaw(ClawState state) {
         this.rightClaw = state;
         this.leftClaw = state;
+        update();
     }
 }

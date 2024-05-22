@@ -52,7 +52,7 @@ public class OpMode extends LinearOpMode {
     double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
     double elevatorTargetRight = 1300, intakePrecentage = DEFAULT_INTAKE_EXTEND_PRECENTAGE, releaseFromIntake = 0, startXDelay = 0, cooldown = 0;;
     double elevatorTargetLeft = 1300;
-    int openedXTimes = 0, clicks = 0;
+    int openedXTimes = 0, ACount = 0;
     boolean retract = false,  goToMid = false, intakeMid = true, canIntake = true, startedDelayTransfer = false, heldExtension = false, firstReleaseThreeTimer = true;
     boolean override = false, had2Pixels = false, hang = false, resetRightTrigger = true, closeClaw = false, wasClosed = false, firstExtend = true, XPressed = false;
     boolean overrideIntakeExtension = false, secondHalf = false, endGame = false, movedStack = false, outtakeToOuttake = true, firstReleaseThree = true, firstOuttake =true;
@@ -744,7 +744,12 @@ public class OpMode extends LinearOpMode {
                     switchOuttake();
                 }
 
-                if (betterGamepad1.AOnce() && cooldowned() || (betterGamepad2.shareOnce() && cooldowned()))  {
+                if(betterGamepad1.AOnce())
+                {
+                    ACount++;
+                    claw.setBothClaw(Claw.ClawState.OPEN);
+                }
+                if (ACount > 1 && cooldowned() || (betterGamepad2.shareOnce() && cooldowned()))  {
                     claw.setBothClaw(Claw.ClawState.OPEN);
 
                     elevatorTargetRight = elevator.getTargetRight() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
@@ -753,6 +758,7 @@ public class OpMode extends LinearOpMode {
 
                     elevatorReset = getTime();
                     retract = true;
+                    ACount = 0;
                 } else if ((getTime() - elevatorReset) >= WAIT_DELAY_TILL_CLOSE && retract)
                 {
                     retract = false;

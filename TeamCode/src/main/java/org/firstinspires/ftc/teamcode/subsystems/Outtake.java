@@ -11,9 +11,9 @@ public class Outtake implements Subsystem{
 
     private final RobotHardware robot;
 
-    public static double intakeHandPivot = 0.165, intakeClawPivot = 0.95;
+    public static double almostIntakeHandPivot = 0.3, intakeHandPivot = 0.17, intakeClawPivot = 0.55;
     public static double outtakeHandPivot = 0.7, outtakeClawPivot = 1;
-    public static double outtakeSpinIntake = 0.3175, outtakeSpinOuttake = 0.875, outtakeSpin45 = 0.1505;
+    public static double outtakeSpinIntake = 0.875, outtakeSpinOuttake = 0.875, outtakeSpin45 = 0.1505;
     public static double outtakeSpinDouble = 0.0325;
 
     public static double power = 1;
@@ -40,6 +40,7 @@ public class Outtake implements Subsystem{
     public enum Angle
     {
         INTAKE,
+        ALMOST_INTAKE,
         OUTTAKE
     }
 
@@ -76,17 +77,22 @@ public class Outtake implements Subsystem{
             case CLAW:
                 switch (angle){
                     case INTAKE:
+                    case ALMOST_INTAKE:
                         this.robot.outtakeClawPivotServo.setPosition(intakeClawPivot);
                         this.robot.outtakeSpinServo.setPosition(outtakeSpinIntake);
                         break;
                     case OUTTAKE:
                         this.robot.outtakeClawPivotServo.setPosition(outtakeClawPivot);
                         this.robot.outtakeSpinServo.setPosition(outtakeSpinOuttake);
-                                                break;
+                        break;
                 }
                 break;
             case HAND:
                 switch (angle){
+                    case ALMOST_INTAKE:
+                        this.robot.outtakeHandLeftServo.setPosition(almostIntakeHandPivot);
+                        this.robot.outtakeHandRightServo.setPosition(almostIntakeHandPivot);
+                        break;
                     case INTAKE:
                         this.robot.outtakeHandLeftServo.setPosition(intakeHandPivot);
                         this.robot.outtakeHandRightServo.setPosition(intakeHandPivot);
