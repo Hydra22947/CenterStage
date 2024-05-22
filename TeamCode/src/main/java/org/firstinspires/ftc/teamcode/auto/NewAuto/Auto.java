@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -67,6 +68,7 @@ public class Auto extends LinearOpMode {
     int tempHeightMax = 1250;
 
     boolean first = true;
+    SubsystemActions subsystemActions;
 
     void initCamera() {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -100,8 +102,21 @@ public class Auto extends LinearOpMode {
 
         propPipelineBlueRight = new PropPipelineBlueRight();
         robot.init(hardwareMap, telemetry, autoConstants.startPoseBlueRight);
-
         autoConstants = new AutoConstants();
+
+
+
+        elevator = new Elevator(true);
+        intake = new Intake();
+        intakeExtension = new IntakeExtension(gamepad1, true);
+        claw = new Claw();
+        outtake = new Outtake();
+
+        this.depositActions = new DepositActions(elevator, intake, claw, outtake, intakeExtension);
+        this.intakeActions = new IntakeActions(intake, intakeExtension, claw);
+        this.updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
+
+        subsystemActions = new SubsystemActions(this.depositActions, this.intakeActions, this.updateActions);
 
         initCamera();
         webcam.setPipeline(propPipelineBlueRight);
@@ -159,19 +174,7 @@ public class Auto extends LinearOpMode {
 
             case RIGHT:
                 runBlocking(new ParallelAction(
-                        new AutoBlueRightRight(telemetry, hardwareMap).generateTraj(),
-                        updateActions.updateSystems()
-                ));
-                break;
-            case MIDDLE:
-                runBlocking(new ParallelAction(
-                        new AutoBlueMidRight(telemetry, hardwareMap).generateTraj(),
-                        updateActions.updateSystems()
-                ));
-                break;
-            case LEFT:
-                runBlocking(new ParallelAction(
-                        new AutoBlueLeftRight(telemetry, hardwareMap).generateTraj(),
+                        new AutoBlueRightRight(subsystemActions).generateTraj(),
                         updateActions.updateSystems()
                 ));
                 break;

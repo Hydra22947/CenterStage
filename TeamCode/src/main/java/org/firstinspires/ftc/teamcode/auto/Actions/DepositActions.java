@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto.Actions;
 
 import androidx.annotation.NonNull;
+
 import static org.firstinspires.ftc.teamcode.auto.Actions.ActionHelper.activateSystem;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -64,7 +65,6 @@ public class DepositActions {
     }
 
 
-
     public class ReadyForDeposit implements Action {
         Stopwatch readyForDepositTimer;
         int elevator;
@@ -91,7 +91,7 @@ public class DepositActions {
         Stopwatch readyForDepositTimer;
         Outtake.Angle angle;
 
-        public MoveOuttake (Outtake.Angle angle) {
+        public MoveOuttake(Outtake.Angle angle) {
             this.angle = angle;
         }
 
@@ -118,6 +118,7 @@ public class DepositActions {
             return !activateSystem(placePixelTimer, () -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), delay);
         }
     }
+
     public class PlaceIntermediatePixel implements Action {
         Stopwatch placePixelTimer;
         long delay = 0;
@@ -133,7 +134,6 @@ public class DepositActions {
             return !activateSystem(placePixelTimer, () -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), delay);
         }
     }
-
 
 
     public class RetractDeposit implements Action {
@@ -156,8 +156,8 @@ public class DepositActions {
     public class MoveElevator implements Action {
         Stopwatch retractDepositTimer;
         int target;
-        public MoveElevator (int target)
-        {
+
+        public MoveElevator(int target) {
             this.target = target;
         }
 
@@ -169,6 +169,23 @@ public class DepositActions {
 
         }
     }
+
+    public class MoveClaw implements Action {
+        private Claw.ClawState _clawState;
+        private ClawSide _clawSide;
+
+        public MoveClaw(Claw.ClawState clawState, ClawSide clawSide) {
+            this._clawState = clawState;
+            this._clawSide = clawSide;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            claw.updateState(this._clawState, this._clawSide);
+            return false;
+        }
+    }
+
     public Action retractDeposit() {
         return new RetractDeposit();
     }
@@ -181,11 +198,22 @@ public class DepositActions {
     public Action placePixel() {
         return new PlacePixel();
     }
+
+    public Action moveClaw(Claw.ClawState clawState, ClawSide clawSide) {
+        return new MoveClaw(clawState, clawSide);
+    }
+
     public Action placeIntermediatePixel(Cycles currentCycle, long d) {
         return new PlaceIntermediatePixel(currentCycle, d);
     }
-    public Action moveOuttake (Outtake.Angle thisAngle) { return new MoveOuttake(thisAngle); }
 
-    public Action moveElevator (int thisTarget) { return new MoveElevator(thisTarget); }
+    public Action moveOuttake(Outtake.Angle thisAngle) {
+        return new MoveOuttake(thisAngle);
+    }
+
+    public Action moveElevator(int thisTarget) {
+        return new MoveElevator(thisTarget);
+    }
+
 
 }

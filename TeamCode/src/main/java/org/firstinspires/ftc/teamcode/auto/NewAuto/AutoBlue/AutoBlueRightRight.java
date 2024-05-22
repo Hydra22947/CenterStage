@@ -15,10 +15,10 @@ import org.firstinspires.ftc.teamcode.auto.NewAuto.SubsystemActions;
 public class AutoBlueRightRight {
     private final RobotHardware robot = RobotHardware.getInstance();
 
-    SubsystemActions subsystemActions;
+    private SubsystemActions subsystemActions;
 
-    public AutoBlueRightRight(Telemetry telemetry, HardwareMap hardwareMap) {
-        subsystemActions = new SubsystemActions(telemetry, hardwareMap);
+    public AutoBlueRightRight(SubsystemActions subsystemActions) {
+        this.subsystemActions = subsystemActions;
     }
 
     Action placePreloadAndIntakeTraj = robot.drive.actionBuilder(robot.drive.pose)

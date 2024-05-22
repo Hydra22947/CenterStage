@@ -15,9 +15,9 @@ public class AutoBlueLeftRight {
 
     SubsystemActions systemActions;
 
-    public AutoBlueLeftRight(Telemetry telemetry, HardwareMap hardwareMap)
+    public AutoBlueLeftRight()
     {
-        systemActions = new SubsystemActions(telemetry, hardwareMap);
+       // systemActions = new SubsystemActions();
     }
 
     Action placePreloadAndIntakeTraj= robot.drive.actionBuilder(robot.drive.pose)

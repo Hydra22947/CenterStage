@@ -114,7 +114,7 @@ public class IntakeFailSafeTest extends LinearOpMode {
                 depositActions.readyForDeposit(1100),
                 intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(0.5),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 600)
+                depositActions.placePixel()
         );
         SequentialAction transferRedMiddle = new SequentialAction(
                 intakeActions.moveIntake(Intake.Angle.OUTTAKE),

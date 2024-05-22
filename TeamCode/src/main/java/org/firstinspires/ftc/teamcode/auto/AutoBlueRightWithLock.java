@@ -41,7 +41,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Disabled
-@Autonomous(name = "2+3 - Auto Right Blue")
+//@Autonomous(name = "2+3 - Auto Right Blue")
 public class AutoBlueRightWithLock extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
@@ -176,7 +176,7 @@ public class AutoBlueRightWithLock extends LinearOpMode {
 
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 0),
                 new SleepAction(1.4),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1500),
+                depositActions.placePixel(),
                 new SleepAction(.5),
                 depositActions.moveElevator(tempHeight + 400),
                 depositActions.retractDeposit()
@@ -192,7 +192,7 @@ public class AutoBlueRightWithLock extends LinearOpMode {
         SequentialAction deposit43Action = new SequentialAction(
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
                 new SleepAction(0.6),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 0),
+                depositActions.placePixel(),
 
                 new SleepAction(0.25),
                 depositActions.moveElevator(tempHeight + 300),

@@ -114,7 +114,7 @@ public class AutoLeftRed extends LinearOpMode {
 
                 intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
+                depositActions.placePixel(),
                 new SleepAction(0.5),
                 depositActions.moveElevator(elevatorHeight + 300)
         );
@@ -134,7 +134,7 @@ public class AutoLeftRed extends LinearOpMode {
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 0),
 
                 new SleepAction(0.2),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 1000),
+                depositActions.placePixel(),
 
                 new SleepAction(.25),
                 depositActions.moveElevator(1850)

@@ -131,7 +131,7 @@ public class AutoRightRed extends LinearOpMode {
 
         SequentialAction depositBlueRight = new SequentialAction(
                 depositActions.readyForDeposit(tempHeight),
-                depositActions.placePixel(DepositActions.Cycles.PRELOAD, 600),
+                depositActions.placePixel(),
                 new SleepAction(0.5),
                 depositActions.moveElevator(1500)
         );
