@@ -44,17 +44,17 @@ public class DebugOpMode extends LinearOpMode {
     BetterGamepad betterGamepad1, betterGamepad2;
 
     // delays
-    public static double delayTransfer = 300, delayRelease = 1100, delayCloseTransfer = 350, XDelay = 500;
+    public static double delayTransfer = 300, delayRelease = 1100, delayCloseTransfer = 350, XDelay = 500, goToIntakeDelay = 50, goToAlmostIntakeDelay = 250;
     public static double WAIT_DELAY_TILL_OUTTAKE = 150, WAIT_DELAY_TILL_CLOSE = 250, ELEVATOR_ZERO = 10, COOL_DOWN = 350;
-    public static double DEFAULT_INTAKE_EXTEND_PRECENTAGE = 42.5, SHORT_INTAKE_EXTEND_PRECENTAGE = 25, delayReleaseFromIntake = 500;
+    public static double DEFAULT_INTAKE_EXTEND_PRECENTAGE = 42.5, SHORT_INTAKE_EXTEND_PRECENTAGE = 25, delayReleaseFromIntake = 200;
     // variables
-    double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0;
+    double elevatorReset = 0, previousElevator = 0, transferTimer = 0, releaseTimer = 0, closeTransferTimer = 0, goToTransferTimer = 0, goToIntakeTimer = 0, goToAlmostIntakeTimer = 0;
     double elevatorTargetRight = 1300, intakePrecentage = DEFAULT_INTAKE_EXTEND_PRECENTAGE, releaseFromIntake = 0, startXDelay = 0, cooldown = 0;
     double elevatorTargetLeft = 1300;
     int openedXTimes = 0, ACount = 0;
     boolean retract = false,  goToMid = false, intakeMid = true, canIntake = true, startedDelayTransfer = false, heldExtension = false, firstReleaseThreeTimer = true;
     boolean override = false, had2Pixels = false, hang = false, resetRightTrigger = true, closeClaw = false, wasClosed = false, firstExtend = true, XPressed = false;
-    boolean overrideIntakeExtension = false, secondHalf = false, endGame = false, movedStack = false, outtakeToOuttake = true, firstReleaseThree = true, firstOuttake = true;
+    boolean overrideIntakeExtension = false, movedStack = false, outtakeToOuttake = true, firstReleaseThree = true, firstOuttake = true, goToIntake = false, goToAlmostIntake = false;
 
     public enum IntakeState {
         RETRACT,
@@ -329,14 +329,12 @@ public class DebugOpMode extends LinearOpMode {
 
                     intakeMid = true;
 
-
-                    intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH);
-                    outtake.setAngle(Outtake.Angle.ALMOST_INTAKE);
+                    goToIntakeTimer = getTime();
+                    goToIntake = true;
                 }
                 else if((liftState == LiftState.EXTRACT || liftState == LiftState.HANG || liftState == LiftState.STUCK_3) && intakeMid)
                 {
                     intake.move(Intake.Angle.TELEOP_MID);
-                    outtake.setAngle(Outtake.Angle.ALMOST_INTAKE);
                     goToTransferTimer = getTime();
                 }
                 else if((elevator.getPos() <= ELEVATOR_ZERO) && !XPressed)
@@ -347,6 +345,21 @@ public class DebugOpMode extends LinearOpMode {
                 {
                     XPressed = false;
                     intake.move(Intake.Angle.OUTTAKE);
+                }
+
+                if(goToIntake && (getTime() - goToIntakeTimer) >= goToIntakeDelay)
+                {
+                    intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH);
+
+                    goToAlmostIntakeTimer = getTime();
+                    goToAlmostIntake = true;
+                    goToIntake = false;
+                }
+                if(goToAlmostIntake && (getTime() - goToAlmostIntakeTimer) >= goToAlmostIntakeDelay)
+                {
+
+                    outtake.setAngle(Outtake.Angle.ALMOST_INTAKE);
+                    goToAlmostIntake = false;
                 }
 
                 break;
@@ -756,8 +769,8 @@ public class DebugOpMode extends LinearOpMode {
                 if ((ACount > 1 && cooldowned()) || (betterGamepad2.shareOnce() && cooldowned()))  {
                     claw.setBothClaw(Claw.ClawState.OPEN);
 
-                    elevatorTargetRight = elevator.getTargetRight() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
-                    elevatorTargetLeft = elevator.getTargetLeft() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
+//                    elevatorTargetRight = elevator.getTargetRight() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
+//                    elevatorTargetLeft = elevator.getTargetLeft() - (openedXTimes * Elevator.ELEVATOR_INCREMENT);
                     openedXTimes++;
 
                     elevatorReset = getTime();

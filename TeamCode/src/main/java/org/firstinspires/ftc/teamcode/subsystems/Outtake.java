@@ -82,12 +82,10 @@ public class Outtake implements Subsystem {
                         this.robot.outtakeClawPivotServo.setPosition(intakeClawPivot);
                         this.robot.outtakeSpinServo.setPosition(outtakeSpinIntake);
                         break;
-
                     case OUTTAKE:
                         this.robot.outtakeClawPivotServo.setPosition(outtakeClawPivot);
                         this.robot.outtakeSpinServo.setPosition(outtakeSpinOuttake);
                         break;
-
                     case FLOOR:
                         this.robot.outtakeClawPivotServo.setPosition(floorClawPivot);
                         break;
