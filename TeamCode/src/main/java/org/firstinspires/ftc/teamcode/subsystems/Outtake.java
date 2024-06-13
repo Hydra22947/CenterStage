@@ -12,11 +12,12 @@ public class Outtake implements Subsystem {
 
     private final RobotHardware robot;
 
-    public static double almostIntakeHandPivot = 0.3, intakeHandPivot = 0.17, intakeClawPivot = 0.55;
-    public static double outtakeHandPivot = 0.7, outtakeClawPivot = 1;
+    public static double almostIntakeHandPivot = 0.35, intakeHandPivot = 0.2, intakeClawPivot = 0;
+    public static double outtakeHandPivot = 0.7, outtakeClawPivot = .4;
     public static double floorHandPivot = 0.8, floorClawPivot = 1;
     public static double outtakeSpinIntake = 0.875, outtakeSpinOuttake = 0.875, outtakeSpin45 = 0.1505;
     public static double outtakeSpinDouble = 0.0325;
+    public static double hangHand = 0.6, handClaw = .4;
 
     public static double power = 1;
 
@@ -43,7 +44,8 @@ public class Outtake implements Subsystem {
         INTAKE,
         ALMOST_INTAKE,
         OUTTAKE,
-        FLOOR
+        FLOOR,
+        HANG
     }
 
     public enum Type {
@@ -89,6 +91,9 @@ public class Outtake implements Subsystem {
                     case FLOOR:
                         this.robot.outtakeClawPivotServo.setPosition(floorClawPivot);
                         break;
+                    case HANG:
+                        this.robot.outtakeClawPivotServo.setPosition(handClaw);
+                        break;
                 }
                 break;
             case HAND:
@@ -108,6 +113,10 @@ public class Outtake implements Subsystem {
                     case FLOOR:
                         this.robot.outtakeHandRightServo.setPosition(floorHandPivot);
                         this.robot.outtakeHandLeftServo.setPosition(floorHandPivot);
+                        break;
+                    case HANG:
+                        this.robot.outtakeHandRightServo.setPosition(hangHand);
+                        this.robot.outtakeHandLeftServo.setPosition(hangHand);
                         break;
                 }
                 break;

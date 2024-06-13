@@ -113,7 +113,7 @@ public class DebugOpMode extends LinearOpMode {
         intake.setAngle(Intake.Angle.OUTTAKE);
         intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH);
         claw.setBothClaw(Claw.ClawState.INTAKE);
-        outtake.setAngle(Outtake.Angle.ALMOST_INTAKE);
+        outtake.setAngle(Outtake.Angle.INTAKE);
         elevator.setAuto(false);
         intakeExtension.setAuto(false);
 
@@ -785,6 +785,8 @@ public class DebugOpMode extends LinearOpMode {
                 break;
             case HANG:
 
+                outtake.setAngle(Outtake.Angle.HANG);
+
                 if(betterGamepad2.dpadUpOnce())
                 {
                     hang = !hang;
@@ -803,6 +805,7 @@ public class DebugOpMode extends LinearOpMode {
                 if (betterGamepad1.AOnce() || betterGamepad1.leftBumperOnce() || betterGamepad2.shareOnce())
                 {
                     liftState = LiftState.RETRACT;
+                    outtake.setAngle(Outtake.Angle.INTAKE);
                 }
                 break;
             case STUCK_3:

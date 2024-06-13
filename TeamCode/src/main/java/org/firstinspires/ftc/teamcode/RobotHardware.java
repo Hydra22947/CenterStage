@@ -119,6 +119,7 @@ public class RobotHardware {
 
         this.dtBackRightMotor = hardwareMap.get(DcMotorEx.class, "mBR");
         this.dtBackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.dtBackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         this.dtFrontRightMotor = hardwareMap.get(DcMotorEx.class, "mFR");
         this.dtFrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -143,6 +144,7 @@ public class RobotHardware {
         this.outtakeClawRightServo = new BetterServo(hardwareMap.get(Servo.class, "sCR"));
         this.outtakeClawPivotServo = new BetterServo(hardwareMap.get(Servo.class, "sC"));
         this.outtakeClawPivotServo.setDirection(Servo.Direction.REVERSE);
+        this.outtakeClawRightServo.setDirection(Servo.Direction.REVERSE);
         // HAND
         this.outtakeHandLeftServo = new BetterServo(hardwareMap.get(Servo.class, "sHL"));
         this.outtakeHandRightServo = new BetterServo(hardwareMap.get(Servo.class, "sHR"));
