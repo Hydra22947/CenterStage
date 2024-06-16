@@ -43,9 +43,9 @@ public class Intake implements Subsystem {
         Intake.seeFarFrom = seeFarFrom;
     }
 
-    public static double seeFarFrom = 3.5;
-    public static final double maxSeeFarFrom = 3.5;
-    public static final double minSeeFarFrom = 2;
+    public static double seeFarFrom = 0.1;
+    public static final double maxSeeFarFrom = 0.5;
+    public static final double minSeeFarFrom = 0.5;
 
     @Override
     public void play() {

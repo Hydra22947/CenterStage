@@ -35,24 +35,14 @@ public class SubsystemActions {
     private DepositActions depositActions;
     private IntakeActions intakeActions;
     private UpdateActions updateActions;
+
+    public SequentialAction intake5CloseAction, intake43OpenAction, transfer, depositAction, readyForDepositAction, deposit43Action;
+    public ParallelAction placePreloadAndIntakeAction;
     int tempHeight = 1250;
 
-    public SubsystemActions(DepositActions depositActions, IntakeActions intakeActions, UpdateActions updateActions) {
-
-
-        this.depositActions = depositActions;
-        this.intakeActions = intakeActions;
-        this.updateActions = updateActions;
-    }
-
-
-    SequentialAction intake5OpenAction = new SequentialAction(
-            intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
-            intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
-
-    );
-
-    public SequentialAction intake5CloseAction = new SequentialAction(
+    Action getIntake5CloseAction()
+    {
+        return new SequentialAction(
             intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE),
             new SleepAction(.5),
             intakeActions.moveStack(),
@@ -63,66 +53,85 @@ public class SubsystemActions {
             intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
             new SleepAction(.5),
             intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
-
     );
-    public SequentialAction intake43OpenAction = new SequentialAction(
+    }
+    Action getIntake5OpenAction()
+    {
+        return new SequentialAction(
+                intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
+                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
+
+        );
+    }
+    Action getPlacePurplePixelAction()
+    {
+        return new SequentialAction(
+                depositActions.moveOuttake(Outtake.Angle.FLOOR),
+                depositActions.placePixel());
+    }
+    public SubsystemActions(DepositActions depositActions, IntakeActions intakeActions, UpdateActions updateActions) {
 
 
-            intakeActions.moveIntake(Intake.Angle.TOP_54_AUTO),
-            new ParallelAction(
-
-                    intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
-                    intakeActions.openExtension(450)
-            )
-    );
-    public SequentialAction placePurplePixelAction = new SequentialAction(
-            depositActions.moveOuttake(Outtake.Angle.FLOOR),
-            depositActions.placePixel()
-    );
-    public ParallelAction placePreloadAndIntakeAction = new ParallelAction(
-            placePurplePixelAction,
-            new SequentialAction(
-                    intake5OpenAction,
-                    new SleepAction(.5),
-                    intake5CloseAction
-            )
-    );
-    public SequentialAction transfer = new SequentialAction(
-
-            intakeActions.moveIntake(Intake.Angle.OUTTAKE),
-            new SleepAction(0.5),
-            depositActions.moveOuttake(Outtake.Angle.INTAKE),
-            new SleepAction(.25),
-            depositActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
-            new SleepAction(.25),
-            intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH)
-
-    );
-
-    public SequentialAction depositAction = new SequentialAction(
-
-            new SleepAction(1.5),
-            depositActions.placePixel(),
-            new SleepAction(.5),
-            depositActions.moveElevator(tempHeight + 400),
-            depositActions.retractDeposit()
-    );
+        this.depositActions = depositActions;
+        this.intakeActions = intakeActions;
+        this.updateActions = updateActions;
 
 
-    SequentialAction readyForDepositAction = new SequentialAction(
-            intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
-            intakeActions.moveIntake(Intake.Angle.TELEOP_MID),
-            new SleepAction(.75),
-            depositActions.readyForDeposit(tempHeight));
+        intake43OpenAction = new SequentialAction(
+                intakeActions.moveIntake(Intake.Angle.TOP_54_AUTO),
+                new ParallelAction(
+
+                        intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                        intakeActions.openExtension(450)
+                )
+        );
 
 
-    SequentialAction deposit43Action = new SequentialAction(
-            depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
-            new SleepAction(0.6),
-            depositActions.placePixel(),
-            new SleepAction(0.25),
-            depositActions.moveElevator(tempHeight + 300),
-            depositActions.retractDeposit());
+        transfer = new SequentialAction(
+                intakeActions.moveIntake(Intake.Angle.OUTTAKE),
+                new SleepAction(0.5),
+                depositActions.moveOuttake(Outtake.Angle.INTAKE),
+                new SleepAction(.25),
+                depositActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
+                new SleepAction(.25),
+                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH)
+                );
+
+        depositAction = new SequentialAction(
+                depositActions.placePixel(),
+                new SleepAction(.5),
+                depositActions.moveElevator(tempHeight + 400),
+                depositActions.retractDeposit()
+        );
 
 
+        readyForDepositAction = new SequentialAction(
+                intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
+                intakeActions.moveIntake(Intake.Angle.TELEOP_MID),
+                new SleepAction(.75),
+                depositActions.readyForDeposit(tempHeight));
+
+
+        deposit43Action = new SequentialAction(
+                depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
+                new SleepAction(0.6),
+                depositActions.placePixel(),
+                new SleepAction(0.25),
+                depositActions.moveElevator(tempHeight + 300),
+                depositActions.retractDeposit());
+
+    }
+
+    public ParallelAction placePreloadAndIntakeAction()
+    {
+        return new ParallelAction(
+                getPlacePurplePixelAction(),
+                new SequentialAction(
+                        getIntake5OpenAction(),
+                        new SleepAction(.5),
+                        getIntake5CloseAction(),
+                        transfer
+                )
+        );
+    }
 }

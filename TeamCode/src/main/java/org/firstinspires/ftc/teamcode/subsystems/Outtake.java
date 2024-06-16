@@ -16,7 +16,7 @@ public class Outtake implements Subsystem {
     public static double almostIntakeHandPivot = 0.35, intakeHandPivot = 0.2, intakeClawPivot = 0;
     public static double outtakeHandPivot = 0.7, outtakeClawPivot = .4;
     public static double floorHandPivot = 0.8, floorClawPivot = 1, goBackRelease = 0.05;
-    public static double outtakeSpinIntake = 0.86, outtakeSpinOuttake = 0.86, outtakeSpin45 = 0.1505;
+    public static double outtakeSpinIntake = 0.885, outtakeSpinOuttake = 0.885, outtakeSpin45 = 0.1505;
     double defaultOuttakeSpinOuttake = 0.875, defaultOuttakeHandPivot = 0.7;
     public static double outtakeSpinDouble = 0.0325;
     public static double hangHand = 0.6, handClaw = .4;

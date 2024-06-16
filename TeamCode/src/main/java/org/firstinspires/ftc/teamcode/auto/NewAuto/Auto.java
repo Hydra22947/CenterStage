@@ -1,3 +1,5 @@
+
+
 package org.firstinspires.ftc.teamcode.auto.NewAuto;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
@@ -6,6 +8,7 @@ import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSetting
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -61,8 +64,6 @@ public class Auto extends LinearOpMode {
 
     PropPipelineBlueRight propPipelineBlueRight;
     OpenCvWebcam webcam;
-
-    SequentialAction readyForDepositAction;
     int tempHeight = 1250;
     int tempHeightMin = 1050;
     int tempHeightMax = 1250;
@@ -85,9 +86,7 @@ public class Auto extends LinearOpMode {
 
             @Override
             public void onError(int errorCode) {
-                /*
-                 * This will be called if the camera could not be opened
-                 */
+
             }
         });
 
@@ -103,7 +102,6 @@ public class Auto extends LinearOpMode {
         propPipelineBlueRight = new PropPipelineBlueRight();
         robot.init(hardwareMap, telemetry, autoConstants.startPoseBlueRight);
         autoConstants = new AutoConstants();
-
 
 
         elevator = new Elevator(true);
@@ -175,6 +173,19 @@ public class Auto extends LinearOpMode {
             case RIGHT:
                 runBlocking(new ParallelAction(
                         new AutoBlueRightRight(subsystemActions).generateTraj(),
+                        updateActions.updateSystems()
+                ));
+                break;
+            case MIDDLE:
+                runBlocking(new ParallelAction(
+                        new AutoBlueRightRight(subsystemActions).generateTraj(),
+                        updateActions.updateSystems()
+                ));
+                break;
+            case LEFT:
+                Action test = new AutoBlueRightRight(subsystemActions).generateTraj();
+                runBlocking(new ParallelAction(test
+                        ,
                         updateActions.updateSystems()
                 ));
                 break;

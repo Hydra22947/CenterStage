@@ -36,6 +36,7 @@ public class DispMarker implements Action {
     public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
         if (isClose()) {
+            telemetryPacket.addLine("The robot is close to position");
             runBlocking(this._systemFunction);
             return false;
         }
