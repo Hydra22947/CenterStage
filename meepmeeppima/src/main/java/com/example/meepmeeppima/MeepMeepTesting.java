@@ -18,7 +18,7 @@ public class MeepMeepTesting {
                 .build();
 
 
-        BlueMiddleLeft(myBot);
+        BlueLeftRight(myBot );
         setAnimation(meepMeep, myBot);
         // BlueLeftLeft(myBot);
         // BlueLeftRight(myBot);
@@ -36,60 +36,85 @@ public class MeepMeepTesting {
     }
 
 
-    public static void BlueRightLeft(RoadRunnerBotEntity myBot) {
-
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-40, 62, Math.toRadians(0)))
-              //  .afterTime(0, pleaseFixIntakeClose())
-             //   .afterTime(1, readyForDepositAction)
-
-                //deposit
-                .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(52, 34, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-             //   .afterTime(0.5, depositAction)
-                .strafeToSplineHeading(new Vector2d(52, 25), Math.toRadians(0))
-
-                .setTangent(Math.toRadians(-180))
-                .splineToLinearHeading(new Pose2d(24, 9, Math.toRadians(0)), Math.toRadians(180))
-
-
-
-                .build());
-
-    }
-
-    public static void BlueMiddleLeft(RoadRunnerBotEntity myBot) {
+    public static void BlueLeftLeft(RoadRunnerBotEntity myBot) {
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
 
-                .splineToSplineHeading(new Pose2d(30 ,26, Math.toRadians(0)) , Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(50,34.25 ), Math.toRadians(0))
-                .waitSeconds(0.45)
-                .splineToSplineHeading(new Pose2d(49,34.25  , Math.toRadians(0)) , Math.toRadians(190))
+                .splineToLinearHeading(new Pose2d(25, 45, Math.toRadians(-90)), Math.toRadians(0))
+                .waitSeconds(0.01)
+                .splineToSplineHeading(new Pose2d(45, 35,Math.toRadians(0)), Math.toRadians(0))
 
-                .setTangent(190)
-                .splineToSplineHeading(new Pose2d(10, 58, Math.toRadians(0)), Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(-32, 58, Math.toRadians(0)),Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-38.5, 37.3, Math.toRadians(0)), Math.toRadians(-180))
-                .strafeTo(new Vector2d(-45, 37))
-                //.afterTime(2.3, intake54Action)
+                .splineToLinearHeading(new Pose2d(20, 55 , Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-40, 55, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-48, 40, Math.toRadians(0)), Math.toRadians(180))
+
+                //deposit
+                .setTangent(0)
+                .splineToLinearHeading(new Pose2d(-40, 55, Math.toRadians(0)), Math.toRadians(0))
+
+                .splineToSplineHeading(new Pose2d(20, 55, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(55, 45, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+
+
+
 
 
 
                 .build());
 
+
     }
 
-    public static void BlueRightMiddle(RoadRunnerBotEntity myBot) {
+    public static void BlueLeftRight(RoadRunnerBotEntity myBot) {
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-32, 33, Math.toRadians(-90)))
-                .setTangent(-180)
-                .splineToSplineHeading(new Pose2d(-48, 41, Math.toRadians(0)), Math.toRadians(-90))
-                .splineToLinearHeading(new Pose2d(-46, 23, Math.toRadians(0)), Math.toRadians(180))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
+
+                .splineToLinearHeading(new Pose2d(10, 35, Math.toRadians(200)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(45, 35,Math.toRadians(0)), Math.toRadians(0))
+
+                .setTangent(60)
+                .splineToLinearHeading(new Pose2d(20, 55 , Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-40, 55, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-48, 40, Math.toRadians(0)), Math.toRadians(180))
 
                 //deposit
-                .splineToLinearHeading(new Pose2d(15, 8, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(31, 20, Math.toRadians(24.5)), Math.toRadians(60))
-                .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .setTangent(0)
+                .splineToLinearHeading(new Pose2d(-40, 55, Math.toRadians(0)), Math.toRadians(0))
+
+                .splineToSplineHeading(new Pose2d(20, 55, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(55, 45, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+
+
+
+
+                .build());
+
+
+
+
+
+
+    }
+
+    public static void BlueLeftMiddle(RoadRunnerBotEntity myBot) {
+
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
+
+                .splineToLinearHeading(new Pose2d(16, 35,Math.toRadians(-90)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(45, 35,Math.toRadians(0)), Math.toRadians(0))
+
+                .setTangent(60)
+                .splineToLinearHeading(new Pose2d(20, 55 , Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-40, 55, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-48, 40, Math.toRadians(0)), Math.toRadians(180))
+
+                //deposit
+                .setTangent(0)
+                .splineToLinearHeading(new Pose2d(-40, 55, Math.toRadians(0)), Math.toRadians(0))
+
+                .splineToSplineHeading(new Pose2d(20, 55, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(55, 45, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                /*
                 .strafeToSplineHeading(new Vector2d(51, 38.2), Math.toRadians(0))
 
                 .setTangent(Math.toRadians(-180))
@@ -107,6 +132,10 @@ public class MeepMeepTesting {
                 .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0))
 
 
+
+
+
+ */
                 .build());
 
     }
@@ -136,6 +165,38 @@ public class MeepMeepTesting {
 
 
                 .build());
+
+    }
+
+    public static void RedRightLeft (RoadRunnerBotEntity myBot)
+
+    {
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, -62, Math.toRadians(90)))
+
+                .splineToLinearHeading(new Pose2d(10, -35, Math.toRadians(200)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(45, -35,Math.toRadians(0)), Math.toRadians(0))
+
+                .setTangent(60)
+                .splineToSplineHeading(new Pose2d(20, -55 , Math.toRadians(180)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-40, -55, Math.toRadians(180)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-48, -40, Math.toRadians(180)), Math.toRadians(180))
+
+                //deposit
+                 .setTangent(0)
+                .splineToSplineHeading(new Pose2d(-40, -55, Math.toRadians(0)), Math.toRadians(0))
+
+                .splineToLinearHeading(new Pose2d(20, -55, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(55, -45, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .build());
+
+
+
+
+
+
+
+
+
 
     }
 }
