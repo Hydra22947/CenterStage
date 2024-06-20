@@ -1,12 +1,5 @@
 package org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll;
 
-import com.qualcomm.robotcore.util.ReadWriteFile;
-
-import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import org.firstinspires.ftc.teamcode.auto.BasicAutos.AutoBlueLeft;
-
-import java.io.File;
-
 public class AutoSettings {
 
     public enum PropLocation {

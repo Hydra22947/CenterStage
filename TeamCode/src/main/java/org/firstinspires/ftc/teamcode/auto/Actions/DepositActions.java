@@ -27,6 +27,25 @@ public class DepositActions {
     }
 
     ;
+
+    public enum TypeClaws {
+        RELEASED,
+        LOCKED
+    }
+
+    public enum LockSide {
+        RIGHT_LOCK,
+        LEFT_LOCK,
+        BOTH_LOCKS,
+    }
+
+    public enum ReleaseSide {
+        RIGHT_OPEN,
+        LEFT_OPEN,
+        BOTH_OPEN,
+    }
+
+
     private Elevator elevator;
     private Intake intake;
     private Outtake outtake;
@@ -36,6 +55,9 @@ public class DepositActions {
 
     private boolean activated;
 
+    ReleaseSide releaseSide;
+    LockSide lockSide;
+    TypeClaws typeClaws;
 
     public DepositActions(Elevator elevator, Intake intake, Claw claw, Outtake outtake, IntakeExtension extension) {
         this.elevator = elevator;
@@ -43,6 +65,26 @@ public class DepositActions {
         this.extension = extension;
         this.claw = claw;
         this.outtake = outtake;
+        typeClaws = TypeClaws.LOCKED;
+        releaseSide = ReleaseSide.BOTH_OPEN;
+        lockSide = LockSide.BOTH_LOCKS;
+
+    }
+
+
+    public class DropPurplePixel implements Action {
+
+        public DropPurplePixel() {
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            outtake.setAngle(Outtake.Angle.ALMOST_INTAKE);
+            extension.setTarget(500);
+            intake.move(Intake.Angle.INTAKE);
+            intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH);
+            return false;
+        }
     }
 
 
@@ -102,118 +144,130 @@ public class DepositActions {
         }
     }
 
-
     public class PlacePixel implements Action {
+
         Stopwatch placePixelTimer;
+
         long delay = 0;
 
         public PlacePixel() {
+
             placePixelTimer = new Stopwatch();
+
             placePixelTimer.reset();
+
             delay = 500;
+
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
             return !activateSystem(placePixelTimer, () -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), delay);
-        }
-    }
-
-    public class PlaceIntermediatePixel implements Action {
-        Stopwatch placePixelTimer;
-        long delay = 0;
-
-        public PlaceIntermediatePixel(Cycles current, long d) {
-            placePixelTimer = new Stopwatch();
-            placePixelTimer.reset();
-            delay = d;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return !activateSystem(placePixelTimer, () -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), delay);
-        }
-    }
-
-
-    public class RetractDeposit implements Action {
-        Stopwatch retractDepositTimer;
-
-        public RetractDeposit() {
-            retractDepositTimer = new Stopwatch();
-            retractDepositTimer.reset();
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return !activateSystem(retractDepositTimer, () -> retractElevator(), 800);
 
 
         }
     }
 
+        public class PlaceIntermediatePixel implements Action {
+            Stopwatch placePixelTimer;
+            long delay = 0;
 
-    public class MoveElevator implements Action {
-        Stopwatch retractDepositTimer;
-        int target;
+            public PlaceIntermediatePixel(Cycles current, long d) {
+                placePixelTimer = new Stopwatch();
+                placePixelTimer.reset();
+                delay = d;
+            }
 
-        public MoveElevator(int target) {
-            this.target = target;
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                return !activateSystem(placePixelTimer, () -> claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH), delay);
+            }
         }
 
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-            moveElevatorByTraj(target);
-            return false;
+        public class RetractDeposit implements Action {
+            Stopwatch retractDepositTimer;
 
+            public RetractDeposit() {
+                retractDepositTimer = new Stopwatch();
+                retractDepositTimer.reset();
+            }
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                return !activateSystem(retractDepositTimer, () -> retractElevator(), 800);
+
+
+            }
         }
-    }
 
-    public class MoveClaw implements Action {
-        private Claw.ClawState _clawState;
-        private ClawSide _clawSide;
 
-        public MoveClaw(Claw.ClawState clawState, ClawSide clawSide) {
-            this._clawState = clawState;
-            this._clawSide = clawSide;
+        public class MoveElevator implements Action {
+            Stopwatch retractDepositTimer;
+            int target;
+
+            public MoveElevator(int target) {
+                this.target = target;
+            }
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+                moveElevatorByTraj(target);
+                return false;
+
+            }
         }
 
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            claw.updateState(this._clawState, this._clawSide);
-            return false;
+        public class MoveClaw implements Action {
+            private Claw.ClawState _clawState;
+            private ClawSide _clawSide;
+
+            public MoveClaw(Claw.ClawState clawState, ClawSide clawSide) {
+                this._clawState = clawState;
+                this._clawSide = clawSide;
+            }
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                claw.updateState(this._clawState, this._clawSide);
+                return false;
+            }
         }
-    }
 
-    public Action retractDeposit() {
-        return new RetractDeposit();
-    }
+        public Action retractDeposit() {
+            return new RetractDeposit();
+        }
 
-    public Action readyForDeposit(int elevator) {
-        return new ReadyForDeposit(elevator);
-    }
+        public Action readyForDeposit(int elevator) {
+            return new ReadyForDeposit(elevator);
+        }
 
 
-    public Action placePixel() {
-        return new PlacePixel();
-    }
+        public Action placePixel() {
+            return new PlacePixel();
+        }
 
-    public Action moveClaw(Claw.ClawState clawState, ClawSide clawSide) {
-        return new MoveClaw(clawState, clawSide);
-    }
+        public Action moveClaw(Claw.ClawState clawState, ClawSide clawSide) {
+            return new MoveClaw(clawState, clawSide);
+        }
 
-    public Action placeIntermediatePixel(Cycles currentCycle, long d) {
-        return new PlaceIntermediatePixel(currentCycle, d);
-    }
+        public Action placeIntermediatePixel(Cycles currentCycle, long d) {
+            return new PlaceIntermediatePixel(currentCycle, d);
+        }
 
-    public Action moveOuttake(Outtake.Angle thisAngle) {
-        return new MoveOuttake(thisAngle);
-    }
+        public Action moveOuttake(Outtake.Angle thisAngle) {
+            return new MoveOuttake(thisAngle);
+        }
 
-    public Action moveElevator(int thisTarget) {
-        return new MoveElevator(thisTarget);
-    }
+        public Action moveElevator(int thisTarget) {
+            return new MoveElevator(thisTarget);
+        }
 
+        public Action dropPurplePixel() {
+            return new DropPurplePixel();
+        }
 
 }
+

@@ -18,7 +18,7 @@ public class MeepMeepTesting {
                 .build();
 
 
-        BlueLeftRight(myBot );
+        BlueLeftRight(myBot);
         setAnimation(meepMeep, myBot);
         // BlueLeftLeft(myBot);
         // BlueLeftRight(myBot);
@@ -40,17 +40,16 @@ public class MeepMeepTesting {
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
 
-                .splineToLinearHeading(new Pose2d(25, 45, Math.toRadians(-90)), Math.toRadians(0))
-                .waitSeconds(0.01)
-                .splineToSplineHeading(new Pose2d(45, 35,Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(30, 32, Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(45, 37,Math.toRadians(0)), Math.toRadians(0))
 
                 .splineToLinearHeading(new Pose2d(20, 55 , Math.toRadians(0)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-40, 55, Math.toRadians(0)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-48, 40, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-30, 55, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-55, 40, Math.toRadians(0)), Math.toRadians(180))
 
                 //deposit
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(-40, 55, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-30, 55, Math.toRadians(0)), Math.toRadians(0))
 
                 .splineToSplineHeading(new Pose2d(20, 55, Math.toRadians(0)), Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(55, 45, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
@@ -69,17 +68,17 @@ public class MeepMeepTesting {
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
 
-                .splineToLinearHeading(new Pose2d(10, 35, Math.toRadians(200)), Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(10, 35, Math.toRadians(0)), Math.toRadians(-90))
                 .splineToSplineHeading(new Pose2d(45, 35,Math.toRadians(0)), Math.toRadians(0))
 
-                .setTangent(60)
+                .setTangent(110)
                 .splineToLinearHeading(new Pose2d(20, 55 , Math.toRadians(0)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-40, 55, Math.toRadians(0)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-48, 40, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-30, 55, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-55, 40, Math.toRadians(0)), Math.toRadians(180))
 
                 //deposit
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(-40, 55, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-30, 55, Math.toRadians(0)), Math.toRadians(0))
 
                 .splineToSplineHeading(new Pose2d(20, 55, Math.toRadians(0)), Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(55, 45, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
@@ -100,17 +99,17 @@ public class MeepMeepTesting {
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
 
-                .splineToLinearHeading(new Pose2d(16, 35,Math.toRadians(-90)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(30, 25,Math.toRadians(0)), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(45, 35,Math.toRadians(0)), Math.toRadians(0))
 
-                .setTangent(60)
+                .setTangent(110)
                 .splineToLinearHeading(new Pose2d(20, 55 , Math.toRadians(0)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-40, 55, Math.toRadians(0)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-48, 40, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-30, 55, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-55, 40, Math.toRadians(0)), Math.toRadians(180))
 
                 //deposit
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(-40, 55, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-30, 55, Math.toRadians(0)), Math.toRadians(0))
 
                 .splineToSplineHeading(new Pose2d(20, 55, Math.toRadians(0)), Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(55, 45, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
@@ -176,17 +175,17 @@ public class MeepMeepTesting {
                 .splineToLinearHeading(new Pose2d(10, -35, Math.toRadians(200)), Math.toRadians(-90))
                 .splineToSplineHeading(new Pose2d(45, -35,Math.toRadians(0)), Math.toRadians(0))
 
-                .setTangent(60)
+                .setTangent(110)
                 .splineToSplineHeading(new Pose2d(20, -55 , Math.toRadians(180)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-40, -55, Math.toRadians(180)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-48, -40, Math.toRadians(180)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-30, -55, Math.toRadians(180)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-55, -40, Math.toRadians(180)), Math.toRadians(180))
 
                 //deposit
-                 .setTangent(0)
-                .splineToSplineHeading(new Pose2d(-40, -55, Math.toRadians(0)), Math.toRadians(0))
-
-                .splineToLinearHeading(new Pose2d(20, -55, Math.toRadians(0)), Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(55, -45, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .setTangent(0)
+                .splineToLinearHeading(new Pose2d(-30, -55, Math.toRadians(0)), Math.toRadians(0))
+                .setTangent(0)
+                .splineToSplineHeading(new Pose2d(20, -55, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(55, -45, Math.toRadians(0)), Math.toRadians(0))
                 .build());
 
 

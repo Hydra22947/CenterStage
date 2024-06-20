@@ -286,7 +286,7 @@ public class MaxBlueConstants {
                 depositActions.moveElevator(minHeight),
                 new SleepAction(1),
                 intakeActions.moveIntake(Intake.Angle.TOP_54),
-                depositActions.placePixel(),
+                //depositActions.placePixel(),
                 new SleepAction(0.25),
                 depositActions.retractDeposit()
 
@@ -317,12 +317,12 @@ public class MaxBlueConstants {
 
                 intakeActions.moveIntake(Intake.Angle.MID),
 
-                intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
+
                 new SleepAction(1),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
 
                 new SleepAction(0.1),
-                depositActions.placePixel(),
+               //depositActions.placePixel(),
 
                 new SleepAction(0.4),
                 depositActions.moveElevator(tempHeight),

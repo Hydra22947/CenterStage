@@ -172,7 +172,7 @@ public class AutoLeftRedNew extends LinearOpMode {
 
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 0),
                 new SleepAction(1.4),
-                depositActions.placePixel(),
+               // depositActions.placePixel(),
                 new SleepAction(.5),
                 depositActions.moveElevator(tempHeight + 400),
                 depositActions.retractDeposit()
@@ -188,7 +188,7 @@ public class AutoLeftRedNew extends LinearOpMode {
         SequentialAction deposit43Action = new SequentialAction(
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
                 new SleepAction(0.6),
-                depositActions.placePixel(),
+               // depositActions.placePixel(),
 
                 new SleepAction(0.25),
                 depositActions.moveElevator(tempHeight + 300),

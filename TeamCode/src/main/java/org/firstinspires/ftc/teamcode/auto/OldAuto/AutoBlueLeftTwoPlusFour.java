@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.OldAuto;
 
 // RR-specific imports
 
@@ -124,7 +124,7 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                 new SleepAction(.2),
                 depositActions.moveElevator(minHeight),
                 new SleepAction(0.2),
-                depositActions.placePixel(),
+                //depositActions.placePixel(),
                 new SleepAction(0.2),
                 depositActions.moveElevator(minHeight+300),
                 new SleepAction(0.2),
@@ -148,13 +148,13 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
                 intakeActions.moveIntake(Intake.Angle.TELEOP_MID),
                 intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
 
-                intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
+               // intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(1.45),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
 
                 new SleepAction(0.25),
                 depositActions.moveElevator(tempHeight + 400),
-                depositActions.placePixel(),
+                //depositActions.placePixel(),
                 new SleepAction(0.3),
                 depositActions.retractDeposit()
         );
@@ -638,11 +638,11 @@ public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
 
                 intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE),
 
-                intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
+                //intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 500),
                 new SleepAction(0.2),
-                depositActions.placePixel(),
+                //depositActions.placePixel(),
                 new SleepAction(0.3),
                 depositActions.moveElevator(tempHeight + 950),
                 depositActions.retractDeposit()

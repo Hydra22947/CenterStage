@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.BasicAutos;
+package org.firstinspires.ftc.teamcode.auto.OldAuto.BasicAutos;
 
 // RR-specific imports
 
@@ -131,7 +131,7 @@ public class AutoRightRed extends LinearOpMode {
 
         SequentialAction depositBlueRight = new SequentialAction(
                 depositActions.readyForDeposit(tempHeight),
-                depositActions.placePixel(),
+                //depositActions.placePixel(),
                 new SleepAction(0.5),
                 depositActions.moveElevator(1500)
         );

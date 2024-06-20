@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.BasicAutos;
+package org.firstinspires.ftc.teamcode.auto.OldAuto.BasicAutos;
 
 // RR-specific imports
 
@@ -112,15 +112,15 @@ public class AutoLeftRed extends LinearOpMode {
 
         SequentialAction depositBlueMiddle = new SequentialAction(
 
-                intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
+               // intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
-                depositActions.placePixel(),
+               // depositActions.placePixel(),
                 new SleepAction(0.5),
                 depositActions.moveElevator(elevatorHeight + 300)
         );
         SequentialAction depositIntermediate = new SequentialAction(
 
-                intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
+                //intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 0),
 
@@ -129,12 +129,12 @@ public class AutoLeftRed extends LinearOpMode {
 
         SequentialAction depositTwoPixels = new SequentialAction(
 
-                intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
+               // intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 0),
 
                 new SleepAction(0.2),
-                depositActions.placePixel(),
+                //depositActions.placePixel(),
 
                 new SleepAction(.25),
                 depositActions.moveElevator(1850)

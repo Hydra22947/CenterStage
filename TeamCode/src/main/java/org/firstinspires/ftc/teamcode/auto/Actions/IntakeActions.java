@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.Action;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeExtension;
+import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.util.ClawSide;
 import org.firstinspires.ftc.teamcode.util.Stopwatch;
 
@@ -34,11 +35,6 @@ public class IntakeActions {
         BOTH_OPEN
     }
 
-    public enum FailSafe {
-        ACTIVATED,
-        DEACTIVATED
-    }
-
     public enum CloseClaw {
         LEFT_CLOSE,
         RIGHT_CLOSE,
@@ -51,8 +47,9 @@ public class IntakeActions {
 
     OpenClaw openClaw;
     CloseClaw closeClaw;
-    Length length;
-    FailSafe failSafe;
+
+
+    public static int extLength;
 
     public IntakeActions(Intake intake, IntakeExtension intakeExtension, Claw claw) {
         this.intake = intake;
@@ -60,24 +57,11 @@ public class IntakeActions {
         this.intakeExtension = intakeExtension;
         openClaw = OpenClaw.LEFT_OPEN;
         closeClaw = CloseClaw.BOTH_CLOSE;
-        this.length = Length.EXTENSION_CLOSED;
-        failSafe = FailSafe.ACTIVATED;
+
 
     }
 
-    public class PlacePurpleMid implements Action {
-        Stopwatch placePurpleMidTimer;
 
-        public PlacePurpleMid() {
-            placePurpleMidTimer = new Stopwatch();
-            placePurpleMidTimer.reset();
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return activateSystem(placePurpleMidTimer, () -> intake.move(Intake.Angle.INTAKE), 0);
-        }
-    }
 
 
     public class Release implements Action {
@@ -106,30 +90,6 @@ public class IntakeActions {
 
     }
 
-    public class FailSafeClaw implements Action {
-        Stopwatch releaseTimer;
-
-        public FailSafeClaw(FailSafe clawFailSafe) {
-            releaseTimer = new Stopwatch();
-            releaseTimer.reset();
-            failSafe = clawFailSafe;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
-            switch (failSafe) {
-                case ACTIVATED:
-                    return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH), 5000);
-                case DEACTIVATED:
-                    return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH), 5000);
-                default:
-                    return activateSystem(releaseTimer, () -> intake.updateClawState(Intake.ClawState.INDETERMINATE, ClawSide.BOTH), 5000);
-            }
-
-        }
-
-    }
 
 
 
@@ -199,21 +159,21 @@ public class IntakeActions {
         intakeExtension.setTarget(length);
         intakeExtension.setPidControl();
     }
-    public class OpenExtension implements Action {
 
-        int length = 0;
+    public class OpenExtension implements Action{
 
-        public OpenExtension(int length) {
-            this.length = length;
+
+        public OpenExtension(int length)
+        {
+            extLength = length;
         }
-
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                moveExtension(length);
-                return false;
-            }
+            intakeExtension.setTarget(extLength);
+            intakeExtension.setPidControl();
+            return false;
+        }
     }
-
     public class CloseExtension implements Action {
 
 
@@ -255,9 +215,6 @@ public class IntakeActions {
 
     }
 
-    public Action placePurpleMid() {
-        return new PlacePurpleMid();
-    }
 
     public Action moveIntake(Intake.Angle angle) {
         return new MoveIntake(angle);
@@ -295,7 +252,7 @@ public class IntakeActions {
         return new CloseExtension();
     }
 
-    public Action failSafeClaw(FailSafe failSafeClaw) { return new FailSafeClaw(failSafeClaw) ; }
+
 
 
 }

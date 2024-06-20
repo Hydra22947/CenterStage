@@ -13,7 +13,7 @@ public class Intake implements Subsystem {
 
     private final RobotHardware robot;
     public static double intakeHandPivot = 0.09, intakeAmmoPivot = 0;
-    public static double outtakeHandPivot = 0.5, outtakeAmmoPivot = 0.56; // פורק מהשאיבה הזוויות-מתוקן
+    public static double outtakeHandPivot = 0.605, outtakeAmmoPivot = 0.47; // פורק מהשאיבה הזוויות-מתוקן
     public static double midHandPivot = 0.5, midAmmoPivot = .55;
     public static double midTeleOpHandPivot = 0.3, midTeleopAmmoPivot = .5;
     public static double top5HandPivot = .31, top5AmmoPivot = 0.13;
@@ -24,6 +24,8 @@ public class Intake implements Subsystem {
     public static double top32HandPivot = 0.11, top32AmmoPivot = 0.025; // ערימה של 32
     public static double top32HandPivotAuto = 0.18, top32AmmoPivotAuto = 0.025;
     public static double top21HandPivot = 0.195, top21AmmoPivot = 0.125; // auto
+
+    public static double autoIntakeMidHand= 0.47, autoIntakeMidAmmo = 0.328;
 
     public static double autoFixIntakeHandPivot = 0.68, autoFixIntakeAmmoPivot = 0.66;
 
@@ -70,7 +72,8 @@ public class Intake implements Subsystem {
         TOP_54, TOP_43, TOP_32, TOP_21, TOP_5,
         TOP_5_AUTO,
         TOP_54_AUTO, TOP_32_AUTO,
-        AUTO_FIX_INTAKE
+        AUTO_FIX_INTAKE,
+        AUTO_MID
     }
 
     public enum ClawState {
@@ -266,6 +269,8 @@ public class Intake implements Subsystem {
                         return top32AmmoPivotAuto + OFFSET_AMMO;
                     case AUTO_FIX_INTAKE:
                         return autoFixIntakeAmmoPivot + OFFSET_AMMO;
+                    case AUTO_MID:
+                        return autoIntakeMidAmmo;
 
                     default:
                         return 0.0;
@@ -300,6 +305,8 @@ public class Intake implements Subsystem {
                         return top5HandPivotAuto;
                     case AUTO_FIX_INTAKE:
                         return autoFixIntakeHandPivot;
+                    case AUTO_MID:
+                        return autoIntakeMidHand;
                     default:
                         return 0.0;
                 }

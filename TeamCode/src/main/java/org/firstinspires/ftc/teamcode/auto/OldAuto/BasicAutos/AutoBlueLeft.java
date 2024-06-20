@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.BasicAutos;
+package org.firstinspires.ftc.teamcode.auto.OldAuto.BasicAutos;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
 
@@ -95,7 +95,7 @@ public class AutoBlueLeft extends LinearOpMode {
 
         SequentialAction depositBlueLeft = new SequentialAction(
                 depositActions.readyForDeposit(tempHeight),
-                depositActions.placePixel(),
+               // depositActions.placePixel(),
                 new SleepAction(0.5),
                 depositActions.moveElevator(tempHeight + 400)
         );
@@ -119,7 +119,7 @@ public class AutoBlueLeft extends LinearOpMode {
 
         SequentialAction depositBlueMiddle = new SequentialAction(
 
-                depositActions.placePixel(),
+               // depositActions.placePixel(),
                 new SleepAction(0.5),
                 depositActions.readyForDeposit(tempHeight + 150),
                 depositActions.retractDeposit()
@@ -144,7 +144,7 @@ public class AutoBlueLeft extends LinearOpMode {
 
         SequentialAction depositBlueRight = new SequentialAction(
                 depositActions.readyForDeposit(tempHeight),
-                depositActions.placePixel(),
+                //depositActions.placePixel(),
                 new SleepAction(0.5),
                 depositActions.moveElevator(tempHeight + 300)
         );
