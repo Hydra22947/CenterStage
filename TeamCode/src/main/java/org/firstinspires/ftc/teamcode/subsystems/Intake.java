@@ -13,9 +13,9 @@ public class Intake implements Subsystem {
 
     private final RobotHardware robot;
     public static double intakeHandPivot = 0.09, intakeAmmoPivot = 0;
-    public static double outtakeHandPivot = 0.605, outtakeAmmoPivot = 0.47; // פורק מהשאיבה הזוויות-מתוקן
+    public static double outtakeHandPivot = 0.485, outtakeAmmoPivot = 0.56; // פורק מהשאיבה הזוויות-מתוקן
     public static double midHandPivot = 0.5, midAmmoPivot = .55;
-    public static double midTeleOpHandPivot = 0.3, midTeleopAmmoPivot = .5;
+    public static double midTeleOpHandPivot = 0.4, midTeleopAmmoPivot = .52;
     public static double top5HandPivot = .31, top5AmmoPivot = 0.13;
     public static double top5HandPivotAuto = 0.315, top5AmmoPivotAuto = 0.13; //auto ערימה של אוטונומי רק ה5
     public static double top54HandPivot = 0.15, top54AmmoPivot = 0.025; // ערימה של 54
@@ -36,7 +36,7 @@ public class Intake implements Subsystem {
 
     public static double openRight = 0.05, openLeft = 0.55;
     public static double closeRight = .2, closeLeft = 0.7; // סרבואים של תפיסה של שאיבה שהם פתוחים
-    public static double indeterminateRight = 0.125, indeterminateLeft = 0.625; // סרבואים של תפיסה של שאיבה שהם פתוחים
+    public static double indeterminateRight = 0.075, indeterminateLeft = 0.55; // סרבואים של תפיסה של שאיבה שהם פתוחים
 
     public static double closeCauseWallRight;
     public static double closeCauseWallLeft;
@@ -45,9 +45,9 @@ public class Intake implements Subsystem {
         Intake.seeFarFrom = seeFarFrom;
     }
 
-    public static double seeFarFrom = 0.1;
-    public static final double maxSeeFarFrom = 0.5;
-    public static final double minSeeFarFrom = 0.5;
+    public static double seeFarFrom = 2;
+    public static final double maxSeeFarFrom = 2.5;
+    public static final double minSeeFarFrom = 2;
 
     @Override
     public void play() {
