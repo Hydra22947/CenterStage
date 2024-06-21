@@ -58,6 +58,7 @@ public class SubsystemActions {
     Action getIntake5OpenAction()
     {
         return new SequentialAction(
+                intakeActions.openExtension(500),
                 intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
                 intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
 
@@ -89,7 +90,6 @@ public class SubsystemActions {
 
         transfer = new SequentialAction(
                 intakeActions.moveIntake(Intake.Angle.OUTTAKE),
-                new SleepAction(0.5),
                 depositActions.moveOuttake(Outtake.Angle.INTAKE),
                 new SleepAction(.25),
                 depositActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.NewAuto.AutoBlue.BlueRight;
+package org.firstinspires.ftc.teamcode.auto.NewAuto.AutoBlue;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -17,7 +17,7 @@ public class AutoBlueRightRight {
     private final RobotHardware robot = RobotHardware.getInstance();
 
     Action placePreloadAndIntakeTraj, placePreloadTraj, intake43Traj;
-    ParallelAction placePreloadAndIntake, depositPreload, intake43;
+    SequentialAction placePreloadAndIntake, depositPreload, intake43;
     private SubsystemActions subsystemActions;
 
 
@@ -27,12 +27,14 @@ public class AutoBlueRightRight {
 
         placePreloadAndIntakeTraj = robot.drive.actionBuilder(robot.drive.pose)
                 .splineToLinearHeading(new Pose2d(-50, 30, Math.toRadians(45)), Math.toRadians(180))
+                .afterDisp(0, new DispMarker(new Vector2d(-50, 30), robot.drive, subsystemActions.placePreloadAndIntakeAction()))
                 .build();
 
         placePreloadTraj = robot.drive.actionBuilder(new Pose2d(-55, 15, Math.toRadians(45)))
                 .setTangent(0)
                 .splineToSplineHeading(new Pose2d(-40, 10, Math.toRadians(0)), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(35, 10, Math.toRadians(0)), Math.toRadians(0))
+                .afterDisp(10, subsystemActions.depositAction)
                 .splineToLinearHeading(new Pose2d(50, 40, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
@@ -42,18 +44,18 @@ public class AutoBlueRightRight {
                 .splineToLinearHeading(new Pose2d(-36, 10, Math.toRadians(0)), Math.toRadians(-180))
                 .strafeToLinearHeading(new Vector2d(-44, 10), Math.toRadians(0))
                 .build();
-        placePreloadAndIntake = new ParallelAction(
-                placePreloadAndIntakeTraj,
-                new DispMarker(new Vector2d(-50, 30), robot.drive, subsystemActions.placePreloadAndIntakeAction())
+        placePreloadAndIntake = new SequentialAction(
+                placePreloadAndIntakeTraj
+                //new DispMarker(new Vector2d(-50, 30), robot.drive, subsystemActions.placePreloadAndIntakeAction())
                 //subsystemActions.placePreloadAndIntakeAction()
         );
 
-        depositPreload = new ParallelAction(
+        depositPreload = new SequentialAction(
                 placePreloadTraj
                 //  new DispMarker(new Vector2d(40, 40), robot.drive, subsystemActions.depositAction)
         );
 
-        intake43 = new ParallelAction(
+        intake43 = new SequentialAction(
                 intake43Traj,
                 new DispMarker(new Vector2d(-36, 10), robot.drive, subsystemActions.intake43OpenAction),
                 new DispMarker(new Vector2d(-44, 10), robot.drive, subsystemActions.intake5CloseAction)
@@ -64,10 +66,8 @@ public class AutoBlueRightRight {
 
     public Action generateTraj() {
         return new SequentialAction(
-                placePreloadAndIntake
-//                depositPreload
-
-
+                placePreloadAndIntake,
+                depositPreload
         );
     }
 }

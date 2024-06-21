@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.auto.Actions.UpdateActions;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoConstants;
 import org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings;
 import org.firstinspires.ftc.teamcode.auto.FailSafe.PositionLocker;
-import org.firstinspires.ftc.teamcode.auto.NewAuto.AutoBlue.BlueRight.AutoBlueRightRight;
+import org.firstinspires.ftc.teamcode.auto.NewAuto.AutoBlue.AutoBlueRightRight;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
