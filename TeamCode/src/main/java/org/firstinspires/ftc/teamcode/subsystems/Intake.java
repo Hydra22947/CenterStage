@@ -27,7 +27,7 @@ public class Intake implements Subsystem {
 
     public static double autoIntakeMidHand= 0.47, autoIntakeMidAmmo = 0.328;
 
-    public static double autoFixIntakeHandPivot = 0.68, autoFixIntakeAmmoPivot = 0.66;
+    public static double autoFixIntakeHandPivot = 0.57, autoFixIntakeAmmoPivot = 0.4;
 
     public static double STACK = 0.3;
     public static double RIGHT_SENSOR_ERROR = 0;
