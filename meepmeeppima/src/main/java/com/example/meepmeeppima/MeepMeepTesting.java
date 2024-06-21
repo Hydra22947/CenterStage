@@ -18,7 +18,7 @@ public class MeepMeepTesting {
                 .build();
 
 
-       BlueLeftLeft(myBot);
+       RedRightMiddle(myBot);
         setAnimation(meepMeep, myBot);
         // BlueLeftLeft(myBot);
         // BlueLeftRight(myBot);
