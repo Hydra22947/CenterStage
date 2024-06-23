@@ -71,8 +71,8 @@ public class AutoRightBlue extends LinearOpMode {
     PropPipelineBlueRight propPipelineBlueRight;
     OpenCvWebcam webcam;
     boolean first = true;
-    int elevatorHeightMin = 950;
-    int elevatorHeightMax = 800;
+    int elevatorHeightMin = 500;
+    int elevatorHeightMax = 350;
 
     int elevatorHeight = elevatorHeightMax;
 
@@ -115,10 +115,9 @@ public class AutoRightBlue extends LinearOpMode {
         SequentialAction depositBlueMiddle = new SequentialAction(
 
                 //intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
-                new SleepAction(1),
-                // depositActions.placePixel(),
-                new SleepAction(0.5),
-                depositActions.moveElevator(elevatorHeight + 300)
+                new SleepAction(1.5),
+                 depositActions.placePixel()
+
         );
 
         SequentialAction depositIntermediate = new SequentialAction(
@@ -174,7 +173,7 @@ public class AutoRightBlue extends LinearOpMode {
 
         SequentialAction intakePixelBlueLeft = new SequentialAction(
                 intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
-                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
+                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.LEFT)
         );
 
         SequentialAction intakePixelBlueRight = new SequentialAction(
@@ -192,8 +191,8 @@ public class AutoRightBlue extends LinearOpMode {
 
         );
         SequentialAction readyForDeposit = new SequentialAction(
-                intakeActions.moveIntake(Intake.Angle.MID),
-                new SleepAction(1),
+                intakeActions.moveIntake(Intake.Angle.AUTO_MID),
+                new SleepAction(1.5),
                 depositActions.readyForDeposit(elevatorHeight)
         );
 
@@ -216,11 +215,12 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(-35, 11), Math.toRadians(0))
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
-                        .afterDisp(10, readyForDeposit)
+                        .afterDisp(25, readyForDeposit)
                         //for no pixels change to 950
 
                         .splineToLinearHeading(new Pose2d(52.25, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
+                        .strafeToLinearHeading(new Vector2d(46, 40), Math.toRadians(0))
                         .waitSeconds(.5)
                         .setTangent(Math.toRadians(90))
 
@@ -254,8 +254,7 @@ public class AutoRightBlue extends LinearOpMode {
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(0))
-                        .afterDisp(.7, readyIntakeBlue)
-                        .afterDisp(0.3, readyForDeposit)                        //for no pixels change to 950
+                        .afterDisp(25, readyForDeposit)                        //for no pixels change to 950
                         .splineToLinearHeading(new Pose2d(52, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .waitSeconds(.5)
