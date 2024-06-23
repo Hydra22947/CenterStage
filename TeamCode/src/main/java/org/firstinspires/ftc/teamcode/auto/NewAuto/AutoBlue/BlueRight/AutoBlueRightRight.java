@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.NewAuto.AutoBlue;
+package org.firstinspires.ftc.teamcode.auto.NewAuto.AutoBlue.BlueRight;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -26,8 +26,8 @@ public class AutoBlueRightRight {
         robot.drive.pose = AutoConstants.startPoseBlueRight;
 
         placePreloadAndIntakeTraj = robot.drive.actionBuilder(robot.drive.pose)
-                .splineToLinearHeading(new Pose2d(-50, 30, Math.toRadians(45)), Math.toRadians(180))
-                .afterDisp(0, new DispMarker(new Vector2d(-50, 30), robot.drive, subsystemActions.placePreloadAndIntakeAction()))
+                .splineToLinearHeading(new Pose2d(-55, 30, Math.toRadians(45)), Math.toRadians(180))
+                .afterDisp(0, new DispMarker(new Vector2d(-55, 30), robot.drive, subsystemActions.placePreloadAndIntakeAction()))
                 .build();
 
         placePreloadTraj = robot.drive.actionBuilder(new Pose2d(-55, 15, Math.toRadians(45)))
@@ -65,6 +65,7 @@ public class AutoBlueRightRight {
 
 
     public Action generateTraj() {
+
         return new SequentialAction(
                 placePreloadAndIntake,
                 depositPreload

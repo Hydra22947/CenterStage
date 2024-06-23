@@ -72,7 +72,7 @@ public class AutoRightBlue extends LinearOpMode {
     OpenCvWebcam webcam;
     boolean first = true;
     int elevatorHeightMin = 950;
-    int elevatorHeightMax = 1150;
+    int elevatorHeightMax = 800;
 
     int elevatorHeight = elevatorHeightMax;
 
@@ -116,7 +116,7 @@ public class AutoRightBlue extends LinearOpMode {
 
                 //intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
-               // depositActions.placePixel(),
+                // depositActions.placePixel(),
                 new SleepAction(0.5),
                 depositActions.moveElevator(elevatorHeight + 300)
         );
@@ -132,7 +132,7 @@ public class AutoRightBlue extends LinearOpMode {
 
         SequentialAction depositTwoPixels = new SequentialAction(
 
-               // intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
+                // intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 0),
 
@@ -143,12 +143,18 @@ public class AutoRightBlue extends LinearOpMode {
                 depositActions.moveElevator(1850)
         );
         SequentialAction transferBlueMiddle = new SequentialAction(
+                depositActions.moveOuttake(Outtake.Angle.ALMOST_INTAKE),
+                depositActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
+                new SleepAction(.5),
                 intakeActions.moveIntake(Intake.Angle.OUTTAKE),
-                new SleepAction(0.5),
-                intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
-                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
-                new SleepAction(1),
-                intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
+                new SleepAction(.5),
+                depositActions.moveOuttake(Outtake.Angle.INTAKE),
+
+                new SleepAction(.5),
+                depositActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
+                new SleepAction(.5),
+                intakeActions.moveIntake(Intake.Angle.TELEOP_MID)
+
         );
 
 
@@ -198,7 +204,7 @@ public class AutoRightBlue extends LinearOpMode {
 
                         //intake from mid stack
                         .stopAndAdd(intakePixelBlueLeft)
-                        .strafeToLinearHeading(new Vector2d(-53.5, 25), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-54.5, 25), Math.toRadians(0))
                         .waitSeconds(.1)
                         .stopAndAdd(intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE))
 
@@ -209,7 +215,6 @@ public class AutoRightBlue extends LinearOpMode {
                         .stopAndAdd(new ParallelAction(new SleepAction(10.5), returnFixintake()))
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
-                        .afterDisp(.7, readyIntakeBlue)
                         .afterDisp(0.3, readyForDeposit)
                         //for no pixels change to 950
 
@@ -362,27 +367,20 @@ public class AutoRightBlue extends LinearOpMode {
                     break;
             }
 
-            if(betterGamepad2.dpadRightOnce())
-            {
+            if (betterGamepad2.dpadRightOnce()) {
                 elevatorHeight = elevatorHeightMax;
-            }
-            else if(betterGamepad2.dpadLeftOnce())
-            {
+            } else if (betterGamepad2.dpadLeftOnce()) {
                 elevatorHeight = elevatorHeightMin;
             }
 
-            if(betterGamepad2.dpadUpOnce())
-            {
-                if(first)
-                {
+            if (betterGamepad2.dpadUpOnce()) {
+                if (first) {
                     webcam.stopStreaming();
                     first = false;
                 }
 
                 propLocation = cycleVision(propLocation);
-            }
-            else if(betterGamepad2.dpadDownOnce())
-            {
+            } else if (betterGamepad2.dpadDownOnce()) {
                 initCamera();
                 webcam.setPipeline(propPipelineBlueRight);
             }
@@ -443,7 +441,7 @@ public class AutoRightBlue extends LinearOpMode {
 
     }
 
-    SequentialAction returnFixintake () {
+    SequentialAction returnFixintake() {
         return new SequentialAction(
                 new SleepAction(.5),
                 new InstantAction(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH)),

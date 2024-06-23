@@ -58,7 +58,7 @@ public class SubsystemActions {
     Action getIntake5OpenAction()
     {
         return new SequentialAction(
-                intakeActions.openExtension(500),
+                intakeActions.openExtension(100),
                 intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
                 intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
 
@@ -67,8 +67,16 @@ public class SubsystemActions {
     Action getPlacePurplePixelAction()
     {
         return new SequentialAction(
+                intakeActions.moveIntake(Intake.Angle.AUTO_MID),
+                new SleepAction(.25),
                 depositActions.moveOuttake(Outtake.Angle.FLOOR),
-                depositActions.placePixel());
+                new SleepAction(1),
+                depositActions.moveClaw(Claw.ClawState.OPEN, ClawSide.RIGHT),
+                new SleepAction(1),
+                depositActions.moveOuttake(Outtake.Angle.INTAKE),
+                intakeActions.moveIntake(Intake.Angle.MID)
+
+        );
     }
     public SubsystemActions(DepositActions depositActions, IntakeActions intakeActions, UpdateActions updateActions) {
 
@@ -125,13 +133,8 @@ public class SubsystemActions {
     public ParallelAction placePreloadAndIntakeAction()
     {
         return new ParallelAction(
-                getPlacePurplePixelAction(),
-                new SequentialAction(
-                        getIntake5OpenAction(),
-                        new SleepAction(.5),
-                        getIntake5CloseAction(),
-                        transfer
-                )
+                getPlacePurplePixelAction()
+
         );
     }
 }

@@ -102,7 +102,6 @@ public class AutoRedRight extends LinearOpMode {
         SequentialAction placePurplePixelAction_Middle = new SequentialAction(
                 new ParallelAction(
                         intakeActions.moveIntake(Intake.Angle.INTAKE),
-                        intakeActions.openExtension(500),
                         new SleepAction(0.5)),
                 intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
         );
@@ -110,7 +109,6 @@ public class AutoRedRight extends LinearOpMode {
         SequentialAction placePurplePixelAction_Left = new SequentialAction(
                 new ParallelAction(
                         intakeActions.moveIntake(Intake.Angle.INTAKE),
-                        intakeActions.openExtension(300),
                         new SleepAction(0.5)),
                 intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
         );
@@ -119,7 +117,6 @@ public class AutoRedRight extends LinearOpMode {
         SequentialAction placePurplePixelAction_Right = new SequentialAction(
                 new ParallelAction(
                         intakeActions.moveIntake(Intake.Angle.INTAKE),
-                        intakeActions.openExtension(300),
                         new SleepAction(0.3)),
                 intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
         );
