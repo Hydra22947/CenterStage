@@ -143,13 +143,13 @@ public class AutoRightBlue extends LinearOpMode {
                 depositActions.moveElevator(1850)
         );
         SequentialAction transferBlueMiddle = new SequentialAction(
+                intakeActions.openExtension(-50),
                 depositActions.moveOuttake(Outtake.Angle.ALMOST_INTAKE),
                 depositActions.moveClaw(Claw.ClawState.INTAKE, ClawSide.BOTH),
-                new SleepAction(.5),
+                new SleepAction(.25),
                 intakeActions.moveIntake(Intake.Angle.OUTTAKE),
-                new SleepAction(.5),
+                new SleepAction(.75),
                 depositActions.moveOuttake(Outtake.Angle.INTAKE),
-
                 new SleepAction(.5),
                 depositActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
                 new SleepAction(.2),
@@ -193,7 +193,7 @@ public class AutoRightBlue extends LinearOpMode {
         );
         SequentialAction readyForDeposit = new SequentialAction(
                 intakeActions.moveIntake(Intake.Angle.MID),
-                new SleepAction(.25),
+                new SleepAction(1),
                 depositActions.readyForDeposit(elevatorHeight)
         );
 
@@ -214,10 +214,9 @@ public class AutoRightBlue extends LinearOpMode {
                         .stopAndAdd(transferBlueMiddle)
                         .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-35, 11), Math.toRadians(0))
-                        .stopAndAdd(new ParallelAction(new SleepAction(10.5), returnFixintake()))
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
-                        .afterDisp(0.3, readyForDeposit)
+                        .afterDisp(10, readyForDeposit)
                         //for no pixels change to 950
 
                         .splineToLinearHeading(new Pose2d(52.25, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
@@ -352,7 +351,7 @@ public class AutoRightBlue extends LinearOpMode {
             intake.setAngle(Intake.Angle.MID);
             intakeExtension.setTarget(0);
             intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.BOTH);
-            claw.updateState(Claw.ClawState.OPEN, ClawSide.BOTH);
+            claw.updateState(Claw.ClawState.CLOSED, ClawSide.BOTH);
             outtake.setAngle(Outtake.Angle.INTAKE);
             telemetry.addData("POS", propLocation.name());
             telemetry.addData("elevator pos", elevatorHeight);

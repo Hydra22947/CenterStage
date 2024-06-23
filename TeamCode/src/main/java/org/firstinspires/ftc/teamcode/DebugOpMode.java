@@ -55,7 +55,7 @@ public class DebugOpMode extends LinearOpMode {
     boolean firstOuttakeAngle = true, retract = false,  goToMid = false, intakeMid = true, canIntake = true, startedDelayTransfer = false, heldExtension = false, firstReleaseThreeTimer = true;
     boolean override = false, had2Pixels = false, hang = false, resetRightTrigger = true, closeClaw = false, wasClosed = false, firstExtend = true, XPressed = false;
     boolean overrideIntakeExtension = false, movedStack = false, outtakeToOuttake = true, firstReleaseThree = true, firstOuttake = true, goToIntake = false, goToAlmostIntake = false;
-
+    boolean rightClaw = true, leftClaw = true;
     public enum IntakeState {
         RETRACT,
         RELEASE,
@@ -166,11 +166,6 @@ public class DebugOpMode extends LinearOpMode {
                 plane.toggle();
             }
 
-//            if(betterGamepad2.shareOnce())
-//            {
-//                outtakeToOuttake = !outtakeToOuttake;
-//            }
-
             if(gamepad2.left_trigger != 0 || gamepad1.left_trigger != 0)
             {
                 drivetrain.superSlow();
@@ -216,7 +211,8 @@ public class DebugOpMode extends LinearOpMode {
             elevatorStateMachine();
 
 
-            telemetry.addData("A", ACount);
+            telemetry.addData("left" , leftClaw);
+            telemetry.addData("right" , rightClaw);
             telemetry.update();
         }
     }
@@ -253,7 +249,7 @@ public class DebugOpMode extends LinearOpMode {
                         wasClosed = true;
                     }
 
-                    claw.setBothClaw(Claw.ClawState.OPEN);
+                    openCloseClaws();
 
                     resetRightTrigger = false;
                     closeClaw = false;
@@ -287,7 +283,9 @@ public class DebugOpMode extends LinearOpMode {
                 {
                     firstReleaseThree = true;
                     moveIntake();
-                    claw.setBothClaw(Claw.ClawState.INTAKE);
+
+                    openCloseClaws();
+
                     intakeState = IntakeState.INTAKE_EXTEND;
                     override = false;
                 }
@@ -365,6 +363,8 @@ public class DebugOpMode extends LinearOpMode {
 
                 break;
             case INTAKE:
+                leftClaw = true;
+                rightClaw = true;
                 moveIntake();
 
                 if(firstReleaseThreeTimer)
@@ -392,11 +392,13 @@ public class DebugOpMode extends LinearOpMode {
                 if (gamepad1.right_trigger != 0)
                 {
                     moveIntake();
-                    claw.setBothClaw(Claw.ClawState.INTAKE);
+
+                    openCloseClaws();
+
                     intakeState = IntakeState.INTAKE_EXTEND;
                 }
 
-                claw.setBothClaw(Claw.ClawState.INTAKE);
+                //openCloseClaws();
 
                 if ((((robot.has2Pixels() && !startedDelayTransfer) || betterGamepad1.rightBumperOnce() || (intake.closedClaw() && override))))
                 {
@@ -409,10 +411,12 @@ public class DebugOpMode extends LinearOpMode {
                 }
                 else if(robot.isCloseLeft() && !robot.has2Pixels() && !override)
                 {
+                    leftClaw = false;
                     intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT);
                 }
                 else if(robot.isCloseRight() && !robot.has2Pixels() && !override)
                 {
+                    rightClaw = false;
                     intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);
                 }
                 else if(!startedDelayTransfer && !override)
@@ -467,6 +471,8 @@ public class DebugOpMode extends LinearOpMode {
 
                 break;
             case INTAKE_EXTEND:
+                leftClaw = true;
+                rightClaw = true;
                 moveIntake();
                 heldExtension = true;
 
@@ -506,10 +512,12 @@ public class DebugOpMode extends LinearOpMode {
                 }
                 else if(robot.isCloseLeft() && !robot.has2Pixels() && !override)
                 {
+                    leftClaw = false;
                     intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.LEFT);
                 }
                 else if(robot.isCloseRight() && !robot.has2Pixels() && !override)
                 {
+                    rightClaw = false;
                     intake.updateClawState(Intake.ClawState.CLOSE, ClawSide.RIGHT);
                 }
                 else if(!startedDelayTransfer && !override)
@@ -600,6 +608,9 @@ public class DebugOpMode extends LinearOpMode {
                 }
                 break;
             case EXTRACT:
+
+                leftClaw = true;
+                rightClaw = true;
 
                 if(firstOuttake)
                 {
@@ -794,6 +805,26 @@ public class DebugOpMode extends LinearOpMode {
     void coolDownReset()
     {
         cooldown = getTime();
+    }
+
+    void openCloseClaws()
+    {
+        if(leftClaw)
+        {
+            claw.setRightClaw(Claw.ClawState.INTAKE);
+        }
+        else
+        {
+            claw.setRightClaw(Claw.ClawState.CLOSED);
+        }
+        if(rightClaw)
+        {
+            claw.setLeftClaw(Claw.ClawState.INTAKE);
+        }
+        else
+        {
+            claw.setLeftClaw(Claw.ClawState.CLOSED);
+        }
     }
 
 
