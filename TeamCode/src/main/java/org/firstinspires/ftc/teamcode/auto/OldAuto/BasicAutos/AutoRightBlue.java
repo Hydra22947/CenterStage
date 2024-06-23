@@ -144,7 +144,7 @@ public class AutoRightBlue extends LinearOpMode {
         );
         SequentialAction transferBlueMiddle = new SequentialAction(
                 depositActions.moveOuttake(Outtake.Angle.ALMOST_INTAKE),
-                depositActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
+                depositActions.moveClaw(Claw.ClawState.INTAKE, ClawSide.BOTH),
                 new SleepAction(.5),
                 intakeActions.moveIntake(Intake.Angle.OUTTAKE),
                 new SleepAction(.5),
@@ -152,6 +152,8 @@ public class AutoRightBlue extends LinearOpMode {
 
                 new SleepAction(.5),
                 depositActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
+                new SleepAction(.2),
+                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE,ClawSide.BOTH),
                 new SleepAction(.5),
                 intakeActions.moveIntake(Intake.Angle.TELEOP_MID)
 
