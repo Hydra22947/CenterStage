@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.NewAuto.AutoBlue.RedRight;
+package org.firstinspires.ftc.teamcode.auto.NewAuto.RedRight;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
 import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.cycleVision;
