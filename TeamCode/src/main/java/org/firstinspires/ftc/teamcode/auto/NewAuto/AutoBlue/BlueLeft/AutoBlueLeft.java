@@ -12,6 +12,7 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -103,7 +104,7 @@ public class AutoBlueLeft extends LinearOpMode {
         SequentialAction placePurplePixelAction_Middle = new SequentialAction(
                 new ParallelAction(
                         intakeActions.moveIntake(Intake.Angle.INTAKE),
-                new SleepAction(0.5)),
+                new SleepAction(0.8)),
                 intakeActions.moveIntakeClaw(Intake.ClawState.OPEN,ClawSide.BOTH)
         );
 
@@ -127,9 +128,11 @@ public class AutoBlueLeft extends LinearOpMode {
                         new InstantAction(() -> intakeExtension.setAggresive(true)),
                         new InstantAction(() -> intakeActions.openExtension(0)),
                         new SleepAction(0.2),
-                        intakeActions.moveIntake(Intake.Angle.AUTO_MID)
+                        intakeActions.moveIntake(Intake.Angle.TELEOP_MID)
                 )
         );
+
+
 
         SequentialAction placePurplePixelSequence_Middle = new SequentialAction(
                 placePurplePixelAction_Middle,
@@ -171,9 +174,26 @@ public class AutoBlueLeft extends LinearOpMode {
                         .setTangent(110)
                         .splineToLinearHeading(new Pose2d(20, 58 , Math.toRadians(0)), Math.toRadians(180))
                         .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(180))
-                        .afterTime(2.3, IntakePixels54())
+                        .afterTime(2.2, IntakePixels(Intake.Angle.TOP_54))
                         .splineToLinearHeading(new Pose2d(-50, 37, Math.toRadians(0)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-54.8, 37, Math.toRadians(0)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-54.8, 37.3, Math.toRadians(0)), Math.toRadians(180))
+
+                        //deposit
+                        .setTangent(0)
+                        .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(0))
+
+                        .splineToSplineHeading(new Pose2d(20, 58, Math.toRadians(0)), Math.toRadians(0))
+                        .afterTime(2.5 , prepOuttake())
+                        .splineToLinearHeading(new Pose2d(49.5, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .afterTime(2.5 , releasePixels())
+                        .afterTime(0.4 , retractElevator())
+
+                        .setTangent(110)
+                        .splineToLinearHeading(new Pose2d(20, 58 , Math.toRadians(0)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(180))
+                        .afterTime(2.2, IntakePixels(Intake.Angle.TOP_32))
+                        .splineToLinearHeading(new Pose2d(-50, 36.8, Math.toRadians(0)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-54.8, 36.8, Math.toRadians(0)), Math.toRadians(180))
 
                         //deposit
                         .setTangent(0)
@@ -182,8 +202,8 @@ public class AutoBlueLeft extends LinearOpMode {
                         .splineToSplineHeading(new Pose2d(20, 58, Math.toRadians(0)), Math.toRadians(0))
                         .afterTime(2.5 , prepOuttake())
                         .splineToLinearHeading(new Pose2d(50, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .afterTime(0 , depositActions.moveClaw(Claw.ClawState.OPEN,ClawSide.BOTH))
-
+                        .afterTime(2.5 , releasePixels())
+                        .afterTime(0.5 , retractElevator())
 
                         .build();
 
@@ -200,18 +220,36 @@ public class AutoBlueLeft extends LinearOpMode {
                         .setTangent(110)
                         .splineToLinearHeading(new Pose2d(20, 58 , Math.toRadians(0)), Math.toRadians(180))
                         .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(180))
-                        .afterTime(1.5, IntakePixels54())
+                        .afterTime(2.2, IntakePixels(Intake.Angle.TOP_54))
                         .splineToLinearHeading(new Pose2d(-50, 37, Math.toRadians(0)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-53, 37.2, Math.toRadians(0)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-54.8, 37.3, Math.toRadians(0)), Math.toRadians(180))
 
                         //deposit
                         .setTangent(0)
                         .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(0))
 
                         .splineToSplineHeading(new Pose2d(20, 58, Math.toRadians(0)), Math.toRadians(0))
-                        .afterTime(2.3, prepOuttake())
+                        .afterTime(2.5 , prepOuttake())
+                        .splineToLinearHeading(new Pose2d(49.5, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .afterTime(2.5 , releasePixels())
+                        .afterTime(0.4 , retractElevator())
+
+                        .setTangent(110)
+                        .splineToLinearHeading(new Pose2d(20, 58 , Math.toRadians(0)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(180))
+                        .afterTime(2.2, IntakePixels(Intake.Angle.TOP_32))
+                        .splineToLinearHeading(new Pose2d(-50, 36.8, Math.toRadians(0)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-54.8, 36.8, Math.toRadians(0)), Math.toRadians(180))
+
+                        //deposit
+                        .setTangent(0)
+                        .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(0))
+
+                        .splineToSplineHeading(new Pose2d(20, 58, Math.toRadians(0)), Math.toRadians(0))
+                        .afterTime(2.5 , prepOuttake())
                         .splineToLinearHeading(new Pose2d(50, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .afterTime(0 , depositActions.moveClaw(Claw.ClawState.OPEN,ClawSide.BOTH))
+                        .afterTime(2.5 , releasePixels())
+                        .afterTime(0.5 , retractElevator())
 
                         .build();
 
@@ -229,19 +267,36 @@ public class AutoBlueLeft extends LinearOpMode {
                         .setTangent(110)
                         .splineToLinearHeading(new Pose2d(20, 58 , Math.toRadians(0)), Math.toRadians(180))
                         .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(180))
-                        .afterTime(1.5, IntakePixels54())
+                        .afterTime(2.2, IntakePixels(Intake.Angle.TOP_54))
                         .splineToLinearHeading(new Pose2d(-50, 37, Math.toRadians(0)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-53, 37, Math.toRadians(0)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-54.8, 37.3, Math.toRadians(0)), Math.toRadians(180))
 
                         //deposit
                         .setTangent(0)
                         .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(0))
 
+                        .splineToSplineHeading(new Pose2d(20, 58, Math.toRadians(0)), Math.toRadians(0))
+                        .afterTime(2.5 , prepOuttake())
+                        .splineToLinearHeading(new Pose2d(49.5, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .afterTime(2.5 , releasePixels())
+                        .afterTime(0.4 , retractElevator())
+
+                        .setTangent(110)
+                        .splineToLinearHeading(new Pose2d(20, 58 , Math.toRadians(0)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(180))
+                        .afterTime(2.2, IntakePixels(Intake.Angle.TOP_32))
+                        .splineToLinearHeading(new Pose2d(-50, 36.8, Math.toRadians(0)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-54.8, 36.8, Math.toRadians(0)), Math.toRadians(180))
+
+                        //deposit
+                        .setTangent(0)
+                        .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(0))
 
                         .splineToSplineHeading(new Pose2d(20, 58, Math.toRadians(0)), Math.toRadians(0))
-                        .afterTime(2.3 , prepOuttake())
+                        .afterTime(2.5 , prepOuttake())
                         .splineToLinearHeading(new Pose2d(50, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .afterTime(0 , depositActions.moveClaw(Claw.ClawState.OPEN,ClawSide.BOTH))
+                        .afterTime(2.5 , releasePixels())
+                        .afterTime(0.5 , retractElevator())
 
 
                         .build();
@@ -310,17 +365,17 @@ public class AutoBlueLeft extends LinearOpMode {
         {
             case LEFT:
                 runBlocking(new ParallelAction(
-                        runLeft,
+                        runMiddle,
                         updateActions.updateSystems()));
                 break;
             case RIGHT:
                 runBlocking(new ParallelAction(
-                        runLeft,
+                        runMiddle,
                         updateActions.updateSystems()));
                 break;
             case MIDDLE:
                 runBlocking(new ParallelAction(
-                      runLeft,
+                      runMiddle,
                       updateActions.updateSystems()));
                 break;
 
@@ -358,13 +413,13 @@ public class AutoBlueLeft extends LinearOpMode {
 
     }
 
-    SequentialAction IntakePixels54()
+    SequentialAction IntakePixels(Intake.Angle angle)
     {
         return new SequentialAction(
                 new ParallelAction(
                         new InstantAction(()-> intakeActions.moveIntakeClaw(Intake.ClawState.OPEN,ClawSide.BOTH)),
-                        intakeActions.moveIntake(Intake.Angle.TOP_54),
-                        new SleepAction(0.3),
+                        intakeActions.moveIntake(angle),
+                        new SleepAction(0.4),
                         new InstantAction(()-> intakeExtension.setAggresive(true)),
                         new InstantAction(()-> intakeExtension.setTarget(100)),
                         new InstantAction(()-> intakeExtension.setPidControl())
@@ -378,69 +433,58 @@ public class AutoBlueLeft extends LinearOpMode {
                 intakeActions.closeExtension(),
                 depositActions.moveOuttake(Outtake.Angle.ALMOST_INTAKE),
                 intakeActions.moveIntake(Intake.Angle.OUTTAKE),
-                new SleepAction(0.6),
-                new InstantAction(()-> outtake.setAngle(Outtake.Angle.INTAKE)),
-                new SleepAction(0.2),
-                new InstantAction(()-> claw.updateState(Claw.ClawState.CLOSED,ClawSide.BOTH)),
-                new SleepAction(0.1),
-                new InstantAction(()->intake.updateClawState(Intake.ClawState.OPEN,ClawSide.BOTH))
+                new SleepAction(0.5),
+                useTransfer()
 
 
                 );
     }
 
-    SequentialAction IntakePixels32()
+
+    SequentialAction useTransfer ()
     {
         return new SequentialAction(
-                new InstantAction(() -> intakeExtension.setAggresive(true)),
-                intakeActions.openExtension(PIXEL_EXTENSION),
-                new SleepAction(0.2),
-                intakeActions.moveIntake(Intake.Angle.TOP_32),
-                intakeActions.moveIntakeClaw(Intake.ClawState.CLOSE, ClawSide.BOTH),
-                new SleepAction(1),
-                new InstantAction(() -> intakeExtension.setAggresive(false)),
-                intakeActions.closeExtension(),
+                intakeActions.openExtension(-50),
+                depositActions.moveOuttake(Outtake.Angle.ALMOST_INTAKE),
+                depositActions.moveClaw(Claw.ClawState.INTAKE, ClawSide.BOTH),
+                new SleepAction(.25),
                 intakeActions.moveIntake(Intake.Angle.OUTTAKE),
-                new SleepAction(0.5),
-                new InstantAction(()-> depositActions.moveOuttake(Outtake.Angle.INTAKE)),
-                new SleepAction(0.2),
-                new InstantAction(()->depositActions.moveClaw(Claw.ClawState.CLOSED,ClawSide.BOTH)),
-                new SleepAction(0.1),
-                new InstantAction(()->intakeActions.moveIntakeClaw(Intake.ClawState.OPEN,ClawSide.BOTH))
+                new SleepAction(.75),
+                depositActions.moveOuttake(Outtake.Angle.INTAKE),
+                new SleepAction(.5),
+                depositActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
+                new SleepAction(.2),
+                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
+                new SleepAction(.5),
+                intakeActions.moveIntake(Intake.Angle.TELEOP_MID)
 
         );
+
+
     }
-
-    SequentialAction IntakePixels1()
-    {
-        return new SequentialAction(
-                new InstantAction(() -> intakeExtension.setAggresive(true)),
-                intakeActions.openExtension(PIXEL_EXTENSION),
-                new SleepAction(0.2),
-                intakeActions.moveIntake(Intake.Angle.INTAKE),
-                intakeActions.moveIntakeClaw(Intake.ClawState.CLOSE, ClawSide.BOTH),
-                new SleepAction(1),
-                new InstantAction(() -> intakeExtension.setAggresive(false)),
-                intakeActions.closeExtension(),
-                intakeActions.moveIntake(Intake.Angle.OUTTAKE),
-                new SleepAction(0.5),
-                new InstantAction(()-> depositActions.moveOuttake(Outtake.Angle.INTAKE)),
-                new SleepAction(0.2),
-                new InstantAction(()->depositActions.moveClaw(Claw.ClawState.CLOSED,ClawSide.BOTH)),
-                new SleepAction(0.1),
-                new InstantAction(()->intakeActions.moveIntakeClaw(Intake.ClawState.OPEN,ClawSide.BOTH))
-
-        );
-    }
-
 
     SequentialAction prepOuttake()
     {
         return new SequentialAction(
-                depositActions.moveOuttake(Outtake.Angle.OUTTAKE),
+                intakeActions.moveIntake(Intake.Angle.AUTO_MID),
+                depositActions.moveOuttake(Outtake.Angle.RELEASE_STACK),
                 depositActions.moveElevator(1000)
         );
     }
+
+    SequentialAction releasePixels (){ return new SequentialAction(depositActions.placePixel());}
+
+    SequentialAction retractElevator ()
+    {
+        return new SequentialAction(
+                depositActions.moveElevator(0),
+                depositActions.moveOuttake(Outtake.Angle.INTAKE),
+                new SleepAction(0.4),
+                depositActions.moveOuttake(Outtake.Angle.INTAKE),
+                new SleepAction(0.4),
+                intakeActions.moveIntake(Intake.Angle.TELEOP_MID)
+
+        );}
 
 
 }

@@ -17,6 +17,7 @@ public class Outtake implements Subsystem {
     public static double outtakeHandPivot = 0.7, outtakeClawPivot = .4;
     public static double floorHandPivot = 0.85, floorClawPivot = 0.5, goBackRelease = 0.05;
 
+    public static double releaseStackHand = 0.65 , releaseStackClaw = .4;
     public static double outtakeSpinIntake = 0.885, outtakeSpinOuttake = 0.885, outtakeSpin45 = 0.1505;
     double defaultOuttakeSpinOuttake = 0.875, defaultOuttakeHandPivot = 0.7;
     public static double outtakeSpinDouble = 0.0325;
@@ -49,6 +50,7 @@ public class Outtake implements Subsystem {
         OUTTAKE,
         FLOOR,
         HANG,
+        RELEASE_STACK
 
     }
 
@@ -98,6 +100,9 @@ public class Outtake implements Subsystem {
                     case HANG:
                         this.robot.outtakeClawPivotServo.setPosition(handClaw);
                         break;
+                    case RELEASE_STACK:
+                        this.robot.outtakeClawPivotServo.setPosition(releaseStackClaw);
+                        break;
                 }
                 break;
             case HAND:
@@ -121,6 +126,10 @@ public class Outtake implements Subsystem {
                     case HANG:
                         this.robot.outtakeHandRightServo.setPosition(hangHand);
                         this.robot.outtakeHandLeftServo.setPosition(hangHand);
+                        break;
+                    case RELEASE_STACK:
+                        this.robot.outtakeHandRightServo.setPosition(releaseStackHand);
+                        this.robot.outtakeHandLeftServo.setPosition(releaseStackHand);
                         break;
                 }
                 break;

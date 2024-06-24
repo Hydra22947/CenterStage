@@ -18,7 +18,7 @@ public class MeepMeepTesting {
                 .build();
 
 
-       RedRightMiddle(myBot);
+       BlueLeftLeft(myBot);
         setAnimation(meepMeep, myBot);
         // BlueLeftLeft(myBot);
         // BlueLeftRight(myBot);
@@ -40,19 +40,30 @@ public class MeepMeepTesting {
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
 
-                .splineToLinearHeading(new Pose2d(30, 32, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(45, 37,Math.toRadians(0)), Math.toRadians(0))
+
+                .splineToLinearHeading(new Pose2d(30, 37, Math.toRadians(0)), Math.toRadians(0))
+
+                .splineToSplineHeading(new Pose2d(48, 40,Math.toRadians(0)), Math.toRadians(0))
+
+
                 .setTangent(110)
-                .splineToLinearHeading(new Pose2d(20, 55 , Math.toRadians(0)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-30, 55, Math.toRadians(0)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-55, 40, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(20, 58 , Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(180))
+
+                .splineToLinearHeading(new Pose2d(-50, 37, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-54.8, 37.3, Math.toRadians(0)), Math.toRadians(180))
 
                 //deposit
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(-30, 55, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(0))
 
-                .splineToSplineHeading(new Pose2d(20, 55, Math.toRadians(0)), Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(55, 45, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .splineToSplineHeading(new Pose2d(20, 58, Math.toRadians(0)), Math.toRadians(0))
+
+                .splineToLinearHeading(new Pose2d(50, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+
+                .waitSeconds(0.3)
+                .strafeToLinearHeading(new Vector2d(47, 40), Math.toRadians(0))
+
 
 
 

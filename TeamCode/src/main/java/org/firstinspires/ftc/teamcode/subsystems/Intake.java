@@ -12,18 +12,18 @@ import org.jetbrains.annotations.NotNull;
 public class Intake implements Subsystem {
 
     private final RobotHardware robot;
-    public static double intakeHandPivot = 0.11, intakeAmmoPivot = 0;
+    public static double intakeHandPivot = 0.11, intakeAmmoPivot = 0.025;
     public static double outtakeHandPivot = 0.5, outtakeAmmoPivot = 0.56; // פורק מהשאיבה הזוויות-מתוקן
     public static double midHandPivot = 0.5, midAmmoPivot = .55;
     public static double midTeleOpHandPivot = 0.4, midTeleopAmmoPivot = .52;
     public static double top5HandPivot = .31, top5AmmoPivot = 0.13;
     public static double top5HandPivotAuto = 0.22, top5AmmoPivotAuto = 0.065; //auto ערימה של אוטונומי רק ה5
-    public static double top54HandPivot = 0.15, top54AmmoPivot = 0.025; // ערימה של 54
+    public static double top54HandPivot = 0.17, top54AmmoPivot = 0.065; // ערימה של 54
     public static double top54HandPivotAuto = 0.29, top54AmmoPivotAuto = 0.135;
-    public static double top43HandPivot = 0.28, top43AmmoPivot = 0.1; // auto
-    public static double top32HandPivot = 0.11, top32AmmoPivot = 0.025; // ערימה של 32
+    public static double top43HandPivot = 0.15, top43AmmoPivot = 0.06; // auto
+    public static double top32HandPivot = 0.14, top32AmmoPivot = 0.05; // ערימה של 32
     public static double top32HandPivotAuto = 0.18, top32AmmoPivotAuto = 0.025;
-    public static double top21HandPivot = 0.195, top21AmmoPivot = 0.125; // auto
+    public static double top21HandPivot = 0.12, top21AmmoPivot = 0.04; // auto
 
     public static double autoIntakeMidHand= 0.47, autoIntakeMidAmmo = 0.328;
 
