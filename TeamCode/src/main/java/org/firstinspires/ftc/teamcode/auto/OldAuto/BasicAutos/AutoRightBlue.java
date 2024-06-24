@@ -113,11 +113,7 @@ public class AutoRightBlue extends LinearOpMode {
 
 
         SequentialAction depositBlueMiddle = new SequentialAction(
-
-                //intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
-                new SleepAction(1.5),
-                 depositActions.placePixel()
-
+                depositActions.placePixel()
         );
 
         SequentialAction depositIntermediate = new SequentialAction(
@@ -152,7 +148,7 @@ public class AutoRightBlue extends LinearOpMode {
                 new SleepAction(.5),
                 depositActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
                 new SleepAction(.2),
-                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE,ClawSide.BOTH),
+                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
                 new SleepAction(.5),
                 intakeActions.moveIntake(Intake.Angle.TELEOP_MID)
 
