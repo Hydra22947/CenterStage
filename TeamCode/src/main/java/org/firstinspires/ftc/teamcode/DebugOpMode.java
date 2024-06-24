@@ -688,7 +688,7 @@ public class DebugOpMode extends LinearOpMode {
                     switchOuttake();
                 }
 
-                if(betterGamepad1.YOnce())
+                if(betterGamepad1.AOnce())
                 {
                     claw.setBothClaw(Claw.ClawState.OPEN);
 
@@ -735,7 +735,7 @@ public class DebugOpMode extends LinearOpMode {
                 }
 
 
-                if (betterGamepad1.YOnce() || betterGamepad1.leftBumperOnce() || betterGamepad2.shareOnce())
+                if (betterGamepad1.AOnce() || betterGamepad1.leftBumperOnce() || betterGamepad2.shareOnce())
                 {
                     liftState = LiftState.RETRACT;
                     outtake.setAngle(Outtake.Angle.INTAKE);
