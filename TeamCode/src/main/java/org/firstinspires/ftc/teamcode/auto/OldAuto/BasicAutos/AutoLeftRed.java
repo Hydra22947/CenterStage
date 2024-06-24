@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode.auto.OldAuto.BasicAutos;
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
 
 import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.cycleVision;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -71,7 +72,7 @@ public class AutoLeftRed extends LinearOpMode {
     OpenCvWebcam webcam;
     boolean first = true;
     int elevatorHeightMin = 950;
-    int elevatorHeightMax = 1150;
+    int elevatorHeightMax = 200;
 
     int elevatorHeight = elevatorHeightMax;
 
@@ -105,19 +106,10 @@ public class AutoLeftRed extends LinearOpMode {
         updateActions = new UpdateActions(elevator, intake, claw, outtake, intakeExtension);
 
 
-        SequentialAction readyIntakeBlue = new SequentialAction(
-                intakeActions.moveIntake(Intake.Angle.MID)
-        );
-
-
         SequentialAction depositBlueMiddle = new SequentialAction(
-
-               // intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
-                new SleepAction(1),
-               // depositActions.placePixel(),
-                new SleepAction(0.5),
-                depositActions.moveElevator(elevatorHeight + 300)
+                depositActions.placePixel()
         );
+
         SequentialAction depositIntermediate = new SequentialAction(
 
                 //intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
@@ -129,7 +121,7 @@ public class AutoLeftRed extends LinearOpMode {
 
         SequentialAction depositTwoPixels = new SequentialAction(
 
-               // intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
+                // intakeActions.failSafeClaw(IntakeActions.FailSafe.ACTIVATED),
                 new SleepAction(1),
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 0),
 
@@ -140,12 +132,20 @@ public class AutoLeftRed extends LinearOpMode {
                 depositActions.moveElevator(1850)
         );
         SequentialAction transferBlueMiddle = new SequentialAction(
+                intakeActions.openExtension(-50),
+                depositActions.moveOuttake(Outtake.Angle.ALMOST_INTAKE),
+                depositActions.moveClaw(Claw.ClawState.INTAKE, ClawSide.BOTH),
+                new SleepAction(.25),
                 intakeActions.moveIntake(Intake.Angle.OUTTAKE),
-                new SleepAction(0.5),
-                intakeActions.moveClaw(Claw.ClawState.OPEN, ClawSide.BOTH),
+                new SleepAction(.75),
+                depositActions.moveOuttake(Outtake.Angle.INTAKE),
+                new SleepAction(.5),
+                depositActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
+                new SleepAction(.2),
                 intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
-                new SleepAction(1),
-                intakeActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH)
+                new SleepAction(.5),
+                intakeActions.moveIntake(Intake.Angle.TELEOP_MID)
+
         );
 
 
@@ -156,19 +156,18 @@ public class AutoLeftRed extends LinearOpMode {
         SequentialAction intakePixelBlueMiddle = new SequentialAction(
                 intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
                 intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
-                new SleepAction(.5),
+                new SleepAction(1),
                 intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE)
 
         );
 
         SequentialAction intakePixelBlueLeft = new SequentialAction(
                 intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
-                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH)
-
+                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.RIGHT)
         );
 
         SequentialAction intakePixelBlueRight = new SequentialAction(
-                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.BOTH),
+                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.RIGHT),
                 intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
                 new SleepAction(1),
                 intakeActions.openExtension(700)
@@ -178,20 +177,15 @@ public class AutoLeftRed extends LinearOpMode {
                 intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.5),
                 intakeActions.moveStack(),
-                intakeActions.openExtension(-35)
+                intakeActions.openExtension(-20)
 
         );
-      /*  SequentialAction readyForDeposit = new SequentialAction(
-                placePurpleActions.moveIntake(Intake.Angle.MID),
-                new SleepAction(.25),
-                depositActions.readyForDeposit(1300)
-        );*/
         SequentialAction readyForDeposit = new SequentialAction(
-                intakeActions.moveIntake(Intake.Angle.MID),
-                new SleepAction(.25),
-                depositActions.readyForDeposit(elevatorHeight)
+                intakeActions.moveIntake(Intake.Angle.TELEOP_MID),
+                new SleepAction(0.5),
+                depositActions.readyForDeposit(elevatorHeight),
+                new InstantAction(() -> outtake.spinOuttake(1))
         );
-
         Action trajRedRight =
                 robot.drive.actionBuilder(robot.drive.pose)
                         //place purple
@@ -210,18 +204,14 @@ public class AutoLeftRed extends LinearOpMode {
                         .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-35, -11), Math.toRadians(0))
 
-                        .stopAndAdd(new ParallelAction(new SleepAction(10), returnFixintake()))
-
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, -12), Math.toRadians(0))
-                        .afterDisp(.7, readyIntakeBlue)
-                        .afterDisp(0.3, readyForDeposit)
+                        .afterDisp(15, readyForDeposit)
                         //for no pixels change to 950
 
-                        .splineToLinearHeading(new Pose2d(52.25, -34, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .stopAndAdd(depositIntermediate)
-                        .splineToLinearHeading(new Pose2d(52.25, -42, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(48, -42, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
+                        .strafeToLinearHeading(new Vector2d(46, -42), Math.toRadians(0))
                         .waitSeconds(.5)
                         .setTangent(Math.toRadians(-90))
 
@@ -240,35 +230,29 @@ public class AutoLeftRed extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(-34.5, -42), Math.toRadians(90))
 
                         //intake from mid stack
-                        .strafeToLinearHeading(new Vector2d(-48, -22), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-48, -26), Math.toRadians(0))
                         .stopAndAdd(intakePixelBlueLeft)
                         .waitSeconds(.1)
-                        .strafeToLinearHeading(new Vector2d(-53.5, -21.1), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-53.5, -26), Math.toRadians(0))
                         .waitSeconds(.1)
                         .stopAndAdd(intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE))
-
 
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
                         .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-44.25, -10), Math.toRadians(0))
 
-                        .stopAndAdd(new ParallelAction(new SleepAction(10), returnFixintake()))
-
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, -8.5), Math.toRadians(0))
-                        .afterDisp(.7, readyIntakeBlue)
-                        .afterDisp(0.3, readyForDeposit)
-                        //for no pixels change to 950
-                        .splineToLinearHeading(new Pose2d(52.25, -30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .stopAndAdd(depositIntermediate)
+                        .afterDisp(25, readyForDeposit)
 
-                        .splineToLinearHeading(new Pose2d(52, -35.75, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(48, -32.5, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
+                        .strafeToLinearHeading(new Vector2d(46, -32.5), Math.toRadians(0))
                         .waitSeconds(.5)
                         .setTangent(Math.toRadians(-90))
                         //Park - Close to other board
-                        .strafeToLinearHeading(new Vector2d(46, -32), Math.toRadians(90))
+                        .strafeToLinearHeading(new Vector2d(46, -10), Math.toRadians(90))
                         .stopAndAdd(retractDepositBlueMiddle)
                         .build();
 
@@ -286,34 +270,28 @@ public class AutoLeftRed extends LinearOpMode {
 
                         //intake from left stack
                         .strafeToSplineHeading(new Vector2d(-42, -48), Math.toRadians(90))
-                        .splineToLinearHeading(new Pose2d(-38, -12, Math.toRadians(90)), Math.toRadians(90))
-                        .strafeToLinearHeading(new Vector2d(-29.9, -10), Math.toRadians(0)
+                        .splineToLinearHeading(new Pose2d(-38, -14, Math.toRadians(90)), Math.toRadians(90))
+                        .strafeToLinearHeading(new Vector2d(-35, -14), Math.toRadians(0)
                                 , baseVelConstraint, baseAccelConstraint)
                         .stopAndAdd(intakePixelBlueRight)
                         .waitSeconds(1)
-                        .strafeToLinearHeading(new Vector2d(-37.25, -11), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-38, -14), Math.toRadians(0))
                         .waitSeconds(.25)
                         .stopAndAdd(intakePixelBlueClose)
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
 
-                        .stopAndAdd(new ParallelAction(new SleepAction(10), returnFixintake()))
-
                         //deposit
-                        .strafeToLinearHeading(new Vector2d(30.25, -9.5), Math.toRadians(0))
-                        .afterDisp(.7, readyIntakeBlue)
-                        .afterDisp(0.3, readyForDeposit)
-
-                        .splineToLinearHeading(new Pose2d(52.25, -38, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .stopAndAdd(depositIntermediate)
+                        .strafeToLinearHeading(new Vector2d(20, -9.5), Math.toRadians(0))
+                        .afterDisp(0, readyForDeposit)
 
                         //for no pixels change to 950
-                        .splineToLinearHeading(new Pose2d(52.75, -29, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(50.5, -30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
+                        .strafeToLinearHeading(new Vector2d(46, -30), Math.toRadians(0))
                         .waitSeconds(.5)
-                        .lineToX(48)
                         .setTangent(Math.toRadians(90))
-                        .strafeToLinearHeading(new Vector2d(46.5, -28), Math.toRadians(90))
+                        .strafeToLinearHeading(new Vector2d(46.5, -10), Math.toRadians(90))
                         .stopAndAdd(retractDepositBlueMiddle)
 
                         //Park - Corner
@@ -330,7 +308,7 @@ public class AutoLeftRed extends LinearOpMode {
             telemetry.addData("POS", propLocation.name());
             telemetry.addData("elevator pos", elevatorHeight);
 
-           switch (propPipelineRedLeft.getLocation()) {
+            switch (propPipelineRedLeft.getLocation()) {
                 case Left:
                     propLocation = AutoSettings.PropLocation.LEFT;
                     break;
@@ -342,27 +320,20 @@ public class AutoLeftRed extends LinearOpMode {
                     break;
             }
 
-            if(betterGamepad2.dpadRightOnce())
-            {
+            if (betterGamepad2.dpadRightOnce()) {
                 elevatorHeight = elevatorHeightMax;
-            }
-            else if(betterGamepad2.dpadLeftOnce())
-            {
+            } else if (betterGamepad2.dpadLeftOnce()) {
                 elevatorHeight = elevatorHeightMin;
             }
 
-            if(betterGamepad2.dpadUpOnce())
-            {
-                if(first)
-                {
+            if (betterGamepad2.dpadUpOnce()) {
+                if (first) {
                     webcam.stopStreaming();
                     first = false;
                 }
 
                 propLocation = cycleVision(propLocation);
-            }
-            else if(betterGamepad2.dpadDownOnce())
-            {
+            } else if (betterGamepad2.dpadDownOnce()) {
                 initCamera();
                 webcam.setPipeline(propPipelineRedLeft);
             }
@@ -392,7 +363,7 @@ public class AutoLeftRed extends LinearOpMode {
                 break;
             case RIGHT:
                 runBlocking(new ParallelAction(
-                        trajRedRight,
+                        trajRedLeft,
                         updateActions.updateSystems()
                 ));
                 break;
@@ -422,7 +393,7 @@ public class AutoLeftRed extends LinearOpMode {
 
     }
 
-    SequentialAction returnFixintake () {
+    SequentialAction returnFixintake() {
         return new SequentialAction(
                 new SleepAction(.5),
                 new InstantAction(() -> intake.updateClawState(Intake.ClawState.OPEN, ClawSide.BOTH)),

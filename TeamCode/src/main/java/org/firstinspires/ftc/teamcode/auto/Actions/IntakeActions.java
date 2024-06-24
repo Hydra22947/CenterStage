@@ -49,7 +49,7 @@ public class IntakeActions {
     CloseClaw closeClaw;
 
 
-    public static int extLength;
+    public static int extLength =  0;
 
     public IntakeActions(Intake intake, IntakeExtension intakeExtension, Claw claw) {
         this.intake = intake;
@@ -162,15 +162,14 @@ public class IntakeActions {
 
     public class OpenExtension implements Action{
 
-
+        private int _length;
         public OpenExtension(int length)
         {
-            extLength = length;
+            this._length = length;
         }
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            intakeExtension.setTarget(extLength);
-            intakeExtension.setPidControl();
+            moveExtension(this._length);
             return false;
         }
     }
