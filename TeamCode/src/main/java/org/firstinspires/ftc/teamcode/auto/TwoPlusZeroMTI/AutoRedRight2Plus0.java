@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.NewAuto.RedRight;
+package org.firstinspires.ftc.teamcode.auto.TwoPlusZeroMTI;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
 import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.cycleVision;
@@ -16,6 +16,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
@@ -37,14 +38,15 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
-@Autonomous(name = "2+4 MTI RedRight" , group = "AutoRed")
-public class AutoRedRight extends LinearOpMode {
+@Autonomous(name = "2+0 MTI RedRight" , group = "AutoRed")
+public class AutoRedRight2Plus0 extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 
     // subsystems
     Elevator elevator;
     Intake intake;
+
     Outtake outtake;
     Claw claw;
     IntakeExtension intakeExtension;
@@ -158,12 +160,6 @@ public class AutoRedRight extends LinearOpMode {
 
         );
 
-        SequentialAction placePixels = new SequentialAction(
-                depositActions.moveOuttake(Outtake.Angle.OUTTAKE),
-                depositActions.moveElevator(1000)
-
-
-        );
 
 
         Action trajRedRight =
@@ -172,41 +168,8 @@ public class AutoRedRight extends LinearOpMode {
                         .splineToSplineHeading(new Pose2d(15, -40, Math.toRadians(0)), Math.toRadians(90))
                         .afterTime(0, placeYellowPixel)
                         .splineToLinearHeading(new Pose2d(45, -40,Math.toRadians(0)), Math.toRadians(0))
-
-                        .setTangent(110)
-                        .splineToLinearHeading(new Pose2d(20, -58 , Math.toRadians(0)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(180))
-                        .afterTime(2.2, IntakePixels(Intake.Angle.TOP_54))
-                        .splineToLinearHeading(new Pose2d(-50, -37, Math.toRadians(0)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-54.8, -37, Math.toRadians(0)), Math.toRadians(180))
-
-                        //deposit
-                        .setTangent(0)
-                        .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(0))
-
-                        .splineToSplineHeading(new Pose2d(20, -58, Math.toRadians(0)), Math.toRadians(0))
-                        .afterTime(2.5 , placePixels)
-                        .splineToLinearHeading(new Pose2d(49.5, -40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .afterTime(2.5 , releasePixels())
-                        .afterTime(0.4 , retractElevator())
-
-                        .setTangent(110)
-                        .splineToLinearHeading(new Pose2d(20, -58 , Math.toRadians(0)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(180))
-                        .afterTime(4.3, IntakePixels(Intake.Angle.TOP_32))
-                        .splineToLinearHeading(new Pose2d(-50, -36.8, Math.toRadians(0)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-54.8, -36.8, Math.toRadians(0)), Math.toRadians(180))
-
-                        //deposit
-                        .setTangent(0)
-                        .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(0))
-
-                        .splineToSplineHeading(new Pose2d(20, -58, Math.toRadians(0)), Math.toRadians(0))
-                        .afterTime(2.8 , prepOuttake())
-                        .splineToLinearHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .afterTime(2.5 , releasePixels())
-                        .afterTime(0.5 , retractElevator())
                         .strafeToLinearHeading(new Vector2d(45,-60), Math.toRadians(270))
+
                         .build();
 
 
@@ -216,41 +179,8 @@ public class AutoRedRight extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(20, -27, Math.toRadians(0)), Math.toRadians(90))
                         .afterTime(0.8, placeYellowPixel)
                         .splineToSplineHeading(new Pose2d(45, -35,Math.toRadians(0)), Math.toRadians(0))
-
-                        .setTangent(110)
-                        .splineToLinearHeading(new Pose2d(20, -58 , Math.toRadians(0)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(180))
-                        .afterTime(2.2, IntakePixels(Intake.Angle.TOP_54))
-                        .splineToLinearHeading(new Pose2d(-50, -37, Math.toRadians(0)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-54.8, -37, Math.toRadians(0)), Math.toRadians(180))
-
-                        //deposit
-                        .setTangent(0)
-                        .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(0))
-
-                        .splineToSplineHeading(new Pose2d(20, -58, Math.toRadians(0)), Math.toRadians(0))
-                        .afterTime(2.5 , placePixels)
-                        .splineToLinearHeading(new Pose2d(49.5, -40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .afterTime(2.5 , releasePixels())
-                        .afterTime(1 , retractElevator())
-
-                        .setTangent(110)
-                        .splineToLinearHeading(new Pose2d(20, -58 , Math.toRadians(0)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(180))
-                        .afterTime(4.2, IntakePixels(Intake.Angle.TOP_32))
-                        .splineToLinearHeading(new Pose2d(-50, -36.5, Math.toRadians(0)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-54.8, -36.5, Math.toRadians(0)), Math.toRadians(180))
-
-                        //deposit
-                        .setTangent(0)
-                        .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(0))
-
-                        .splineToSplineHeading(new Pose2d(20, -58, Math.toRadians(0)), Math.toRadians(0))
-                        .afterTime(2.8 , prepOuttake())
-                        .splineToLinearHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .afterTime(2.5 , releasePixels())
-                        .afterTime(0.5 , retractElevator())
                         .strafeToLinearHeading(new Vector2d(45,-60), Math.toRadians(270))
+
 
 
                         .build();
@@ -263,40 +193,6 @@ public class AutoRedRight extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(17, -35, Math.toRadians(0)), Math.toRadians(90))
                         .afterTime(1.1, placeYellowPixel)
                         .splineToSplineHeading(new Pose2d(48, -32, Math.toRadians(0)), Math.toRadians(0))
-
-                        .setTangent(110)
-                        .splineToLinearHeading(new Pose2d(20, -58 , Math.toRadians(0)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(180))
-                        .afterTime(2.2, IntakePixels(Intake.Angle.TOP_54))
-                        .splineToLinearHeading(new Pose2d(-50, -37, Math.toRadians(0)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-54.8, -37.8, Math.toRadians(0)), Math.toRadians(180))
-
-                        //deposit
-                        .setTangent(0)
-                        .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(0))
-
-                        .splineToSplineHeading(new Pose2d(20, -58, Math.toRadians(0)), Math.toRadians(0))
-                        .afterTime(2.5 , placePixels)
-                        .splineToLinearHeading(new Pose2d(49.5, -40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .afterTime(2.5 , releasePixels())
-                        .afterTime(0.4 , retractElevator())
-
-                        .setTangent(110)
-                        .splineToLinearHeading(new Pose2d(20, -58 , Math.toRadians(0)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(180))
-                        .afterTime(4.3, IntakePixels(Intake.Angle.TOP_32))
-                        .splineToLinearHeading(new Pose2d(-50, -36.8, Math.toRadians(0)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-54.8, -36.8, Math.toRadians(0)), Math.toRadians(180))
-
-                        //deposit
-                        .setTangent(0)
-                        .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(0))
-
-                        .splineToSplineHeading(new Pose2d(20, -58, Math.toRadians(0)), Math.toRadians(0))
-                        .afterTime(2.8 , prepOuttake())
-                        .splineToLinearHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .afterTime(2.5 , releasePixels())
-                        .afterTime(1 , retractElevator())
                         .strafeToLinearHeading(new Vector2d(45,-60), Math.toRadians(270))
 
                         .build();
@@ -335,15 +231,22 @@ public class AutoRedRight extends LinearOpMode {
                 }
             }
 
-            if (betterGamepad2.dpadUpOnce()) {
-                if (first) {
-                    webcam.stopStreaming();
-                    first = false;
-                }
+            if(gamepad1.y)
+            {
                 vision = false;
-
-                propLocation = cycleVision(propLocation);
+                propLocation = AutoSettings.PropLocation.MIDDLE;
             }
+            else if(gamepad1.b)
+            {
+                vision = false;
+                propLocation = AutoSettings.PropLocation.RIGHT;
+            }
+            else if(gamepad1.x)
+            {
+                vision = false;
+                propLocation = AutoSettings.PropLocation.LEFT;
+            }
+
 
             telemetry.addLine("Initialized");
             telemetry.update();
@@ -359,12 +262,12 @@ public class AutoRedRight extends LinearOpMode {
         switch (propLocation) {
             case LEFT:
                 runBlocking(new ParallelAction(
-                        runMiddle,
+                        runLeft,
                         updateActions.updateSystems()));
                 break;
             case RIGHT:
                 runBlocking(new ParallelAction(
-                        runMiddle,
+                        runRight,
                         updateActions.updateSystems()));
                 break;
             case MIDDLE:
@@ -402,85 +305,6 @@ public class AutoRedRight extends LinearOpMode {
 
     }
 
-
-
-    SequentialAction IntakePixels(Intake.Angle angle)
-    {
-        return new SequentialAction(
-                new ParallelAction(
-                        new InstantAction(()-> intakeActions.moveIntakeClaw(Intake.ClawState.OPEN,ClawSide.BOTH)),
-                        intakeActions.moveIntake(angle),
-                        new SleepAction(0.4),
-                        new InstantAction(()-> intakeExtension.setAggresive(true)),
-                        new InstantAction(()-> intakeExtension.setTarget(100)),
-                        new InstantAction(()-> intakeExtension.setPidControl())
-
-                ),
-                new SleepAction(0.3),
-                intakeActions.moveIntakeClaw(Intake.ClawState.CLOSE, ClawSide.BOTH),
-                intakeActions.moveIntakeClaw(Intake.ClawState.CLOSE, ClawSide.BOTH),
-                new SleepAction(1),
-                new InstantAction(() -> intakeExtension.setAggresive(false)),
-                intakeActions.closeExtension(),
-                depositActions.moveOuttake(Outtake.Angle.ALMOST_INTAKE),
-                intakeActions.moveIntake(Intake.Angle.OUTTAKE),
-                new SleepAction(0.5),
-                useTransfer()
-
-
-        );
-    }
-
-
-    SequentialAction useTransfer ()
-    {
-        return new SequentialAction(
-                intakeActions.openExtension(-50),
-                depositActions.moveOuttake(Outtake.Angle.ALMOST_INTAKE),
-                new SleepAction(.25),
-                new InstantAction(()-> outtake.setAngle(Outtake.Angle.INTAKE)),
-                new SleepAction(.75),
-                intakeActions.moveIntake(Intake.Angle.OUTTAKE),
-                new SleepAction(.5),
-                depositActions.moveClaw(Claw.ClawState.CLOSED, ClawSide.BOTH),
-                new SleepAction(.2),
-                intakeActions.moveIntakeClaw(Intake.ClawState.INDETERMINATE, ClawSide.BOTH),
-                new SleepAction(.5),
-                intakeActions.moveIntake(Intake.Angle.TELEOP_MID)
-
-        );
-
-
-    }
-
-    SequentialAction prepOuttake () {
-
-        return new SequentialAction(
-                new SleepAction(0.5),
-                new InstantAction(()-> outtake.setAngle(Outtake.Angle.RELEASE_STACK)),
-                depositActions.moveElevator(1000)
-
-        );
-
-
-    }
-    SequentialAction releasePixels ()
-    {
-            return new SequentialAction(
-                        depositActions.placePixel(),
-                        new SleepAction(0.5),
-                        retractElevator())
-
-
-                    ;}
-
-    SequentialAction retractElevator ()
-    {
-        return new SequentialAction(
-              depositActions.moveOuttake(Outtake.Angle.INTAKE),
-              depositActions.moveElevator(0)
-
-        );}
 
 
 }

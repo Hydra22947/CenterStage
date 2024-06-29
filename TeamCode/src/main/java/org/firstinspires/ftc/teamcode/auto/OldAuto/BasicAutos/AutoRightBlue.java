@@ -23,6 +23,7 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -49,7 +50,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.Arrays;
 
 @Config
-@Autonomous(name = "2+1 - AutoBlueRight Blue Right")
+@Autonomous(name = "2+1 - Blue Right")
 public class AutoRightBlue extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
@@ -72,9 +73,10 @@ public class AutoRightBlue extends LinearOpMode {
     OpenCvWebcam webcam;
     boolean first = true;
     int elevatorHeightMin = 500;
-    int elevatorHeightMax = 350;
+    int elevatorHeightMax = 750;
 
     int elevatorHeight = elevatorHeightMax;
+    boolean vision = true;
 
 
     @Override
@@ -343,34 +345,42 @@ public class AutoRightBlue extends LinearOpMode {
             telemetry.addData("POS", propLocation.name());
             telemetry.addData("elevator pos", elevatorHeight);
 
-            switch (propPipelineBlueRight.getLocation()) {
-                case Left:
-                    propLocation = AutoSettings.PropLocation.LEFT;
-                    break;
-                case Right:
-                    propLocation = AutoSettings.PropLocation.RIGHT;
-                    break;
-                case Center:
-                    propLocation = AutoSettings.PropLocation.MIDDLE;
-                    break;
+            if(vision)
+            {
+                switch (propPipelineBlueRight.getLocation()) {
+                    case Left:
+                        propLocation = AutoSettings.PropLocation.LEFT;
+                        break;
+                    case Right:
+                        propLocation = AutoSettings.PropLocation.RIGHT;
+                        break;
+                    case Center:
+                        propLocation = AutoSettings.PropLocation.MIDDLE;
+                        break;
+                }
             }
 
-            if (betterGamepad2.dpadRightOnce()) {
+
+            if (gamepad1.dpad_right) {
                 elevatorHeight = elevatorHeightMax;
-            } else if (betterGamepad2.dpadLeftOnce()) {
+            } else if (gamepad2.dpad_left) {
                 elevatorHeight = elevatorHeightMin;
             }
 
-            if (betterGamepad2.dpadUpOnce()) {
-                if (first) {
-                    webcam.stopStreaming();
-                    first = false;
-                }
-
-                propLocation = cycleVision(propLocation);
-            } else if (betterGamepad2.dpadDownOnce()) {
-                initCamera();
-                webcam.setPipeline(propPipelineBlueRight);
+            if(gamepad1.y)
+            {
+                vision = false;
+                propLocation = AutoSettings.PropLocation.MIDDLE;
+            }
+            else if(gamepad1.b)
+            {
+                vision = false;
+                propLocation = AutoSettings.PropLocation.RIGHT;
+            }
+            else if(gamepad1.x)
+            {
+                vision = false;
+                propLocation = AutoSettings.PropLocation.LEFT;
             }
 
             telemetry.addLine("Initialized");
@@ -387,7 +397,7 @@ public class AutoRightBlue extends LinearOpMode {
         switch (propLocation) {
             case LEFT:
                 runBlocking(new ParallelAction(
-                        trajBlueMiddle,
+                        trajBlueLeft,
                         updateActions.updateSystems()
                 ));
                 break;

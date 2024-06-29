@@ -15,6 +15,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -40,6 +41,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous(name = "2+0 - AutoBlueRight Red Right")
+@Disabled
 public class AutoRightRed extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
@@ -268,21 +270,8 @@ public class AutoRightRed extends LinearOpMode {
                     break;
             }
 
-            if(betterGamepad2.dpadUpOnce())
-            {
-                if(first)
-                {
-                    webcam.stopStreaming();
-                    first = false;
-                }
 
-                propLocation = cycleVision(propLocation);
-            }
-            else if(betterGamepad2.dpadDownOnce())
-            {
-                initCamera();
-                webcam.setPipeline(propPipelineRedRight);
-            }
+
 
 
             outtake.setAngle(Outtake.Angle.INTAKE);

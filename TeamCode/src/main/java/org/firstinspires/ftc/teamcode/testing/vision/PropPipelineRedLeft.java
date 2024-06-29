@@ -16,8 +16,8 @@ import org.openftc.easyopencv.OpenCvPipeline;
 public class PropPipelineRedLeft extends OpenCvPipeline {
 
     // blue , not seeing the right line
-    public static int leftX = 0, leftY = 80;
-    public static int centerX = 395, centerY = 70;
+    public static int leftX = 0, leftY = 180;
+    public static int centerX = 350, centerY = 170;
 
     double avgLeft = 0, avgCenter = 0;
     // red, not seeing the left line
@@ -25,15 +25,15 @@ public class PropPipelineRedLeft extends OpenCvPipeline {
     public static double MIN_PIXELS = 1500;
 
 
-    public static int widthRight = 150, heightRight = 130;
+    public static int widthRight = 100, heightRight = 130;
     public static int widthCenter = 140, heightCenter = 150;
 
-    public static int redMinH = 120;
-    public static int redMinS = 120;
-    public static int redMinV = 70;
+    public static int redMinH = 110;
+    public static int redMinS = 130;
+    public static int redMinV = 0;
     public static int redMaxH = 150;
     public static int redMaxS = 255;
-    public static int redMaxV = 255;
+    public static int redMaxV = 170;
     public static int idkNumber = 10;
     private Mat workingMatrix = new Mat();
     private Mat returnMatrix = new Mat();

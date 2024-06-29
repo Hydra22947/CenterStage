@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.OldAuto;
+package org.firstinspires.ftc.teamcode.auto.Disabled;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
 import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.cycleVision;
@@ -14,6 +14,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -38,8 +39,9 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
-@Autonomous(name = "2+3 - AutoBlueRight Left Red")
-public class AutoLeftRed extends LinearOpMode {
+@Autonomous(name = "2+1 - AutoBlueRight Left Red NEW")
+@Disabled
+public class AutoLeftRedNew extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 
@@ -170,7 +172,7 @@ public class AutoLeftRed extends LinearOpMode {
 
                 depositActions.placeIntermediatePixel(DepositActions.Cycles.PRELOAD, 0),
                 new SleepAction(1.4),
-                //depositActions.placePixel(),
+               // depositActions.placePixel(),
                 new SleepAction(.5),
                 depositActions.moveElevator(tempHeight + 400),
                 depositActions.retractDeposit()
@@ -365,7 +367,7 @@ public class AutoLeftRed extends LinearOpMode {
                 .build();
 
 
-        Action parkTraj = robot.drive.actionBuilder(new Pose2d(52, -28, Math.toRadians(0)))
+        Action parkTraj = robot.drive.actionBuilder(new Pose2d(-53, -26, Math.toRadians(0)))
                 .strafeToLinearHeading(new Vector2d(46, -32), Math.toRadians(90))
                 .build();
 
@@ -440,8 +442,6 @@ public class AutoLeftRed extends LinearOpMode {
                 placePurplePixelLeft,
                 intake5Left,
                 depositPreloadLeft,
-                intake43Traj_Left,
-                deposit43_Left,
                 park
         );
 
@@ -449,8 +449,6 @@ public class AutoLeftRed extends LinearOpMode {
                 placePurplePixelMiddle,
                 intake5Middle,
                 depositPreloadMiddle,
-                intake43_Middle,
-                deposit43_Middle,
                 park
         );
 
@@ -458,8 +456,6 @@ public class AutoLeftRed extends LinearOpMode {
                 placePurplePixelRight,
                 intake5Right,
                 depositPreloadRight,
-                intake43_Right,
-                deposit43_Right,
                 park
         );
 

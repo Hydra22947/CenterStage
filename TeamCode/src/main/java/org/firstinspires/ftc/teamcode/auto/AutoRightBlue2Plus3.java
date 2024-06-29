@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.OldAuto;
+package org.firstinspires.ftc.teamcode.auto;
 
 // RR-specific imports
 
@@ -48,7 +48,7 @@ import java.util.Arrays;
 
 @Config
 @Autonomous(name = "2+3 - Auto Right Blue ")
-public class AutoRightBlueMax extends LinearOpMode {
+public class AutoRightBlue2Plus3 extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 

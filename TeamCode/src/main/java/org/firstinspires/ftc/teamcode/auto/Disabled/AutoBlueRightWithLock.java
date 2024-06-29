@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.OldAuto;
+package org.firstinspires.ftc.teamcode.auto.Disabled;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
 

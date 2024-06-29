@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.NewAuto.AutoBlue.BlueLeft;
+package org.firstinspires.ftc.teamcode.auto.NewAuto.AutoBlue.BlueLeftMTI2Plus4;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
 import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.cycleVision;
@@ -17,7 +17,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.auto.Actions.DepositActions;
 import org.firstinspires.ftc.teamcode.auto.Actions.IntakeActions;
@@ -351,16 +350,20 @@ public class AutoBlueLeft extends LinearOpMode {
                 }
             }
 
-            if(betterGamepad2.dpadUpOnce())
+            if(gamepad1.y)
             {
-                if(first)
-                {
-                    webcam.stopStreaming();
-                    first = false;
-                }
                 vision = false;
-
-                propLocation = cycleVision(propLocation);
+                propLocation = AutoSettings.PropLocation.MIDDLE;
+            }
+            else if(gamepad1.b)
+            {
+                vision = false;
+                propLocation = AutoSettings.PropLocation.RIGHT;
+            }
+            else if(gamepad1.x)
+            {
+                vision = false;
+                propLocation = AutoSettings.PropLocation.LEFT;
             }
 
             telemetry.addLine("Initialized");
@@ -379,12 +382,12 @@ public class AutoBlueLeft extends LinearOpMode {
         {
             case LEFT:
                 runBlocking(new ParallelAction(
-                        runMiddle,
+                        runLeft,
                         updateActions.updateSystems()));
                 break;
             case RIGHT:
                 runBlocking(new ParallelAction(
-                        runMiddle,
+                        runRight,
                         updateActions.updateSystems()));
                 break;
             case MIDDLE:

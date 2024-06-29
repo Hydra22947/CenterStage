@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.TwoPlusZero;
+package org.firstinspires.ftc.teamcode.auto.TwoPlusZeroMTI;
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
 import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.cycleVision;
@@ -39,7 +39,6 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous(name = "2+0 MTI BlueLeft" , group = "AutoBlue")
-
 public class AutoBlueLeft2Plus0 extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
@@ -238,15 +237,22 @@ public class AutoBlueLeft2Plus0 extends LinearOpMode {
                 }
             }
 
-            if (betterGamepad2.dpadUpOnce()) {
-                if (first) {
-                    webcam.stopStreaming();
-                    first = false;
-                }
+            if(gamepad1.y)
+            {
                 vision = false;
-
-                propLocation = cycleVision(propLocation);
+                propLocation = AutoSettings.PropLocation.MIDDLE;
             }
+            else if(gamepad1.b)
+            {
+                vision = false;
+                propLocation = AutoSettings.PropLocation.RIGHT;
+            }
+            else if(gamepad1.x)
+            {
+                vision = false;
+                propLocation = AutoSettings.PropLocation.LEFT;
+            }
+
 
             telemetry.addLine("Initialized");
             telemetry.update();
@@ -262,12 +268,12 @@ public class AutoBlueLeft2Plus0 extends LinearOpMode {
         switch (propLocation) {
             case LEFT:
                 runBlocking(new ParallelAction(
-                        runMiddle,
+                        runLeft,
                         updateActions.updateSystems()));
                 break;
             case RIGHT:
                 runBlocking(new ParallelAction(
-                        runMiddle,
+                        runRight,
                         updateActions.updateSystems()));
                 break;
             case MIDDLE:

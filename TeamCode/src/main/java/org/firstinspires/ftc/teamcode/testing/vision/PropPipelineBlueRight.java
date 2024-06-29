@@ -16,8 +16,8 @@ import org.openftc.easyopencv.OpenCvPipeline;
 public class PropPipelineBlueRight extends OpenCvPipeline {
 
     // blue , not seeing the right line
-    public static int rightX = 500, rightY = 45;
-    public static int centerX = 85, centerY = 80;
+    public static int rightX = 400, rightY = 170;
+    public static int centerX = 20, centerY = 185;
 
     double avgRight = 0, avgCenter = 0;
     // red, not seeing the left line

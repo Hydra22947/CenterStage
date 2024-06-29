@@ -722,6 +722,17 @@ public class DebugOpMode extends LinearOpMode {
 
                 outtake.setAngle(Outtake.Angle.HANG);
 
+                if(betterGamepad2.rightBumperOnce())
+                {
+                    elevatorTargetRight += 100;
+                    elevatorTargetLeft += 100;
+                }
+                else if(betterGamepad2.leftBumperOnce())
+                {
+                    elevatorTargetRight -= 100;
+                    elevatorTargetLeft -= 100;
+                }
+
                 if(betterGamepad2.dpadUpOnce())
                 {
                     hang = !hang;
@@ -737,7 +748,7 @@ public class DebugOpMode extends LinearOpMode {
                 }
 
 
-                if (betterGamepad1.YOnce() || betterGamepad1.leftBumperOnce() || betterGamepad2.shareOnce())
+                if (betterGamepad1.AOnce() || betterGamepad1.leftBumperOnce() || betterGamepad2.shareOnce())
                 {
                     liftState = LiftState.RETRACT;
                     outtake.setAngle(Outtake.Angle.INTAKE);

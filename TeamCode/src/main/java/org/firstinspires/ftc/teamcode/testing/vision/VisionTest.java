@@ -22,6 +22,7 @@ public class VisionTest extends LinearOpMode{
     PropPipelineBlueRight propPipelineBlueRight;
     PropPipelineRedLeft propPipelineRedLeft;
     PropPipelineRedRight propPipelineRedRight;
+    PlainPipeline plainPipeline;
     OpenCvWebcam webcam;
     BetterGamepad gamepad;
 
@@ -30,7 +31,8 @@ public class VisionTest extends LinearOpMode{
         BLUE_LEFT,
         BLUE_RIGHT,
         RED_LEFT,
-        RED_RIGHT
+        RED_RIGHT,
+        PLAIN
     }
 
     public static SideColor sideColor = SideColor.RED_RIGHT;
@@ -44,6 +46,7 @@ public class VisionTest extends LinearOpMode{
         propPipelineBlueRight = new PropPipelineBlueRight();
         propPipelineRedLeft = new PropPipelineRedLeft();
         propPipelineRedRight = new PropPipelineRedRight();
+        plainPipeline = new PlainPipeline();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -61,6 +64,9 @@ public class VisionTest extends LinearOpMode{
                 break;
             case RED_RIGHT:
                 webcam.setPipeline(propPipelineRedRight);
+                break;
+            case PLAIN:
+                webcam.setPipeline(plainPipeline);
                 break;
         }
 

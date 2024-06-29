@@ -4,11 +4,9 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.auto.NewAuto.SubsystemActions;
+import org.firstinspires.ftc.teamcode.auto.Actions.SubsystemActions;
 
 public class AutoBlueLeftRight {
     private final RobotHardware robot = RobotHardware.getInstance();

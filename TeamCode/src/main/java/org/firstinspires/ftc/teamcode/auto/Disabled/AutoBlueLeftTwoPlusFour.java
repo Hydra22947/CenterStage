@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.OldAuto;
+package org.firstinspires.ftc.teamcode.auto.Disabled;
 
 // RR-specific imports
 
@@ -21,6 +21,7 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -48,7 +49,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous(name = "2+4 - AutoBlueRight Blue Left")
-
+@Disabled
 public class AutoBlueLeftTwoPlusFour extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
