@@ -11,6 +11,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -231,46 +232,45 @@ public class AutoRightBlue2Plus3 extends LinearOpMode {
 
                         //intake from mid stack
                         .stopAndAdd(intakePixelBlueLeft)
-                        .strafeToLinearHeading(new Vector2d(-54.5, 25), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-54, 26), Math.toRadians(0))
                         .waitSeconds(.1)
                         .stopAndAdd(intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE))
 
                         .waitSeconds(.5)
                         .stopAndAdd(transferBlueMiddle)
-                        .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-35, 11), Math.toRadians(0))
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
                         .afterDisp(25, readyForDeposit)
                         //for no pixels change to 950
 
-                        .splineToLinearHeading(new Pose2d(50, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(50, 38, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
-                        .strafeToLinearHeading(new Vector2d(46, 40), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(46, 38), Math.toRadians(0))
                         .afterTime(0, retractDepositBlueMiddle)
 
 
                         //intake 43
                         .setTangent(Math.toRadians(-180))
-                        .splineToLinearHeading(new Pose2d(24, 15, Math.toRadians(0)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(24, 12, Math.toRadians(0)), Math.toRadians(180))
                         .afterTime(0.9, intakePixel43)
-                        .splineToLinearHeading(new Pose2d(-44, 15, Math.toRadians(0)), Math.toRadians(-180))
+                        .splineToLinearHeading(new Pose2d(-44, 12, Math.toRadians(0)), Math.toRadians(-180))
                         .waitSeconds(.5)
                         .afterTime(0.6, intakePixelBlueClose)
-                        .strafeToLinearHeading(new Vector2d(-48, 15), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-48, 12), Math.toRadians(0))
                         .stopAndAdd(transfer43)
 
                         //deposit43
                         .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
                         .afterTime(0, readyForDeposit)
-                        .splineToLinearHeading(new Pose2d(50, 36, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(50, 30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(deposit43)
-                        .strafeToLinearHeading(new Vector2d(48, 36), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(44, 30), Math.toRadians(0))
                         .stopAndAdd(retractDepositBlueMiddle)
 
                         .setTangent(Math.toRadians(90))
                         //Park - Close to other board
-                        .strafeToLinearHeading(new Vector2d(46, 20), Math.toRadians(-90))
+                        .strafeToLinearHeading(new Vector2d(44, 20), Math.toRadians(-90))
 
                         .build();
 
@@ -302,25 +302,25 @@ public class AutoRightBlue2Plus3 extends LinearOpMode {
 
                         //intake 43
                         .setTangent(Math.toRadians(-180))
-                        .splineToLinearHeading(new Pose2d(24, 15, Math.toRadians(0)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(24, 12, Math.toRadians(0)), Math.toRadians(180))
                         .afterTime(0.9, intakePixel43)
-                        .splineToLinearHeading(new Pose2d(-44, 15, Math.toRadians(0)), Math.toRadians(-180))
+                        .splineToLinearHeading(new Pose2d(-44, 12, Math.toRadians(0)), Math.toRadians(-180))
                         .waitSeconds(.5)
                         .afterTime(0.6, intakePixelBlueClose)
-                        .strafeToLinearHeading(new Vector2d(-48, 15), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-48, 12), Math.toRadians(0))
                         .stopAndAdd(transfer43)
 
                         //deposit43
                         .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
                         .afterTime(0, readyForDeposit)
-                        .splineToLinearHeading(new Pose2d(50, 36, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(50, 30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(deposit43)
-                        .strafeToLinearHeading(new Vector2d(48, 36), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(44, 30), Math.toRadians(0))
                         .stopAndAdd(retractDepositBlueMiddle)
 
                         .setTangent(Math.toRadians(90))
                         //Park - Close to other board
-                        .strafeToLinearHeading(new Vector2d(46, 20), Math.toRadians(-90))
+                        .strafeToLinearHeading(new Vector2d(44, 20), Math.toRadians(-90))
 
 
                         //Park - Corner
@@ -377,7 +377,6 @@ public class AutoRightBlue2Plus3 extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(-30, 14), Math.toRadians(0)
                                 , baseVelConstraint, baseAccelConstraint)
                         .stopAndAdd(intakePixelBlueRight)
-                        .waitSeconds(1)
                         .strafeToLinearHeading(new Vector2d(-38, 14), Math.toRadians(0))
                         .stopAndAdd(intakePixelBlueClose)
                         .waitSeconds(.5)
@@ -393,25 +392,25 @@ public class AutoRightBlue2Plus3 extends LinearOpMode {
 
                         //intake 43
                         .setTangent(Math.toRadians(-180))
-                        .splineToLinearHeading(new Pose2d(24, 15, Math.toRadians(0)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(24, 12, Math.toRadians(0)), Math.toRadians(180))
                         .afterTime(0.9, intakePixel43)
-                        .splineToLinearHeading(new Pose2d(-44, 15, Math.toRadians(0)), Math.toRadians(-180))
+                        .splineToLinearHeading(new Pose2d(-44, 12, Math.toRadians(0)), Math.toRadians(-180))
                         .waitSeconds(.5)
                         .afterTime(0.6, intakePixelBlueClose)
-                        .strafeToLinearHeading(new Vector2d(-48, 15), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-48, 12), Math.toRadians(0))
                         .stopAndAdd(transfer43)
 
                         //deposit43
                         .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
                         .afterTime(0, readyForDeposit)
-                        .splineToLinearHeading(new Pose2d(50, 36, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(50, 30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(deposit43)
-                        .strafeToLinearHeading(new Vector2d(48, 36), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(44, 30), Math.toRadians(0))
                         .stopAndAdd(retractDepositBlueMiddle)
 
                         .setTangent(Math.toRadians(90))
                         //Park - Close to other board
-                        .strafeToLinearHeading(new Vector2d(46, 20), Math.toRadians(-90))
+                        .strafeToLinearHeading(new Vector2d(44, 20), Math.toRadians(-90))
 
                         .build();
 
@@ -469,7 +468,7 @@ public class AutoRightBlue2Plus3 extends LinearOpMode {
         switch (propLocation) {
             case LEFT:
                 runBlocking(new ParallelAction(
-                        trajBlueMiddle,
+                        trajBlueLeft,
                         updateActions.updateSystems()
                 ));
                 break;

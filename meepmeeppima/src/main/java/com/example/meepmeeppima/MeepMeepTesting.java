@@ -298,10 +298,10 @@ public class MeepMeepTesting {
 
                 //intake 43
                 .setTangent(Math.toRadians(-180))
-                .splineToLinearHeading(new Pose2d(24, 15, Math.toRadians(0)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-44, 15, Math.toRadians(0)), Math.toRadians(-180))
+                .splineToLinearHeading(new Pose2d(24, 12, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-44, 12, Math.toRadians(0)), Math.toRadians(-180))
                 .waitSeconds(.5)
-                .strafeToLinearHeading(new Vector2d(-48, 15), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-48, 12), Math.toRadians(0))
 
                 //deposit43
                 .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
