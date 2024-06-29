@@ -486,7 +486,7 @@ public class AutoRedRight extends LinearOpMode {
 
         return new SequentialAction(
                 new SleepAction(0.5),
-                new InstantAction(()-> outtake.setAngle(Outtake.Angle.RELEASE_STACK)),
+                new InstantAction(()-> outtake.setAngle(Outtake.Angle.OUTTAKE)),
                 depositActions.moveElevator(1000)
 
         );
