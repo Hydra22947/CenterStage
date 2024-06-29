@@ -218,10 +218,11 @@ public class AutoRightBlue2Plus3 extends LinearOpMode {
                 depositActions.readyForDeposit(elevatorHeight)
         );
 
+
             SequentialAction readyForDeposit43 = new SequentialAction(
                 intakeActions.moveIntake(Intake.Angle.TELEOP_MID),
-                new SleepAction(0.5),
-                depositActions.readyForDeposit(elevatorHeight)
+                new SleepAction(0.25),
+                depositActions.readyForDeposit(elevatorHeight + 200 )
         );
 
         Action trajBlueLeft =
@@ -241,31 +242,31 @@ public class AutoRightBlue2Plus3 extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(-35, 11), Math.toRadians(0))
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
-                        .afterDisp(25, readyForDeposit)
+                        .afterDisp(20, readyForDeposit)
                         //for no pixels change to 950
 
-                        .splineToLinearHeading(new Pose2d(50, 38, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .splineToLinearHeading(new Pose2d(50, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
-                        .strafeToLinearHeading(new Vector2d(46, 38), Math.toRadians(0))
-                        .afterTime(0, retractDepositBlueMiddle)
+                        .strafeToLinearHeading(new Vector2d(46, 40), Math.toRadians(0))
+                        .afterTime(.5, retractDepositBlueMiddle)
 
 
                         //intake 43
                         .setTangent(Math.toRadians(-180))
                         .splineToLinearHeading(new Pose2d(24, 12, Math.toRadians(0)), Math.toRadians(180))
                         .afterTime(0.9, intakePixel43)
-                        .splineToLinearHeading(new Pose2d(-44, 12, Math.toRadians(0)), Math.toRadians(-180))
+                        .splineToLinearHeading(new Pose2d(-44, 11, Math.toRadians(0)), Math.toRadians(-180))
                         .waitSeconds(.5)
                         .afterTime(0.6, intakePixelBlueClose)
-                        .strafeToLinearHeading(new Vector2d(-48, 12), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-46, 11), Math.toRadians(0))
                         .stopAndAdd(transfer43)
 
                         //deposit43
                         .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
-                        .afterTime(0, readyForDeposit)
-                        .splineToLinearHeading(new Pose2d(50, 30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .afterTime(0, readyForDeposit43)
+                        .splineToLinearHeading(new Pose2d(50, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(deposit43)
-                        .strafeToLinearHeading(new Vector2d(44, 30), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(44, 28), Math.toRadians(0))
                         .stopAndAdd(retractDepositBlueMiddle)
 
                         .setTangent(Math.toRadians(90))
@@ -293,11 +294,11 @@ public class AutoRightBlue2Plus3 extends LinearOpMode {
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(0))
-                        .afterDisp(25, readyForDeposit)                        //for no pixels change to 950
-                        .splineToLinearHeading(new Pose2d(48, 36, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .afterDisp(20, readyForDeposit)                        //for no pixels change to 950
+                        .splineToLinearHeading(new Pose2d(48, 32, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .strafeToLinearHeading(new Vector2d(45, 32), Math.toRadians(0))
-                        .afterTime(0, retractDepositBlueMiddle)
+                        .afterTime(.5, retractDepositBlueMiddle)
 
 
                         //intake 43
@@ -307,12 +308,12 @@ public class AutoRightBlue2Plus3 extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(-44, 12, Math.toRadians(0)), Math.toRadians(-180))
                         .waitSeconds(.5)
                         .afterTime(0.6, intakePixelBlueClose)
-                        .strafeToLinearHeading(new Vector2d(-48, 12), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-47, 12), Math.toRadians(0))
                         .stopAndAdd(transfer43)
 
                         //deposit43
                         .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
-                        .afterTime(0, readyForDeposit)
+                        .afterTime(0, readyForDeposit43)
                         .splineToLinearHeading(new Pose2d(50, 30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(deposit43)
                         .strafeToLinearHeading(new Vector2d(44, 30), Math.toRadians(0))
@@ -384,11 +385,11 @@ public class AutoRightBlue2Plus3 extends LinearOpMode {
 
                         //deposit
                         .strafeToLinearHeading(new Vector2d(30, 8), Math.toRadians(0))
-                        .afterDisp(25, readyForDeposit)                        //for no pixels change to 950
+                        .afterDisp(20, readyForDeposit)                        //for no pixels change to 950
                         .splineToLinearHeading(new Pose2d(48, 36, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .strafeToLinearHeading(new Vector2d(48, 36), Math.toRadians(0))
-                        .afterTime(0, retractDepositBlueMiddle)
+                        .afterTime(.5, retractDepositBlueMiddle)
 
                         //intake 43
                         .setTangent(Math.toRadians(-180))
@@ -397,16 +398,16 @@ public class AutoRightBlue2Plus3 extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(-44, 12, Math.toRadians(0)), Math.toRadians(-180))
                         .waitSeconds(.5)
                         .afterTime(0.6, intakePixelBlueClose)
-                        .strafeToLinearHeading(new Vector2d(-48, 12), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-47, 12), Math.toRadians(0))
                         .stopAndAdd(transfer43)
 
                         //deposit43
                         .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
-                        .afterTime(0, readyForDeposit)
+                        .afterTime(0, readyForDeposit43)
                         .splineToLinearHeading(new Pose2d(50, 30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(deposit43)
                         .strafeToLinearHeading(new Vector2d(44, 30), Math.toRadians(0))
-                        .stopAndAdd(retractDepositBlueMiddle)
+                        .afterDisp(2, retractDepositBlueMiddle)
 
                         .setTangent(Math.toRadians(90))
                         //Park - Close to other board
