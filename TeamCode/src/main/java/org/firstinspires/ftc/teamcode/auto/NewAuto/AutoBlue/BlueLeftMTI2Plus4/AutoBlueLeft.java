@@ -6,13 +6,19 @@ import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSetting
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
 import com.acmerobotics.roadrunner.InstantAction;
+import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -35,6 +41,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
+
+import java.util.Arrays;
 
 @Config
 @Autonomous(name = "2+4 MTI BlueLeft" , group = "AutoBlue")
@@ -172,6 +180,12 @@ public class AutoBlueLeft extends LinearOpMode {
 
 
 
+        VelConstraint baseVelConstraint = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(20),
+                new AngularVelConstraint(Math.PI / 2)
+        ));
+        AccelConstraint baseAccelConstraint = new ProfileAccelConstraint(-10.0, 10);
+
 
         Action trajBlueLeft =
                 robot.drive.actionBuilder(robot.drive.pose)
@@ -196,6 +210,7 @@ public class AutoBlueLeft extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(49.5, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .afterTime(2.5 , releasePixels())
                         .afterTime(0.4 , retractElevator())
+                        .splineToLinearHeading(new Pose2d(48, 40, Math.toRadians(0)), Math.toRadians(0),baseVelConstraint, baseAccelConstraint).setTangent(0)
 
                         .setTangent(110)
                         .splineToLinearHeading(new Pose2d(20, 58 , Math.toRadians(0)), Math.toRadians(180))
@@ -209,10 +224,11 @@ public class AutoBlueLeft extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(0))
 
                         .splineToSplineHeading(new Pose2d(20, 58, Math.toRadians(0)), Math.toRadians(0))
-                        .afterTime(2.8 , prepOuttake())
+                        .afterTime(3.2 , prepOuttake())
                         .splineToLinearHeading(new Pose2d(50, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .afterTime(2.5 , releasePixels())
                         .afterTime(0.5 , retractElevator())
+                        .splineToLinearHeading(new Pose2d(48, 40, Math.toRadians(0)), Math.toRadians(0),baseVelConstraint, baseAccelConstraint).setTangent(0)
                         .strafeToLinearHeading(new Vector2d(45,60), Math.toRadians(270))
 
 
@@ -244,6 +260,8 @@ public class AutoBlueLeft extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(49.5, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .afterTime(2.5 , releasePixels())
                         .afterTime(0.4 , retractElevator())
+                        .splineToLinearHeading(new Pose2d(48, 40, Math.toRadians(0)), Math.toRadians(0),baseVelConstraint, baseAccelConstraint).setTangent(0)
+
 
                         .setTangent(110)
                         .splineToLinearHeading(new Pose2d(20, 58 , Math.toRadians(0)), Math.toRadians(180))
@@ -257,10 +275,12 @@ public class AutoBlueLeft extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(0))
 
                         .splineToSplineHeading(new Pose2d(20, 58, Math.toRadians(0)), Math.toRadians(0))
-                        .afterTime(2.8 , prepOuttake())
+                        .afterTime(3.2 , prepOuttake())
                         .splineToLinearHeading(new Pose2d(50, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+
                         .afterTime(2.5 , releasePixels())
                         .afterTime(0.5 , retractElevator())
+                        .splineToLinearHeading(new Pose2d(48, 40, Math.toRadians(0)), Math.toRadians(0),baseVelConstraint, baseAccelConstraint).setTangent(0)
                         .strafeToLinearHeading(new Vector2d(45,60), Math.toRadians(270))
 
                         .build();
@@ -292,6 +312,7 @@ public class AutoBlueLeft extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(49.5, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .afterTime(2.5 , releasePixels())
                         .afterTime(0.4 , retractElevator())
+                        .splineToLinearHeading(new Pose2d(48, 40, Math.toRadians(0)), Math.toRadians(0),baseVelConstraint, baseAccelConstraint).setTangent(0)
 
                         .setTangent(110)
                         .splineToLinearHeading(new Pose2d(20, 58 , Math.toRadians(0)), Math.toRadians(180))
@@ -305,10 +326,12 @@ public class AutoBlueLeft extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(0))
 
                         .splineToSplineHeading(new Pose2d(20, 58, Math.toRadians(0)), Math.toRadians(0))
-                        .afterTime(2.8 , prepOuttake())
+                        .afterTime(3.2 , prepOuttake())
                         .splineToLinearHeading(new Pose2d(50, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .afterTime(2.5 , releasePixels())
                         .afterTime(0.5 , retractElevator())
+                        .splineToLinearHeading(new Pose2d(48, 40, Math.toRadians(0)), Math.toRadians(0),baseVelConstraint, baseAccelConstraint).setTangent(0)
+
                         .strafeToLinearHeading(new Vector2d(45,60), Math.toRadians(270))
 
 
