@@ -201,7 +201,7 @@ public class AutoRedRight extends LinearOpMode {
                         .splineToSplineHeading(new Pose2d(20, -58, Math.toRadians(0)), Math.toRadians(0))
                         .afterTime(2.5 , placePixels)
                         .splineToLinearHeading(new Pose2d(49.5, -40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .afterTime(2.5 , releasePixels())
+                        .afterTime(3 , releasePixels())
                         .afterTime(0.4 , retractElevator())
                         .splineToLinearHeading(new Pose2d(48, -40, Math.toRadians(0)), Math.toRadians(0),baseVelConstraint, baseAccelConstraint).setTangent(0)
 
@@ -219,7 +219,7 @@ public class AutoRedRight extends LinearOpMode {
                         .splineToSplineHeading(new Pose2d(20, -58, Math.toRadians(0)), Math.toRadians(0))
                         .afterTime(3.2 , prepOuttake())
                         .splineToLinearHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .afterTime(2.5 , releasePixels())
+                        .afterTime(3 , releasePixels())
                         .afterTime(0.5 , retractElevator())
                         .splineToLinearHeading(new Pose2d(48, -40, Math.toRadians(0)), Math.toRadians(0),baseVelConstraint, baseAccelConstraint).setTangent(0)
 
@@ -248,8 +248,8 @@ public class AutoRedRight extends LinearOpMode {
                         .splineToSplineHeading(new Pose2d(20, -58, Math.toRadians(0)), Math.toRadians(0))
                         .afterTime(3.2 , placePixels)
                         .splineToLinearHeading(new Pose2d(49.5, -40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .afterTime(2.5 , releasePixels())
-                        .afterTime(1 , retractElevator())
+                        .afterTime(3, releasePixels())
+                        .afterTime(0.5, retractElevator())
                         .splineToLinearHeading(new Pose2d(48, -40, Math.toRadians(0)), Math.toRadians(0),baseVelConstraint, baseAccelConstraint).setTangent(0)
 
                         .setTangent(110)
@@ -266,7 +266,7 @@ public class AutoRedRight extends LinearOpMode {
                         .splineToSplineHeading(new Pose2d(20, -58, Math.toRadians(0)), Math.toRadians(0))
                         .afterTime(3.2 , prepOuttake())
                         .splineToLinearHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .afterTime(2.5 , releasePixels())
+                        .afterTime(3 , releasePixels())
                         .afterTime(0.5 , retractElevator())
                         .splineToLinearHeading(new Pose2d(48, -40, Math.toRadians(0)), Math.toRadians(0),baseVelConstraint, baseAccelConstraint).setTangent(0)
 
@@ -316,7 +316,7 @@ public class AutoRedRight extends LinearOpMode {
                         .splineToSplineHeading(new Pose2d(20, -58, Math.toRadians(0)), Math.toRadians(0))
                         .afterTime(3.2 , prepOuttake())
                         .splineToLinearHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-                        .afterTime(2.5 , releasePixels())
+                        .afterTime(3 , releasePixels())
                         .afterTime(1 , retractElevator())
                         .splineToLinearHeading(new Pose2d(48, -40, Math.toRadians(0)), Math.toRadians(0),baseVelConstraint, baseAccelConstraint).setTangent(0)
 
