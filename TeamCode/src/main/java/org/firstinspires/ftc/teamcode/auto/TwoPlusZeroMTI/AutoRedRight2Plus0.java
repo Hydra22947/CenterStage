@@ -168,18 +168,18 @@ public class AutoRedRight2Plus0 extends LinearOpMode {
                         .splineToSplineHeading(new Pose2d(15, -40, Math.toRadians(0)), Math.toRadians(90))
                         .afterTime(0, placeYellowPixel)
                         .splineToLinearHeading(new Pose2d(45, -40,Math.toRadians(0)), Math.toRadians(0))
-                        .strafeToLinearHeading(new Vector2d(45,-60), Math.toRadians(270))
+                        .strafeToLinearHeading(new Vector2d(45,-60), Math.toRadians(90))
 
                         .build();
 
 
         Action trajRedMiddle =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .afterTime(1.6, placePurplePixelSequence_Middle)
+                        .afterTime(1.5, placePurplePixelSequence_Middle)
                         .splineToLinearHeading(new Pose2d(20, -27, Math.toRadians(0)), Math.toRadians(90))
-                        .afterTime(0.8, placeYellowPixel)
+                        .afterTime(1, placeYellowPixel)
                         .splineToSplineHeading(new Pose2d(45, -35,Math.toRadians(0)), Math.toRadians(0))
-                        .strafeToLinearHeading(new Vector2d(45,-60), Math.toRadians(270))
+                        .strafeToLinearHeading(new Vector2d(45,-60), Math.toRadians(90))
 
 
 
@@ -193,7 +193,7 @@ public class AutoRedRight2Plus0 extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(17, -35, Math.toRadians(0)), Math.toRadians(90))
                         .afterTime(1.1, placeYellowPixel)
                         .splineToSplineHeading(new Pose2d(48, -32, Math.toRadians(0)), Math.toRadians(0))
-                        .strafeToLinearHeading(new Vector2d(45,-60), Math.toRadians(270))
+                        .strafeToLinearHeading(new Vector2d(45,-60), Math.toRadians(90))
 
                         .build();
 

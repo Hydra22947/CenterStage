@@ -690,7 +690,7 @@ public class DebugOpMode extends LinearOpMode {
                     switchOuttake();
                 }
 
-                if(betterGamepad1.YOnce())
+                if(betterGamepad1.YOnce() || betterGamepad1.AOnce())
                 {
                     claw.setBothClaw(Claw.ClawState.OPEN);
 
