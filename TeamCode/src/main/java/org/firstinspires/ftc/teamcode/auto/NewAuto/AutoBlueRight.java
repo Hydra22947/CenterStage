@@ -37,8 +37,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
-@Autonomous(name = "2+3 - Auto Right Blue")
-public class Auto extends LinearOpMode {
+@Autonomous(name = "2+3 - AutoBlueRight Right Blue")
+public class AutoBlueRight extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 

@@ -363,6 +363,7 @@ public class DebugOpMode extends LinearOpMode {
 
                 break;
             case INTAKE:
+                claw.setBothClaw(Claw.ClawState.INTAKE);
                 leftClaw = true;
                 rightClaw = true;
                 moveIntake();
@@ -471,6 +472,7 @@ public class DebugOpMode extends LinearOpMode {
 
                 break;
             case INTAKE_EXTEND:
+                claw.setBothClaw(Claw.ClawState.INTAKE);
                 leftClaw = true;
                 rightClaw = true;
                 moveIntake();

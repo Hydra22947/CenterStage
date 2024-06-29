@@ -49,7 +49,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.Arrays;
 
 @Config
-@Autonomous(name = "2+1 - Auto Red Left")
+@Autonomous(name = "2+1 - AutoBlueRight Red Left")
 public class AutoLeftRed extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;

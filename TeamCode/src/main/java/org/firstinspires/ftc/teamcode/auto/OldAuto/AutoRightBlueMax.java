@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.auto.OldAuto.BasicAutos;
+package org.firstinspires.ftc.teamcode.auto.OldAuto;
 
 // RR-specific imports
 
 import static com.acmerobotics.roadrunner.ftc.Actions.runBlocking;
-
 import static org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll.AutoSettings.cycleVision;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -12,7 +11,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.AngularVelConstraint;
-import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -49,8 +47,8 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.Arrays;
 
 @Config
-@Autonomous(name = "2+1 - AutoBlueRight Blue Right")
-public class AutoRightBlue extends LinearOpMode {
+@Autonomous(name = "2+3 - AutoBlueRight Blue Right")
+public class AutoRightBlueMax extends LinearOpMode {
     private final RobotHardware robot = RobotHardware.getInstance();
     ElapsedTime time;
 
@@ -179,6 +177,13 @@ public class AutoRightBlue extends LinearOpMode {
                 intakeActions.openExtension(700)
         );
 
+        SequentialAction intakePixel43 = new SequentialAction(
+                intakeActions.moveIntakeClaw(Intake.ClawState.OPEN, ClawSide.LEFT),
+                intakeActions.moveIntake(Intake.Angle.TOP_5_AUTO),
+                new SleepAction(1),
+                intakeActions.openExtension(450)
+        );
+
         SequentialAction intakePixelBlueClose = new SequentialAction(
                 intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE),
                 new SleepAction(0.5),
@@ -216,6 +221,23 @@ public class AutoRightBlue extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(50, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .strafeToLinearHeading(new Vector2d(46, 40), Math.toRadians(0))
+
+                        //intake 43
+                        .setTangent(Math.toRadians(-180))
+                        .splineToLinearHeading(new Pose2d(24, 9.25, Math.toRadians(0)), Math.toRadians(180))
+                        .afterTime(0.9, intakePixel43)
+                        .splineToLinearHeading(new Pose2d(-36, 9.65, Math.toRadians(0)), Math.toRadians(-180))
+                        .waitSeconds(.2)
+                        .afterTime(0.6, intakePixelBlueClose)
+                        .strafeToLinearHeading(new Vector2d(-44, 9.85), Math.toRadians(0))
+                        .stopAndAdd(transferBlueMiddle)
+
+                        //deposit43
+                        .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(50, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .stopAndAdd(depositBlueMiddle)
+                        .strafeToLinearHeading(new Vector2d(48, 28), Math.toRadians(0))
+
                         .waitSeconds(.5)
                         .setTangent(Math.toRadians(90))
 
@@ -251,6 +273,24 @@ public class AutoRightBlue extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(48, 36, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(depositBlueMiddle)
                         .strafeToLinearHeading(new Vector2d(45, 32), Math.toRadians(0))
+
+
+                        //intake 43
+                        .setTangent(Math.toRadians(-180))
+                        .splineToLinearHeading(new Pose2d(24, 14, Math.toRadians(0)), Math.toRadians(180))
+                        .afterTime(0.9, intakePixel43)
+                        .splineToLinearHeading(new Pose2d(-36, 14, Math.toRadians(0)), Math.toRadians(-180))
+                        .waitSeconds(.2)
+                        .afterTime(0.6, intakePixelBlueClose)
+                        .strafeToLinearHeading(new Vector2d(-44, 14), Math.toRadians(0))
+                        .stopAndAdd(transferBlueMiddle)
+
+                        //deposit43
+                        .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(50, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .stopAndAdd(depositBlueMiddle)
+                        .strafeToLinearHeading(new Vector2d(48, 28), Math.toRadians(0))
+
                         .setTangent(Math.toRadians(90))
                         //Park - Close to other board
                         .strafeToLinearHeading(new Vector2d(46, 20), Math.toRadians(-90))
@@ -325,6 +365,23 @@ public class AutoRightBlue extends LinearOpMode {
                         .stopAndAdd(depositBlueMiddle)
                         .strafeToLinearHeading(new Vector2d(46, 30), Math.toRadians(0))
                         .waitSeconds(.5)
+
+                        //intake 43
+                        .setTangent(Math.toRadians(-180))
+                        .splineToLinearHeading(new Pose2d(24, 14, Math.toRadians(0)), Math.toRadians(180))
+                        .afterTime(0.9, intakePixel43)
+                        .splineToLinearHeading(new Pose2d(-36, 14, Math.toRadians(0)), Math.toRadians(-180))
+                        .waitSeconds(.2)
+                        .afterTime(0.6, intakePixelBlueClose)
+                        .strafeToLinearHeading(new Vector2d(-44, 14), Math.toRadians(0))
+                        .stopAndAdd(transferBlueMiddle)
+
+                        //deposit43
+                        .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(50, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                        .stopAndAdd(depositBlueMiddle)
+                        .strafeToLinearHeading(new Vector2d(48, 28), Math.toRadians(0))
+
                         .setTangent(Math.toRadians(90))
                         .strafeToLinearHeading(new Vector2d(46.5, 20), Math.toRadians(-90))
                         .stopAndAdd(retractDepositBlueMiddle)

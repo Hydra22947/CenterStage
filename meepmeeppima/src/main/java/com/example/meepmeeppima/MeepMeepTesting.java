@@ -18,7 +18,7 @@ public class MeepMeepTesting {
                 .build();
 
 
-       BlueLeftLeft(myBot);
+        BlueRightRight(myBot);
         setAnimation(meepMeep, myBot);
         // BlueLeftLeft(myBot);
         // BlueLeftRight(myBot);
@@ -40,30 +40,23 @@ public class MeepMeepTesting {
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(16, 62, Math.toRadians(-90)))
 
-
-                .splineToLinearHeading(new Pose2d(30, 37, Math.toRadians(0)), Math.toRadians(0))
-
-                .splineToSplineHeading(new Pose2d(48, 40,Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(30, 25,Math.toRadians(0)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(48, 35,Math.toRadians(0)), Math.toRadians(0))
 
 
                 .setTangent(110)
                 .splineToLinearHeading(new Pose2d(20, 58 , Math.toRadians(0)), Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(180))
-
                 .splineToLinearHeading(new Pose2d(-50, 37, Math.toRadians(0)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-54.8, 37.3, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-54.8, 37.5, Math.toRadians(0)), Math.toRadians(180))
 
                 //deposit
                 .setTangent(0)
                 .splineToLinearHeading(new Pose2d(-30, 58, Math.toRadians(0)), Math.toRadians(0))
 
                 .splineToSplineHeading(new Pose2d(20, 58, Math.toRadians(0)), Math.toRadians(0))
-
-                .splineToLinearHeading(new Pose2d(50, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
-
-                .waitSeconds(0.3)
-                .strafeToLinearHeading(new Vector2d(47, 40), Math.toRadians(0))
-
+                .splineToLinearHeading(new Pose2d(49.5, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .strafeToLinearHeading(new Vector2d(45,60), Math.toRadians(270))
 
 
 
@@ -73,6 +66,46 @@ public class MeepMeepTesting {
                 .build());
 
 
+    }
+    public static void BlueRightRight(RoadRunnerBotEntity myBot)
+    {
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-40, 62, Math.toRadians(-90)))
+                //place purple
+                .strafeToSplineHeading(new Vector2d(-37.5, 37.5), Math.toRadians(-40))
+                .splineToLinearHeading(new Pose2d(-34.7, 32.1, Math.toRadians(0)), Math.toRadians(0))
+
+                //intake from mid stack
+                .strafeToLinearHeading(new Vector2d(-54.5, 25), Math.toRadians(0))
+                .waitSeconds(.1)
+
+                .waitSeconds(1)
+                .strafeToLinearHeading(new Vector2d(-35, 11), Math.toRadians(0))
+                //deposit
+                .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
+                //for no pixels change to 950
+
+                .splineToLinearHeading(new Pose2d(50, 40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .strafeToLinearHeading(new Vector2d(46, 40), Math.toRadians(0))
+
+                //intake 43
+                .setTangent(Math.toRadians(-180))
+                .splineToLinearHeading(new Pose2d(24, 9.25, Math.toRadians(0)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-36, 9.65, Math.toRadians(0)), Math.toRadians(-180))
+                .waitSeconds(.2)
+                .strafeToLinearHeading(new Vector2d(-44, 9.85), Math.toRadians(0))
+
+                .strafeToLinearHeading(new Vector2d(30, 12), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(50, 28, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
+                .strafeToLinearHeading(new Vector2d(48, 28), Math.toRadians(0))
+
+                .waitSeconds(.5)
+                .setTangent(Math.toRadians(90))
+
+                .strafeToLinearHeading(new Vector2d(46, 20), Math.toRadians(-90))
+
+
+
+                .build());
     }
 
     public static void BlueLeftRight(RoadRunnerBotEntity myBot) {
