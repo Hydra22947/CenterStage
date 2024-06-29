@@ -236,7 +236,7 @@ public class AutoRightBlue extends LinearOpMode {
                         .strafeToLinearHeading(new Vector2d(-49.5, 25), Math.toRadians(0))
                         .stopAndAdd(intakePixelBlueLeft)
                         .waitSeconds(.1)
-                        .strafeToLinearHeading(new Vector2d(-54.5, 28), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-55, 28), Math.toRadians(0))
                         .waitSeconds(.1)
                         .stopAndAdd(intakeActions.lock(IntakeActions.CloseClaw.BOTH_CLOSE))
 

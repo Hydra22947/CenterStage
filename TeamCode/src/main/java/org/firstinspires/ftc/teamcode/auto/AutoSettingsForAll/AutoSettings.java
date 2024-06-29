@@ -1,8 +1,13 @@
 package org.firstinspires.ftc.teamcode.auto.AutoSettingsForAll;
 
+import com.acmerobotics.dashboard.config.Config;
+
+import org.checkerframework.checker.units.qual.C;
+
+@Config
 public class AutoSettings {
 
-    public enum PropLocation {
+    public static enum PropLocation {
         LEFT,
         MIDDLE,
         RIGHT
