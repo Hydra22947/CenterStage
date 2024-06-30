@@ -164,9 +164,9 @@ public class AutoRedRight2Plus0 extends LinearOpMode {
 
         Action trajRedRight =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .afterTime(1.8, placePurplePixelSequence_Right)
-                        .splineToSplineHeading(new Pose2d(15, -40, Math.toRadians(0)), Math.toRadians(90))
-                        .afterTime(0, placeYellowPixel)
+                        .afterTime(1.9, placePurplePixelSequence_Right)
+                        .splineToSplineHeading(new Pose2d(15, -37, Math.toRadians(0)), Math.toRadians(90))
+                        .afterTime(1, placeYellowPixel)
                         .splineToLinearHeading(new Pose2d(45, -40,Math.toRadians(0)), Math.toRadians(0))
                         .strafeToLinearHeading(new Vector2d(45,-60), Math.toRadians(90))
 
@@ -177,8 +177,8 @@ public class AutoRedRight2Plus0 extends LinearOpMode {
                 robot.drive.actionBuilder(robot.drive.pose)
                         .afterTime(1.5, placePurplePixelSequence_Middle)
                         .splineToLinearHeading(new Pose2d(20, -27, Math.toRadians(0)), Math.toRadians(90))
-                        .afterTime(1, placeYellowPixel)
-                        .splineToSplineHeading(new Pose2d(45, -35,Math.toRadians(0)), Math.toRadians(0))
+                        .afterTime(1.4, placeYellowPixel)
+                        .splineToSplineHeading(new Pose2d(48, -35,Math.toRadians(0)), Math.toRadians(0))
                         .strafeToLinearHeading(new Vector2d(45,-60), Math.toRadians(90))
 
 
@@ -189,10 +189,10 @@ public class AutoRedRight2Plus0 extends LinearOpMode {
         Action trajRedLeft =
                 robot.drive.actionBuilder(robot.drive.pose)
 
-                        .afterTime(1, placePurplePixelSequence_Left)
+                        .afterTime(1.3, placePurplePixelSequence_Left)
                         .splineToLinearHeading(new Pose2d(17, -35, Math.toRadians(0)), Math.toRadians(90))
-                        .afterTime(1.1, placeYellowPixel)
-                        .splineToSplineHeading(new Pose2d(48, -32, Math.toRadians(0)), Math.toRadians(0))
+                        .afterTime(1.3, placeYellowPixel)
+                        .splineToSplineHeading(new Pose2d(48, -28, Math.toRadians(0)), Math.toRadians(0))
                         .strafeToLinearHeading(new Vector2d(45,-60), Math.toRadians(90))
 
                         .build();
