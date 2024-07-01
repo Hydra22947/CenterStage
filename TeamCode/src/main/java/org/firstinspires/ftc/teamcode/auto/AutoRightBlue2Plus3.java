@@ -222,7 +222,7 @@ public class AutoRightBlue2Plus3 extends LinearOpMode {
             SequentialAction readyForDeposit43 = new SequentialAction(
                 intakeActions.moveIntake(Intake.Angle.TELEOP_MID),
                 new SleepAction(0.25),
-                depositActions.readyForDeposit(elevatorHeight + 200 )
+                depositActions.readyForDeposit(elevatorHeight + 400 )
         );
 
         Action trajBlueLeft =
@@ -365,6 +365,10 @@ public class AutoRightBlue2Plus3 extends LinearOpMode {
                 new TranslationalVelConstraint(50),
                 new AngularVelConstraint(Math.toRadians(150))));
 
+        VelConstraint slowerSpeed = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(50),
+                new AngularVelConstraint(Math.toRadians(150))));
+
         AccelConstraint baseAccelConstraint = new ProfileAccelConstraint(-10, 25);
 
         Action trajBlueRight =
@@ -407,7 +411,7 @@ public class AutoRightBlue2Plus3 extends LinearOpMode {
                         .afterTime(0, readyForDeposit43)
                         .splineToLinearHeading(new Pose2d(50, 30, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .stopAndAdd(deposit43)
-                        .strafeToLinearHeading(new Vector2d(44, 30), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(44, 30), Math.toRadians(0), slowerSpeed, baseAccelConstraint)
                         .afterDisp(2, retractDepositBlueMiddle)
 
                         .setTangent(Math.toRadians(90))

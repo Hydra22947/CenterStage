@@ -182,17 +182,17 @@ public class AutoRedRight extends LinearOpMode {
 
         Action trajRedRight =
                 robot.drive.actionBuilder(robot.drive.pose)
-                        .afterTime(1.8, placePurplePixelSequence_Right)
-                        .splineToSplineHeading(new Pose2d(15, -40, Math.toRadians(0)), Math.toRadians(90))
-                        .afterTime(0, placeYellowPixel)
+                        .afterTime(1.9, placePurplePixelSequence_Right)
+                        .splineToSplineHeading(new Pose2d(15, -37, Math.toRadians(0)), Math.toRadians(90))
+                        .afterTime(1, placeYellowPixel)
                         .splineToLinearHeading(new Pose2d(45, -40,Math.toRadians(0)), Math.toRadians(0))
 
                         .setTangent(110)
                         .splineToLinearHeading(new Pose2d(20, -58 , Math.toRadians(0)), Math.toRadians(180))
                         .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(180))
                         .afterTime(2.2, IntakePixels(Intake.Angle.TOP_54))
-                        .splineToLinearHeading(new Pose2d(-50, -37, Math.toRadians(0)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-54.8, -37, Math.toRadians(0)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-50, -36.9, Math.toRadians(0)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-54.8, -36.9, Math.toRadians(0)), Math.toRadians(180))
 
                         //deposit
                         .setTangent(0)
@@ -217,10 +217,10 @@ public class AutoRedRight extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(0))
 
                         .splineToSplineHeading(new Pose2d(20, -58, Math.toRadians(0)), Math.toRadians(0))
-                        .afterTime(3.2 , prepOuttake())
+                        .afterTime(3.5 , prepOuttake())
                         .splineToLinearHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .afterTime(3 , releasePixels())
-                        .afterTime(0.5 , retractElevator())
+                        .afterTime(1 , retractElevator())
                         .splineToLinearHeading(new Pose2d(48, -40, Math.toRadians(0)), Math.toRadians(0),baseVelConstraint, baseAccelConstraint).setTangent(0)
 
                         .strafeToLinearHeading(new Vector2d(45,-60), Math.toRadians(90))
@@ -231,13 +231,13 @@ public class AutoRedRight extends LinearOpMode {
                 robot.drive.actionBuilder(robot.drive.pose)
                         .afterTime(1.5, placePurplePixelSequence_Middle)
                         .splineToLinearHeading(new Pose2d(20, -27, Math.toRadians(0)), Math.toRadians(90))
-                        .afterTime(1, placeYellowPixel)
-                        .splineToSplineHeading(new Pose2d(45, -35,Math.toRadians(0)), Math.toRadians(0))
+                        .afterTime(1.4, placeYellowPixel)
+                        .splineToSplineHeading(new Pose2d(48, -35,Math.toRadians(0)), Math.toRadians(0))
 
                         .setTangent(110)
                         .splineToLinearHeading(new Pose2d(20, -58 , Math.toRadians(0)), Math.toRadians(180))
                         .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(180))
-                        .afterTime(2.5, IntakePixels(Intake.Angle.TOP_54))
+                        .afterTime(2.3, IntakePixels(Intake.Angle.TOP_54))
                         .splineToLinearHeading(new Pose2d(-50, -37, Math.toRadians(0)), Math.toRadians(180))
                         .splineToLinearHeading(new Pose2d(-54.8, -37, Math.toRadians(0)), Math.toRadians(180))
 
@@ -267,9 +267,9 @@ public class AutoRedRight extends LinearOpMode {
                         .afterTime(3.2 , prepOuttake())
                         .splineToLinearHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .afterTime(3 , releasePixels())
-                        .afterTime(0.5 , retractElevator())
-                        .splineToLinearHeading(new Pose2d(48, -40, Math.toRadians(0)), Math.toRadians(0),baseVelConstraint, baseAccelConstraint).setTangent(0)
 
+                        .splineToLinearHeading(new Pose2d(48, -40, Math.toRadians(0)), Math.toRadians(0),baseVelConstraint, baseAccelConstraint).setTangent(0)
+                        .afterTime(0.5 , retractElevator())
                         .strafeToLinearHeading(new Vector2d(45,-60), Math.toRadians(90))
 
 
@@ -279,15 +279,15 @@ public class AutoRedRight extends LinearOpMode {
         Action trajRedLeft =
                 robot.drive.actionBuilder(robot.drive.pose)
 
-                        .afterTime(1, placePurplePixelSequence_Left)
+                        .afterTime(1.3, placePurplePixelSequence_Left)
                         .splineToLinearHeading(new Pose2d(17, -35, Math.toRadians(0)), Math.toRadians(90))
-                        .afterTime(1.1, placeYellowPixel)
-                        .splineToSplineHeading(new Pose2d(48, -32, Math.toRadians(0)), Math.toRadians(0))
+                        .afterTime(1.3, placeYellowPixel)
+                        .splineToSplineHeading(new Pose2d(48, -28, Math.toRadians(0)), Math.toRadians(0))
 
                         .setTangent(110)
                         .splineToLinearHeading(new Pose2d(20, -58 , Math.toRadians(0)), Math.toRadians(180))
                         .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(180))
-                        .afterTime(2.5, IntakePixels(Intake.Angle.TOP_54))
+                        .afterTime(2.3, IntakePixels(Intake.Angle.TOP_54))
                         .splineToLinearHeading(new Pose2d(-50, -37, Math.toRadians(0)), Math.toRadians(180))
                         .splineToLinearHeading(new Pose2d(-54.8, -37.8, Math.toRadians(0)), Math.toRadians(180))
 
@@ -305,7 +305,7 @@ public class AutoRedRight extends LinearOpMode {
                         .setTangent(110)
                         .splineToLinearHeading(new Pose2d(20, -58 , Math.toRadians(0)), Math.toRadians(180))
                         .splineToLinearHeading(new Pose2d(-30, -58, Math.toRadians(0)), Math.toRadians(180))
-                        .afterTime(4.3, IntakePixels(Intake.Angle.TOP_32))
+                        .afterTime(4.1, IntakePixels(Intake.Angle.TOP_32))
                         .splineToLinearHeading(new Pose2d(-50, -36.8, Math.toRadians(0)), Math.toRadians(180))
                         .splineToLinearHeading(new Pose2d(-54.8, -36.8, Math.toRadians(0)), Math.toRadians(180))
 
@@ -317,8 +317,8 @@ public class AutoRedRight extends LinearOpMode {
                         .afterTime(3.2 , prepOuttake())
                         .splineToLinearHeading(new Pose2d(50, -40, Math.toRadians(0)), Math.toRadians(0)).setTangent(0)
                         .afterTime(3 , releasePixels())
-                        .afterTime(1 , retractElevator())
                         .splineToLinearHeading(new Pose2d(48, -40, Math.toRadians(0)), Math.toRadians(0),baseVelConstraint, baseAccelConstraint).setTangent(0)
+                        .afterTime( 1, retractElevator())
 
                         .strafeToLinearHeading(new Vector2d(45,-60), Math.toRadians(90))
 
