@@ -259,6 +259,7 @@ public class AutoRightBlue2Plus3 extends LinearOpMode {
                         .waitSeconds(.5)
                         .afterTime(0.6, intakePixelBlueClose)
                         .strafeToLinearHeading(new Vector2d(-46, 11), Math.toRadians(0))
+                        .waitSeconds(.5)
                         .stopAndAdd(transfer43)
 
                         //deposit43
