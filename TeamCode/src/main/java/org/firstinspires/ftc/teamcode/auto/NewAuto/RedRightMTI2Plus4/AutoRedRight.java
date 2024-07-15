@@ -185,7 +185,7 @@ public class AutoRedRight extends LinearOpMode {
                         .afterTime(1.9, placePurplePixelSequence_Right)
                         .splineToSplineHeading(new Pose2d(15, -37, Math.toRadians(0)), Math.toRadians(90))
                         .afterTime(1, placeYellowPixel)
-                        .splineToLinearHeading(new Pose2d(45, -40,Math.toRadians(0)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(49, -40,Math.toRadians(0)), Math.toRadians(0))
 
                         .setTangent(110)
                         .splineToLinearHeading(new Pose2d(20, -58 , Math.toRadians(0)), Math.toRadians(180))
@@ -232,7 +232,7 @@ public class AutoRedRight extends LinearOpMode {
                         .afterTime(1.5, placePurplePixelSequence_Middle)
                         .splineToLinearHeading(new Pose2d(20, -27, Math.toRadians(0)), Math.toRadians(90))
                         .afterTime(1.4, placeYellowPixel)
-                        .splineToSplineHeading(new Pose2d(48, -35,Math.toRadians(0)), Math.toRadians(0))
+                        .splineToSplineHeading(new Pose2d(49, -35,Math.toRadians(0)), Math.toRadians(0))
 
                         .setTangent(110)
                         .splineToLinearHeading(new Pose2d(20, -58 , Math.toRadians(0)), Math.toRadians(180))
@@ -282,7 +282,7 @@ public class AutoRedRight extends LinearOpMode {
                         .afterTime(1.3, placePurplePixelSequence_Left)
                         .splineToLinearHeading(new Pose2d(17, -35, Math.toRadians(0)), Math.toRadians(90))
                         .afterTime(1.3, placeYellowPixel)
-                        .splineToSplineHeading(new Pose2d(48, -28, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToSplineHeading(new Pose2d(49, -28, Math.toRadians(0)), Math.toRadians(0))
 
                         .setTangent(110)
                         .splineToLinearHeading(new Pose2d(20, -58 , Math.toRadians(0)), Math.toRadians(180))
